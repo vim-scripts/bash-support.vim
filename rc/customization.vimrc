@@ -3,15 +3,15 @@
 "==========  CUSTOMIZATION (vimrc)  ============================================
 "===============================================================================
 "
-set tabstop=2
-set shiftwidth=2
-set autowrite
 set autoread
-set incsearch
-set visualbell
-set nowrap
-set browsedir=current                    " Which directory to use for the file browser
+set autowrite
 set backupdir=$HOME/.vim.backupdir       " Don't forget to create this directory!
+set browsedir=current                    " Which directory to use for the file browser
+set incsearch
+set nowrap
+set shiftwidth=2
+set tabstop=2
+set visualbell
 "
 "
 "-------------------------------------------------------------------------------
@@ -55,7 +55,7 @@ imap  <silent> <s-tab>  <Esc>:if &modifiable && !&readonly && &modified <cr> :w<
 "-------------------------------------------------------------------------------
 " Leave the editor with Ctrl-q : Write all changed buffers and exit Vim
 "-------------------------------------------------------------------------------
-nmap  <C-q>     :wqa<CR>
+nmap	<C-q> 		:wqa<CR>
 "
 "
 "-------------------------------------------------------------------------------
@@ -69,9 +69,8 @@ set guifont=-b&h-lucidatypewriter-medium-r-normal-*-*-140-*-*-m-*-iso10646-1
 " Change to the directory the file in your current buffer is in
 "-------------------------------------------------------------------------------
 if has("autocmd")
-  autocmd BufEnter * :lcd %:p:h
+	autocmd BufEnter * :lcd %:p:h
 endif " has("autocmd")
-"
 "
 "-------------------------------------------------------------------------------
 " use of dictionaries
@@ -81,14 +80,14 @@ endif " has("autocmd")
 "   complete : search the files defined by the 'dictionary' option
 "-------------------------------------------------------------------------------
 "
-set dictionary=$HOME/.vim/word.list
+set dictionary=$HOME/.vim/wordlists/german.list
 set complete+=k
 "
 "
 "-------------------------------------------------------------------------------
 " filename completion
 " 
-"   wildmenu : command-line completion operates in an enhanced   mode
+"   wildmenu : command-line completion operates in an enhanced 	mode
 " wildignore : A file that matches with one of these
 "              patterns is ignored when completing file or directory names.
 "-------------------------------------------------------------------------------
@@ -105,12 +104,27 @@ set printoptions=left:8pc,right:3pc
 "
 
 highlight Cursor guibg=Blue guifg=NONE
-"
+
+
 "-------------------------------------------------------------------------------
-" Insert header into new Bash files
+" bash-support.vim
 "-------------------------------------------------------------------------------
+
+let g:BASH_AuthorName      = ""
+let g:BASH_AuthorRef       = ""
+let g:BASH_Email           = ""
+let g:BASH_Company         = ""
+let g:BASH_Project         = ""
+let g:BASH_CopyrightHolder = ""
+
+let g:BASH_Dictionary_File = $HOME."/.vim/wordlists/bash.list"
+
+" ----------  Insert header into new Bash files  ----------
 if has("autocmd")
-  autocmd BufNewFile  *.sh                 call BASH_CommentTemplates('header')
+	autocmd BufNewFile  *.sh                 call BASH_CommentTemplates('header')
 endif " has("autocmd")
-"
-"
+
+
+
+
+

@@ -1,0 +1,347 @@
+*bashsupport.txt*          bash Support             Last Change: Aug  11  2003
+
+bash Support                                     *bash-support* *bashsupport*
+                            Plugin version 1.7
+                      for Vim version 6.0 and above
+                     Fritz Mehner  <mehner@fh-swf.de>
+
+Write and run bash scripts using menus and hot keys (key mappings).
+
+|bashsupport-usage-gvim|     Usage with GUI 
+|bashsupport-usage-vim|      Usage without GUI
+|bashsupport-hotkeys|        Hotkeys
+|bashsupport-customization|  Customization and configuration
+|bashsupport-template-files| Template files and tags
+|bashsupport-code-snippets|  Code Snippets
+|bashsupport-dictionary|     bash Dictionary
+|bashsupport-release-notes|  Release Notes
+|add-local-help|             How to add this help file to Vim's help
+
+
+==============================================================================
+USAGE with GUI  (gVim)                                *bashsupport-usage-gvim*
+==============================================================================
+
+If the menus are not visible call them with the entry "Load Bash Support"
+in the standard Tools-menu.
+
+
+Menu 'Comments'
+------------------
+Frame comments, file header comments and function descriptions are read as
+templates from the appropriate files (see |bashsupport-customization|).
+
+'code-comment' and 'comment->code' are for commenting/uncommenting 
+visually selected blocks.
+
+Menu 'Statements'
+--------------------
+
+Normal mode, insert mode: 
+The statements will be inserted.
+
+Visual mode:
+The highlighted area (...) will be surrounded by a statement, parentheses,
+quotes or an echo with quotes (for testing the complete expression):
+
+  ${...}
+  $(...)
+  $((...))
+
+  for in do ... done
+  if then ... fi
+  if then ... else fi
+  select  in do ... done
+  until do ... done
+  while do ... done
+
+  '...'
+  "..."
+  `...`
+
+The echo-entry shows a special behavior:
+
+ Normal mode: The complete line (from the first nonblank to the end) is 
+              framed with  echo "..." ; the curser will be moved to the 
+              next line.
+ Visual mode: The highlighted text is framed with  echo "...".
+ Insert mode: An empty echo "" will be inserted.
+
+The remove-echo-entry:
+
+ The keyword echo, the following double quotation mark and the last double
+ quotation mark in the current line will be removed; the curser will be moved 
+ to the next line.
+
+Multiline inserts and code snippets will be indented after insertion.
+
+==============================================================================
+USAGE without GUI  (Vim)                              *bashsupport-usage-vim*
+==============================================================================
+
+The frequently used constructs can be inserted with key mappings:
+
+  -- Load / Unload bash Support ------------
+
+  \lbs    Load Bash Support    (normal)
+  \ubs    Unload Bash Support  (normal)
+
+  -- Comments ------------------------------
+
+  \cl     Line End Comment             (normal)
+  \cf     Frame Comment                (normal)
+  \cu     Function Description         (normal)
+  \ch     File Header                  (normal)
+  \ckb    Keyword comment BUG          (normal)
+  \ckt    Keyword comment TODO         (normal)
+  \ckr    Keyword comment TRICKY       (normal)
+  \ckw    Keyword comment WARNING      (normal)
+  \ckn    Keyword comment New_Keyword  (normal)
+  \cc     code to comment              (visual)
+  \co     comment to code              (visual)
+  \cd     Date                         (normal)
+  \ct     Date & Time                  (normal)
+  \cv     vim modeline                 (normal)
+                                     
+  -- Statements ----------------------------
+
+  \ac     case in ... esac             (normal)
+  \al     elif then                    (normal)
+  \af     for in do done               (normal, visual)
+  \ai     if then fi                   (normal, visual)
+  \ae     if then else fi              (normal, visual)
+  \as     select in do done            (normal, visual)
+  \at     until do done                (normal, visual)
+  \aw     while do done                (normal, visual)
+  \ao     echo "..."                   (normal, visual)
+  \av     remove echo "..."            (normal)
+
+  -- Run -----------------------------------
+
+  \rx     make script executable           (normal)
+  \rh     hardcopy buffer to FILENAME.ps   (normal)
+
+
+File bash-hot-keys.pdf contains a reference card for these key mappings.
+Multiline inserts and code snippets will be indented after insertion.
+
+The hotkeys are defined in the filetype plugin sh.vim (part of this
+bash-support plugin package).
+
+==============================================================================
+HOTKEYS                                                  *bashsupport-hotkeys*
+==============================================================================
+
+The following hotkey is defined in normal, visual and insert mode: 
+
+    Ctrl-F9   run script
+
+==============================================================================
+CUSTOMIZATION                                      *bashsupport-customization*
+==============================================================================
+
+Several global variables are checked by the script to customize it:
+
+------------------------------------------------------------------------------
+GLOBAL VARIABLE            DEFAULT VALUE                     TAG (see below)
+------------------------------------------------------------------------------
+g:BASH_AuthorName          ""                                |AUTHOR|
+g:BASH_AuthorRef           ""                                |AUTHORREF|
+g:BASH_Email               ""                                |EMAIL|
+g:BASH_Company             ""                                |COMPANY|   
+g:BASH_Project             ""                                |PROJECT|
+g:BASH_CopyrightHolder     ""                                |COPYRIGHTHOLDER|
+
+g:BASH_Template_Directory  $HOME."/.vim/plugin/templates/"
+g:BASH_Template_File       "bash-file-header"
+g:BASH_Template_Frame      "bash-frame"
+g:BASH_Template_Function   "bash-function-description"
+
+g:BASH_CodeSnippets        $HOME."/.vim/codesnippets-bash"
+g:BASH_Pager               "less"
+g:BASH_LoadMenus           "yes"
+g:BASH_Dictionary_File     $HOME."/.vim/wordlists/bash.list"
+--------------------------------------------------------------------------------
+
+1. group: Defines the text which will be inserted for the tags when a template  
+          is read in (see below).
+
+          g:BASH_AuthorName      : author name
+          g:BASH_AuthorRef       : author reference (e.g. acronym)
+          g:BASH_Email           : email address
+          g:BASH_Company         : name of the company / institution
+          g:BASH_Project         : project
+          g:BASH_CopyrightHolder : the copyright holder
+
+2. group: Sets the template directory and the names of the template files (see below).
+
+3. group: g:BASH_CodeSnippets    : The name of the code snippet directory (see below).
+          g:BASH_Pager           : The name of the filter used when the output of a 
+                                   bash script is run through a filter for paging 
+                                   through text.
+          g:BASH_LoadMenus       : Load menus and mappings ("yes", "no") at startup.
+          g:BASH_Dictionary_File : Path and filename of the bash word list used for
+                                   dictionary completion (see below).
+          
+To override the default add appropriate assignments to .vimrc .
+Here are my settings as an example:
+
+  let g:BASH_AuthorName      = "Dr.-Ing. Fritz Mehner"     
+  let g:BASH_AuthorRef       = "Mn"                         
+  let g:BASH_Email           = "mehner@fh-swf.de"            
+  let g:BASH_Company         = "FH Südwestfalen, Iserlohn"    
+
+
+==============================================================================
+TEMPLATE FILES AND TAGS                           *bashsupport-template-files*
+==============================================================================
+
+3 menu entries generate block comments:
+
+    bash -> Comments -> Frame Comment
+    bash -> Comments -> Function Description
+    bash -> Comments -> File Header
+
+The comments which will be inserted by these menu entries are read from 
+template files:
+
+------------------------------------------------------------------------------
+MENU ENTRY              FILE                          GLOBAL VARIABLE         
+------------------------------------------------------------------------------
+Frame Comment           bash-frame                    g:BASH_Template_Frame   
+Function Description    bash-function-description     g:BASH_Template_Function
+File Header             bash-file-header              g:BASH_Template_File    
+------------------------------------------------------------------------------
+
+The template files can be written or changed by the user to fulfill special
+requirements (layout for a project or workgroup already exists, file headers /
+blocks have to be prepared for a documentation tool, ... ).  They can hold not
+only comments but a complete file skeleton if this is necessary.  So you may
+want to lay out your own templates.
+
+The comments in these files do not have to be personalized but they can be.
+The text can contain the following tags which are replaced by the appropriate
+information when the file is read in:
+
+    |AUTHOR|
+    |DATE|
+    |EMAIL|
+    |FILENAME|
+    |YEAR|
+
+    |AUTHORREF|
+    |COMPANY|
+    |COPYRIGHTHOLDER|
+    |PROJECT|
+    |TIME|
+
+    |CURSOR|
+
+Each tag can occur more than once. The tag |CURSOR| may appear only once.
+The tag |CURSOR| will be the cursor position after the block is read in.
+There is no need to use any of these tags, some or all can be missing.
+
+The template files can actually be links pointing to existing templates.
+
+
+==============================================================================
+CODE SNIPPETS                                      *bashsupport-code-snippets*
+==============================================================================
+
+Code snippets are pieces of code which are kept in separate files in a special 
+directory. File names are used to identify the snippets.
+The snippet directory has to be created by the user 
+( $HOME/.vim/codesnippets-bash is the default).
+Snippets are managed with the 3 entries 
+
+   bash -> Statements -> read  code snippet
+   bash -> Statements -> write code snippet
+   bash -> Statements -> edit  code snippet
+
+from the Statements submenu.
+
+Creating a new snippet:  
+-----------------------
+When nothing is marked, "write code snippet" will write the whole buffer 
+to a snippet file, otherwise the marked area will be written to a file.
+
+Insert a snippet:
+-----------------
+Select the appropriate file from the snippet directory ("read  code snippet").
+The inserted lines will be indented.
+
+
+==============================================================================
+BASH DICTIONARY                                       *bashsupport-dictionary*
+==============================================================================
+
+The file  bash.list  contains words used as dictionary entries for automatic 
+word completion. In order to use this feature
+
+(1) copy this file to an appropriate location, e.g.
+
+  $HOME/.vim/wordlists/bash.list
+
+(2) and put the following line into  .vimrc  (see customization.vimrc) :
+
+  let g:BASH_Dictionary_File   = $HOME."/.vim/wordlists/bash.list"
+
+(3) Copy the filetype plugin  ftplugin/bash.vim  to 
+
+  $HOME/.vim/ftplugin/bash.vim
+
+This will create a local dictionary for each bash file and enable keyword 
+completion for bash using Vim's dictionary feature CTRL-X CTRL-K.
+
+
+==============================================================================
+Release Notes                                      *bashsupport-release-notes*
+==============================================================================
+
+------------------------------------------------------------------------------
+  RELEASE NOTES FOR VERSION 1.7
+------------------------------------------------------------------------------
+
++ Only one entry in the gVim root menu.
++ All hotkeys are only defined for bash files.
++ Install script added.
++ Customization improved. 
++ Documentation improved.
++ Bug fix (template file handling)
+
+------------------------------------------------------------------------------
+  RELEASE NOTES FOR VERSION 1.6
+------------------------------------------------------------------------------
+
++ 28 key mappings for Vim without GUI. See bash-hot-keys.pdf (reference card).
++ Vim doc added (file bashsupport.txt).
+
+------------------------------------------------------------------------------
+  RELEASE NOTES FOR VERSION 1.5
+------------------------------------------------------------------------------
+
++ Tag substitution rewritten (Some characters in a substitution text for a tag 
+  prevented the tag from being substituted).
++ All bash variables can now be inserted from the menus.
++ A marked region can be surrounded by a for-, if, select- while- or until
+  statement (with indentation).
++ A marked text can be surrounded with quotes.
++ A marked region or a complete line can be surrounded with echo " ".
++ The echo " " can be removed from a line.
+
+------------------------------------------------------------------------------
+  RELEASE NOTES FOR VERSION 1.4
+------------------------------------------------------------------------------
+
++ Block comments are now read as templates or skeletons from files:
+    frame Comment,  function description,  file header
++ These templates can contain tags like |FILENAME|, |AUTHOR| etc. which are 
+  replaced after reading.
++ indentation: multiline inserts and code snippets will be indented after insertion.
++ Most menu entries are now also active in normal mode.
++ Reading the templates is done in one function which can be called in an autocmd.
++ Code cleanup: register z no longer used. Most function calls are silent now.
+
+
+==============================================================================
+vim:tw=78:noet:ts=2:ft=help:norl:

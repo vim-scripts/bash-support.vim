@@ -1,39 +1,62 @@
-README for bash-support.vim (Version 1.5) / May 31 2003
+README for bash-support.vim (Version 1.7) / Aug  11  2003
+
+
+  *  RELEASE NOTES 
+  *  FILES
+  *  INSTALLATION
+  *  CONFIGURATION
+  *  TEMPLATE FILES AND TAGS
+  *  CODE SNIPPETS
+  *  BASH DICTIONARY
+  *  SPEED UP TYPING
+  *  CREDITS
 
 =======================================================================================
-  RELEASE NOTES FOR VERSION 1.5
+  RELEASE NOTES 
 =======================================================================================
+
+---------------------------------------------------------------------------------------
+  RELEASE NOTES FOR VERSION 1.7
+---------------------------------------------------------------------------------------
+
++ Only one entry in the gVim root menu.
++ All hotkeys are only defined for bash files.
++ Install script added.
++ Customization improved. 
++ Documentation improved.
++ Bug fix (template file handling)
+
+---------------------------------------------------------------------------------------
+  RELEASE NOTES FOR VERSION 1.6
+---------------------------------------------------------------------------------------
+
++ 28 key mappings for Vim without GUI. See bash-hot-keys.pdf (reference card).
++ Vim doc added (file bashsupport.txt).
+
+---------------------------------------------------------------------------------------
+  RELEASE NOTES FOR VERSION 1.5
+---------------------------------------------------------------------------------------
 
 + Tag substitution rewritten (Some characters in a substitution text for a tag 
   prevented the tag from being substituted).
-
 + All bash variables can now be inserted from the menus.
-
 + A marked region can be surrounded by a for-, if, select- while- or until
   statement (with indentation).
-
 + A marked text can be surrounded with quotes.
-
 + A marked region or a complete line can be surrounded with echo " ".
-
 + The echo " " can be removed from a line.
 
-=======================================================================================
+---------------------------------------------------------------------------------------
   RELEASE NOTES FOR VERSION 1.4
-=======================================================================================
+---------------------------------------------------------------------------------------
 
 + Block comments are now read as templates or skeletons from files:
     frame Comment,  function description,  file header
-
 + These templates can contain tags like |FILENAME|, |AUTHOR| etc. which are replaced
   after reading.
-
 + indentation: multiline inserts and code snippets will be indented after insertion.
-
 + Most menu entries are now also active in normal mode.
-
 + Reading the templates is done in one function which can be called in an autocmd.
-
 + Code cleanup: register z no longer used. Most function calls are silent now.
 
 
@@ -41,109 +64,180 @@ README for bash-support.vim (Version 1.5) / May 31 2003
   FILES
 =======================================================================================
 
-README                                    this file
+README                                    This file.
 
-bash-support.vim                          The bash plugin for GVIM.
-                                          Copy this file to your local plugin directory:
-                                             $HOME/.vim/plugin/bash-support.vim
-                                          Some configuration is needed (your name,
-                                          Email, ... ; see section CONFIGURATION below).
+install.sh                                Install script
 
+plugin/bash-support.vim                   The bash plugin for Vim/gVim.
 
-templates/bash-file-header           -+-  bash template files 
-templates/bash-frame                  |   (see section TEMPLATE FILES below).
-templates/bash-function-description  _+
-
-
+plugin/templates/bash-file-header           -+-  bash template files 
+plugin/templates/bash-frame                  |   (see section TEMPLATE FILES below).
+plugin/templates/bash-function-description  -+
 
 -----------------------   -------------------------------------------------------------
-                          The following files and extensions are for convenience only.
+-----------------------   The following files and extensions are for convenience only.
                           bash-support.vim will work without them.
                           -------------------------------------------------------------
 
+rc/bash.vimrc             The minimal additions which should be added  to $HOME/.vimrc .
 
-costumization.vimrc       Additional settings I use in .vimrc:  incremental search,
+rc/customization.vimrc    Additional settings I use in  .vimrc:  incremental search,
                           tabstop, hot keys, font, use of dictionaries, ...
                           The file is commented. Append it to your .vimrc if you like.
 
-costumization.gvimrc      Additional settings I use in .gvimrc:
+rc/customization.gvimrc   Additional settings I use in  .gvimrc:
                             hot keys, mouse settings, ...
                           The file is commented. Append it to your .gvimrc if you like.
 
-word.list                 A file with words used as dictionary for automatic word completion. 
-                          This file is referenced in the file costumization.vimrc .
+doc/bashsupport.txt       The help file for the local online help. 
+                          
+doc/bash-hot-keys.pdf     Reference card for the key mappings. 
+                          The mappings can be used with the non-GUI Vim, 
+                          because the menus are not available.
+
+
+wordlists/bash.list       A file with words used as dictionary for automatic word 
+                          completion. This file is referenced in the file 
+													customization.vimrc .
+
+ftplugin/sh.vim           A filetype plugin. Define hotkeys, creates a local dictionary 
+                          for each bash file.
+
+
+=======================================================================================
+  INSTALLATION
+=======================================================================================
+
+The subdirectories in the zip archive  bash-support.zip  mirror the directory structure 
+which is needed below the local installation directory $HOME/.vim/ .
+
+(1) Create the following directories if they do not already exist:
+
+      mkdir $HOME/.vim
+      mkdir $HOME/.vim/doc
+      mkdir $HOME/.vim/ftplugin
+      mkdir $HOME/.vim/plugin
+      mkdir $HOME/.vim/plugin/templates
+      mkdir $HOME/.vim/wordlists
+      mkdir $HOME/.vim/codesnippets-bash
+
+(2) Move the content of the corresponding subdirectories of the distribution into these
+    subdirectories.
+
+(3) Start Vim or gVim and generate the local help tags file with the following command:
+
+      :helptags $target_dir
+      
+    You can see an entry for the local help file when you do:
+
+      :help local-additions
+
+(4) Append at least the file  rc/bash.vimrc  to  $HOME/.vimrc  :
+
+      cat rc/bash.vimrc  >> $HOME/.vimrc
+
+(5) Do the configuration described below (personal details, ... )
+
+    ---------------------------------------------------------------------
+
+If you are on LINUX or U**X steps 1 - 5 can be done by calling the script  install.sh 
+with the command line option -p :
+	
+	./install.sh -p
+
+If you have already a personalized .vimrc call the script without an option:
+	
+	./install.sh 
+
+If $HOME/.vim is NOT your target directory than call the script with the -t option 
+followed by the name of a subdirectory:
+
+	./install.sh -t xyz
+
+The files go now to $HOME/xyz .
 
 
 =======================================================================================
   CONFIGURATION
 =======================================================================================
 
-The file bash-support.vim contains the following configuration section. Use my configuration as
-an example and change what has to be changed in the file  bash-support.vim . The template files
-are described in the next section.
+Several global variables are checked by the script to customize it:
 
-  "###############################################################################################
-  "
-  "  Configuration  (use my configuration as an example)
-  "
-  let s:BASH_AuthorName      = "Dr.-Ing. Fritz Mehner"
-  let s:BASH_AuthorRef       = "Mn"
-  let s:BASH_Email           = "mehner@fh-swf.de"
-  let s:BASH_Company         = "FH Südwestfalen, Iserlohn"
-  "
-  "  Copyright information
-  "  ---------------------
-  "  If the code has been developed over a period of years, each year must be stated.
-  "  If BASH_CopyrightHolder is empty the copyright notice will not appear.
-  "  If BASH_CopyrightHolder is not empty and BASH_CopyrightYears is empty, 
-  "  the current year will be inserted.
-  "
-  let s:BASH_CopyrightHolder = ""
-  let s:BASH_CopyrightYears  = ""
-  "
-  " The menu entries for code snippet support will not appear 
-  " if the following string is empty 
-  let s:BASH_CodeSnippetDir = $HOME."/.vim/codesnippets-bash"   " code snippet, Makefile-templates, ...
-  "
-  let s:BASH_ShowMenues     = "no"   " show menues immediately after loading (yes/no)
-  "
-  "  
-  let s:BASH_Template_Directory    = $HOME."/.vim/plugin/templates/"
-  "                           
-  "                             ----- bash template files ---- ( 1. set of templates ) ----
-  "                             
-  let s:BASH_Template_File         = "bash-file-header"
-  let s:BASH_Template_Frame        = "bash-frame"
-  let s:BASH_Template_Function     = "bash-function-description"
-  "
-  "---------------------------------------------------------------------------------------------
+  -----------------------------------------------------------------------------------
+  GLOBAL VARIABLE              DEFAULT VALUE                      TAG (see below)
+  -----------------------------------------------------------------------------------
+  g:BASH_AuthorName            ""                                 |AUTHOR|
+  g:BASH_AuthorRef             ""                                 |AUTHORREF|
+  g:BASH_Email                 ""                                 |EMAIL|
+  g:BASH_Company               ""                                 |COMPANY|   
+  g:BASH_Project               ""                                 |PROJECT|
+  g:BASH_CopyrightHolder       ""                                 |COPYRIGHTHOLDER|
+
+  g:BASH_Template_Directory    $HOME."/.vim/plugin/templates/"
+  g:BASH_Template_File         "bash-file-header"
+  g:BASH_Template_Frame        "bash-frame"
+  g:BASH_Template_Function     "bash-function-description"
+
+  g:BASH_CodeSnippets          $HOME."/.vim/codesnippets-bash"
+  g:BASH_Pager                 "less"
+  g:BASH_LoadMenus             "yes"
+  g:BASH_Dictionary_File       $HOME."/.vim/wordlists/bash.list"
+  -----------------------------------------------------------------------------------
+
+1. group: Defines the text which will be inserted for the tags when a template  
+          is read in (see below).
+
+          g:BASH_AuthorName      : author name
+          g:BASH_AuthorRef       : author reference (e.g. acronym)
+          g:BASH_Email           : email address
+          g:BASH_Company         : name of the company / institution
+          g:BASH_Project         : project
+          g:BASH_CopyrightHolder : the copyright holder
+
+2. group: Sets the template directory and the names of the template files (see below).
+
+3. group: g:BASH_CodeSnippets    : The name of the code snippet directory (see below).
+          g:BASH_Pager           : The name of the filter used when the output of a 
+                                   bash script is run through a filter for paging 
+                                   through text.
+          g:BASH_LoadMenus       : Load menus and mappings ("yes", "no") at startup.
+          g:BASH_Dictionary_File : Path and filename of the bash word list used for
+                                   dictionary completion (see below).
+          
+To override the default add appropriate assignments to .vimrc .
+Here are my settings as an example:
+
+  let g:BASH_AuthorName      = "Dr.-Ing. Fritz Mehner"     
+  let g:BASH_AuthorRef       = "Mn"                         
+  let g:BASH_Email           = "mehner@fh-swf.de"            
+  let g:BASH_Company         = "FH Südwestfalen, Iserlohn"    
 
 
 =======================================================================================
-  TEMPLATE FILES
+  TEMPLATE FILES AND TAGS
 =======================================================================================
 
-3 menu entries generate block comments:
+Three menu entries generate block comments:
 
-    Frame Comment
-    Function Description
-    File Header
+    bash -> Comments -> Frame Comment
+    bash -> Comments -> Function Description
+    bash -> Comments -> File Header
 
-The comments which will be inserted by these menus entries are read from files:
+The comments which will be inserted by these menu entries are read from template files:
 
-    +------------------------+----------------------------+-----------------------------+
-    |  menu entry            |  global variable           |  file (distribution set)    |
-    +------------------------+----------------------------+-----------------------------+
-    |  File Header           |  s:BASH_Template_File      |  bash-file-header           |
-    |  Frame Comment         |  s:BASH_Template_Frame     |  bash-frame                 |
-    |  Function Description  |  s:BASH_Template_Function  |  bash-function-description  |
-    +------------------------+----------------------------------------------------------+
+  ----------------------------------------------------------------------------------
+  MENU ENTRY                FILE (in ./plugin/templates )   GLOBAL VARIABLE         
+  ----------------------------------------------------------------------------------
+  Frame Comment             bash-frame                      g:BASH_Template_Frame   
+  Function Description      bash-function-description       g:BASH_Template_Function
+  File Header               bash-file-header                g:BASH_Template_File    
+  ----------------------------------------------------------------------------------
 
 The template files can be written or changed by the user to fulfill special
-requirements (layout for a project or workgroup already exists, file headers / blocks
-have to be prepared for a documentation tool, ... ).
-They can hold not only comments but a complete file skeleton if this is necessary.
-So you may want to lay out your own templates.
+requirements (layout for a project or workgroup already exists, file headers /
+blocks have to be prepared for a documentation tool, ... ).  They can hold not
+only comments but a complete file skeleton if this is necessary.  So you may
+want to lay out your own templates.
 
 The comments in these files do not have to be personalized but they can be.
 The text can contain the following tags which are replaced by the appropriate
@@ -170,22 +264,71 @@ There is no need to use any of these tags, some or all can be missing.
 The template files can actually be links pointing to existing templates.
 
 
+=======================================================================================
+  CODE SNIPPETS
+=======================================================================================
+
+Code snippets are pieces of code which are kept in separate files in a special 
+directory. File names are used to identify the snippets.
+The snippet directory has to be created by the user 
+( $HOME/.vim/codesnippets-bash is the default).
+Snippets are managed with the 3 entries 
+
+   bash -> Statements -> read  code snippet
+   bash -> Statements -> write code snippet
+   bash -> Statements -> edit  code snippet
+
+from the Statements submenu.
+
+Creating a new snippet:  
+-----------------------
+When nothing is marked, "write code snippet" will write the whole buffer 
+to a snippet file, otherwise the marked area will be written to a file.
+
+Insert a snippet:
+-----------------
+Select the appropriate file from the snippet directory ("read  code snippet").
+The inserted lines will be indented.
+
+
+=======================================================================================
+  BASH DICTIONARY
+=======================================================================================
+
+The file  bash.list  contains words used as dictionary for automatic word completion. 
+In order to use this feature
+
+(1) copy this file to an appropriate location, e.g.
+
+      $HOME/.vim/wordlists/bash.list
+
+(2) and put the following line into  .vimrc  (see customization.vimrc) :
+
+      let g:BASH_Dictionary_File   = $HOME."/.vim/wordlists/bash.list"
+
+(3) Copy the filetype plugin  ftplugin/sh.vim  to 
+
+      $HOME/.vim/ftplugin/sh.vim
+  
+This will create a local dictionary for each bash file and enable keyword 
+completion for bash using Vim's dictionary feature CTRL-X CTRL-K.
+
 
 =======================================================================================
   SPEED UP TYPING / SAVE KEYSTROKES
 =======================================================================================
 
 (1) gvim. Toggle 'insert mode' <--> 'normal mode' with the right mouse button
-    (see mapping in file costumization.gvimrc).
+    (see mapping in file customization.gvimrc).
 
 (2) gvim. Use tear off menus and
 
-(3) try 'Focus under mouse' as window behavior (No mouse click when the mouse pointer 
-    is back from the menu entry).
+(3) try 'Focus under mouse' as window behavior (No mouse click when the mouse
+    pointer is back from the menu entry).
 
-(4) Use Emulate3Buttons "on" (X11) even for a 3-button mouse. Pressing left and right
-    button at the same time without moving your fingers is faster then moving a finger
-    to the middle button (often a wheel).
+(4) Use Emulate3Buttons "on" (X11) even for a 3-button mouse. Pressing left and
+    right button simultaneously without moving your fingers is faster then 
+    moving a finger to the middle button (often a wheel).
+
 
 =======================================================================================
-
