@@ -3,14 +3,25 @@
 "==========  CUSTOMIZATION (vimrc)  ============================================
 "===============================================================================
 "
-set autoread
-set autowrite
-set backupdir=$HOME/.vim.backupdir       " Don't forget to create this directory!
-set browsedir=current                    " Which directory to use for the file browser
-set incsearch
+"shift down   : change window focus to lower one
+"shift up     : change window focus to upper one
+"shift left   : change window focus to one on left
+"shift right  : change window focus to one on right
+"
+nmap <s-down>   <c-w>j
+nmap <s-up>     <c-w>k
+nmap <s-left>   <c-w>h
+nmap <s-right>  <c-w>l
+
+"
+set autoread                          " read open files again when changed outside Vim
+set autowrite                         " write a modified buffer on each :next , ...
+set backupdir  =$HOME/.vim.backupdir  " directory for the backup files (Don't forget to create it!)
+set browsedir  =current               " which directory to use for the file browser
+set incsearch                         " use incremental search
 set nowrap
-set shiftwidth=2
-set tabstop=2
+set shiftwidth =2
+set tabstop    =2
 set visualbell
 "
 "
@@ -48,28 +59,21 @@ imap  <silent> <F8>    <Esc>:cn<CR>
 " The current buffer will be written before switching to the next one.
 "-------------------------------------------------------------------------------
 "
- map  <silent> <s-tab>       :if &modifiable && !&readonly && &modified <cr> :w<cr> :endif<cr> :bp<cr> 
-imap  <silent> <s-tab>  <Esc>:if &modifiable && !&readonly && &modified <cr> :w<cr> :endif<cr> :bp<cr> 
+ map  <silent> <s-tab>  <Esc>:if &modifiable && !&readonly && &modified <CR> :write<CR> :endif<CR>:bprevious<CR>
+imap  <silent> <s-tab>  <Esc>:if &modifiable && !&readonly && &modified <CR> :write<CR> :endif<CR>:bprevious<CR>
 "
 "
 "-------------------------------------------------------------------------------
 " Leave the editor with Ctrl-q : Write all changed buffers and exit Vim
 "-------------------------------------------------------------------------------
-nmap	<C-q> 		:wqa<CR>
-"
-"
-"-------------------------------------------------------------------------------
-" use font with clearly distinguishable brackets : ()[]{}
-"-------------------------------------------------------------------------------
-" 
-set guifont=-b&h-lucidatypewriter-medium-r-normal-*-*-140-*-*-m-*-iso10646-1
+nmap  <C-q>     :wqa<CR>
 "
 "
 "-------------------------------------------------------------------------------
 " Change to the directory the file in your current buffer is in
 "-------------------------------------------------------------------------------
 if has("autocmd")
-	autocmd BufEnter * :lcd %:p:h
+  autocmd BufEnter * :lcd %:p:h
 endif " has("autocmd")
 "
 "-------------------------------------------------------------------------------
@@ -87,7 +91,7 @@ set complete+=k
 "-------------------------------------------------------------------------------
 " filename completion
 " 
-"   wildmenu : command-line completion operates in an enhanced 	mode
+"   wildmenu : command-line completion operates in an enhanced mode
 " wildignore : A file that matches with one of these
 "              patterns is ignored when completing file or directory names.
 "-------------------------------------------------------------------------------
@@ -105,26 +109,12 @@ set printoptions=left:8pc,right:3pc
 
 highlight Cursor guibg=Blue guifg=NONE
 
-
+"
 "-------------------------------------------------------------------------------
-" bash-support.vim
+" taglist.vim : toggle the taglist window
 "-------------------------------------------------------------------------------
-
-let g:BASH_AuthorName      = ""
-let g:BASH_AuthorRef       = ""
-let g:BASH_Email           = ""
-let g:BASH_Company         = ""
-let g:BASH_Project         = ""
-let g:BASH_CopyrightHolder = ""
-
-let g:BASH_Dictionary_File = $HOME."/.vim/wordlists/bash.list"
-
-" ----------  Insert header into new Bash files  ----------
-if has("autocmd")
-	autocmd BufNewFile  *.sh                 call BASH_CommentTemplates('header')
-endif " has("autocmd")
-
-
+ noremap <silent> <F11>  <Esc><Esc>:Tlist<CR>
+inoremap <silent> <F11>  <Esc><Esc>:Tlist<CR>
 
 
 

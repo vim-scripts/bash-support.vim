@@ -1,0 +1,162 @@
+README for bash-support.vim (Version 1.8) / July  08  2004
+
+  *  INSTALLATION
+  *  RELEASE NOTES 
+  *  FILES
+  *  ADDITIONAL TIPS
+ 
+ 
+=======================================================================================
+  INSTALLATION
+=======================================================================================
+
+The subdirectories in the zip archive  bash-support.zip  mirror the directory structure 
+which is needed below the local installation directory $HOME/.vim/ .
+
+(1) Copy the zip archive  bash-support.zip to $HOME/.vim and run
+
+      unzip bash-support.zip
+
+    If you have already an older version of bash-support and you have modified the
+    template files you may want to save your templates first or copy the files from the 
+    archive by hand.
+
+(2) Set at least some personal details into .vimrc by overriding some defaults.
+    Here the minimal personalization (my settings as an example, of course):
+
+      let g:BASH_AuthorName      = 'Dr.-Ing. Fritz Mehner'     
+      let g:BASH_AuthorRef       = 'Mn'                         
+      let g:BASH_Email           = 'mehner@fh-swf.de'            
+      let g:BASH_Company         = 'FH Südwestfalen, Iserlohn'    
+
+There are a lot of features and options which can be used and influenced:
+
+  *  use of template files and tags
+  *  using and managing personal code snippets
+  *  bash dictionary for keyword completion
+  *  removing the root menu
+
+Restart gVim/Vim and look at the bash-support help with
+
+  :help bashsupport 
+
+>>>>>                                <<<<<
+>>>>>    or read  bashsupport.txt    <<<<<
+>>>>>                                <<<<<
+
+
+=======================================================================================
+  RELEASE NOTES 
+=======================================================================================
+
+---------------------------------------------------------------------------------------
+  RELEASE NOTES FOR VERSION 1.8
+---------------------------------------------------------------------------------------
++ Installation simplified. 
++ Run syntax check / list errors in an error window
++ Append aligned comments to all lines of a marked block.
++ The root menu can be removed (default is not removed).
++ The dialog windows (GUI) have been replaced by more flexible command line inputs.
++ User will now be asked before a snippet file will be overwritten.
++ The undocumented and unnecessary hot key F12 has been removed.
+
+---------------------------------------------------------------------------------------
+  RELEASE NOTES FOR VERSION 1.7
+---------------------------------------------------------------------------------------
++ Only one entry in the gVim root menu.
++ All hotkeys are only defined for bash files.
++ Install script added.
++ Customization improved. 
++ Documentation improved.
++ Bug fix (template file handling)
+
+---------------------------------------------------------------------------------------
+  RELEASE NOTES FOR VERSION 1.6
+---------------------------------------------------------------------------------------
++ 28 key mappings for Vim without GUI. See bash-hot-keys.pdf (reference card).
++ Vim doc added (file bashsupport.txt).
+
+---------------------------------------------------------------------------------------
+  RELEASE NOTES FOR VERSION 1.5
+---------------------------------------------------------------------------------------
++ Tag substitution rewritten (Some characters in a substitution text for a tag 
+  prevented the tag from being substituted).
++ All bash variables can now be inserted from the menus.
++ A marked region can be surrounded by a for-, if, select- while- or until
+  statement (with indentation).
++ A marked text can be surrounded with quotes.
++ A marked region or a complete line can be surrounded with echo " ".
++ The echo " " can be removed from a line.
+
+---------------------------------------------------------------------------------------
+  RELEASE NOTES FOR VERSION 1.4
+---------------------------------------------------------------------------------------
++ Block comments are now read as templates or skeletons from files:
+    frame Comment,  function description,  file header
++ These templates can contain tags like |FILENAME|, |AUTHOR| etc. which are replaced
+  after reading.
++ indentation: multiline inserts and code snippets will be indented after insertion.
++ Most menu entries are now also active in normal mode.
++ Reading the templates is done in one function which can be called in an autocmd.
++ Code cleanup: register z no longer used. Most function calls are silent now.
+
+
+=======================================================================================
+  FILES
+=======================================================================================
+
+README.bashsupport                        This file.
+
+codesnippets-bash/*       Some code snippets as a starting point.
+
+doc/bashsupport.txt       The help file for the local online help. 
+
+ftplugin/sh.vim           A filetype plugin. Define hotkeys, creates a local dictionary 
+                          for each bash file.
+
+plugin/bash-support.vim                   The bash plugin for Vim/gVim.
+
+plugin/templates/bash-file-header           -+-  bash template files 
+plugin/templates/bash-frame                  |   (see bashsupport.txt)
+plugin/templates/bash-function-description  -+
+
+wordlists/bash.list       A file with words used as dictionary for automatic word 
+                          completion. This file is referenced in the file 
+													customization.vimrc .
+
+-----------------------   -------------------------------------------------------------
+-----------------------   The following files and extensions are for convenience only.
+                          bash-support.vim will work without them.
+                          -------------------------------------------------------------
+
+rc/customization.vimrc    Additional settings I use in  .vimrc:  incremental search,
+                          tabstop, hot keys, font, use of dictionaries, ...
+                          The file is commented. Append it to your .vimrc if you like.
+
+rc/customization.gvimrc   Additional settings I use in  .gvimrc:
+                            hot keys, mouse settings, ...
+                          The file is commented. Append it to your .gvimrc if you like.
+
+doc/bash-hot-keys.pdf     Reference card for the key mappings. 
+                          The mappings can be used with the non-GUI Vim, 
+                          because the menus are not available.
+
+
+=======================================================================================
+  ADDITIONAL TIPS
+=======================================================================================
+
+(1) gvim. Toggle 'insert mode' <--> 'normal mode' with the right mouse button
+    (see mapping in file customization.gvimrc).
+
+(2) gvim. Use tear off menus and
+
+(3) try 'Focus under mouse' as window behavior (No mouse click when the mouse
+    pointer is back from the menu entry).
+
+(4) Use Emulate3Buttons "on" (X11) even for a 3-button mouse. Pressing left and
+    right button simultaneously without moving your fingers is faster then 
+    moving a finger to the middle button (often a wheel).
+
+
+=======================================================================================
