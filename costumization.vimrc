@@ -55,7 +55,7 @@ imap  <silent> <s-tab>  <Esc>:if &modifiable && !&readonly && &modified <cr> :w<
 "-------------------------------------------------------------------------------
 " Leave the editor with Ctrl-q : Write all changed buffers and exit Vim
 "-------------------------------------------------------------------------------
-nmap	<C-q> 		:wqa<CR>
+nmap  <C-q>     :wqa<CR>
 "
 "
 "-------------------------------------------------------------------------------
@@ -69,7 +69,7 @@ set guifont=-b&h-lucidatypewriter-medium-r-normal-*-*-140-*-*-m-*-iso10646-1
 " Change to the directory the file in your current buffer is in
 "-------------------------------------------------------------------------------
 if has("autocmd")
-	autocmd BufEnter * :lcd %:p:h
+  autocmd BufEnter * :lcd %:p:h
 endif " has("autocmd")
 "
 "
@@ -88,7 +88,7 @@ set complete+=k
 "-------------------------------------------------------------------------------
 " filename completion
 " 
-"   wildmenu : command-line completion operates in an enhanced 	mode
+"   wildmenu : command-line completion operates in an enhanced   mode
 " wildignore : A file that matches with one of these
 "              patterns is ignored when completing file or directory names.
 "-------------------------------------------------------------------------------
@@ -107,15 +107,10 @@ set printoptions=left:8pc,right:3pc
 highlight Cursor guibg=Blue guifg=NONE
 "
 "-------------------------------------------------------------------------------
-" Insert header into new C/C++-files
-" Insert header into new PERL files
 " Insert header into new Bash files
 "-------------------------------------------------------------------------------
 if has("autocmd")
-	autocmd BufNewFile  *.\(c\|cc\|cpp\|C\)  call C_CommentTemplates('cheader')
-	autocmd BufNewFile  *.\(h\|hpp\)         call C_CommentTemplates('hheader')
-	autocmd BufNewFile  *.\(pl\|pm\)         call Perl_CommentTemplates('header')
-	autocmd BufNewFile  *.sh                 call BASH_CommentTemplates('header')
+  autocmd BufNewFile  *.sh                 call BASH_CommentTemplates('header')
 endif " has("autocmd")
 "
 "

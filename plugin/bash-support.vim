@@ -2,7 +2,7 @@
 "
 "     Filename:  bash-support.vim
 "
-"  Description:  BASH support     (VIM Version 6.0+)
+"  Description:  BASH support     (VIM Version 6.0)
 "
 "                Write BASH-scripts by inserting comments, statements, tests, 
 "                variables and builtins.
@@ -27,33 +27,34 @@
 "                The file shellmenu.vim in the macro directory of the 
 "                vim standard distribution was my starting point.
 "
-let s:BASH_Version = "1.4"              " version number of this script; do not change
-"     Revision:  26.04.2003
+let s:BASH_Version = "1.5"              " version number of this script; do not change
+"     Revision:  31.05.2003
 "      Created:  26.02.2001
 "###############################################################################################
 "
 "  Configuration  (use my configuration as an example)
 "
-let s:BASH_AuthorName      = "Dr.-Ing. Fritz Mehner"
-let s:BASH_AuthorRef       = "Mn"
-let s:BASH_Email           = "mehner@fh-swf.de"
-let s:BASH_Company         = "FH Südwestfalen, Iserlohn"
+"------------------------------------------------------------------------------------------
+"   plugin variable          value                                     tag
+"------------------------------------------------------------------------------------------
+let s:BASH_AuthorName      = "Dr.-Ing. Fritz Mehner"				 				 " |AUTHOR|
+let s:BASH_AuthorRef       = "Mn"                            				 " |AUTHORREF|
+let s:BASH_Email           = "mehner@fh-swf.de"              				 " |EMAIL|
+let s:BASH_Company         = "FH Südwestfalen, Iserlohn"     				 " |COMPANY|   
+let s:BASH_Project         = ""                                      " |PROJECT|
+let s:BASH_CopyrightHolder = s:BASH_AuthorName    								   " |COPYRIGHTHOLDER|
 "
-"  Copyright information
-"  ---------------------
-"  If the code has been developed over a period of years, each year must be stated.
-"  If BASH_CopyrightHolder is empty the copyright notice will not appear.
-"  If BASH_CopyrightHolder is not empty and BASH_CopyrightYears is empty, 
-"  the current year will be inserted.
+"  Copyright information. If the code has been developed over a period of years, 
+"  each year must be stated. In a template file use a fixed year in the first position :
+"  
+"    '#     Copyright (C) 1998-|YEAR|  |COPYRIGHTHOLDER|'
 "
-let s:BASH_CopyrightHolder = ""
-let s:BASH_CopyrightYears  = ""
 "
-" The menu entries for code snippet support will not appear 
-" if the following string is empty 
+" The menu entries for code snippet support will not appear if the following string is empty 
+" 
 let s:BASH_CodeSnippetDir = $HOME."/.vim/codesnippets-bash"   " code snippet, Makefile-templates, ...
 "
-let s:BASH_ShowMenues     = "no"   " show menues immediately after loading (yes/no)
+let s:BASH_ShowMenues     = "yes"   " show menues immediately after loading (yes/no)
 "
 "  
 let s:BASH_Template_Directory    = $HOME."/.vim/plugin/templates/"
@@ -118,16 +119,35 @@ amenu &Comments.\#\ \:&KEYWORD\:.&new\ keyword      <Esc><Esc>$<Esc>:call BASH_C
 amenu &Comments.-SEP3-                        :
 amenu &Comments.&vim\ modeline            <Esc><Esc>:call BASH_CommentVimModeline()<CR>
 "
-amenu St&mts.&for									<Esc><Esc>ofor  in <CR>do<CR>done<CR><Esc>3kf<Space>a
+ menu St&mts.${\.\.\.}						<Esc>a${}<Esc>i
+ menu St&mts.$(\.\.\.)						<Esc>a$()<Esc>i
+ menu St&mts.$((\.\.\.))					<Esc>a$(())<Esc>hi
+vmenu St&mts.${\.\.\.}						s${}<Esc>Pla
+vmenu St&mts.$(\.\.\.)						s$()<Esc>Pla
+vmenu St&mts.$((\.\.\.))					s$(())<Esc>hP2la
+imenu St&mts.${\.\.\.}						${}<Esc>i
+imenu St&mts.$(\.\.\.)						$()<Esc>i
+imenu St&mts.$((\.\.\.))					$(())<Esc>hi
+"
+amenu St&mts.-SEP1-                      :
+amenu St&mts.&for									<Esc><Esc>ofor  in <CR>do<CR>done<Esc>2k^f<Space>a
 amenu St&mts.&case								<Esc><Esc>ocase  in<CR>)<CR>;;<CR><CR>)<CR>;;<CR><CR>*)<CR>;;<CR><CR>esac    # --- end of case ---<CR><Esc>11kf<Space>a
-amenu St&mts.&if									<Esc><Esc>oif <CR>then<CR>fi<CR><Esc>3kA
-amenu St&mts.if-&else							<Esc><Esc>oif <CR>then<CR>else<CR>fi<CR><Esc>4kA
-amenu St&mts.e&lif								<Esc><Esc>oelif <CR>then<CR><Esc>2kA
-amenu St&mts.&select							<Esc><Esc>oselect  in <CR>do<CR>done<CR><Esc>3kf a
-amenu St&mts.&while								<Esc><Esc>owhile <CR>do<CR>done<CR><Esc>3kA
-amenu St&mts.un&til								<Esc><Esc>ountil <CR>do<CR>done<CR><Esc>3kA
+amenu St&mts.&if									<Esc><Esc>oif <CR>then<CR>fi<Esc>2k^A
+amenu St&mts.if-&else							<Esc><Esc>oif <CR>then<CR>else<CR>fi<Esc>3kA
+amenu St&mts.e&lif								<Esc><Esc>oelif <CR>then<Esc>1kA
+amenu St&mts.&select							<Esc><Esc>oselect  in <CR>do<CR>done<Esc>2kf a
+amenu St&mts.&while								<Esc><Esc>owhile <CR>do<CR>done<Esc>2kA
+amenu St&mts.un&til								<Esc><Esc>ountil <CR>do<CR>done<Esc>2kA
+
+vmenu St&mts.&for								  DOfor  in <CR>do<CR>done<Esc>P2k^<Esc>:exe "normal =".(line("'>")-line(".")-1)."+"<CR>f<Space>a
+vmenu St&mts.&if									DOif <CR>then<CR>fi<Esc>P2k<Esc>:exe "normal =".(line("'>")-line(".")-1)."+"<CR>A
+vmenu St&mts.if-&else							DOif <CR>then<CR>else<CR>fi<Esc>kP<Esc>:exe "normal =".(line("'>")-line(".")-1)."+"<CR>2kA
+vmenu St&mts.&select							DOselect  in <CR>do<CR>done<Esc>P2k^<Esc>:exe "normal =".(line("'>")-line(".")-1)."+"<CR>f<Space>a
+vmenu St&mts.&while								DOwhile <CR>do<CR>done<Esc>P2k<Esc>:exe "normal =".(line("'>")-line(".")-1)."+"<CR>A
+vmenu St&mts.un&til								DOuntil <CR>do<CR>done<Esc>P2k<Esc>:exe "normal =".(line("'>")-line(".")-1)."+"<CR>A
+
 amenu St&mts.&break								<Esc><Esc>obreak 
-amenu St&mts.c&ontinue						<Esc><Esc>ocontinue 
+amenu St&mts.co&ntinue						<Esc><Esc>ocontinue 
 amenu St&mts.f&unction						<Esc><Esc>o<Esc>:call BASH_CodeFunction()<CR>2jA
 amenu St&mts.&return							<Esc><Esc>oreturn 
 amenu St&mts.return\ &0\ (true)		<Esc><Esc>oreturn 0
@@ -136,8 +156,19 @@ amenu St&mts.e&xit								<Esc><Esc>oexit
 amenu St&mts.s&hift								<Esc><Esc>oshift 
 amenu St&mts.tra&p								<Esc><Esc>otrap 
 "
+amenu St&mts.-SEP2-                      :
+"
+vmenu St&mts.'\.\.\.'							s''<Esc>Pla
+vmenu St&mts."\.\.\."							s""<Esc>Pla
+vmenu St&mts.`\.\.\.`							s``<Esc>Pla
+"
+amenu St&mts.ech&o\ "xxx"	  									<Esc><Esc>^iecho<Space>"<Esc>$a"
+imenu St&mts.ech&o\ "xxx"	  									echo<Space>""<Esc>i
+vmenu St&mts.ech&o\ "xxx"    									secho<Space>""<Esc>P
+amenu <silent> St&mts.remo&ve\ echo  		      <Esc><Esc>0:s/echo\s\+\"// \| s/\s*\"\s*$//<CR>
+"
 	if s:BASH_CodeSnippetDir != ""
-		amenu  St&mts.-SEP5-                      :
+		amenu  St&mts.-SEP4-                      :
 		amenu  <silent> St&mts.read\ code\ snippet        <C-C>:call BASH_CodeSnippets("r")<CR>
 		amenu  <silent> St&mts.write\ code\ snippet       <C-C>:call BASH_CodeSnippets("w")<CR>
 		vmenu  <silent> St&mts.write\ code\ snippet       <C-C>:call BASH_CodeSnippets("wv")<CR>
@@ -293,31 +324,148 @@ imenu Spec&Vars.Return\ code\ of\ last\ command									${?}
 imenu Spec&Vars.Process\ number\ of\ this\ shell								${$}
 imenu Spec&Vars.Process\ number\ of\ last\ background\ command	${!}
 "
- menu E&nviron.&HOME				<Esc>a${HOME}
- menu E&nviron.&PATH				<Esc>a${PATH}
- menu E&nviron.&CDPATH			<Esc>a${CDPATH}
- menu E&nviron.&MAIL				<Esc>a${MAIL}
- menu E&nviron.MAI&LCHECK		<Esc>a${MAILCHECK}
- menu E&nviron.PS&1					<Esc>a${PS1}
- menu E&nviron.PS&2					<Esc>a${PS2}
- menu E&nviron.&IFS					<Esc>a${IFS}
- menu E&nviron.SH&ACCT			<Esc>a${SHACCT}
- menu E&nviron.&SHELL				<Esc>a${SHELL}
- menu E&nviron.LC_CT&YPE		<Esc>a${LC_CTYPE}
- menu E&nviron.LC_M&ESSAGES	<Esc>a${LC_MESSAGES}
+"-------------------------------------------------------------------------------
+" Shell Variables
+"-------------------------------------------------------------------------------
 "
-imenu E&nviron.&HOME				${HOME}
-imenu E&nviron.&PATH				${PATH}
-imenu E&nviron.&CDPATH			${CDPATH}
-imenu E&nviron.&MAIL				${MAIL}
-imenu E&nviron.MAI&LCHECK		${MAILCHECK}
-imenu E&nviron.PS&1					${PS1}
-imenu E&nviron.PS&2					${PS2}
-imenu E&nviron.&IFS					${IFS}
-imenu E&nviron.SH&ACCT			${SHACCT}
-imenu E&nviron.&SHELL				${SHELL}
-imenu E&nviron.LC_CT&YPE		${LC_CTYPE}
-imenu E&nviron.LC_M&ESSAGES	${LC_MESSAGES}
+ menu E&nviron.&BASH\ \.\.\.\ FUNCNAME.&BASH            <Esc>a${BASH}
+ menu E&nviron.&BASH\ \.\.\.\ FUNCNAME.B&ASH_ENV        <Esc>a${BASH_ENV}
+ menu E&nviron.&BASH\ \.\.\.\ FUNCNAME.BA&SH_VERSINFO   <Esc>a${BASH_VERSINFO}
+ menu E&nviron.&BASH\ \.\.\.\ FUNCNAME.BAS&H_VERSION    <Esc>a${BASH_VERSION}
+ menu E&nviron.&BASH\ \.\.\.\ FUNCNAME.&CDPATH          <Esc>a${CDPATH}
+ menu E&nviron.&BASH\ \.\.\.\ FUNCNAME.C&OLUMNS         <Esc>a${COLUMNS}
+ menu E&nviron.&BASH\ \.\.\.\ FUNCNAME.CO&MPREPLY       <Esc>a${COMPREPLY}
+ menu E&nviron.&BASH\ \.\.\.\ FUNCNAME.COM&P_CWORD      <Esc>a${COMP_CWORD}
+ menu E&nviron.&BASH\ \.\.\.\ FUNCNAME.COMP_&LINE       <Esc>a${COMP_LINE}
+ menu E&nviron.&BASH\ \.\.\.\ FUNCNAME.COMP_POI&NT      <Esc>a${COMP_POINT}
+ menu E&nviron.&BASH\ \.\.\.\ FUNCNAME.COMP_&WORDS      <Esc>a${COMP_WORDS}
+ menu E&nviron.&BASH\ \.\.\.\ FUNCNAME.&DIRSTACK        <Esc>a${DIRSTACK}
+ menu E&nviron.&BASH\ \.\.\.\ FUNCNAME.&EUID            <Esc>a${EUID}
+ menu E&nviron.&BASH\ \.\.\.\ FUNCNAME.&FCEDIT          <Esc>a${FCEDIT}
+ menu E&nviron.&BASH\ \.\.\.\ FUNCNAME.F&IGNORE         <Esc>a${FIGNORE}
+ menu E&nviron.&BASH\ \.\.\.\ FUNCNAME.F&UNCNAME        <Esc>a${FUNCNAME}
+ menu E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.&GLOBIGNORE    <Esc>a${GLOBIGNORE}
+ menu E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.GRO&UPS        <Esc>a${GROUPS}
+ menu E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.&HISTCMD       <Esc>a${HISTCMD}
+ menu E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.HI&STCONTROL   <Esc>a${HISTCONTROL}
+ menu E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.HIS&TFILE      <Esc>a${HISTFILE}
+ menu E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.HIST&FILESIZE  <Esc>a${HISTFILESIZE}
+ menu E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.HISTIG&NORE    <Esc>a${HISTIGNORE}
+ menu E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.HISTSI&ZE      <Esc>a${HISTSIZE}
+ menu E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.H&OME          <Esc>a${HOME}
+ menu E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.HOSTFIL&E      <Esc>a${HOSTFILE}
+ menu E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.HOSTN&AME      <Esc>a${HOSTNAME}
+ menu E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.HOSTT&YPE      <Esc>a${HOSTTYPE}
+ menu E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.&IFS           <Esc>a${IFS}
+ menu E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.IGNO&REEOF     <Esc>a${IGNOREEOF}
+ menu E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.INPUTR&C       <Esc>a${INPUTRC}
+ menu E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.&LANG          <Esc>a${LANG}
+ menu E&nviron.&LC_ALL\ \.\.\.\ OSTYPE.&LC_ALL          <Esc>a${LC_ALL}
+ menu E&nviron.&LC_ALL\ \.\.\.\ OSTYPE.LC_&COLLATE      <Esc>a${LC_COLLATE}
+ menu E&nviron.&LC_ALL\ \.\.\.\ OSTYPE.LC_C&TYPE        <Esc>a${LC_CTYPE}
+ menu E&nviron.&LC_ALL\ \.\.\.\ OSTYPE.LC_M&ESSAGES     <Esc>a${LC_MESSAGES}
+ menu E&nviron.&LC_ALL\ \.\.\.\ OSTYPE.LC_&NUMERIC      <Esc>a${LC_NUMERIC}
+ menu E&nviron.&LC_ALL\ \.\.\.\ OSTYPE.L&INENO          <Esc>a${LINENO}
+ menu E&nviron.&LC_ALL\ \.\.\.\ OSTYPE.LINE&S           <Esc>a${LINES}
+ menu E&nviron.&LC_ALL\ \.\.\.\ OSTYPE.&MACHTYPE        <Esc>a${MACHTYPE}
+ menu E&nviron.&LC_ALL\ \.\.\.\ OSTYPE.M&AIL            <Esc>a${MAIL}
+ menu E&nviron.&LC_ALL\ \.\.\.\ OSTYPE.MAILCHEC&K       <Esc>a${MAILCHECK}
+ menu E&nviron.&LC_ALL\ \.\.\.\ OSTYPE.MAIL&PATH        <Esc>a${MAILPATH}
+ menu E&nviron.&LC_ALL\ \.\.\.\ OSTYPE.&OLDPWD          <Esc>a${OLDPWD}
+ menu E&nviron.&LC_ALL\ \.\.\.\ OSTYPE.OPTAR&G          <Esc>a${OPTARG}
+ menu E&nviron.&LC_ALL\ \.\.\.\ OSTYPE.OPTER&R          <Esc>a${OPTERR}
+ menu E&nviron.&LC_ALL\ \.\.\.\ OSTYPE.OPTIN&D          <Esc>a${OPTIND}
+ menu E&nviron.&LC_ALL\ \.\.\.\ OSTYPE.OST&YPE          <Esc>a${OSTYPE}
+ menu E&nviron.&PATH\ \.\.\.\ UID.&PATH                 <Esc>a${PATH}
+ menu E&nviron.&PATH\ \.\.\.\ UID.P&IPESTATUS           <Esc>a${PIPESTATUS}
+ menu E&nviron.&PATH\ \.\.\.\ UID.P&OSIXLY_CORRECT      <Esc>a${POSIXLY_CORRECT}
+ menu E&nviron.&PATH\ \.\.\.\ UID.PPI&D                 <Esc>a${PPID}
+ menu E&nviron.&PATH\ \.\.\.\ UID.PROMPT_&COMMAND       <Esc>a${PROMPT_COMMAND}
+ menu E&nviron.&PATH\ \.\.\.\ UID.PS&1                  <Esc>a${PS1}
+ menu E&nviron.&PATH\ \.\.\.\ UID.PS&2                  <Esc>a${PS2}
+ menu E&nviron.&PATH\ \.\.\.\ UID.PS&3                  <Esc>a${PS3}
+ menu E&nviron.&PATH\ \.\.\.\ UID.PS&4                  <Esc>a${PS4}
+ menu E&nviron.&PATH\ \.\.\.\ UID.P&WD                  <Esc>a${PWD}
+ menu E&nviron.&PATH\ \.\.\.\ UID.&RANDOM               <Esc>a${RANDOM}
+ menu E&nviron.&PATH\ \.\.\.\ UID.REPL&Y                <Esc>a${REPLY}
+ menu E&nviron.&PATH\ \.\.\.\ UID.&SECONDS              <Esc>a${SECONDS}
+ menu E&nviron.&PATH\ \.\.\.\ UID.S&HELLOPTS            <Esc>a${SHELLOPTS}
+ menu E&nviron.&PATH\ \.\.\.\ UID.SH&LVL                <Esc>a${SHLVL}
+ menu E&nviron.&PATH\ \.\.\.\ UID.&TIMEFORMAT           <Esc>a${TIMEFORMAT}
+ menu E&nviron.&PATH\ \.\.\.\ UID.T&MOUT                <Esc>a${TMOUT}
+ menu E&nviron.&PATH\ \.\.\.\ UID.&UID                  <Esc>a${UID}
+
+imenu E&nviron.&BASH\ \.\.\.\ FUNCNAME.&BASH            ${BASH}
+imenu E&nviron.&BASH\ \.\.\.\ FUNCNAME.B&ASH_ENV        ${BASH_ENV}
+imenu E&nviron.&BASH\ \.\.\.\ FUNCNAME.BA&SH_VERSINFO   ${BASH_VERSINFO}
+imenu E&nviron.&BASH\ \.\.\.\ FUNCNAME.BAS&H_VERSION    ${BASH_VERSION}
+imenu E&nviron.&BASH\ \.\.\.\ FUNCNAME.&CDPATH          ${CDPATH}
+imenu E&nviron.&BASH\ \.\.\.\ FUNCNAME.C&OLUMNS         ${COLUMNS}
+imenu E&nviron.&BASH\ \.\.\.\ FUNCNAME.CO&MPREPLY       ${COMPREPLY}
+imenu E&nviron.&BASH\ \.\.\.\ FUNCNAME.COM&P_CWORD      ${COMP_CWORD}
+imenu E&nviron.&BASH\ \.\.\.\ FUNCNAME.COMP_&LINE       ${COMP_LINE}
+imenu E&nviron.&BASH\ \.\.\.\ FUNCNAME.COMP_POI&NT      ${COMP_POINT}
+imenu E&nviron.&BASH\ \.\.\.\ FUNCNAME.COMP_&WORDS      ${COMP_WORDS}
+imenu E&nviron.&BASH\ \.\.\.\ FUNCNAME.&DIRSTACK        ${DIRSTACK}
+imenu E&nviron.&BASH\ \.\.\.\ FUNCNAME.&EUID            ${EUID}
+imenu E&nviron.&BASH\ \.\.\.\ FUNCNAME.&FCEDIT          ${FCEDIT}
+imenu E&nviron.&BASH\ \.\.\.\ FUNCNAME.F&IGNORE         ${FIGNORE}
+imenu E&nviron.&BASH\ \.\.\.\ FUNCNAME.F&UNCNAME        ${FUNCNAME}
+imenu E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.&GLOBIGNORE    ${GLOBIGNORE}
+imenu E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.GRO&UPS        ${GROUPS}
+imenu E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.&HISTCMD       ${HISTCMD}
+imenu E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.HI&STCONTROL   ${HISTCONTROL}
+imenu E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.HIS&TFILE      ${HISTFILE}
+imenu E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.HIST&FILESIZE  ${HISTFILESIZE}
+imenu E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.HISTIG&NORE    ${HISTIGNORE}
+imenu E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.HISTSI&ZE      ${HISTSIZE}
+imenu E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.H&OME          ${HOME}
+imenu E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.HOSTFIL&E      ${HOSTFILE}
+imenu E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.HOSTN&AME      ${HOSTNAME}
+imenu E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.HOSTT&YPE      ${HOSTTYPE}
+imenu E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.&IFS           ${IFS}
+imenu E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.IGNO&REEOF     ${IGNOREEOF}
+imenu E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.INPUTR&C       ${INPUTRC}
+imenu E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.&LANG          ${LANG}
+imenu E&nviron.&LC_ALL\ \.\.\.\ OSTYPE.&LC_ALL          ${LC_ALL}
+imenu E&nviron.&LC_ALL\ \.\.\.\ OSTYPE.LC_&COLLATE      ${LC_COLLATE}
+imenu E&nviron.&LC_ALL\ \.\.\.\ OSTYPE.LC_C&TYPE        ${LC_CTYPE}
+imenu E&nviron.&LC_ALL\ \.\.\.\ OSTYPE.LC_M&ESSAGES     ${LC_MESSAGES}
+imenu E&nviron.&LC_ALL\ \.\.\.\ OSTYPE.LC_&NUMERIC      ${LC_NUMERIC}
+imenu E&nviron.&LC_ALL\ \.\.\.\ OSTYPE.L&INENO          ${LINENO}
+imenu E&nviron.&LC_ALL\ \.\.\.\ OSTYPE.LINE&S           ${LINES}
+imenu E&nviron.&LC_ALL\ \.\.\.\ OSTYPE.&MACHTYPE        ${MACHTYPE}
+imenu E&nviron.&LC_ALL\ \.\.\.\ OSTYPE.M&AIL            ${MAIL}
+imenu E&nviron.&LC_ALL\ \.\.\.\ OSTYPE.MAILCHEC&K       ${MAILCHECK}
+imenu E&nviron.&LC_ALL\ \.\.\.\ OSTYPE.MAIL&PATH        ${MAILPATH}
+imenu E&nviron.&LC_ALL\ \.\.\.\ OSTYPE.&OLDPWD          ${OLDPWD}
+imenu E&nviron.&LC_ALL\ \.\.\.\ OSTYPE.OPTAR&G          ${OPTARG}
+imenu E&nviron.&LC_ALL\ \.\.\.\ OSTYPE.OPTER&R          ${OPTERR}
+imenu E&nviron.&LC_ALL\ \.\.\.\ OSTYPE.OPTIN&D          ${OPTIND}
+imenu E&nviron.&LC_ALL\ \.\.\.\ OSTYPE.OST&YPE          ${OSTYPE}
+imenu E&nviron.&PATH\ \.\.\.\ UID.&PATH                 ${PATH}
+imenu E&nviron.&PATH\ \.\.\.\ UID.P&IPESTATUS           ${PIPESTATUS}
+imenu E&nviron.&PATH\ \.\.\.\ UID.P&OSIXLY_CORRECT      ${POSIXLY_CORRECT}
+imenu E&nviron.&PATH\ \.\.\.\ UID.PPI&D                 ${PPID}
+imenu E&nviron.&PATH\ \.\.\.\ UID.PROMPT_&COMMAND       ${PROMPT_COMMAND}
+imenu E&nviron.&PATH\ \.\.\.\ UID.PS&1                  ${PS1}
+imenu E&nviron.&PATH\ \.\.\.\ UID.PS&2                  ${PS2}
+imenu E&nviron.&PATH\ \.\.\.\ UID.PS&3                  ${PS3}
+imenu E&nviron.&PATH\ \.\.\.\ UID.PS&4                  ${PS4}
+imenu E&nviron.&PATH\ \.\.\.\ UID.P&WD                  ${PWD}
+imenu E&nviron.&PATH\ \.\.\.\ UID.&RANDOM               ${RANDOM}
+imenu E&nviron.&PATH\ \.\.\.\ UID.REPL&Y                ${REPLY}
+imenu E&nviron.&PATH\ \.\.\.\ UID.&SECONDS              ${SECONDS}
+imenu E&nviron.&PATH\ \.\.\.\ UID.S&HELLOPTS            ${SHELLOPTS}
+imenu E&nviron.&PATH\ \.\.\.\ UID.SH&LVL                ${SHLVL}
+imenu E&nviron.&PATH\ \.\.\.\ UID.&TIMEFORMAT           ${TIMEFORMAT}
+imenu E&nviron.&PATH\ \.\.\.\ UID.T&MOUT                ${TMOUT}
+imenu E&nviron.&PATH\ \.\.\.\ UID.&UID                  ${UID}
+
+"
+"-------------------------------------------------------------------------------
+" Builtins
+"-------------------------------------------------------------------------------
 "
  menu B&uiltins.&cd         <Esc>acd<Space>
  menu B&uiltins.&echo       <Esc>aecho<Space>
@@ -446,7 +594,42 @@ endfunction			" function Bash_InitMenu
 "
 "
 "------------------------------------------------------------------------------
-"  P-Comments : Insert Template Files
+"  Substitute tags
+"------------------------------------------------------------------------------
+function! BASH_SubstituteTag( pos1, pos2, tag, replacement )
+	" 
+	" loop over marked block
+	" 
+	let	linenumber=a:pos1
+	while linenumber <= a:pos2
+		let line=getline(linenumber)
+		" 
+		" loop for multiple tags in one line
+		" 
+		let	start=0
+		while match(line,a:tag,start)>=0				" do we have a tag ?
+			let frst=match(line,a:tag,start)
+			let last=matchend(line,a:tag,start)
+			if frst!=-1
+				let part1=strpart(line,0,frst)
+				let part2=strpart(line,last)
+				let line=part1.a:replacement.part2
+				"
+				" next search starts after the replacement to suppress recursion
+				" 
+				let start=strlen(part1)+strlen(a:replacement)
+			endif
+			exe linenumber
+			exe "d"
+			put! =line
+		endwhile
+		let	linenumber=linenumber+1
+	endwhile
+
+endfunction    " ----------  end of function  Bash_SubstituteTag  ----------
+"
+"------------------------------------------------------------------------------
+"  Bash-Comments : Insert Template Files
 "------------------------------------------------------------------------------
 function! BASH_CommentTemplates (arg)
 
@@ -489,18 +672,17 @@ function! BASH_CommentTemplates (arg)
 		"----------------------------------------------------------------------
 		"  substitute keywords
 		"----------------------------------------------------------------------
-		silent! exe pos1.','.pos2.' s/|FILENAME|/'.expand("%:t").'/g'
-		" the seperator (#) for the following substitute (s) may not appear 
-		" in the date representation
-		silent! exe pos1.','.pos2.' s#|DATE|#'.strftime("%x %X %Z").'#g'
-		silent! exe pos1.','.pos2.' s/|TIME|/'.strftime("%X").'/g'
-		silent! exe pos1.','.pos2.' s/|YEAR|/'.strftime("%Y").'/g'
-		silent! exe pos1.','.pos2.' s/|AUTHOR|/'.s:BASH_AuthorName.'/g'
-		silent! exe pos1.','.pos2.' s/|EMAIL|/'.s:BASH_Email.'/g'
-		silent! exe pos1.','.pos2.' s/|AUTHORREF|/'.s:BASH_AuthorRef.'/g'
-		silent! exe pos1.','.pos2.' s/|PROJECT|/'.s:BASH_Project.'/g'
-		silent! exe pos1.','.pos2.' s/|COMPANY|/'.s:BASH_Company.'/g'
-		silent! exe pos1.','.pos2.' s/|COPYRIGHTHOLDER|/'.s:BASH_CopyrightHolder.'/g'
+		" 
+		call  BASH_SubstituteTag( pos1, pos2, '|FILENAME|',        expand("%:t")        )
+		call  BASH_SubstituteTag( pos1, pos2, '|DATE|',            strftime("%x %X %Z") )
+		call  BASH_SubstituteTag( pos1, pos2, '|TIME|',            strftime("%X")       )
+		call  BASH_SubstituteTag( pos1, pos2, '|YEAR|',            strftime("%Y")       )
+		call  BASH_SubstituteTag( pos1, pos2, '|AUTHOR|',          s:BASH_AuthorName       )
+		call  BASH_SubstituteTag( pos1, pos2, '|EMAIL|',           s:BASH_Email            )
+		call  BASH_SubstituteTag( pos1, pos2, '|AUTHORREF|',       s:BASH_AuthorRef        )
+		call  BASH_SubstituteTag( pos1, pos2, '|PROJECT|',         s:BASH_Project          )
+		call  BASH_SubstituteTag( pos1, pos2, '|COMPANY|',         s:BASH_Company          )
+		call  BASH_SubstituteTag( pos1, pos2, '|COPYRIGHTHOLDER|', s:BASH_CopyrightHolder  )
 		"
 		" now the cursor
 		"
@@ -570,7 +752,7 @@ function! BASH_Arguments ()
 endfunction
 "
 "------------------------------------------------------------------------------
-"  C-Idioms : read / edit code snippet
+"  Bash-Idioms : read / edit code snippet
 "------------------------------------------------------------------------------
 function! BASH_CodeSnippets(arg1)
 	if isdirectory(s:BASH_CodeSnippetDir)
@@ -655,9 +837,6 @@ function! BASH_Settings ()
 	let settings = settings."author  :  ".s:BASH_AuthorName." (".s:BASH_AuthorRef.") ".s:BASH_Email."\n"
 	let settings = settings."company :  ".s:BASH_Company."\n"
 	let settings = settings."copyright holder :  ".s:BASH_CopyrightHolder."\n"
-	if(s:BASH_CopyrightHolder!="")
-		let settings = settings."copyright year(s) :  ".s:BASH_CopyrightYears."\n"
-	endif
 	let settings = settings."\n"
 	let settings = settings."code snippet directory  :  ".s:BASH_CodeSnippetDir."\n"
 	let settings = settings."\n"
@@ -672,7 +851,7 @@ endfunction
 "	 which script is already loaded
 "------------------------------------------------------------------------------
 "
-let s:Bash_Active = -1														" state variable controlling the C-menus
+let s:Bash_Active = -1														" state variable controlling the Bash-menus
 let s:BASH_CmdLineArgs  = ""           " command line arguments for Run-run; initially empty
 
 function! Bash_CreateUnLoadMenuEntries ()
@@ -733,4 +912,6 @@ if s:BASH_ShowMenues == "yes"
 	call Bash_Handle()											" load the menus
 endif
 "
-
+"
+"------------------------------------------------------------------------------
+"  vim: set tabstop=2: set shiftwidth=2: 

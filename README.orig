@@ -1,4 +1,22 @@
-README for bash-support.vim (Version 1.4) / April 26 2003
+README for bash-support.vim (Version 1.5) / May 31 2003
+
+=======================================================================================
+  RELEASE NOTES FOR VERSION 1.5
+=======================================================================================
+
++ Tag substitution rewritten (Some characters in a substitution text for a tag 
+  prevented the tag from being substituted).
+
++ All bash variables can now be inserted from the menus.
+
++ A marked region can be surrounded by a for-, if, select- while- or until
+  statement (with indentation).
+
++ A marked text can be surrounded with quotes.
+
++ A marked region or a complete line can be surrounded with echo " ".
+
++ The echo " " can be removed from a line.
 
 =======================================================================================
   RELEASE NOTES FOR VERSION 1.4

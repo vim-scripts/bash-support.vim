@@ -20,6 +20,6 @@ imap  <silent> <s-F3>  <Esc>:browse confirm e<CR>
 " toggle insert mode <--> 'normal mode with the <RightMouse>-key
 "-------------------------------------------------------------------------------
 "
-nmap	<RightMouse> <Insert>
-imap	<RightMouse> <ESC>
+nmap  <RightMouse> <Insert>
+imap  <RightMouse> <ESC>
 "
