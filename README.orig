@@ -1,0 +1,173 @@
+README for bash-support.vim (Version 1.4) / April 26 2003
+
+=======================================================================================
+  RELEASE NOTES FOR VERSION 1.4
+=======================================================================================
+
++ Block comments are now read as templates or skeletons from files:
+    frame Comment,  function description,  file header
+
++ These templates can contain tags like |FILENAME|, |AUTHOR| etc. which are replaced
+  after reading.
+
++ indentation: multiline inserts and code snippets will be indented after insertion.
+
++ Most menu entries are now also active in normal mode.
+
++ Reading the templates is done in one function which can be called in an autocmd.
+
++ Code cleanup: register z no longer used. Most function calls are silent now.
+
+
+=======================================================================================
+  FILES
+=======================================================================================
+
+README                                    this file
+
+bash-support.vim                          The bash plugin for GVIM.
+                                          Copy this file to your local plugin directory:
+                                             $HOME/.vim/plugin/bash-support.vim
+                                          Some configuration is needed (your name,
+                                          Email, ... ; see section CONFIGURATION below).
+
+
+templates/bash-file-header           -+-  bash template files 
+templates/bash-frame                  |   (see section TEMPLATE FILES below).
+templates/bash-function-description  _+
+
+
+
+-----------------------   -------------------------------------------------------------
+                          The following files and extensions are for convenience only.
+                          bash-support.vim will work without them.
+                          -------------------------------------------------------------
+
+
+costumization.vimrc       Additional settings I use in .vimrc:  incremental search,
+                          tabstop, hot keys, font, use of dictionaries, ...
+                          The file is commented. Append it to your .vimrc if you like.
+
+costumization.gvimrc      Additional settings I use in .gvimrc:
+                            hot keys, mouse settings, ...
+                          The file is commented. Append it to your .gvimrc if you like.
+
+word.list                 A file with words used as dictionary for automatic word completion. 
+                          This file is referenced in the file costumization.vimrc .
+
+
+=======================================================================================
+  CONFIGURATION
+=======================================================================================
+
+The file bash-support.vim contains the following configuration section. Use my configuration as
+an example and change what has to be changed in the file  bash-support.vim . The template files
+are described in the next section.
+
+  "###############################################################################################
+  "
+  "  Configuration  (use my configuration as an example)
+  "
+  let s:BASH_AuthorName      = "Dr.-Ing. Fritz Mehner"
+  let s:BASH_AuthorRef       = "Mn"
+  let s:BASH_Email           = "mehner@fh-swf.de"
+  let s:BASH_Company         = "FH Südwestfalen, Iserlohn"
+  "
+  "  Copyright information
+  "  ---------------------
+  "  If the code has been developed over a period of years, each year must be stated.
+  "  If BASH_CopyrightHolder is empty the copyright notice will not appear.
+  "  If BASH_CopyrightHolder is not empty and BASH_CopyrightYears is empty, 
+  "  the current year will be inserted.
+  "
+  let s:BASH_CopyrightHolder = ""
+  let s:BASH_CopyrightYears  = ""
+  "
+  " The menu entries for code snippet support will not appear 
+  " if the following string is empty 
+  let s:BASH_CodeSnippetDir = $HOME."/.vim/codesnippets-bash"   " code snippet, Makefile-templates, ...
+  "
+  let s:BASH_ShowMenues     = "no"   " show menues immediately after loading (yes/no)
+  "
+  "  
+  let s:BASH_Template_Directory    = $HOME."/.vim/plugin/templates/"
+  "                           
+  "                             ----- bash template files ---- ( 1. set of templates ) ----
+  "                             
+  let s:BASH_Template_File         = "bash-file-header"
+  let s:BASH_Template_Frame        = "bash-frame"
+  let s:BASH_Template_Function     = "bash-function-description"
+  "
+  "---------------------------------------------------------------------------------------------
+
+
+=======================================================================================
+  TEMPLATE FILES
+=======================================================================================
+
+3 menu entries generate block comments:
+
+    Frame Comment
+    Function Description
+    File Header
+
+The comments which will be inserted by these menus entries are read from files:
+
+    +------------------------+----------------------------+-----------------------------+
+    |  menu entry            |  global variable           |  file (distribution set)    |
+    +------------------------+----------------------------+-----------------------------+
+    |  File Header           |  s:BASH_Template_File      |  bash-file-header           |
+    |  Frame Comment         |  s:BASH_Template_Frame     |  bash-frame                 |
+    |  Function Description  |  s:BASH_Template_Function  |  bash-function-description  |
+    +------------------------+----------------------------------------------------------+
+
+The template files can be written or changed by the user to fulfill special
+requirements (layout for a project or workgroup already exists, file headers / blocks
+have to be prepared for a documentation tool, ... ).
+They can hold not only comments but a complete file skeleton if this is necessary.
+So you may want to lay out your own templates.
+
+The comments in these files do not have to be personalized but they can be.
+The text can contain the following tags which are replaced by the appropriate
+information when the file is read in:
+
+    |AUTHOR|
+    |DATE|
+    |EMAIL|
+    |FILENAME|
+    |YEAR|
+
+    |AUTHORREF|
+    |COMPANY|
+    |COPYRIGHTHOLDER|
+    |PROJECT|
+    |TIME|
+
+    |CURSOR|
+
+Each tag can occur more than once. The tag |CURSOR| may appear only once.
+The tag |CURSOR| will be the cursor position after the block is read in.
+There is no need to use any of these tags, some or all can be missing.
+
+The template files can actually be links pointing to existing templates.
+
+
+
+=======================================================================================
+  SPEED UP TYPING / SAVE KEYSTROKES
+=======================================================================================
+
+(1) gvim. Toggle 'insert mode' <--> 'normal mode' with the right mouse button
+    (see mapping in file costumization.gvimrc).
+
+(2) gvim. Use tear off menus and
+
+(3) try 'Focus under mouse' as window behavior (No mouse click when the mouse pointer 
+    is back from the menu entry).
+
+(4) Use Emulate3Buttons "on" (X11) even for a 3-button mouse. Pressing left and right
+    button at the same time without moving your fingers is faster then moving a finger
+    to the middle button (often a wheel).
+
+=======================================================================================
+
