@@ -1,4 +1,4 @@
-README for bash-support.vim (Version 1.8) / July  08  2004
+README for bash-support.vim (Version 1.9) / November  26  2004
 
   *  INSTALLATION
   *  RELEASE NOTES 
@@ -40,14 +40,34 @@ Restart gVim/Vim and look at the bash-support help with
 
   :help bashsupport 
 
->>>>>                                <<<<<
->>>>>    or read  bashsupport.txt    <<<<<
->>>>>                                <<<<<
+                 +--------------------------------------------+
+                 | +----------------------------------------+ |
+                 | |  ** Please read the documentation **   | |
+                 | |  Actions differ for different modes!   | |
+                 | +----------------------------------------+ |
+                 +--------------------------------------------+
 
 
 =======================================================================================
   RELEASE NOTES 
 =======================================================================================
+
+---------------------------------------------------------------------------------------
+  RELEASE NOTES FOR VERSION 1.9
+---------------------------------------------------------------------------------------
++ Running a Bash-script 
+  (1) The script can be run from the command line as usual.
+  (2) The output can be directed into a window with name "Bash-Output". 
+      The buffer and its content will disappear when closing the window. 
+      The buffer is reused when still open.
+  (3) The script can be run in an xterm.
++ The new hotkey Shift-F9 or the "cmd. line arg." sets command line arguments for the
+  current buffer (that is, each buffer can have its own arguments).
++ A code snippet with the file name extension "ni" or "noindent" will not be
+  indented on insertion.
++ 'Line End Comments' ignores blank lines in a marked block.
++ Calling a set-command (submenu "Set") for a marked block will set this option above
+  this block and unset it below.
 
 ---------------------------------------------------------------------------------------
   RELEASE NOTES FOR VERSION 1.8
@@ -114,7 +134,8 @@ doc/bashsupport.txt       The help file for the local online help.
 ftplugin/sh.vim           A filetype plugin. Define hotkeys, creates a local dictionary 
                           for each bash file.
 
-plugin/bash-support.vim                   The bash plugin for Vim/gVim.
+plugin/bash-support.vim   The bash plugin for Vim/gVim.
+plugin/wrapper.sh         The wrapper script for the use of a xterm.
 
 plugin/templates/bash-file-header           -+-  bash template files 
 plugin/templates/bash-frame                  |   (see bashsupport.txt)
@@ -122,7 +143,7 @@ plugin/templates/bash-function-description  -+
 
 wordlists/bash.list       A file with words used as dictionary for automatic word 
                           completion. This file is referenced in the file 
-													customization.vimrc .
+                          customization.vimrc .
 
 -----------------------   -------------------------------------------------------------
 -----------------------   The following files and extensions are for convenience only.

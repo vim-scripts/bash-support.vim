@@ -3,7 +3,7 @@
 " Language   :  bash
 " Plugin     :  bash-support.vim
 " Maintainer :  Fritz Mehner <mehner@fh-swf.de>
-" Last Change:  July 08 2004
+" Last Change:  26.11.2004
 "
 " -----------------------------------------------------------------
 "
@@ -27,11 +27,18 @@ endif
 "
 "   Alt-F9   run syntax check
 "  Ctrl-F9   update file and run script
+" Shift-F9   command line arguments
 "
- map  <buffer>  <silent>  <A-F9>             :call BASH_Run("c")<CR>
-imap  <buffer>  <silent>  <A-F9>        <Esc>:call BASH_Run("c")<CR>
- map  <buffer>  <silent>  <C-F9>             :call BASH_Run("r")<CR>
-imap  <buffer>  <silent>  <C-F9>        <Esc>:call BASH_Run("r")<CR>
+ map  <buffer>  <silent>  <A-F9>        <Esc>:call BASH_SyntaxCheck()<CR><CR>
+imap  <buffer>  <silent>  <A-F9>        <Esc>:call BASH_SyntaxCheck()<CR><CR>
+"
+" <C-C> seems to be essential here:
+"
+ map  <buffer>            <C-F9>        <C-C>:call BASH_Run()<CR>
+imap  <buffer>            <C-F9>   <C-C><C-C>:call BASH_Run()<CR>
+"
+ map  <buffer>  <silent>  <S-F9>             :call BASH_Arguments()<CR>
+imap  <buffer>  <silent>  <S-F9>        <Esc>:call BASH_Arguments()<CR>
 "
 "
 " ---------- Key mappings  -------------------------------------
@@ -72,6 +79,9 @@ nmap  <buffer>  <silent>  <Leader>ao      ^iecho<Space>"<Esc>$a"<Esc>j
 vmap  <buffer>  <silent>  <Leader>ao      secho<Space>""<Esc>P
 nmap  <buffer>  <silent>  <Leader>av      0:s/echo\s\+\"// \| s/\s*\"\s*$//<CR><Esc>j
 
-nmap  <buffer>  <silent>  <Leader>rx      :!chmod -c u+x %<CR>
-nmap  <buffer>  <silent>  <Leader>rh      :call BASH_Hardcopy("n")<CR>
+if !has('win32')
+	nmap  <buffer>  <silent>  <Leader>re      <Esc>:!chmod -c u+x %<CR>
+endif
+ map  <buffer>  <silent>  <Leader>rh      <Esc>:call BASH_Hardcopy("n")<CR>
+vmap  <buffer>  <silent>  <Leader>rh      <Esc>:call BASH_Hardcopy("v")<CR>
 
