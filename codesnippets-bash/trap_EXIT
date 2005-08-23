@@ -1,0 +1,15 @@
+
+#===  FUNCTION  ================================================================
+#         NAME:  _exit_trap_
+#  DESCRIPTION:  Trap code for the fake signal EXIT. Generates an message.
+#   PARAMETERS:  The current line number given by $LINENO .
+#===============================================================================
+function _exit_trap_ ()
+{
+  es=$?
+  echo -e "\nEXIT line $1: Script exited with status $es"
+}    # ----------  end of function ----------
+
+trap '_exit_trap_ $LINENO' EXIT                 # trap EXIT
+#trap - EXIT                                     # reset the EXIT trap
+

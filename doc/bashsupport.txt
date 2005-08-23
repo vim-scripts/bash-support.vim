@@ -1,9 +1,9 @@
-*bashsupport.txt*          bash Support             Last Change:  Nov 27 2004
+*bashsupport.txt*                Bash Support                      Aug 18 2005
 
-bash Support                                     *bash-support* *bashsupport*
-                            Plugin version 1.9
-                      for Vim version 6.0 and above
-                     Fritz Mehner  <mehner@fh-swf.de>
+bash Support                                      *bash-support* *bashsupport*
+                             Plugin version 1.10
+                        for Vim version 6.0 and above
+                       Fritz Mehner  <mehner@fh-swf.de>
 
 Write and run bash scripts using menus and hot keys (key mappings).
 
@@ -18,14 +18,15 @@ Write and run bash scripts using menus and hot keys (key mappings).
  1.2.1    Normal mode, insert mode               |bashsupport-stat-1|
  1.2.2    Visual mode                            |bashsupport-stat-2|
  1.2.3    Code Snippets                          |bashsupport-stat-3|  
- 1.3     Menu 'Set'                              |bashsupport-set|     
- 1.4     Menu 'Run'                              |bashsupport-run|     
- 1.4.1    Save and run                           |bashsupport-run-1|
- 1.4.2    Save and check syntax                   |bashsupport-run-2|
- 1.4.3    Command line arguments                 |bashsupport-run-3|
- 1.4.4    Hardcopy                               |bashsupport-run-4|
- 1.4.5    Xterm size                             |bashsupport-run-5|
- 1.4.6    Output redirection                     |bashsupport-run-6|
+ 1.3     Menu 'set'                              |bashsupport-set|     
+ 1.4     Menu 'shopt'                            |bashsupport-shopt|     
+ 1.5     Menu 'Run'                              |bashsupport-run|     
+ 1.5.1    Save and run                           |bashsupport-run-1|
+ 1.5.2    Save and check syntax                  |bashsupport-run-2|
+ 1.5.3    Command line arguments                 |bashsupport-run-3|
+ 1.5.4    Hardcopy                               |bashsupport-run-4|
+ 1.5.5    Xterm size                             |bashsupport-run-5|
+ 1.5.6    Output redirection                     |bashsupport-run-6|
  2.     Usage without GUI                        |bashsupport-usage-vim|      
  3.     Hotkeys                                  |bashsupport-hotkeys|        
  4.     Customization and configuration          |bashsupport-custom|  
@@ -69,12 +70,22 @@ Marking the 4 lines
 
 and choosing 'Line End Comm.' will yield 
 
- x11=11;              # |
- x1111=1111;          # 
+ x11=11;                                        # |
+ x1111=1111;                                    # 
  
- x11111111=11111111;  # 
+ x11111111=11111111;                            # 
 
-The cursor position is marked by | . Empty lines will be ignored.
+The cursor position above is marked by '|' . Empty lines will be ignored.
+
+The default starting column is 49 ( = (8*6 or 4*12 or 2*24) + 1 ).  This can
+be changed by setting a global variable in the file .vimrc , e.g. :
+
+  let g:BASH_LineEndCommColDefault    = 45
+
+The starting column can also be set by the menu entry 'Comments->Set End Comm.
+Col.' . Just position the cursor in an arbitrary column (column number is
+shown in the Vim status line) and choose this menu entry.  This setting is
+buffer related.
 
 
 1.1.2 CODE TO COMMENT                                     *bashsupport-comm-2*
@@ -214,35 +225,60 @@ add the file extension "ni" or "noindent" to the snippet file name, e.g.
 
 
 ------------------------------------------------------------------------------
-1.3  MENU 'Set'                                              *bashsupport-set*
+1.3  MENU 'set'                                              *bashsupport-set*
 ------------------------------------------------------------------------------
 
-Calling a set-command (submenu "Set") in NORMAL or INSERT MODE will set this
+Calling a set-command (submenu "set") in NORMAL or INSERT MODE will set this
 option, e.g.
 
  set -o posix
 
-Calling a set-command (submenu "Set") for a marked block (VISUAL MODE)
+Calling a set-command (submenu "set") for a marked block (VISUAL MODE)
 
  rm "$alldirs"
  echo "$alldirs gone"
 
 will set this option above this block and unset it below:
 
- set -o xtrace            # OptionNumber_1
+set -o posix             # SetOptionNumber_1
  rm "$alldirs"
  echo "$alldirs gone"
- set +o xtrace            # OptionNumber_1
+set +o posix             # SetOptionNumber_1
 
-The option numbers OptionNumber_xxx are automatically incremented. They can be 
-searched for with the vim star command (*).
+The option numbers SetOptionNumber_xxx are automatically incremented. They can
+be searched for with the vim star command (*).
 
 
 ------------------------------------------------------------------------------
-1.4  MENU 'Run'                                              *bashsupport-run*
+1.4  MENU 'shopt'                                          *bashsupport-shopt*
 ------------------------------------------------------------------------------
 
-1.4.1 Save and run                                         *bashsupport-run-1*
+Calling a shopt-command (submenu "shopt") in NORMAL or INSERT MODE will set
+this option, e.g.
+
+ shopt -s shift_verbose
+
+Calling a shopt-command (submenu "shopt") for a marked block (VISUAL MODE)
+
+ function1 22 33 55
+ function2 "cc"
+
+will set this option above this block and unset it below:
+
+shopt -s shift_verbose       # ShoptOptionNumber_1
+ function1 22 33 55
+ function2 "cc"
+shopt -u shift_verbose       # ShoptOptionNumber_1
+
+The option numbers ShoptOptionNumber_xxx are automatically incremented. They
+can be searched for with the vim star command (*).
+
+
+------------------------------------------------------------------------------
+1.5  MENU 'Run'                                              *bashsupport-run*
+------------------------------------------------------------------------------
+
+1.5.1 Save and run                                         *bashsupport-run-1*
 ------------------
 
 Save the current buffer to his file and run this file. The command line, the
@@ -250,7 +286,7 @@ applied parameters and the shell return code are shown in the bottom line.
 
 
 
-1.4.2 Save and check syntax                                *bashsupport-run-2*
+1.5.2 Save and check syntax                                *bashsupport-run-2*
 ---------------------------
 
 Save the current buffer to his file and run this file with the -n flag
@@ -258,7 +294,7 @@ Save the current buffer to his file and run this file with the -n flag
 Errors are listed in an error window; now the quickfix commands can be used.
 
 
-1.4.3 Command line arguments                               *bashsupport-run-3*
+1.5.3 Command line arguments                               *bashsupport-run-3*
 ----------------------------
 
 The entry 'com. line arg.' calls an input dialog which asks for command line
@@ -271,20 +307,20 @@ If the buffer gets a new name with "save as" the arguments will now belong to
 the buffer with the new name.
 
 
-1.4.4 Hardcopy                                             *bashsupport-run-4*
+1.5.4 Hardcopy                                             *bashsupport-run-4*
 --------------
 
 Normal mode, insert mode: a Postscript file is made from the whole file.
 Visual mode             : a Postscript file is made from the marked area.
 
 
-1.4.5 Xterm size                                           *bashsupport-run-5*
+1.5.5 Xterm size                                           *bashsupport-run-5*
 ----------------
 
 The size of the xterm (see below) can be changes for the current session.  The
 size has to be specified as COLUMNS LINES (e.g. 96 32 ).
 
-1.4.6 Output redirection                                   *bashsupport-run-6*
+1.5.6 Output redirection                                   *bashsupport-run-6*
 ------------------------
 
 The last menu entry 'output: ... ' has 3 states:
@@ -350,47 +386,58 @@ The methods are "vim", "buffer" and "xterm".
 2.  USAGE without GUI  (Vim)                           *bashsupport-usage-vim*
 ==============================================================================
 
-The frequently used constructs can be inserted with key mappings:
+The frequently used constructs and commands can also be inserted and used with
+key mappings:
 
-  -- Load / Unload bash Support ------------
+  -- Load / Unload bash Support -------------------------
 
   \lbs    Load Bash Support    (normal)
   \ubs    Unload Bash Support  (normal)
 
-  -- Comments ------------------------------
+  -- Comments -------------------------------------------
 
-  \cl     Line End Comment             (normal)
-  \cf     Frame Comment                (normal)
-  \cu     Function Description         (normal)
-  \ch     File Header                  (normal)
-  \ckb    Keyword comment BUG          (normal)
-  \ckt    Keyword comment TODO         (normal)
-  \ckr    Keyword comment TRICKY       (normal)
-  \ckw    Keyword comment WARNING      (normal)
-  \ckn    Keyword comment New_Keyword  (normal)
-  \cc     code to comment              (visual)
-  \co     comment to code              (visual)
-  \cd     Date                         (normal)
-  \ct     Date & Time                  (normal)
-  \cv     vim modeline                 (normal)
+  \cl     Line End Comment                (normal)
+  \cf     Frame Comment                   (normal)
+  \cu     Function Description            (normal)
+  \ch     File Header                     (normal)
+  \ckb    Keyword comment BUG             (normal)
+  \ckt    Keyword comment TODO            (normal)
+  \ckr    Keyword comment TRICKY          (normal)
+  \ckw    Keyword comment WARNING         (normal)
+  \ckn    Keyword comment New_Keyword     (normal)
+  \cc     code to comment                 (visual)
+  \co     comment to code                 (visual)
+  \cd     Date                            (normal)
+  \ct     Date & Time                     (normal)
+  \cv     vim modeline                    (normal)
                                      
-  -- Statements ----------------------------
+  -- Statements ------------------------------------------
 
-  \ac     case in ... esac             (normal)
-  \al     elif then                    (normal)
-  \af     for in do done               (normal, visual)
-  \ai     if then fi                   (normal, visual)
-  \ae     if then else fi              (normal, visual)
-  \as     select in do done            (normal, visual)
-  \at     until do done                (normal, visual)
-  \aw     while do done                (normal, visual)
-  \ao     echo "..."                   (normal, visual)
-  \av     remove echo "..."            (normal)
+  \ac     case in ... esac                (normal)
+  \al     elif then                       (normal)
+  \af     for in do done                  (normal, visual)
+  \ai     if then fi                      (normal, visual)
+  \ae     if then else fi                 (normal, visual)
+  \as     select in do done               (normal, visual)
+  \at     until do done                   (normal, visual)
+  \aw     while do done                   (normal, visual)
+  \ao     echo "..."                      (normal, visual)
+  \av     remove echo "..."               (normal)
 
-  -- Run -----------------------------------
+  -- Run ------------------------------------------------
 
-  \re     make script executable           (normal)
-  \rh     hardcopy buffer to FILENAME.ps   (normal)
+  \rr     update file, run script         (normal)
+  \rc     update file, check syntax       (normal)
+  \ra     set command line arguments      (normal)
+  \re     make script executable          (normal)
+  \rh     hardcopy buffer to FILENAME.ps  (normal)
+  \rs     settings and hotkeys            (normal)
+  \rt     set xterm size                  (normal)
+  \ro     change output destination       (normal)
+
+  -- bash help ------------------------------------------
+
+  \rh     hardcopy buffer to FILENAME.ps  (normal)
 
 
 File bash-hot-keys.pdf contains a reference card for these key mappings.
@@ -406,6 +453,8 @@ bash-support plugin package).
 
 The following hotkeys are defined in NORMAL, VISUAL and INSERT MODE: 
 
+   Shift-F1   display help for a the builtin command under the cursur or ask
+               for a name
     Ctrl-F9   run script
      Alt-F9   run syntax check
    Shift-F9   command line arguments (for the current buffer)
@@ -463,27 +512,29 @@ doc/bash-hot-keys.pdf     Reference card for the key mappings.
 Several global variables are checked by the script to customize it:
 
 ---------------------------------------------------------------------------------------
-global variable            default value            tag (see |bashsupport-tempfiles-2|)
+global variable                default value                     tag 
+                                                        (see |bashsupport-tempfiles-2|)
 ---------------------------------------------------------------------------------------
-g:BASH_AuthorName          ""                                |AUTHOR|
-g:BASH_AuthorRef           ""                                |AUTHORREF|
-g:BASH_Email               ""                                |EMAIL|
-g:BASH_Company             ""                                |COMPANY|   
-g:BASH_Project             ""                                |PROJECT|
-g:BASH_CopyrightHolder     ""                                |COPYRIGHTHOLDER|
+g:BASH_AuthorName              ""                                |AUTHOR|
+g:BASH_AuthorRef               ""                                |AUTHORREF|
+g:BASH_Email                   ""                                |EMAIL|
+g:BASH_Company                 ""                                |COMPANY|   
+g:BASH_Project                 ""                                |PROJECT|
+g:BASH_CopyrightHolder         ""                                |COPYRIGHTHOLDER|
 
-g:BASH_Template_Directory  $HOME."/.vim/plugin/templates/"
-g:BASH_Template_File       "bash-file-header"
-g:BASH_Template_Frame      "bash-frame"
-g:BASH_Template_Function   "bash-function-description"
+g:BASH_Template_Directory      $HOME."/.vim/plugin/templates/"
+g:BASH_Template_File           "bash-file-header"
+g:BASH_Template_Frame          "bash-frame"
+g:BASH_Template_Function       "bash-function-description"
 
-g:BASH_CodeSnippets        $HOME."/.vim/codesnippets-bash"
-g:BASH_LoadMenus           "yes"
-g:BASH_Dictionary_File     $HOME."/.vim/wordlists/bash.list"
-g:BASH_Root                'B&ash.'
+g:BASH_CodeSnippets            $HOME."/.vim/codesnippets-bash"
+g:BASH_LoadMenus               "yes"
+g:BASH_Dictionary_File         $HOME."/.vim/wordlists/bash.list"
+g:BASH_Root                    'B&ash.'
 
-g:BASH_OutputGvim          "vim"
-g:BASH_XtermDefaults       "-fa courier -fs 12 -geometry 80x24"
+g:BASH_OutputGvim              "vim"
+g:BASH_XtermDefaults           "-fa courier -fs 12 -geometry 80x24"
+g:BASH_LineEndCommColDefault   49
 
 --------------------------------------------------------------------------------
 
@@ -507,16 +558,23 @@ g:BASH_XtermDefaults       "-fa courier -fs 12 -geometry 80x24"
           g:BASH_Root            : The name of the root menu entry of this plugin 
                                    (see |bashsupport-custom-3|).
 
-4. group: g:BASH_OutputGvim      : Target for a script output (see |bashsupport-run-6|).
-          g:BASH_XtermDefaults   : The xterm defaults (see |bashsupport-run-5|).
+4. group: g:BASH_OutputGvim             : Target for a script output 
+                                          (see |bashsupport-run-6|).
+          g:BASH_XtermDefaults          : The xterm defaults (see |bashsupport-run-5|).
+          g:BASH_LineEndCommColDefault  : default starting column for line end comments 
           
 To override the defaults add appropriate assignments in .vimrc .
 Here are my settings as an example:
 
-  let g:BASH_AuthorName      = "Dr.-Ing. Fritz Mehner"     
-  let g:BASH_AuthorRef       = "Mn"                         
-  let g:BASH_Email           = "mehner@fh-swf.de"            
-  let g:BASH_Company         = "FH Südwestfalen, Iserlohn"    
+  let g:BASH_AuthorName   = "Dr.-Ing. Fritz Mehner"     
+  let g:BASH_AuthorRef    = "Mn"                         
+  let g:BASH_Email        = "mehner@fh-swf.de"            
+  let g:BASH_Company      = "FH Südwestfalen, Iserlohn"    
+
+This plugin sets the global variable is_bash:
+  let is_bash             = 1
+This assignment is necessary to avoid a wrong syntax highlighting for $(..) and
+$((..)).
 
 ------------------------------------------------------------------------------
 4.3  THE ROOT MENU                                      *bashsupport-custom-3*

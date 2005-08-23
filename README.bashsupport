@@ -1,4 +1,4 @@
-README for bash-support.vim (Version 1.9) / November  26  2004
+README for bash-support.vim (Version 1.10) / Aug 18 2005
 
   *  INSTALLATION
   *  RELEASE NOTES 
@@ -24,10 +24,10 @@ which is needed below the local installation directory $HOME/.vim/ .
 (2) Set at least some personal details into .vimrc by overriding some defaults.
     Here the minimal personalization (my settings as an example, of course):
 
-      let g:BASH_AuthorName      = 'Dr.-Ing. Fritz Mehner'     
-      let g:BASH_AuthorRef       = 'Mn'                         
-      let g:BASH_Email           = 'mehner@fh-swf.de'            
-      let g:BASH_Company         = 'FH Südwestfalen, Iserlohn'    
+      let g:BASH_AuthorName   = 'Dr.-Ing. Fritz Mehner'     
+      let g:BASH_AuthorRef    = 'Mn'                         
+      let g:BASH_Email        = 'mehner@fh-swf.de'            
+      let g:BASH_Company      = 'FH Südwestfalen, Iserlohn'    
 
 There are a lot of features and options which can be used and influenced:
 
@@ -36,21 +36,38 @@ There are a lot of features and options which can be used and influenced:
   *  bash dictionary for keyword completion
   *  removing the root menu
 
-Restart gVim/Vim and look at the bash-support help with
+Restart gVim/Vim generate the help tags 
+
+  :helptags ~/.vim/doc
+
+and look at the bashsupport help with
 
   :help bashsupport 
 
-                 +--------------------------------------------+
-                 | +----------------------------------------+ |
-                 | |  ** Please read the documentation **   | |
-                 | |  Actions differ for different modes!   | |
-                 | +----------------------------------------+ |
-                 +--------------------------------------------+
+             +-----------------------------------------------+
+             | +-------------------------------------------+ |
+             | |    ** Please read the documentation **    | |
+             | |    Actions differ for different modes!    | |
+             | +-------------------------------------------+ |
+             +-----------------------------------------------+
 
 
 =======================================================================================
   RELEASE NOTES 
 =======================================================================================
+
+---------------------------------------------------------------------------------------
+  RELEASE NOTES FOR VERSION 1.10
+---------------------------------------------------------------------------------------
++ New Bash 3.0 set options added.
++ Shopt-menu added.
++ More builtins.
++ <S-F1> or \h displays help for the Bash builtin command under the cursor.
++ Key mappings for all run menu entries.
++ Line end comments start in a fixed column now (can be set from the menu).
++ Spaces in path names and file names are now possible.
++ Template files and snippet files are no longer kept in the list of alternate files.
++ Global variable is_bash is set to avoid a wrong highlighting for $(..) and $((..)).
 
 ---------------------------------------------------------------------------------------
   RELEASE NOTES FOR VERSION 1.9
@@ -135,7 +152,7 @@ ftplugin/sh.vim           A filetype plugin. Define hotkeys, creates a local dic
                           for each bash file.
 
 plugin/bash-support.vim   The bash plugin for Vim/gVim.
-plugin/wrapper.sh         The wrapper script for the use of a xterm.
+plugin/wrapper.sh         The wrapper script for the use of an xterm.
 
 plugin/templates/bash-file-header           -+-  bash template files 
 plugin/templates/bash-frame                  |   (see bashsupport.txt)

@@ -3,7 +3,8 @@
 " Language   :  bash
 " Plugin     :  bash-support.vim
 " Maintainer :  Fritz Mehner <mehner@fh-swf.de>
-" Last Change:  26.11.2004
+" Version    :  1.10
+" Last Change:  18.08.2005
 "
 " -----------------------------------------------------------------
 "
@@ -34,14 +35,20 @@ imap  <buffer>  <silent>  <A-F9>        <Esc>:call BASH_SyntaxCheck()<CR><CR>
 "
 " <C-C> seems to be essential here:
 "
- map  <buffer>            <C-F9>        <C-C>:call BASH_Run()<CR>
-imap  <buffer>            <C-F9>   <C-C><C-C>:call BASH_Run()<CR>
+vmap  <buffer>            <C-F9>        <C-C>:call BASH_Run("v")<CR>
+nmap  <buffer>            <C-F9>        <C-C>:call BASH_Run("n")<CR>
+imap  <buffer>            <C-F9>   <C-C><C-C>:call BASH_Run("n")<CR>
 "
  map  <buffer>  <silent>  <S-F9>             :call BASH_Arguments()<CR>
 imap  <buffer>  <silent>  <S-F9>        <Esc>:call BASH_Arguments()<CR>
 "
 "
+ map  <buffer>  <silent>  <S-F1>             :call BASH_help()<CR>
+imap  <buffer>  <silent>  <S-F1>        <Esc>:call BASH_help()<CR>
+"
 " ---------- Key mappings  -------------------------------------
+"
+ map  <buffer>  <silent>  <Leader>h     <Esc>:call BASH_help()<CR>
 "
 nmap  <buffer>  <silent>  <Leader>cl      <Tab><Tab><Tab>#<Space>
 vmap  <buffer>  <silent>  <Leader>cl      <Esc><Esc>:call BASH_MultiLineEndComments()<CR>
@@ -80,8 +87,18 @@ vmap  <buffer>  <silent>  <Leader>ao      secho<Space>""<Esc>P
 nmap  <buffer>  <silent>  <Leader>av      0:s/echo\s\+\"// \| s/\s*\"\s*$//<CR><Esc>j
 
 if !has('win32')
-	nmap  <buffer>  <silent>  <Leader>re      <Esc>:!chmod -c u+x %<CR>
+	nmap  <buffer>  <silent>  <Leader>re      <Esc>:call BASH_MakeScriptExecutable()<CR>
 endif
+ map  <buffer>  <silent>  <Leader>rr      <Esc>:call BASH_Run("n")<CR>
+vmap  <buffer>  <silent>  <Leader>rr      <Esc>:call BASH_Run("v")<CR>
+ map  <buffer>  <silent>  <Leader>rc      <Esc>:call BASH_SyntaxCheck()<CR>
+ map  <buffer>  <silent>  <Leader>ra      <Esc>:call BASH_Arguments()<CR>
+ map  <buffer>  <silent>  <Leader>rs      <Esc>:call BASH_Settings()<CR>
+if has("gui_running") && has("unix")
+ map  <buffer>  <silent>  <Leader>rt      <Esc>:call BASH_XtermSize()<CR>
+endif
+ map  <buffer>  <silent>  <Leader>ro      <Esc>:call BASH_Toggle_Gvim_Xterm()<CR>
+
  map  <buffer>  <silent>  <Leader>rh      <Esc>:call BASH_Hardcopy("n")<CR>
 vmap  <buffer>  <silent>  <Leader>rh      <Esc>:call BASH_Hardcopy("v")<CR>
 

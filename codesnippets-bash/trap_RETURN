@@ -1,0 +1,17 @@
+
+#===  FUNCTION  ================================================================
+#         NAME:  _return_trap_
+#  DESCRIPTION:  Trap code for the fake signal RETURN. Generates a message.
+#                The RETURN trap is not inherited by functions.
+#                Use 'set -o functrace'
+#   PARAMETERS:  The current line number given by $LINENO .
+#                variable(s) to be tracked
+#===============================================================================
+function _return_trap_ ()
+{
+  echo -e "\nRETURN line $1: "
+}    # ----------  end of functionn _return_trap_  ----------
+
+trap '_return_trap_ $LINENO' RETURN             # trap RETURN
+#trap - RETURN                                   # reset the RETURN trap
+

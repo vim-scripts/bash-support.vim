@@ -1,4 +1,3 @@
 
-# generate timestamp : YYYYMMDD-mmss
-timestamp=$(date +"%Y%m%d-%M%S")
+timestamp=$(date +"%Y%m%d-%H%M%S")          # generate timestamp : YYYYMMDD-mmss
 
