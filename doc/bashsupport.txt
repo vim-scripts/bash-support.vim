@@ -1,42 +1,42 @@
-*bashsupport.txt*                Bash Support                      Aug 18 2005
+*bashsupport.txt*                Bash Support                      Sep 30 2005
 
 bash Support                                      *bash-support* *bashsupport*
-                             Plugin version 1.10
+                            Plugin version 1.10.1
                         for Vim version 6.0 and above
                        Fritz Mehner  <mehner@fh-swf.de>
 
 Write and run bash scripts using menus and hot keys (key mappings).
 
  1.     Usage with GUI                           |bashsupport-usage-gvim|     
- 1.1     Menu 'Comments'                         |bashsupport-comm|     
- 1.1.1   Append aligned comments                 |bashsupport-comm-1|
- 1.1.2   Code to comment                         |bashsupport-comm-2|
- 1.1.3   Comment to code                         |bashsupport-comm-3|
- 1.1.4   Frame comments, file header, ...        |bashsupport-comm-4|
- 1.1.5   KEYWORD + comment                       |bashsupport-comm-5|
- 1.2     Menu 'Statements'                       |bashsupport-stat|     
- 1.2.1    Normal mode, insert mode               |bashsupport-stat-1|
- 1.2.2    Visual mode                            |bashsupport-stat-2|
- 1.2.3    Code Snippets                          |bashsupport-stat-3|  
+ 1.1     Menu 'Comments'                         |bashsupport-comments|     
+ 1.1.1   Append aligned comments                 |bashsupport-aligned-comm|
+ 1.1.2   Code to comment                         |bashsupport-code-to-comm|  
+ 1.1.3   Comment to code                         |bashsupport-comm-to-code|  
+ 1.1.4   Frame comments, file header, ...        |bashsupport-comm-templates|
+ 1.1.5   KEYWORD + comment                       |bashsupport-comm-keywords| 
+ 1.2     Menu 'Statements'                       |bashsupport-statements|
+ 1.2.1    Normal mode, insert mode               |bashsupport-stat-norm-ins|
+ 1.2.2    Visual mode                            |bashsupport-stat-visual|
+ 1.2.3    Code Snippets                          |bashsupport-stat-snippets|
  1.3     Menu 'set'                              |bashsupport-set|     
  1.4     Menu 'shopt'                            |bashsupport-shopt|     
  1.5     Menu 'Run'                              |bashsupport-run|     
- 1.5.1    Save and run                           |bashsupport-run-1|
- 1.5.2    Save and check syntax                  |bashsupport-run-2|
- 1.5.3    Command line arguments                 |bashsupport-run-3|
- 1.5.4    Hardcopy                               |bashsupport-run-4|
- 1.5.5    Xterm size                             |bashsupport-run-5|
- 1.5.6    Output redirection                     |bashsupport-run-6|
+ 1.5.1    Save and run                           |bashsupport-run-script|
+ 1.5.2    Save and check syntax                  |bashsupport-syntax-check|
+ 1.5.3    Command line arguments                 |bashsupport-cmdline-args|
+ 1.5.4    Hardcopy                               |bashsupport-hardcopy|
+ 1.5.5    Xterm size                             |bashsupport-xterm|
+ 1.5.6    Output redirection                     |bashsupport-output|
  2.     Usage without GUI                        |bashsupport-usage-vim|      
- 3.     Hotkeys                                  |bashsupport-hotkeys|        
- 4.     Customization and configuration          |bashsupport-custom|  
- 4.1     Files                                   |bashsupport-custom-1|  
- 4.2     Global variables                        |bashsupport-custom-2|
- 4.3     The root menu                           |bashsupport-custom-3|
+ 3.     Hot keys                                 |bashsupport-hotkeys|        
+ 4.     Customization and configuration          |bashsupport-customization|  
+ 4.1     Files                                   |bashsupport-custom-files|  
+ 4.2     Global variables                        |bashsupport-custom-variables|
+ 4.3     The root menu                           |bashsupport-custom-root|
  5.     Template files and tags                  |bashsupport-tempfiles| 
- 5.1     Template files                          |bashsupport-tempfiles-1|    
- 5.2     Tags                                    |bashsupport-tempfiles-2|
- 6.     Bash Dictionary                          |bashsupport-dictionary|     
+ 5.1     Template files                          |bashsupport-tempfiles|    
+ 5.2     Tags                                    |bashsupport-tags|
+ 6.     Bash dictionary                          |bashsupport-dictionary|     
  7.     Release Notes                            |bashsupport-release-notes|  
 
         How to add this help file to Vim's help  |add-local-help|             
@@ -50,10 +50,10 @@ If the menus are not visible call them with the entry "Load Bash Support"
 in the standard Tools-menu.
 
 ------------------------------------------------------------------------------
-1.1  MENU 'Comments'                                        *bashsupport-comm*
+1.1  MENU 'Comments'                                    *bashsupport-comments*
 ------------------------------------------------------------------------------
 
-1.1.1 APPEND ALIGNED COMMENTS TO CONSECUTIVE LINES        *bashsupport-comm-1*
+1.1.1 APPEND ALIGNED COMMENTS TO CONSECUTIVE LINES  *bashsupport-aligned-comm*
 --------------------------------------------------
 
 In NORMAL MODE the menu entry
@@ -88,7 +88,7 @@ shown in the Vim status line) and choose this menu entry.  This setting is
 buffer related.
 
 
-1.1.2 CODE TO COMMENT                                     *bashsupport-comm-2*
+1.1.2 CODE TO COMMENT                               *bashsupport-code-to-comm*
 ---------------------
 
 A marked block will be changed into
@@ -102,7 +102,7 @@ The menu entry works also for a single line. A single line needs not to be
 marked. 
 
 
-1.1.3 COMMENT TO CODE                                     *bashsupport-comm-3*
+1.1.3 COMMENT TO CODE                               *bashsupport-comm-to-code*
 ---------------------
 
 A marked block 
@@ -123,14 +123,14 @@ The menu entry works also for a single line. A single line needs not to be
 marked. 
 
 
-1.1.4 FRAME COMMENTS, FILE HEADER, ...                    *bashsupport-comm-4*
+1.1.4 FRAME COMMENTS, FILE HEADER, ...            *bashsupport-comm-templates*
 --------------------------------------
 
 Frame comments, function descriptions and file header comments are read as
 templates from the appropriate files (see |bashsupport-tempfiles|).
 
 
-1.1.5 KEYWORD+comment                                     *bashsupport-comm-5*
+1.1.5 KEYWORD+comment                              *bashsupport-comm-keywords*
 ---------------------
 
 Preliminary line end comments to document (and find again) places where work
@@ -141,10 +141,10 @@ will be resumed shortly, like
 Usually not meant for the final documentation.
 
 ------------------------------------------------------------------------------
-1.2  MENU 'Statements'                                      *bashsupport-stat*
+1.2  MENU 'Statements'                                *bashsupport-statements*
 ------------------------------------------------------------------------------
 
-1.2.1  NORMAL MODE, INSERT MODE.                          *bashsupport-stat-1*
+1.2.1  NORMAL MODE, INSERT MODE.                   *bashsupport-stat-norm-ins*
 --------------------------------
 
 An empty statement will be inserted and properly indented. The entry 'if'
@@ -156,7 +156,7 @@ will insert an if-statement:
 
 Inner statements will be indented.
 
-1.2.1  VISUAL MODE                                        *bashsupport-stat-2*
+1.2.1  VISUAL MODE                                   *bashsupport-stat-visual*
 ------------------
 
 The highlighted area (...) will be surrounded by a statement, parentheses,
@@ -179,8 +179,8 @@ quotes or an echo with quotes (for testing the complete expression):
 
 The echo-entry shows a special behavior:
 
- Normal mode: The complete line (from the first nonblank to the end) is 
-              framed with  echo "..." ; the curser will be moved to the 
+ Normal mode: The complete line (from the first non-blank to the end) is 
+              framed with  echo "..." ; the cursor will be moved to the 
               next line.
  Visual mode: The highlighted text is framed with  echo "...".
  Insert mode: An empty echo "" will be inserted.
@@ -188,11 +188,11 @@ The echo-entry shows a special behavior:
 The remove-echo-entry:
 
  The keyword echo, the following double quotation mark and the last double
- quotation mark in the current line will be removed; the curser will be moved 
+ quotation mark in the current line will be removed; the cursor will be moved 
  to the next line.
 
 ------------------------------------------------------------------------------
-1.2.3 CODE SNIPPETS                                       *bashsupport-stat-3*
+1.2.3 CODE SNIPPETS                                *bashsupport-stat-snippets*
 ------------------------------------------------------------------------------
 
 Code snippets are pieces of code which are kept in separate files in a special
@@ -278,15 +278,17 @@ can be searched for with the vim star command (*).
 1.5  MENU 'Run'                                              *bashsupport-run*
 ------------------------------------------------------------------------------
 
-1.5.1 Save and run                                         *bashsupport-run-1*
+1.5.1 Save and run                                    *bashsupport-run-script*
 ------------------
 
 Save the current buffer to his file and run this file. The command line, the
 applied parameters and the shell return code are shown in the bottom line.
 
+ * In NORMAL MODE the whole buffer will be executed.
+ * In VISUAL MODE only the marked lines will be executed.
 
 
-1.5.2 Save and check syntax                                *bashsupport-run-2*
+1.5.2 Save and check syntax                         *bashsupport-syntax-check*
 ---------------------------
 
 Save the current buffer to his file and run this file with the -n flag
@@ -294,7 +296,7 @@ Save the current buffer to his file and run this file with the -n flag
 Errors are listed in an error window; now the quickfix commands can be used.
 
 
-1.5.3 Command line arguments                               *bashsupport-run-3*
+1.5.3 Command line arguments                        *bashsupport-cmdline-args*
 ----------------------------
 
 The entry 'com. line arg.' calls an input dialog which asks for command line
@@ -307,20 +309,20 @@ If the buffer gets a new name with "save as" the arguments will now belong to
 the buffer with the new name.
 
 
-1.5.4 Hardcopy                                             *bashsupport-run-4*
+1.5.4 Hardcopy                                          *bashsupport-hardcopy*
 --------------
 
 Normal mode, insert mode: a Postscript file is made from the whole file.
 Visual mode             : a Postscript file is made from the marked area.
 
 
-1.5.5 Xterm size                                           *bashsupport-run-5*
+1.5.5 Xterm size                                           *bashsupport-xterm*
 ----------------
 
 The size of the xterm (see below) can be changes for the current session.  The
 size has to be specified as COLUMNS LINES (e.g. 96 32 ).
 
-1.5.6 Output redirection                                   *bashsupport-run-6*
+1.5.6 Output redirection                                  *bashsupport-output*
 ------------------------
 
 The last menu entry 'output: ... ' has 3 states:
@@ -345,7 +347,7 @@ want to scroll).
 When the script is run again and the output buffer is still open it will be
 reused.
 
-The buffer will not be opened if the script does not produce anny output.
+The buffer will not be opened if the script does not produce any output.
 This is for convenience; you do not have to close an empty buffer.
 
 * This is suitable for scripts without dialog elements and many lines of output
@@ -431,7 +433,7 @@ key mappings:
   \ra     set command line arguments      (normal)
   \re     make script executable          (normal)
   \rh     hardcopy buffer to FILENAME.ps  (normal)
-  \rs     settings and hotkeys            (normal)
+  \rs     settings and hot keys           (normal)
   \rt     set xterm size                  (normal)
   \ro     change output destination       (normal)
 
@@ -443,17 +445,17 @@ key mappings:
 File bash-hot-keys.pdf contains a reference card for these key mappings.
 Multiline inserts and code snippets will be indented after insertion.
 
-The hotkeys are defined in the filetype plugin sh.vim (part of this
+The hot keys are defined in the file type plugin sh.vim (part of this
 bash-support plugin package).
 
 
 ==============================================================================
-3.  HOTKEYS                                              *bashsupport-hotkeys*
+3.  HOT KEYS                                             *bashsupport-hotkeys*
 ==============================================================================
 
-The following hotkeys are defined in NORMAL, VISUAL and INSERT MODE: 
+The following hot keys are defined in NORMAL, VISUAL and INSERT MODE: 
 
-   Shift-F1   display help for a the builtin command under the cursur or ask
+   Shift-F1   display help for a the built command under the cursor or ask
                for a name
     Ctrl-F9   run script
      Alt-F9   run syntax check
@@ -461,11 +463,11 @@ The following hotkeys are defined in NORMAL, VISUAL and INSERT MODE:
 
 
 ==============================================================================
-4.0  CUSTOMIZATION                                        *bashsupport-custom*
+4.0  CUSTOMIZATION                                 *bashsupport-customization*
 ==============================================================================
 
 ------------------------------------------------------------------------------
-4.1  FILES                                              *bashsupport-custom-1*
+4.1  FILES                                          *bashsupport-custom-files*
 ------------------------------------------------------------------------------
 
 README.bashsupport        This file.
@@ -474,8 +476,8 @@ codesnippets-bash/*       Some code snippets as a starting point.
 
 doc/bashsupport.txt       The help file for the local online help. 
 
-ftplugin/sh.vim           A filetype plugin. Define hotkeys, creates a local dictionary 
-                          for each bash file.
+ftplugin/sh.vim           A file type plugin. Define hot keys, creates a local 
+                          dictionary for each bash file.
 
 plugin/bash-support.vim   The bash plugin for Vim/gVim.
 plugin/wrapper.sh         The wrapper script for the use with a xterm.
@@ -506,14 +508,14 @@ doc/bash-hot-keys.pdf     Reference card for the key mappings.
                           because the menus are not available.
 
 ------------------------------------------------------------------------------
-4.2  GLOBAL VARIABLES                                   *bashsupport-custom-2*
+4.2  GLOBAL VARIABLES                           *bashsupport-custom-variables*
 ------------------------------------------------------------------------------
 
 Several global variables are checked by the script to customize it:
 
 ---------------------------------------------------------------------------------------
 global variable                default value                     tag 
-                                                        (see |bashsupport-tempfiles-2|)
+                                                               (see |bashsupport-tags|)
 ---------------------------------------------------------------------------------------
 g:BASH_AuthorName              ""                                |AUTHOR|
 g:BASH_AuthorRef               ""                                |AUTHORREF|
@@ -551,16 +553,16 @@ g:BASH_LineEndCommColDefault   49
 2. group: Sets the template directory and the names of the template files (see below).
 
 3. group: g:BASH_CodeSnippets    : The name of the code snippet directory 
-                                   (see |bashsupport-stat-3|).
-          g:BASH_LoadMenus       : Load menus and mappings ("yes", "no") at startup.
-          g:BASH_Dictionary_File : Path and filename of the bash word list used for
+                                   (see |bashsupport-stat-snippets|).
+          g:BASH_LoadMenus       : Load menus and mappings ("yes", "no") at start up.
+          g:BASH_Dictionary_File : Path and file name of the bash word list used for
                                    dictionary completion (see |bashsupport-dictionary|).
           g:BASH_Root            : The name of the root menu entry of this plugin 
-                                   (see |bashsupport-custom-3|).
+                                   (see |bashsupport-custom-root|).
 
 4. group: g:BASH_OutputGvim             : Target for a script output 
-                                          (see |bashsupport-run-6|).
-          g:BASH_XtermDefaults          : The xterm defaults (see |bashsupport-run-5|).
+                                          (see |bashsupport-output|).
+          g:BASH_XtermDefaults          : The xterm defaults (see |bashsupport-xterm|).
           g:BASH_LineEndCommColDefault  : default starting column for line end comments 
           
 To override the defaults add appropriate assignments in .vimrc .
@@ -577,7 +579,7 @@ This assignment is necessary to avoid a wrong syntax highlighting for $(..) and
 $((..)).
 
 ------------------------------------------------------------------------------
-4.3  THE ROOT MENU                                      *bashsupport-custom-3*
+4.3  THE ROOT MENU                                   *bashsupport-custom-root*
 ------------------------------------------------------------------------------
 
 The variable g:BASH_Root, if set (in .vimrc or in .gvimrc), gives the name of
@@ -597,7 +599,7 @@ courses.
 ==============================================================================
 
 ------------------------------------------------------------------------------
-5.1  TEMPLATE FILES                                  *bashsupport-tempfiles-1*
+5.1  TEMPLATE FILES 
 ------------------------------------------------------------------------------
 
 Three menu entries generate block comments:
@@ -618,13 +620,13 @@ File Header             bash-file-header              g:BASH_Template_File
 ------------------------------------------------------------------------------
 
 The template files can be written or changed by the user to fulfill special
-requirements (layout for a project or workgroup already exists, file headers /
+requirements (layout for a project or work group already exists, file headers /
 blocks have to be prepared for a documentation tool, ... ).  They can hold not
 only comments but a complete file skeleton if this is necessary.  So you may
 want to lay out your own templates.
 
 ------------------------------------------------------------------------------
-5.2  TAGS                                            *bashsupport-tempfiles-2*
+5.2  TAGS                                                   *bashsupport-tags*
 ------------------------------------------------------------------------------
 The comments in these files do not have to be personalized but they can be.
 The text can contain the following tags which are replaced by the appropriate

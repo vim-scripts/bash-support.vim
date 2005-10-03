@@ -18,7 +18,7 @@
 "          Email:  mehner@fh-swf.de
 "          
 "        Version:  see variable  g:BASH_Version  below 
-"       Revision:  18.08.2005
+"       Revision:  30.09.2005
 "        Created:  26.02.2001
 "        License:  GPL (GNU Public License)
 "  
@@ -29,7 +29,7 @@
 if exists("g:BASH_Version") || &cp
  finish
 endif
-let g:BASH_Version= "1.10"  						" version number of this script; do not change
+let g:BASH_Version= "1.10.1"  						" version number of this script; do not change
 "
 "#########################################################################################
 "
@@ -38,8 +38,10 @@ let g:BASH_Version= "1.10"  						" version number of this script; do not change
 "  Key word completion is enabled by the filetype plugin 'sh.vim'
 "  g:BASH_Dictionary_File  must be global
 "          
+let s:root_dir	  = $HOME.'/.vim/'
+"
 if !exists("g:BASH_Dictionary_File")
-	let g:BASH_Dictionary_File     = $HOME.'/.vim/wordlists/bash.list'
+	let g:BASH_Dictionary_File     = s:root_dir.'wordlists/bash.list'
 endif
 "
 "  Modul global variables (with default values) which can be overridden.
@@ -53,8 +55,8 @@ let s:BASH_CopyrightHolder       = ""
 "
 let	s:BASH_Root 				         = 'B&ash.'					" the name of the root menu of this plugin
 let s:BASH_LoadMenus             = "yes"
-let s:BASH_CodeSnippets          = $HOME."/.vim/codesnippets-bash/"
-let s:BASH_Template_Directory    = $HOME."/.vim/plugin/templates/"
+let s:BASH_CodeSnippets          = s:root_dir."codesnippets-bash/"
+let s:BASH_Template_Directory    = s:root_dir."plugin/templates/"
 let s:BASH_Template_File         = "bash-file-header"
 let s:BASH_Template_Frame        = "bash-frame"
 let s:BASH_Template_Function     = "bash-function-description"
@@ -867,9 +869,9 @@ function!	BASH_InitMenu ()
 			exe "amenu ".s:BASH_Root.'&Run.-Sep0-        :'
 		endif
 
-		exe "amenu ".s:BASH_Root.'&Run.save\ +\ &run\ script<Tab><C-F9>                <C-C>:call BASH_Run("n")<CR>'
-		exe "vmenu ".s:BASH_Root.'&Run.save\ +\ &run\ script<Tab><C-F9>                <C-C>:call BASH_Run("v")<CR>'
-		exe "amenu ".s:BASH_Root.'&Run.save\ +\ &check\ syntax<Tab><A-F9>              <C-C>:call BASH_SyntaxCheck()<CR>'
+		exe "amenu <silent> ".s:BASH_Root.'&Run.save\ +\ &run\ script<Tab><C-F9>       <C-C>:call BASH_Run("n")<CR>'
+		exe "vmenu <silent> ".s:BASH_Root.'&Run.save\ +\ &run\ script<Tab><C-F9>       <C-C>:call BASH_Run("v")<CR>'
+		exe "amenu <silent> ".s:BASH_Root.'&Run.save\ +\ &check\ syntax<Tab><A-F9>     <C-C>:call BASH_SyntaxCheck()<CR>'
 		"
 		"   set execution right only for the user ( may be user root ! )
 		"
@@ -1364,7 +1366,7 @@ function! BASH_Run ( mode )
 	if s:BASH_OutputGvim == "xterm"
 		"
 		if a:mode=="n"
-			silent exe "!xterm -title ".l:fullname." ".s:BASH_XtermDefaults." -e $HOME/.vim/plugin/wrapper.sh ".l:fullname.l:arguments.' &'
+			silent exe "!xterm -title ".l:fullname." ".s:BASH_XtermDefaults.' -e '.s:root_dir.'plugin/wrapper.sh '.l:fullname.l:arguments
 		endif
 		"
 		if a:mode=="v"

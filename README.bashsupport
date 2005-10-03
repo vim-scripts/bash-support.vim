@@ -1,4 +1,4 @@
-README for bash-support.vim (Version 1.10) / Aug 18 2005
+README for bash-support.vim (Version 1.10.1) / Sep 30 2005
 
   *  INSTALLATION
   *  RELEASE NOTES 
@@ -55,6 +55,11 @@ and look at the bashsupport help with
 =======================================================================================
   RELEASE NOTES 
 =======================================================================================
+
+---------------------------------------------------------------------------------------
+  RELEASE NOTES FOR VERSION 1.10.1
+---------------------------------------------------------------------------------------
++ Starting an xterm was not possible with some installations (bugfix).
 
 ---------------------------------------------------------------------------------------
   RELEASE NOTES FOR VERSION 1.10
