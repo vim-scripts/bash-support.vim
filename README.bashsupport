@@ -1,4 +1,4 @@
-README for bash-support.vim (Version 1.10.1) / Sep 30 2005
+README for bash-support.vim (Version 1.11) / Oct 30 2005
 
   *  INSTALLATION
   *  RELEASE NOTES 
@@ -55,6 +55,18 @@ and look at the bashsupport help with
 =======================================================================================
   RELEASE NOTES 
 =======================================================================================
+
+---------------------------------------------------------------------------------------
+  RELEASE NOTES FOR VERSION 1.11
+---------------------------------------------------------------------------------------
++ Start debugger bashdb with a keystroke.
++ Parameter substitutions completed.
++ Environmnent variables completed / menu rearranged.
++ Builtins completed.
++ Code <-> comment working in all modes.
++ Insert/remove echo for commenting/uncommenting statements.
++ Script will be made executable before running it (e.g. after a "Save As...").
++ Statement menu now in alphabetical order.
 
 ---------------------------------------------------------------------------------------
   RELEASE NOTES FOR VERSION 1.10.1

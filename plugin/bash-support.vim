@@ -18,7 +18,7 @@
 "          Email:  mehner@fh-swf.de
 "          
 "        Version:  see variable  g:BASH_Version  below 
-"       Revision:  30.09.2005
+"       Revision:  01.11.2005
 "        Created:  26.02.2001
 "        License:  GPL (GNU Public License)
 "  
@@ -29,7 +29,7 @@
 if exists("g:BASH_Version") || &cp
  finish
 endif
-let g:BASH_Version= "1.10.1"  						" version number of this script; do not change
+let g:BASH_Version= "1.11"  						" version number of this script; do not change
 "
 "#########################################################################################
 "
@@ -74,7 +74,7 @@ let s:BASH_Active         = -1                    " state variable controlling t
 let s:BASH_SetCounter     = 0                     " 
 let s:BASH_Set_Txt		 		= "SetOptionNumber_"
 let s:BASH_Shopt_Txt			= "ShoptOptionNumber_"
-let s:escfilename = ' \%#[]'
+let s:escfilename         = ' \%#[]'
 "
 "------------------------------------------------------------------------------
 "  Look for global variables (if any), to override the defaults.
@@ -139,8 +139,10 @@ function!	BASH_InitMenu ()
 		exe "amenu <silent>  ".s:BASH_Root.'&Comments.F&unction\ Description   <Esc><Esc>:call BASH_CommentTemplates("function")<CR>'
 		exe "amenu <silent>  ".s:BASH_Root.'&Comments.File\ &Header            <Esc><Esc>:call BASH_CommentTemplates("header")<CR>'
 		exe "amenu ".s:BASH_Root.'&Comments.-Sep1-                    :'
+		exe "amenu ".s:BASH_Root."&Comments.&code->comment            <Esc><Esc>:s/^/\#/<CR><Esc>:nohlsearch<CR>"
 		exe "vmenu ".s:BASH_Root."&Comments.&code->comment            <Esc><Esc>:'<,'>s/^/\#/<CR><Esc>:nohlsearch<CR>"
-		exe "vmenu ".s:BASH_Root."&Comments.c&omment->code            <Esc><Esc>:'<,'>s/^\#//<CR><Esc>:nohlsearch<CR>"
+		exe "amenu ".s:BASH_Root."&Comments.c&omment->code            <Esc><Esc>:s/^\\(\\s*\\)#/\\1/<CR><Esc>:nohlsearch<CR>"
+		exe "vmenu ".s:BASH_Root."&Comments.c&omment->code            <Esc><Esc>:'<,'>s/^\\(\\s*\\)#/\\1/<CR><Esc>:nohlsearch<CR>"
 		exe "amenu ".s:BASH_Root.'&Comments.-SEP2-                    :'
 		exe " menu ".s:BASH_Root.'&Comments.&Date                     i<C-R>=strftime("%x")<CR>'
 		exe "imenu ".s:BASH_Root.'&Comments.&Date                      <C-R>=strftime("%x")<CR>'
@@ -148,6 +150,11 @@ function!	BASH_InitMenu ()
 		exe "imenu ".s:BASH_Root.'&Comments.Date\ &Time                <C-R>=strftime("%x %X %Z")<CR>'
 		"
 		exe "amenu ".s:BASH_Root.'&Comments.-SEP3-                    :'
+		"
+		exe "amenu ".s:BASH_Root.'&Comments.&echo\ "<line>"	  				<Esc><Esc>^iecho<Space>"<Esc>$a"<Esc>j'
+		exe "amenu ".s:BASH_Root.'&Comments.&remove\ echo           	<Esc><Esc>0:s/^\s*echo\s\+\"// \| s/\s*\"\s*$// \| :normal ==<CR><Esc>j'
+		"
+		exe "amenu ".s:BASH_Root.'&Comments.-SEP4-                    :'
 		"
 		"----- Submenu : BASH-Comments : Keywords  ----------------------------------------------------------
 		"
@@ -191,57 +198,68 @@ function!	BASH_InitMenu ()
 			exe "amenu ".s:BASH_Root.'St&atements.Statements<Tab>Bash          <Esc>'
 			exe "amenu ".s:BASH_Root.'St&atements.-Sep0-             :'
 		endif
-		exe " menu ".s:BASH_Root.'St&atements.${\.\.\.}							<Esc>a${}<Esc>i'
-		exe " menu ".s:BASH_Root.'St&atements.$(\.\.\.)							<Esc>a$()<Esc>i'
-		exe " menu ".s:BASH_Root.'St&atements.$((\.\.\.))						<Esc>a$(())<Esc>hi'
-		exe "vmenu ".s:BASH_Root.'St&atements.${\.\.\.}							s${}<Esc>Pla'
-		exe "vmenu ".s:BASH_Root.'St&atements.$(\.\.\.)							s$()<Esc>Pla'
-		exe "vmenu ".s:BASH_Root.'St&atements.$((\.\.\.))						s$(())<Esc>hP2la'
-		exe "imenu ".s:BASH_Root.'St&atements.${\.\.\.}							${}<Esc>i'
-		exe "imenu ".s:BASH_Root.'St&atements.$(\.\.\.)							$()<Esc>i'
-		exe "imenu ".s:BASH_Root.'St&atements.$((\.\.\.))						$(())<Esc>hi'
-		"
-		exe "amenu ".s:BASH_Root.'St&atements.-SEP1-                :'
-		exe "amenu ".s:BASH_Root.'St&atements.&case									<Esc><Esc>ocase  in<CR>)<CR>;;<CR><CR>)<CR>;;<CR><CR>*)<CR>;;<CR><CR>esac    # --- end of case ---<CR><Esc>11kf<Space>a'
-		exe "amenu ".s:BASH_Root.'St&atements.e&lif									<Esc><Esc>oelif <CR>then<Esc>1kA'
-		exe "amenu ".s:BASH_Root.'St&atements.&for									<Esc><Esc>ofor  in <CR>do<CR>done<Esc>2k^f<Space>a'
-		exe "amenu ".s:BASH_Root.'St&atements.&if										<Esc><Esc>oif <CR>then<CR>fi<Esc>2k^A'
-		exe "amenu ".s:BASH_Root.'St&atements.if-&else							<Esc><Esc>oif <CR>then<CR>else<CR>fi<Esc>3kA'
-		exe "amenu ".s:BASH_Root.'St&atements.&select								<Esc><Esc>oselect  in <CR>do<CR>done<Esc>2kf<Space>a'
-		exe "amenu ".s:BASH_Root.'St&atements.un&til								<Esc><Esc>ountil <CR>do<CR>done<Esc>2kA'
-		exe "amenu ".s:BASH_Root.'St&atements.&while								<Esc><Esc>owhile <CR>do<CR>done<Esc>2kA'
 
-		exe "vmenu ".s:BASH_Root."St&atements.&for								  DOfor  in <CR>do<CR>done<Esc>P2k^<Esc>:exe \"normal =\".(line(\"'>\")-line(\".\")-1).\"+\"<CR>f<Space>a"
-		exe "vmenu ".s:BASH_Root."St&atements.&if										DOif <CR>then<CR>fi<Esc>P2k<Esc>:exe \"normal =\".(line(\"'>\")-line(\".\")-1).\"+\"<CR>A"
-		exe "vmenu ".s:BASH_Root."St&atements.if-&else							DOif <CR>then<CR>else<CR>fi<Esc>kP<Esc>:exe \"normal =\".(line(\"'>\")-line(\".\")-1).\"+\"<CR>2kA"
-		exe "vmenu ".s:BASH_Root."St&atements.&select								DOselect  in <CR>do<CR>done<Esc>P2k^<Esc>:exe \"normal =\".(line(\"'>\")-line(\".\")-1).\"+\"<CR>f<Space>a"
-		exe "vmenu ".s:BASH_Root."St&atements.un&til								DOuntil <CR>do<CR>done<Esc>P2k<Esc>:exe \"normal =\".(line(\"'>\")-line(\".\")-1).\"+\"<CR>A"
-		exe "vmenu ".s:BASH_Root."St&atements.&while								DOwhile <CR>do<CR>done<Esc>P2k<Esc>:exe \"normal =\".(line(\"'>\")-line(\".\")-1).\"+\"<CR>A"
+		exe "amenu ".s:BASH_Root.'St&atements.&case								<Esc><Esc>ocase  in<CR>)<CR>;;<CR><CR>)<CR>;;<CR><CR>*)<CR>;;<CR><CR>esac    # --- end of case ---<CR><Esc>11kf<Space>a'
+		exe "amenu ".s:BASH_Root.'St&atements.&for								<Esc><Esc>ofor  in <CR>do<CR>done<Esc>2k^f<Space>a'
+		exe "amenu ".s:BASH_Root.'St&atements.e&lif								<Esc><Esc>oelif <CR>then<Esc>1kA'
+		exe "amenu ".s:BASH_Root.'St&atements.&if									<Esc><Esc>oif <CR>then<CR>fi<Esc>2k^A'
+		exe "amenu ".s:BASH_Root.'St&atements.if-&else						<Esc><Esc>oif <CR>then<CR>else<CR>fi<Esc>3kA'
+		exe "amenu ".s:BASH_Root.'St&atements.&select							<Esc><Esc>oselect  in <CR>do<CR>done<Esc>2kf<Space>a'
+		exe "amenu ".s:BASH_Root.'St&atements.un&til							<Esc><Esc>ountil <CR>do<CR>done<Esc>2kA'
+		exe "amenu ".s:BASH_Root.'St&atements.&while							<Esc><Esc>owhile <CR>do<CR>done<Esc>2kA'
 
-		exe "amenu ".s:BASH_Root.'St&atements.&break								<Esc><Esc>obreak '
-		exe "amenu ".s:BASH_Root.'St&atements.co&ntinue							<Esc><Esc>ocontinue '
-		exe "amenu ".s:BASH_Root.'St&atements.f&unction							<Esc><Esc>o<Esc>:call BASH_CodeFunction()<CR>2jA'
-		exe "amenu ".s:BASH_Root.'St&atements.&return								<Esc><Esc>oreturn '
-		exe "amenu ".s:BASH_Root.'St&atements.return\ &0\ (true)		<Esc><Esc>oreturn 0'
-		exe "amenu ".s:BASH_Root.'St&atements.return\ &1\ (false)		<Esc><Esc>oreturn 1'
-		exe "amenu ".s:BASH_Root.'St&atements.e&xit									<Esc><Esc>oexit '
-		exe "amenu ".s:BASH_Root.'St&atements.s&hift								<Esc><Esc>oshift '
-		exe "amenu ".s:BASH_Root.'St&atements.tra&p									<Esc><Esc>otrap '
+		exe "vmenu ".s:BASH_Root."St&atements.&for								DOfor  in <CR>do<CR>done<Esc>P2k^<Esc>:exe \"normal =\".(line(\"'>\")-line(\".\")-1).\"+\"<CR>f<Space>a"
+		exe "vmenu ".s:BASH_Root."St&atements.&if									DOif <CR>then<CR>fi<Esc>P2k<Esc>:exe \"normal =\".(line(\"'>\")-line(\".\")-1).\"+\"<CR>A"
+		exe "vmenu ".s:BASH_Root."St&atements.if-&else						DOif <CR>then<CR>else<CR>fi<Esc>kP<Esc>:exe \"normal =\".(line(\"'>\")-line(\".\")-1).\"+\"<CR>2kA"
+		exe "vmenu ".s:BASH_Root."St&atements.&select							DOselect  in <CR>do<CR>done<Esc>P2k^<Esc>:exe \"normal =\".(line(\"'>\")-line(\".\")-1).\"+\"<CR>f<Space>a"
+		exe "vmenu ".s:BASH_Root."St&atements.un&til							DOuntil <CR>do<CR>done<Esc>P2k<Esc>:exe \"normal =\".(line(\"'>\")-line(\".\")-1).\"+\"<CR>A"
+		exe "vmenu ".s:BASH_Root."St&atements.&while							DOwhile <CR>do<CR>done<Esc>P2k<Esc>:exe \"normal =\".(line(\"'>\")-line(\".\")-1).\"+\"<CR>A"
 		"
-		exe "amenu ".s:BASH_Root.'St&atements.-SEP2-                :'
+		exe "amenu ".s:BASH_Root.'St&atements.-SEP3-              :'
+
+		exe "amenu ".s:BASH_Root.'St&atements.&break							<Esc><Esc>obreak '
+		exe "amenu ".s:BASH_Root.'St&atements.co&ntinue						<Esc><Esc>ocontinue '
+		exe "amenu ".s:BASH_Root.'St&atements.e&xit								<Esc><Esc>oexit '
+		exe "amenu ".s:BASH_Root.'St&atements.f&unction						<Esc><Esc>o<Esc>:call BASH_CodeFunction()<CR>2jA'
+		exe "amenu ".s:BASH_Root.'St&atements.&return							<Esc><Esc>oreturn '
+		exe "amenu ".s:BASH_Root.'St&atements.s&hift							<Esc><Esc>oshift '
+		exe "amenu ".s:BASH_Root.'St&atements.tra&p								<Esc><Esc>otrap '
 		"
-		exe "vmenu ".s:BASH_Root."St&atements.'\\.\\.\\.'						s''<Esc>Pla"
-		exe "vmenu ".s:BASH_Root.'St&atements."\.\.\."							s""<Esc>Pla'
-		exe "vmenu ".s:BASH_Root.'St&atements.`\.\.\.`							s``<Esc>Pla'
+		exe "amenu ".s:BASH_Root.'St&atements.-SEP1-              :'
 		"
-		exe "amenu ".s:BASH_Root.'St&atements.ech&o\ "<line>"				<Esc><Esc>^iecho<Space>"<Esc>$a"<Esc>j'
-		exe "imenu ".s:BASH_Root.'St&atements.ech&o\ "<line>"				echo<Space>""<Esc>i'
-		exe "vmenu ".s:BASH_Root.'St&atements.ech&o\ "<line>"  			secho<Space>""<Esc>P'
+		exe " menu ".s:BASH_Root.'St&atements.$&((\.\.\.))				<Esc>a$(())<Esc>hi'
+		exe "vmenu ".s:BASH_Root.'St&atements.$&((\.\.\.))				s$(())<Esc>hP2la'
+		exe "imenu ".s:BASH_Root.'St&atements.$&((\.\.\.))				$(())<Esc>hi'
+		exe " menu ".s:BASH_Root.'St&atements.$&[[\.\.\.]]				<Esc>a$[[]]<Esc>hi'
+		exe "vmenu ".s:BASH_Root.'St&atements.$&[[\.\.\.]]				s$[[]]<Esc>hP2la'
+		exe "imenu ".s:BASH_Root.'St&atements.$&[[\.\.\.]]				$[[]]<Esc>hi'
 		"
-		exe "amenu <silent> ".s:BASH_Root.'St&atements.remo&ve\ echo  	<Esc><Esc>0:s/echo\s\+\"// \| s/\s*\"\s*$//<CR><Esc>j'
+		exe "amenu ".s:BASH_Root.'St&atements.-SEP4-              :'
+		"
+		exe "amenu ".s:BASH_Root."St&atements.&'\\.\\.\\.'				<Esc>a''<Esc>i"
+		exe "amenu ".s:BASH_Root.'St&atements.&"\.\.\."						<Esc>a""<Esc>i'
+		exe "amenu ".s:BASH_Root.'St&atements.&`\.\.\.`						<Esc>a``<Esc>i'
+		exe "amenu ".s:BASH_Root.'St&atements.&$(\.\.\.)					<Esc>a$()<Esc>i'
+		exe "amenu ".s:BASH_Root.'St&atements.$&{\.\.\.}					<Esc>a${}<Esc>i'
+
+		exe "imenu ".s:BASH_Root."St&atements.&'\\.\\.\\.'				''<Esc>i"
+		exe "imenu ".s:BASH_Root.'St&atements.&"\.\.\."						""<Esc>i'
+		exe "imenu ".s:BASH_Root.'St&atements.&`\.\.\.`						``<Esc>i'
+		exe "imenu ".s:BASH_Root.'St&atements.&$(\.\.\.)					$()<Esc>i'
+		exe "imenu ".s:BASH_Root.'St&atements.$&{\.\.\.}					${}<Esc>i'
+
+		exe "vmenu ".s:BASH_Root."St&atements.&'\\.\\.\\.'				s''<Esc>Pla"
+		exe "vmenu ".s:BASH_Root.'St&atements.&"\.\.\."						s""<Esc>Pla'
+		exe "vmenu ".s:BASH_Root.'St&atements.&`\.\.\.`						s``<Esc>Pla'
+		exe "vmenu ".s:BASH_Root.'St&atements.&$(\.\.\.)					s$()<Esc>Pla'
+		exe "vmenu ".s:BASH_Root.'St&atements.$&{\.\.\.}					s${}<Esc>Pla'
+		"
+		exe "amenu ".s:BASH_Root.'St&atements.ech&o\ -e\ "\\n"		<Esc><Esc>oecho<Space>-e<Space>"\n"<Esc>2hi'
+		exe "imenu ".s:BASH_Root.'St&atements.ech&o\ -e\ "\\n"		echo<Space>-e<Space>"\n"<Esc>2hi'
+		exe "vmenu ".s:BASH_Root.'St&atements.ech&o\ -e\ "\\n" 		secho<Space>-e<Space>"\n"<Esc>2hP'
 		"
 		if s:BASH_CodeSnippets != ""
-			exe "amenu  ".s:BASH_Root.'St&atements.-SEP4-                    		  :'
+			exe "amenu  ".s:BASH_Root.'St&atements.-SEP5-                    		  :'
 			exe "amenu  <silent> ".s:BASH_Root.'St&atements.read\ code\ snippet   <C-C>:call BASH_CodeSnippets("r")<CR>'
 			exe "amenu  <silent> ".s:BASH_Root.'St&atements.write\ code\ snippet  <C-C>:call BASH_CodeSnippets("w")<CR>'
 			exe "vmenu  <silent> ".s:BASH_Root.'St&atements.write\ code\ snippet  <C-C>:call BASH_CodeSnippets("wv")<CR>'
@@ -382,31 +400,39 @@ function!	BASH_InitMenu ()
 			exe "amenu ".s:BASH_Root.'&ParmSub.-Sep0-           :'
 		endif
 
-    exe " menu ".s:BASH_Root.'&ParmSub.Use\ &Default\ Value<Tab>${:-}                        <Esc>a${:-}<ESC>F{a'
-    exe " menu ".s:BASH_Root.'&ParmSub.&Assign\ Default\ Value<Tab>${:=}                     <Esc>a${:=}<ESC>F{a'
-    exe " menu ".s:BASH_Root.'&ParmSub.Display\ &Error\ if\ Null\ or\ Unset<Tab>${:?}        <Esc>a${:?}<ESC>F{a'
-    exe " menu ".s:BASH_Root.'&ParmSub.Use\ Alternate\ &Value<Tab>${:+}                      <Esc>a${:+}<ESC>F{a'
-    exe " menu ".s:BASH_Root.'&ParmSub.&parameter\ length\ in\ characters<Tab>${#}           <Esc>a${#}<ESC>F#a'
-    exe " menu ".s:BASH_Root.'&ParmSub.match\ beginning;\ delete\ &shortest\ part<Tab>${#}   <Esc>a${#}<ESC>F{a'
-    exe " menu ".s:BASH_Root.'&ParmSub.match\ beginning;\ delete\ &longest\ part<Tab>${##}   <Esc>a${##}<ESC>F{a'
-    exe " menu ".s:BASH_Root.'&ParmSub.match\ end;\ delete\ s&hortest\ part<Tab>${%}         <Esc>a${%}<ESC>F{a'
-    exe " menu ".s:BASH_Root.'&ParmSub.match\ end;\ delete\ l&ongest\ part<Tab>${%%}         <Esc>a${%%}<ESC>F{a'
-    exe " menu ".s:BASH_Root.'&ParmSub.&replace\ first\ match<Tab>${/\ /\ }                  <Esc>a${/ / }<ESC>F{a'
-    exe " menu ".s:BASH_Root.'&ParmSub.replace\ all\ &matches<Tab>${//\ /\ }                 <Esc>a${// / }<ESC>F{a'
-    exe " menu ".s:BASH_Root.'&ParmSub.&substring\ expansion<Tab>${::}                       <Esc>a${::}<ESC>F{a'
+    exe " menu ".s:BASH_Root.'&ParmSub.S&ubstitution\ <Tab>${}                                 <Esc>a${}<ESC>i'
+    exe " menu ".s:BASH_Root.'&ParmSub.Use\ &Default\ Value<Tab>${:-}                          <Esc>a${:-}<ESC>F{a'
+    exe " menu ".s:BASH_Root.'&ParmSub.&Assign\ Default\ Value<Tab>${:=}                       <Esc>a${:=}<ESC>F{a'
+    exe " menu ".s:BASH_Root.'&ParmSub.Display\ &Error\ if\ Null\ or\ Unset<Tab>${:?}          <Esc>a${:?}<ESC>F{a'
+    exe " menu ".s:BASH_Root.'&ParmSub.Use\ Alternate\ &Value<Tab>${:+}                        <Esc>a${:+}<ESC>F{a'
+    exe " menu ".s:BASH_Root.'&ParmSub.&substring\ expansion<Tab>${::}                         <Esc>a${::}<ESC>F{a'
+    exe " menu ".s:BASH_Root.'&ParmSub.List\ of\ variables\ &beginning\ with\ prefix<Tab>${!*} <Esc>a${!*}<ESC>F!a'
+    exe " menu ".s:BASH_Root.'&ParmSub.List\ of\ array\ &indices\ assigned<Tab>${![*]}         <Esc>a${![@]}<ESC>F!a'
+    exe " menu ".s:BASH_Root.'&ParmSub.&parameter\ length\ in\ characters<Tab>${#}             <Esc>a${#}<ESC>F#a'
+    exe " menu ".s:BASH_Root.'&ParmSub.match\ beginning;\ delete\ &shortest\ part<Tab>${#}     <Esc>a${#}<ESC>F{a'
+    exe " menu ".s:BASH_Root.'&ParmSub.match\ beginning;\ delete\ &longest\ part<Tab>${##}     <Esc>a${##}<ESC>F{a'
+    exe " menu ".s:BASH_Root.'&ParmSub.match\ end;\ delete\ s&hortest\ part<Tab>${%}           <Esc>a${%}<ESC>F{a'
+    exe " menu ".s:BASH_Root.'&ParmSub.match\ end;\ delete\ l&ongest\ part<Tab>${%%}           <Esc>a${%%}<ESC>F{a'
+    exe " menu ".s:BASH_Root.'&ParmSub.&replace\ first\ match<Tab>${/\ /\ }                    <Esc>a${/ / }<ESC>F{a'
+    exe " menu ".s:BASH_Root.'&ParmSub.replace\ all\ &matches<Tab>${//\ /\ }                   <Esc>a${// / }<ESC>F{a'
     "
-    exe "imenu ".s:BASH_Root.'&ParmSub.Use\ &Default\ Value<Tab>${:-}                        ${:-}<ESC>F{a'
-    exe "imenu ".s:BASH_Root.'&ParmSub.&Assign\ Default\ Value<Tab>${:=}                     ${:=}<ESC>F{a'
-    exe "imenu ".s:BASH_Root.'&ParmSub.Display\ &Error\ if\ Null\ or\ Unset<Tab>${:?}        ${:?}<ESC>F{a'
-    exe "imenu ".s:BASH_Root.'&ParmSub.Use\ Alternate\ &Value<Tab>${:+}                      ${:+}<ESC>F{a'
-    exe "imenu ".s:BASH_Root.'&ParmSub.&parameter\ length\ in\ characters<Tab>${#}           ${#}<ESC>F#a'
-    exe "imenu ".s:BASH_Root.'&ParmSub.match\ beginning;\ delete\ &shortest\ part<Tab>${#}   ${#}<ESC>F{a'
-    exe "imenu ".s:BASH_Root.'&ParmSub.match\ beginning;\ delete\ &longest\ part<Tab>${##}   ${##}<ESC>F{a'
-    exe "imenu ".s:BASH_Root.'&ParmSub.match\ end;\ delete\ s&hortest\ part<Tab>${%}         ${%}<ESC>F{a'
-    exe "imenu ".s:BASH_Root.'&ParmSub.match\ end;\ delete\ l&ongest\ part<Tab>${%%}         ${%%}<ESC>F{a'
-    exe "imenu ".s:BASH_Root.'&ParmSub.&replace\ first\ match<Tab>${/\ /\ }                  ${/ / }<ESC>F{a'
-    exe "imenu ".s:BASH_Root.'&ParmSub.replace\ all\ &matches<Tab>${//\ /\ }                 ${// / }<ESC>F{a'
-    exe "imenu ".s:BASH_Root.'&ParmSub.&substring\ expansion<Tab>${::}                       ${::}<ESC>F{a'
+    exe "imenu ".s:BASH_Root.'&ParmSub.S&ubstitution\ <Tab>${}                                 ${}<ESC>i'
+    exe "imenu ".s:BASH_Root.'&ParmSub.Use\ &Default\ Value<Tab>${:-}                          ${:-}<ESC>F{a'
+    exe "imenu ".s:BASH_Root.'&ParmSub.&Assign\ Default\ Value<Tab>${:=}                       ${:=}<ESC>F{a'
+    exe "imenu ".s:BASH_Root.'&ParmSub.Display\ &Error\ if\ Null\ or\ Unset<Tab>${:?}          ${:?}<ESC>F{a'
+    exe "imenu ".s:BASH_Root.'&ParmSub.Use\ Alternate\ &Value<Tab>${:+}                        ${:+}<ESC>F{a'
+    exe "imenu ".s:BASH_Root.'&ParmSub.&substring\ expansion<Tab>${::}                         ${::}<ESC>F{a'
+    exe "imenu ".s:BASH_Root.'&ParmSub.List\ of\ variables\ &beginning\ with\ prefix<Tab>${!*} ${!*}<ESC>F!a'
+    exe "imenu ".s:BASH_Root.'&ParmSub.List\ of\ array\ &indices\ assigned<Tab>${![*]}         ${![@]}<ESC>F!a'
+    exe "imenu ".s:BASH_Root.'&ParmSub.&parameter\ length\ in\ characters<Tab>${#}             ${#}<ESC>F#a'
+    exe "imenu ".s:BASH_Root.'&ParmSub.match\ beginning;\ delete\ &shortest\ part<Tab>${#}     ${#}<ESC>F{a'
+    exe "imenu ".s:BASH_Root.'&ParmSub.match\ beginning;\ delete\ &longest\ part<Tab>${##}     ${##}<ESC>F{a'
+    exe "imenu ".s:BASH_Root.'&ParmSub.match\ end;\ delete\ s&hortest\ part<Tab>${%}           ${%}<ESC>F{a'
+    exe "imenu ".s:BASH_Root.'&ParmSub.match\ end;\ delete\ l&ongest\ part<Tab>${%%}           ${%%}<ESC>F{a'
+    exe "imenu ".s:BASH_Root.'&ParmSub.&replace\ first\ match<Tab>${/\ /\ }                    ${/ / }<ESC>F{a'
+    exe "imenu ".s:BASH_Root.'&ParmSub.replace\ all\ &matches<Tab>${//\ /\ }                   ${// / }<ESC>F{a'
+
+    exe "vmenu ".s:BASH_Root.'&ParmSub.S&ubstitution\ <Tab>${}                                 s${}<Esc>Pla'
 		"
 		"-------------------------------------------------------------------------------
 		" menu Special Variables
@@ -441,49 +467,65 @@ function!	BASH_InitMenu ()
 		endif
 		"
 		if s:BASH_MenuHeader == "yes"
-			exe "amenu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ FUNCNAME.Environ-1<Tab>Bash      <Esc>'
-			exe "amenu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ FUNCNAME.-Sep0-         :'
+			exe "amenu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ BASH_VERSION.Environ-1<Tab>Bash      <Esc>'
+			exe "amenu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ BASH_VERSION.-Sep0-         :'
 		endif
-		exe "	menu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ FUNCNAME.&BASH            <Esc>a${BASH}'
-		exe "	menu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ FUNCNAME.B&ASH_ENV        <Esc>a${BASH_ENV}'
-		exe "	menu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ FUNCNAME.BA&SH_VERSINFO   <Esc>a${BASH_VERSINFO}'
-		exe "	menu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ FUNCNAME.BAS&H_VERSION    <Esc>a${BASH_VERSION}'
-		exe "	menu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ FUNCNAME.&CDPATH          <Esc>a${CDPATH}'
-		exe "	menu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ FUNCNAME.C&OLUMNS         <Esc>a${COLUMNS}'
-		exe "	menu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ FUNCNAME.CO&MPREPLY       <Esc>a${COMPREPLY}'
-		exe "	menu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ FUNCNAME.COM&P_CWORD      <Esc>a${COMP_CWORD}'
-		exe "	menu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ FUNCNAME.COMP_&LINE       <Esc>a${COMP_LINE}'
-		exe "	menu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ FUNCNAME.COMP_POI&NT      <Esc>a${COMP_POINT}'
-		exe "	menu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ FUNCNAME.COMP_&WORDS      <Esc>a${COMP_WORDS}'
-		exe "	menu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ FUNCNAME.&DIRSTACK        <Esc>a${DIRSTACK}'
-		exe "	menu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ FUNCNAME.&EUID            <Esc>a${EUID}'
-		exe "	menu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ FUNCNAME.&FCEDIT          <Esc>a${FCEDIT}'
-		exe "	menu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ FUNCNAME.F&IGNORE         <Esc>a${FIGNORE}'
-		exe "	menu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ FUNCNAME.F&UNCNAME        <Esc>a${FUNCNAME}'
+		exe "	menu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ BASH_VERSION.&BASH            <Esc>a${BASH}'
+		exe "	menu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ BASH_VERSION.BASH_ARG&C       <Esc>a${BASH_ARGC}'
+		exe "	menu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ BASH_VERSION.BASH_ARG&V       <Esc>a${BASH_ARGV}'
+		exe "	menu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ BASH_VERSION.BASH_C&OMMAND    <Esc>a${BASH_COMMAND}'
+		exe "	menu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ BASH_VERSION.BASH_&ENV        <Esc>a${BASH_ENV}'
+		exe "	menu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ BASH_VERSION.BASH_E&XE\.STR\. <Esc>a${BASH_EXECUTION_STRING}'
+		exe "	menu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ BASH_VERSION.BASH_&LINENO     <Esc>a${BASH_LINENO}'
+		exe "	menu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ BASH_VERSION.BASH_&REMATCH    <Esc>a${BASH_REMATCH}'
+		exe "	menu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ BASH_VERSION.BASH_&SOURCE     <Esc>a${BASH_SOURCE}'
+		exe "	menu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ BASH_VERSION.BASH_S&UBSHELL   <Esc>a${BASH_SUBSHELL}'
+		exe "	menu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ BASH_VERSION.BASH_VERS&INFO   <Esc>a${BASH_VERSINFO}'
+		exe "	menu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ BASH_VERSION.BASH_VERSIO&N    <Esc>a${BASH_VERSION}'
 		"
 		if s:BASH_MenuHeader == "yes"
-			exe "amenu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.Environ-2<Tab>Bash                                    <Esc>'
+			exe "amenu ".s:BASH_Root.'E&nviron.&CDPATH\ \.\.\.\ FUNCNAME.Environ-2<Tab>Bash      <Esc>'
+			exe "amenu ".s:BASH_Root.'E&nviron.&CDPATH\ \.\.\.\ FUNCNAME.-Sep0-         :'
+		endif
+		exe "	menu ".s:BASH_Root.'E&nviron.&CDPATH\ \.\.\.\ FUNCNAME.&CDPATH          <Esc>a${CDPATH}'
+		exe "	menu ".s:BASH_Root.'E&nviron.&CDPATH\ \.\.\.\ FUNCNAME.C&OLUMNS         <Esc>a${COLUMNS}'
+		exe "	menu ".s:BASH_Root.'E&nviron.&CDPATH\ \.\.\.\ FUNCNAME.CO&MPREPLY       <Esc>a${COMPREPLY}'
+		exe "	menu ".s:BASH_Root.'E&nviron.&CDPATH\ \.\.\.\ FUNCNAME.COM&P_CWORD      <Esc>a${COMP_CWORD}'
+		exe "	menu ".s:BASH_Root.'E&nviron.&CDPATH\ \.\.\.\ FUNCNAME.COMP_&LINE       <Esc>a${COMP_LINE}'
+		exe "	menu ".s:BASH_Root.'E&nviron.&CDPATH\ \.\.\.\ FUNCNAME.COMP_POI&NT      <Esc>a${COMP_POINT}'
+		exe "	menu ".s:BASH_Root.'E&nviron.&CDPATH\ \.\.\.\ FUNCNAME.COMP_WORD&BREAKS <Esc>a${COMP_WORDBREAKS}'
+		exe "	menu ".s:BASH_Root.'E&nviron.&CDPATH\ \.\.\.\ FUNCNAME.COMP_&WORDS      <Esc>a${COMP_WORDS}'
+		exe "	menu ".s:BASH_Root.'E&nviron.&CDPATH\ \.\.\.\ FUNCNAME.&DIRSTACK        <Esc>a${DIRSTACK}'
+		exe "	menu ".s:BASH_Root.'E&nviron.&CDPATH\ \.\.\.\ FUNCNAME.&EMAC&S          <Esc>a${EMACS}'
+		exe "	menu ".s:BASH_Root.'E&nviron.&CDPATH\ \.\.\.\ FUNCNAME.&EUID            <Esc>a${EUID}'
+		exe "	menu ".s:BASH_Root.'E&nviron.&CDPATH\ \.\.\.\ FUNCNAME.&FCEDIT          <Esc>a${FCEDIT}'
+		exe "	menu ".s:BASH_Root.'E&nviron.&CDPATH\ \.\.\.\ FUNCNAME.F&IGNORE         <Esc>a${FIGNORE}'
+		exe "	menu ".s:BASH_Root.'E&nviron.&CDPATH\ \.\.\.\ FUNCNAME.F&UNCNAME        <Esc>a${FUNCNAME}'
+		"
+		if s:BASH_MenuHeader == "yes"
+			exe "amenu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.Environ-3<Tab>Bash                                    <Esc>'
 			exe "amenu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.-Sep0-                         :'
 		endif
-		exe "	menu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.&GLOBIGNORE    <Esc>a${GLOBIGNORE}'
-		exe "	menu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.GRO&UPS        <Esc>a${GROUPS}'
-		exe "	menu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.&HISTCMD       <Esc>a${HISTCMD}'
-		exe "	menu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.HI&STCONTROL   <Esc>a${HISTCONTROL}'
-		exe "	menu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.HIS&TFILE      <Esc>a${HISTFILE}'
-		exe "	menu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.HIST&FILESIZE  <Esc>a${HISTFILESIZE}'
-		exe "	menu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.HISTIG&NORE    <Esc>a${HISTIGNORE}'
-		exe "	menu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.HISTSI&ZE      <Esc>a${HISTSIZE}'
-		exe "	menu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.H&OME          <Esc>a${HOME}'
-		exe "	menu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.HOSTFIL&E      <Esc>a${HOSTFILE}'
-		exe "	menu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.HOSTN&AME      <Esc>a${HOSTNAME}'
-		exe "	menu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.HOSTT&YPE      <Esc>a${HOSTTYPE}'
-		exe "	menu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.&IFS           <Esc>a${IFS}'
-		exe "	menu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.IGNO&REEOF     <Esc>a${IGNOREEOF}'
-		exe "	menu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.INPUTR&C       <Esc>a${INPUTRC}'
-		exe "	menu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.&LANG          <Esc>a${LANG}'
+		exe "	menu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.&GLOBIGNORE     <Esc>a${GLOBIGNORE}'
+		exe "	menu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.GRO&UPS         <Esc>a${GROUPS}'
+		exe "	menu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.&HISTCMD        <Esc>a${HISTCMD}'
+		exe "	menu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.HI&STCONTROL    <Esc>a${HISTCONTROL}'
+		exe "	menu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.HIS&TFILE       <Esc>a${HISTFILE}'
+		exe "	menu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.HIST&FILESIZE   <Esc>a${HISTFILESIZE}'
+		exe "	menu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.HISTIG&NORE     <Esc>a${HISTIGNORE}'
+		exe "	menu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.HISTSI&ZE       <Esc>a${HISTSIZE}'
+		exe "	menu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.HISTTI&MEFORMAT <Esc>a${HISTTIMEFORMAT}'
+		exe "	menu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.H&OME           <Esc>a${HOME}'
+		exe "	menu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.HOSTFIL&E       <Esc>a${HOSTFILE}'
+		exe "	menu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.HOSTN&AME       <Esc>a${HOSTNAME}'
+		exe "	menu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.HOSTT&YPE       <Esc>a${HOSTTYPE}'
+		exe "	menu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.&IFS            <Esc>a${IFS}'
+		exe "	menu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.IGNO&REEOF      <Esc>a${IGNOREEOF}'
+		exe "	menu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.INPUTR&C        <Esc>a${INPUTRC}'
+		exe "	menu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.&LANG           <Esc>a${LANG}'
 		"
 		if s:BASH_MenuHeader == "yes"
-			exe "amenu ".s:BASH_Root.'E&nviron.&LC_ALL\ \.\.\.\ OSTYPE.Environ-3<Tab>Bash      <Esc>'
+			exe "amenu ".s:BASH_Root.'E&nviron.&LC_ALL\ \.\.\.\ OSTYPE.Environ-4<Tab>Bash      <Esc>'
 			exe "amenu ".s:BASH_Root.'E&nviron.&LC_ALL\ \.\.\.\ OSTYPE.-Sep0-         :'
 		endif
 		exe "	menu ".s:BASH_Root.'E&nviron.&LC_ALL\ \.\.\.\ OSTYPE.&LC_ALL          <Esc>a${LC_ALL}'
@@ -504,7 +546,7 @@ function!	BASH_InitMenu ()
 		exe "	menu ".s:BASH_Root.'E&nviron.&LC_ALL\ \.\.\.\ OSTYPE.OST&YPE          <Esc>a${OSTYPE}'
 		"
 		if s:BASH_MenuHeader == "yes"
-			exe "amenu ".s:BASH_Root.'E&nviron.&PATH\ \.\.\.\ UID.Environ-4<Tab>Bash           <Esc>'
+			exe "amenu ".s:BASH_Root.'E&nviron.&PATH\ \.\.\.\ UID.Environ-5<Tab>Bash           <Esc>'
 			exe "amenu ".s:BASH_Root.'E&nviron.&PATH\ \.\.\.\ UID.-Sep0-              :'
 		endif
 		exe "	menu ".s:BASH_Root.'E&nviron.&PATH\ \.\.\.\ UID.&PATH                 <Esc>a${PATH}'
@@ -520,44 +562,59 @@ function!	BASH_InitMenu ()
 		exe "	menu ".s:BASH_Root.'E&nviron.&PATH\ \.\.\.\ UID.&RANDOM               <Esc>a${RANDOM}'
 		exe "	menu ".s:BASH_Root.'E&nviron.&PATH\ \.\.\.\ UID.REPL&Y                <Esc>a${REPLY}'
 		exe "	menu ".s:BASH_Root.'E&nviron.&PATH\ \.\.\.\ UID.&SECONDS              <Esc>a${SECONDS}'
-		exe "	menu ".s:BASH_Root.'E&nviron.&PATH\ \.\.\.\ UID.S&HELLOPTS            <Esc>a${SHELLOPTS}'
+		exe "	menu ".s:BASH_Root.'E&nviron.&PATH\ \.\.\.\ UID.S&HELL                <Esc>a${SHELL}'
+		exe "	menu ".s:BASH_Root.'E&nviron.&PATH\ \.\.\.\ UID.SH&ELLOPTS            <Esc>a${SHELLOPTS}'
 		exe "	menu ".s:BASH_Root.'E&nviron.&PATH\ \.\.\.\ UID.SH&LVL                <Esc>a${SHLVL}'
 		exe "	menu ".s:BASH_Root.'E&nviron.&PATH\ \.\.\.\ UID.&TIMEFORMAT           <Esc>a${TIMEFORMAT}'
 		exe "	menu ".s:BASH_Root.'E&nviron.&PATH\ \.\.\.\ UID.T&MOUT                <Esc>a${TMOUT}'
 		exe "	menu ".s:BASH_Root.'E&nviron.&PATH\ \.\.\.\ UID.&UID                  <Esc>a${UID}'
 
-		exe "imenu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ FUNCNAME.&BASH            ${BASH}'
-		exe "imenu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ FUNCNAME.B&ASH_ENV        ${BASH_ENV}'
-		exe "imenu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ FUNCNAME.BA&SH_VERSINFO   ${BASH_VERSINFO}'
-		exe "imenu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ FUNCNAME.BAS&H_VERSION    ${BASH_VERSION}'
-		exe "imenu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ FUNCNAME.&CDPATH          ${CDPATH}'
-		exe "imenu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ FUNCNAME.C&OLUMNS         ${COLUMNS}'
-		exe "imenu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ FUNCNAME.CO&MPREPLY       ${COMPREPLY}'
-		exe "imenu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ FUNCNAME.COM&P_CWORD      ${COMP_CWORD}'
-		exe "imenu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ FUNCNAME.COMP_&LINE       ${COMP_LINE}'
-		exe "imenu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ FUNCNAME.COMP_POI&NT      ${COMP_POINT}'
-		exe "imenu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ FUNCNAME.COMP_&WORDS      ${COMP_WORDS}'
-		exe "imenu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ FUNCNAME.&DIRSTACK        ${DIRSTACK}'
-		exe "imenu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ FUNCNAME.&EUID            ${EUID}'
-		exe "imenu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ FUNCNAME.&FCEDIT          ${FCEDIT}'
-		exe "imenu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ FUNCNAME.F&IGNORE         ${FIGNORE}'
-		exe "imenu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ FUNCNAME.F&UNCNAME        ${FUNCNAME}'
-		exe "imenu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.&GLOBIGNORE    ${GLOBIGNORE}'
-		exe "imenu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.GRO&UPS        ${GROUPS}'
-		exe "imenu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.&HISTCMD       ${HISTCMD}'
-		exe "imenu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.HI&STCONTROL   ${HISTCONTROL}'
-		exe "imenu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.HIS&TFILE      ${HISTFILE}'
-		exe "imenu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.HIST&FILESIZE  ${HISTFILESIZE}'
-		exe "imenu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.HISTIG&NORE    ${HISTIGNORE}'
-		exe "imenu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.HISTSI&ZE      ${HISTSIZE}'
-		exe "imenu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.H&OME          ${HOME}'
-		exe "imenu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.HOSTFIL&E      ${HOSTFILE}'
-		exe "imenu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.HOSTN&AME      ${HOSTNAME}'
-		exe "imenu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.HOSTT&YPE      ${HOSTTYPE}'
-		exe "imenu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.&IFS           ${IFS}'
-		exe "imenu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.IGNO&REEOF     ${IGNOREEOF}'
-		exe "imenu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.INPUTR&C       ${INPUTRC}'
-		exe "imenu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.&LANG          ${LANG}'
+		exe "imenu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ BASH_VERSION.&BASH            ${BASH}'
+		exe "imenu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ BASH_VERSION.BASH_ARG&C       ${BASH_ARGC}'
+		exe "imenu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ BASH_VERSION.BASH_ARG&V       ${BASH_ARGV}'
+		exe "imenu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ BASH_VERSION.BASH_C&OMMAND    ${BASH_COMMAND}'
+		exe "imenu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ BASH_VERSION.BASH_&ENV        ${BASH_ENV}'
+		exe "imenu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ BASH_VERSION.BASH_E&XE\.STR\. ${BASH_EXECUTION_STRING}'
+		exe "imenu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ BASH_VERSION.BASH_&LINENO     ${BASH_LINENO}'
+		exe "imenu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ BASH_VERSION.BASH_&REMATCH    ${BASH_REMATCH}'
+		exe "imenu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ BASH_VERSION.BASH_&SOURCE     ${BASH_SOURCE}'
+		exe "imenu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ BASH_VERSION.BASH_S&UBSHELL   ${BASH_SUBSHELL}'
+		exe "imenu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ BASH_VERSION.BASH_VERS&INFO   ${BASH_VERSINFO}'
+		exe "imenu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ BASH_VERSION.BASH_VERSIO&N    ${BASH_VERSION}'
+
+		exe "imenu ".s:BASH_Root.'E&nviron.&CDPATH\ \.\.\.\ FUNCNAME.&CDPATH          ${CDPATH}'
+		exe "imenu ".s:BASH_Root.'E&nviron.&CDPATH\ \.\.\.\ FUNCNAME.C&OLUMNS         ${COLUMNS}'
+		exe "imenu ".s:BASH_Root.'E&nviron.&CDPATH\ \.\.\.\ FUNCNAME.CO&MPREPLY       ${COMPREPLY}'
+		exe "imenu ".s:BASH_Root.'E&nviron.&CDPATH\ \.\.\.\ FUNCNAME.COM&P_CWORD      ${COMP_CWORD}'
+		exe "imenu ".s:BASH_Root.'E&nviron.&CDPATH\ \.\.\.\ FUNCNAME.COMP_&LINE       ${COMP_LINE}'
+		exe "imenu ".s:BASH_Root.'E&nviron.&CDPATH\ \.\.\.\ FUNCNAME.COMP_POI&NT      ${COMP_POINT}'
+		exe "imenu ".s:BASH_Root.'E&nviron.&CDPATH\ \.\.\.\ FUNCNAME.COMP_WORD&BREAKS ${COMP_WORDBREAKS}'
+		exe "imenu ".s:BASH_Root.'E&nviron.&CDPATH\ \.\.\.\ FUNCNAME.COMP_&WORDS      ${COMP_WORDS}'
+		exe "imenu ".s:BASH_Root.'E&nviron.&CDPATH\ \.\.\.\ FUNCNAME.&DIRSTACK        ${DIRSTACK}'
+		exe "imenu ".s:BASH_Root.'E&nviron.&CDPATH\ \.\.\.\ FUNCNAME.&EMAC&S          ${EMACS}'
+		exe "imenu ".s:BASH_Root.'E&nviron.&CDPATH\ \.\.\.\ FUNCNAME.&EUID            ${EUID}'
+		exe "imenu ".s:BASH_Root.'E&nviron.&CDPATH\ \.\.\.\ FUNCNAME.&FCEDIT          ${FCEDIT}'
+		exe "imenu ".s:BASH_Root.'E&nviron.&CDPATH\ \.\.\.\ FUNCNAME.F&IGNORE         ${FIGNORE}'
+		exe "imenu ".s:BASH_Root.'E&nviron.&CDPATH\ \.\.\.\ FUNCNAME.F&UNCNAME        ${FUNCNAME}'
+		"
+		exe "imenu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.&GLOBIGNORE     ${GLOBIGNORE}'
+		exe "imenu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.GRO&UPS         ${GROUPS}'
+		exe "imenu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.&HISTCMD        ${HISTCMD}'
+		exe "imenu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.HI&STCONTROL    ${HISTCONTROL}'
+		exe "imenu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.HIS&TFILE       ${HISTFILE}'
+		exe "imenu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.HIST&FILESIZE   ${HISTFILESIZE}'
+		exe "imenu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.HISTIG&NORE     ${HISTIGNORE}'
+		exe "imenu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.HISTSI&ZE       ${HISTSIZE}'
+		exe "imenu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.HISTTI&MEFORMAT ${HISTTIMEFORMAT}'
+		exe "imenu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.H&OME           ${HOME}'
+		exe "imenu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.HOSTFIL&E       ${HOSTFILE}'
+		exe "imenu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.HOSTN&AME       ${HOSTNAME}'
+		exe "imenu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.HOSTT&YPE       ${HOSTTYPE}'
+		exe "imenu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.&IFS            ${IFS}'
+		exe "imenu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.IGNO&REEOF      ${IGNOREEOF}'
+		exe "imenu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.INPUTR&C        ${INPUTRC}'
+		exe "imenu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.&LANG           ${LANG}'
+		"
 		exe "imenu ".s:BASH_Root.'E&nviron.&LC_ALL\ \.\.\.\ OSTYPE.&LC_ALL          ${LC_ALL}'
 		exe "imenu ".s:BASH_Root.'E&nviron.&LC_ALL\ \.\.\.\ OSTYPE.LC_&COLLATE      ${LC_COLLATE}'
 		exe "imenu ".s:BASH_Root.'E&nviron.&LC_ALL\ \.\.\.\ OSTYPE.LC_C&TYPE        ${LC_CTYPE}'
@@ -574,6 +631,7 @@ function!	BASH_InitMenu ()
 		exe "imenu ".s:BASH_Root.'E&nviron.&LC_ALL\ \.\.\.\ OSTYPE.OPTER&R          ${OPTERR}'
 		exe "imenu ".s:BASH_Root.'E&nviron.&LC_ALL\ \.\.\.\ OSTYPE.OPTIN&D          ${OPTIND}'
 		exe "imenu ".s:BASH_Root.'E&nviron.&LC_ALL\ \.\.\.\ OSTYPE.OST&YPE          ${OSTYPE}'
+		"
 		exe "imenu ".s:BASH_Root.'E&nviron.&PATH\ \.\.\.\ UID.&PATH                 ${PATH}'
 		exe "imenu ".s:BASH_Root.'E&nviron.&PATH\ \.\.\.\ UID.P&IPESTATUS           ${PIPESTATUS}'
 		exe "imenu ".s:BASH_Root.'E&nviron.&PATH\ \.\.\.\ UID.P&OSIXLY_CORRECT      ${POSIXLY_CORRECT}'
@@ -587,7 +645,8 @@ function!	BASH_InitMenu ()
 		exe "imenu ".s:BASH_Root.'E&nviron.&PATH\ \.\.\.\ UID.&RANDOM               ${RANDOM}'
 		exe "imenu ".s:BASH_Root.'E&nviron.&PATH\ \.\.\.\ UID.REPL&Y                ${REPLY}'
 		exe "imenu ".s:BASH_Root.'E&nviron.&PATH\ \.\.\.\ UID.&SECONDS              ${SECONDS}'
-		exe "imenu ".s:BASH_Root.'E&nviron.&PATH\ \.\.\.\ UID.S&HELLOPTS            ${SHELLOPTS}'
+		exe "imenu ".s:BASH_Root.'E&nviron.&PATH\ \.\.\.\ UID.S&HELL                ${SHELL}'
+		exe "imenu ".s:BASH_Root.'E&nviron.&PATH\ \.\.\.\ UID.SH&ELLOPTS            ${SHELLOPTS}'
 		exe "imenu ".s:BASH_Root.'E&nviron.&PATH\ \.\.\.\ UID.SH&LVL                ${SHLVL}'
 		exe "imenu ".s:BASH_Root.'E&nviron.&PATH\ \.\.\.\ UID.&TIMEFORMAT           ${TIMEFORMAT}'
 		exe "imenu ".s:BASH_Root.'E&nviron.&PATH\ \.\.\.\ UID.T&MOUT                ${TMOUT}'
@@ -602,13 +661,16 @@ function!	BASH_InitMenu ()
 		endif
 		"
 		exe "	menu ".s:BASH_Root.'B&uiltins\ \ a-l.&alias      <Esc>aalias<Space>'
+		exe "	menu ".s:BASH_Root.'B&uiltins\ \ a-l.b&ind       <Esc>abind<Space>'
 		exe "	menu ".s:BASH_Root.'B&uiltins\ \ a-l.&builtin    <Esc>abuiltin<Space>'
 		exe "	menu ".s:BASH_Root.'B&uiltins\ \ a-l.&cd         <Esc>acd<Space>'
 		exe "	menu ".s:BASH_Root.'B&uiltins\ \ a-l.c&ommand    <Esc>acommand<Space>'
 		exe "	menu ".s:BASH_Root.'B&uiltins\ \ a-l.co&mpgen    <Esc>acompgen<Space>'
 		exe "	menu ".s:BASH_Root.'B&uiltins\ \ a-l.com&plete   <Esc>acomplete<Space>'
 		exe "	menu ".s:BASH_Root.'B&uiltins\ \ a-l.&declare    <Esc>adeclare<Space>'
+		exe "	menu ".s:BASH_Root.'B&uiltins\ \ a-l.dir&s       <Esc>adirs<Space>'
 		exe "	menu ".s:BASH_Root.'B&uiltins\ \ a-l.&echo       <Esc>aecho<Space>'
+		exe "	menu ".s:BASH_Root.'B&uiltins\ \ a-l.e&nable     <Esc>aenable<Space>'
 		exe "	menu ".s:BASH_Root.'B&uiltins\ \ a-l.e&val       <Esc>aeval<Space>'
 		exe "	menu ".s:BASH_Root.'B&uiltins\ \ a-l.e&xec       <Esc>aexec<Space>'
 		exe "	menu ".s:BASH_Root.'B&uiltins\ \ a-l.expo&rt     <Esc>aexport<Space>'
@@ -618,22 +680,25 @@ function!	BASH_InitMenu ()
 		exe "	menu ".s:BASH_Root.'B&uiltins\ \ a-l.&let        <Esc>alet<Space>'
 		exe "	menu ".s:BASH_Root.'B&uiltins\ \ a-l.local\ (&1) <Esc>alocal<Space>'
 		"
-		exe "imenu ".s:BASH_Root.'B&uiltins\ \ a-l.&alias      <Esc>aalias<Space>'
-		exe "imenu ".s:BASH_Root.'B&uiltins\ \ a-l.&builtin    <Esc>abuiltin<Space>'
-		exe "imenu ".s:BASH_Root.'B&uiltins\ \ a-l.&cd         <Esc>acd<Space>'
-		exe "imenu ".s:BASH_Root.'B&uiltins\ \ a-l.c&ommand    <Esc>acommand<Space>'
-		exe "imenu ".s:BASH_Root.'B&uiltins\ \ a-l.co&mpgen    <Esc>acompgen<Space>'
-		exe "imenu ".s:BASH_Root.'B&uiltins\ \ a-l.com&plete   <Esc>acomplete<Space>'
-		exe "imenu ".s:BASH_Root.'B&uiltins\ \ a-l.&declare    <Esc>adeclare<Space>'
-		exe "imenu ".s:BASH_Root.'B&uiltins\ \ a-l.&echo       <Esc>aecho<Space>'
-		exe "imenu ".s:BASH_Root.'B&uiltins\ \ a-l.e&val       <Esc>aeval<Space>'
-		exe "imenu ".s:BASH_Root.'B&uiltins\ \ a-l.e&xec       <Esc>aexec<Space>'
-		exe "imenu ".s:BASH_Root.'B&uiltins\ \ a-l.expo&rt     <Esc>aexport<Space>'
-		exe "imenu ".s:BASH_Root.'B&uiltins\ \ a-l.&getopts    <Esc>agetopts<Space>'
-		exe "imenu ".s:BASH_Root.'B&uiltins\ \ a-l.&hash       <Esc>ahash<Space>'
-		exe "imenu ".s:BASH_Root.'B&uiltins\ \ a-l.&kill       <Esc>akill<Space>'
-		exe "imenu ".s:BASH_Root.'B&uiltins\ \ a-l.&let        <Esc>alet<Space>'
-		exe "imenu ".s:BASH_Root.'B&uiltins\ \ a-l.local\ (&1) <Esc>alocal<Space>'
+		exe "imenu ".s:BASH_Root.'B&uiltins\ \ a-l.&alias      alias<Space>'
+		exe "imenu ".s:BASH_Root.'B&uiltins\ \ a-l.b&ind       bind<Space>'
+		exe "imenu ".s:BASH_Root.'B&uiltins\ \ a-l.&builtin    builtin<Space>'
+		exe "imenu ".s:BASH_Root.'B&uiltins\ \ a-l.&cd         cd<Space>'
+		exe "imenu ".s:BASH_Root.'B&uiltins\ \ a-l.c&ommand    command<Space>'
+		exe "imenu ".s:BASH_Root.'B&uiltins\ \ a-l.co&mpgen    compgen<Space>'
+		exe "imenu ".s:BASH_Root.'B&uiltins\ \ a-l.com&plete   complete<Space>'
+		exe "imenu ".s:BASH_Root.'B&uiltins\ \ a-l.&declare    declare<Space>'
+		exe "imenu ".s:BASH_Root.'B&uiltins\ \ a-l.dir&s       dirs<Space>'
+		exe "imenu ".s:BASH_Root.'B&uiltins\ \ a-l.&echo       echo<Space>'
+		exe "imenu ".s:BASH_Root.'B&uiltins\ \ a-l.e&nable     enable<Space>'
+		exe "imenu ".s:BASH_Root.'B&uiltins\ \ a-l.e&val       eval<Space>'
+		exe "imenu ".s:BASH_Root.'B&uiltins\ \ a-l.e&xec       exec<Space>'
+		exe "imenu ".s:BASH_Root.'B&uiltins\ \ a-l.expo&rt     export<Space>'
+		exe "imenu ".s:BASH_Root.'B&uiltins\ \ a-l.&getopts    getopts<Space>'
+		exe "imenu ".s:BASH_Root.'B&uiltins\ \ a-l.&hash       hash<Space>'
+		exe "imenu ".s:BASH_Root.'B&uiltins\ \ a-l.&kill       kill<Space>'
+		exe "imenu ".s:BASH_Root.'B&uiltins\ \ a-l.&let        let<Space>'
+		exe "imenu ".s:BASH_Root.'B&uiltins\ \ a-l.local\ (&1) local<Space>'
 		"
 		"-------------------------------------------------------------------------------
 		" menu Builtins  n-w
@@ -759,8 +824,8 @@ function!	BASH_InitMenu ()
     exe "amenu ".s:BASH_Root.'sh&opt.failglob                   <Esc><Esc>oshopt -s failglob'
     exe "amenu ".s:BASH_Root.'sh&opt.force_fignore              <Esc><Esc>oshopt -s force_fignore'
     exe "amenu ".s:BASH_Root.'sh&opt.gnu_errfmt                 <Esc><Esc>oshopt -s gnu_errfmt'
-    exe "amenu ".s:BASH_Root.'sh&opt.histreedit                 <Esc><Esc>oshopt -s histreedit'
     exe "amenu ".s:BASH_Root.'sh&opt.histappend                 <Esc><Esc>oshopt -s histappend'
+    exe "amenu ".s:BASH_Root.'sh&opt.histreedit                 <Esc><Esc>oshopt -s histreedit'
     exe "amenu ".s:BASH_Root.'sh&opt.histverify                 <Esc><Esc>oshopt -s histverify'
     exe "amenu ".s:BASH_Root.'sh&opt.hostcomplete               <Esc><Esc>oshopt -s hostcomplete'
     exe "amenu ".s:BASH_Root.'sh&opt.huponexit                  <Esc><Esc>oshopt -s huponexit'
@@ -792,8 +857,8 @@ function!	BASH_InitMenu ()
     exe "vmenu ".s:BASH_Root.'sh&opt.failglob                  D<Esc>:call BASH_shopt("failglob")<CR>'
     exe "vmenu ".s:BASH_Root.'sh&opt.force_fignore             D<Esc>:call BASH_shopt("force_fignore")<CR>'
     exe "vmenu ".s:BASH_Root.'sh&opt.gnu_errfmt                D<Esc>:call BASH_shopt("gnu_errfmt")<CR>'
-    exe "vmenu ".s:BASH_Root.'sh&opt.histreedit                D<Esc>:call BASH_shopt("histreedit")<CR>'
     exe "vmenu ".s:BASH_Root.'sh&opt.histappend                D<Esc>:call BASH_shopt("histappend")<CR>'
+    exe "vmenu ".s:BASH_Root.'sh&opt.histreedit                D<Esc>:call BASH_shopt("histreedit")<CR>'
     exe "vmenu ".s:BASH_Root.'sh&opt.histverify                D<Esc>:call BASH_shopt("histverify")<CR>'
     exe "vmenu ".s:BASH_Root.'sh&opt.hostcomplete              D<Esc>:call BASH_shopt("hostcomplete")<CR>'
     exe "vmenu ".s:BASH_Root.'sh&opt.huponexit                 D<Esc>:call BASH_shopt("huponexit")<CR>'
@@ -876,6 +941,7 @@ function!	BASH_InitMenu ()
 		"   set execution right only for the user ( may be user root ! )
 		"
 		exe "amenu <silent> ".s:BASH_Root.'&Run.cmd\.\ line\ &arg\.<Tab><S-F9>         <C-C>:call BASH_Arguments()<CR>'
+		exe "amenu <silent> ".s:BASH_Root.'&Run.start\ &debugger<Tab><F9>              <C-C>:call BASH_Debugger()<CR>'
 		exe "amenu <silent> ".s:BASH_Root.'&Run.make\ script\ &executable              <C-C>:call BASH_MakeScriptExecutable()<CR>'
 		exe "amenu          ".s:BASH_Root.'&Run.-Sep1-                                 :'
 		exe "amenu <silent> ".s:BASH_Root.'&Run.&hardcopy\ to\ FILENAME\.ps            <C-C>:call BASH_Hardcopy("n")<CR>'
@@ -1130,13 +1196,6 @@ function! BASH_CodeFunction ()
 endfunction		" ---------- end of function  BASH_CodeFunction  ----------
 "
 "------------------------------------------------------------------------------
-"  bash help
-"------------------------------------------------------------------------------
-""function! BASH_help ()
-""	exe ":!help  <cword>"
-""endfunction		" ---------- end of function  BASH_help  ----------
-"
-"------------------------------------------------------------------------------
 "  BASH_help : lookup word under the cursor or ask
 "------------------------------------------------------------------------------
 "
@@ -1221,6 +1280,30 @@ function! BASH_SyntaxCheck ()
 	endif
 endfunction		" ---------- end of function  BASH_SyntaxCheck  ----------
 "
+"------------------------------------------------------------------------------
+"  run : debugger
+"------------------------------------------------------------------------------
+function! BASH_Debugger ()
+	if !executable("bashdb") 
+		echohl Search 
+		echo   ' bashdb  is not executable or not installed! '
+		echohl None
+		return
+	endif
+	"
+	silent exe	":update"
+	let	l:arguments	= exists("b:BASH_CmdLineArgs") ? " ".b:BASH_CmdLineArgs : ""
+	let	Sou					= escape( expand("%"), s:escfilename ) 
+	"
+	" debugger is ' bash --debugger ...'
+	"
+	if has("gui_running")
+		silent exe "!xterm ".s:BASH_XtermDefaults.' -e bash --debugger ./'.Sou.l:arguments.' &'
+	else
+		silent exe '!bash --debugger ./'.Sou.l:arguments
+	endif
+endfunction		" ---------- end of function  BASH_Debugger  ----------
+"
 "----------------------------------------------------------------------
 "  run : toggle output destination
 "----------------------------------------------------------------------
@@ -1293,6 +1376,10 @@ function! BASH_Run ( mode )
 		let pos1		= line("'<")
 		let pos2		= line("'>")
 		silent exe ":'<,'>write ".tmpfile 
+	endif
+	"
+	if a:mode=="n" && !executable(l:fullname) 
+		call BASH_MakeScriptExecutable ()
 	endif
 	"
 	"------------------------------------------------------------------------------
@@ -1597,6 +1684,7 @@ function! BASH_Settings ()
 	let txt = txt."                Ctrl-F9  :  update file, run script           \n"
 	let txt = txt."                 Alt-F9  :  update file, run syntax check     \n"
 	let txt = txt."               Shift-F9  :  edit command line arguments       \n"
+	let txt = txt."                     F9  :  debug script                      \n"
 	let	txt = txt."________________________________________________________________________\n"
 	let	txt = txt." Bash-Support, Version ".g:BASH_Version." / Dr.-Ing. Fritz Mehner / mehner@fh-swf.de\n\n"
 	echo txt

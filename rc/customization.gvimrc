@@ -49,6 +49,6 @@ imap	<RightMouse> <ESC>
 " 
 "set guifont=-b&h-luxi\ mono-medium-r-normal-*-*-120-*-*-m-*-iso10646-1
 "set guifont=-b&h-lucidatypewriter-medium-r-normal-*-*-140-*-*-m-*-iso10646-1
-"set guifont=Monospace\ 11
+"set guifont=Monospace\ 12
 "
 "

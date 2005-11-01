@@ -13,8 +13,8 @@ runtime vimrc_example.vim
 " - central backup directory (has to be created)
 " - default dictionary
 " Uncomment your choice.  
-if  has("win16") || has("win32")     || has("win32") || 
-  \ has("win64") || has("win32unix") || has("win95")
+if  has("win16") || has("win32")     || has("win64") || 
+  \ has("win95") || has("win32unix") 
     "
 "    runtime mswin.vim
 "    set backupdir =$VIM\vimfiles\backupdir
@@ -77,6 +77,7 @@ imap  <silent> <F12>   <Esc>:let &number=1-&number<CR>
 "-------------------------------------------------------------------------------
 " Fast switching between buffers
 " The current buffer will be saved before switching to the next one.
+" Choose :bprevious or :bnext
 "-------------------------------------------------------------------------------
 "
  map  <silent> <s-tab>  <Esc>:if &modifiable && !&readonly && 
@@ -122,10 +123,7 @@ let g:BASH_Email        = 'mehner@fh-swf.de'
 "                         
 "-------------------------------------------------------------------------------
 " taglist.vim : toggle the taglist window
-" taglist.vim : define the title texts for make
 "-------------------------------------------------------------------------------
  noremap <silent> <F11>  <Esc><Esc>:Tlist<CR>
 inoremap <silent> <F11>  <Esc><Esc>:Tlist<CR>
-
-let tlist_make_settings  = 'make;m:makros;t:targets'
 

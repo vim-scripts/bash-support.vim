@@ -1,45 +1,47 @@
-*bashsupport.txt*                Bash Support                      Sep 30 2005
+*bashsupport.txt*                Bash Support                      Oct 30 2005
 
 bash Support                                      *bash-support* *bashsupport*
-                            Plugin version 1.10.1
+                             Plugin version 1.11
                         for Vim version 6.0 and above
                        Fritz Mehner  <mehner@fh-swf.de>
 
 Write and run bash scripts using menus and hot keys (key mappings).
 
- 1.     Usage with GUI                           |bashsupport-usage-gvim|     
- 1.1     Menu 'Comments'                         |bashsupport-comments|     
+ 1.     Usage with GUI                           |bashsupport-usage-gvim|
+ 1.1     Menu 'Comments'                         |bashsupport-comments|
  1.1.1   Append aligned comments                 |bashsupport-aligned-comm|
- 1.1.2   Code to comment                         |bashsupport-code-to-comm|  
- 1.1.3   Comment to code                         |bashsupport-comm-to-code|  
+ 1.1.2   Code to comment                         |bashsupport-code-to-comm|
+ 1.1.3   Comment to code                         |bashsupport-comm-to-code|
  1.1.4   Frame comments, file header, ...        |bashsupport-comm-templates|
- 1.1.5   KEYWORD + comment                       |bashsupport-comm-keywords| 
+ 1.1.5   Comment/uncomment with echo             |bashsupport-comm-echo|
+ 1.1.6   KEYWORD + comment                       |bashsupport-comm-keywords|
  1.2     Menu 'Statements'                       |bashsupport-statements|
  1.2.1    Normal mode, insert mode               |bashsupport-stat-norm-ins|
  1.2.2    Visual mode                            |bashsupport-stat-visual|
  1.2.3    Code Snippets                          |bashsupport-stat-snippets|
- 1.3     Menu 'set'                              |bashsupport-set|     
- 1.4     Menu 'shopt'                            |bashsupport-shopt|     
- 1.5     Menu 'Run'                              |bashsupport-run|     
+ 1.3     Menu 'set'                              |bashsupport-set|
+ 1.4     Menu 'shopt'                            |bashsupport-shopt|
+ 1.5     Menu 'Run'                              |bashsupport-run|
  1.5.1    Save and run                           |bashsupport-run-script|
  1.5.2    Save and check syntax                  |bashsupport-syntax-check|
  1.5.3    Command line arguments                 |bashsupport-cmdline-args|
- 1.5.4    Hardcopy                               |bashsupport-hardcopy|
- 1.5.5    Xterm size                             |bashsupport-xterm|
- 1.5.6    Output redirection                     |bashsupport-output|
- 2.     Usage without GUI                        |bashsupport-usage-vim|      
- 3.     Hot keys                                 |bashsupport-hotkeys|        
- 4.     Customization and configuration          |bashsupport-customization|  
- 4.1     Files                                   |bashsupport-custom-files|  
+ 1.5.4    Start debugger                         |bashsupport-debugger|
+ 1.5.5    Hardcopy                               |bashsupport-hardcopy|
+ 1.5.6    Xterm size                             |bashsupport-xterm|
+ 1.5.7    Output redirection                     |bashsupport-output|
+ 2.     Usage without GUI                        |bashsupport-usage-vim|
+ 3.     Hot keys                                 |bashsupport-hotkeys|
+ 4.     Customization and configuration          |bashsupport-customization|
+ 4.1     Files                                   |bashsupport-custom-files|
  4.2     Global variables                        |bashsupport-custom-variables|
  4.3     The root menu                           |bashsupport-custom-root|
- 5.     Template files and tags                  |bashsupport-tempfiles| 
- 5.1     Template files                          |bashsupport-tempfiles|    
+ 5.     Template files and tags                  |bashsupport-tempfiles|
+ 5.1     Template files                          |bashsupport-tempfiles|
  5.2     Tags                                    |bashsupport-tags|
- 6.     Bash dictionary                          |bashsupport-dictionary|     
- 7.     Release Notes                            |bashsupport-release-notes|  
+ 6.     Bash dictionary                          |bashsupport-dictionary|
+ 7.     Release Notes                            |bashsupport-release-notes|
 
-        How to add this help file to Vim's help  |add-local-help|             
+        How to add this help file to Vim's help  |add-local-help|
 
 
 ==============================================================================
@@ -99,7 +101,7 @@ A marked block will be changed into
  #x11111111=11111111;
 
 The menu entry works also for a single line. A single line needs not to be
-marked. 
+marked (normal mode). 
 
 
 1.1.3 COMMENT TO CODE                               *bashsupport-comm-to-code*
@@ -120,7 +122,7 @@ will be changed into
  x11111111=11111111;
 
 The menu entry works also for a single line. A single line needs not to be
-marked. 
+marked (normal mode). 
 
 
 1.1.4 FRAME COMMENTS, FILE HEADER, ...            *bashsupport-comm-templates*
@@ -129,8 +131,26 @@ marked.
 Frame comments, function descriptions and file header comments are read as
 templates from the appropriate files (see |bashsupport-tempfiles|).
 
+1.1.5 COMMENT/UNCOMMENT WITH echo                      *bashsupport-comm-echo*
+---------------------------------
 
-1.1.5 KEYWORD+comment                              *bashsupport-comm-keywords*
+The echo-entry in the Comments-menu can be used to put one or more statements
+in a sort of comment. This is usually done for testing:
+
+ echo "rm -f $allfiles"
+
+This can only be done in normal mode: The complete line (from the first
+non-blank to the end) is framed with  echo "..." ; the cursor will be then
+moved to the next line. Now this line can be framed and so forth.
+
+The remove-echo-entry removes an echo.  The keyword echo, the following double
+quotation mark and the last double quotation mark in the current line will be
+removed; the cursor will then be moved to the next line.
+
+Longer sections of a script are better commented out with set options
+|bashsupport-set|.
+
+1.1.6 KEYWORD+comment                              *bashsupport-comm-keywords*
 ---------------------
 
 Preliminary line end comments to document (and find again) places where work
@@ -160,11 +180,7 @@ Inner statements will be indented.
 ------------------
 
 The highlighted area (...) will be surrounded by a statement, parentheses,
-quotes or an echo with quotes (for testing the complete expression):
-
-  ${...}
-  $(...)
-  $((...))
+quotes or an echo with quotes:
 
   for in do ... done
   if then ... fi
@@ -173,23 +189,14 @@ quotes or an echo with quotes (for testing the complete expression):
   until do ... done
   while do ... done
 
+  ${...}
+  $(...)
+  $((...))
+
   '...'
   "..."
   `...`
-
-The echo-entry shows a special behavior:
-
- Normal mode: The complete line (from the first non-blank to the end) is 
-              framed with  echo "..." ; the cursor will be moved to the 
-              next line.
- Visual mode: The highlighted text is framed with  echo "...".
- Insert mode: An empty echo "" will be inserted.
-
-The remove-echo-entry:
-
- The keyword echo, the following double quotation mark and the last double
- quotation mark in the current line will be removed; the cursor will be moved 
- to the next line.
+  echo -e ""
 
 ------------------------------------------------------------------------------
 1.2.3 CODE SNIPPETS                                *bashsupport-stat-snippets*
@@ -309,20 +316,33 @@ If the buffer gets a new name with "save as" the arguments will now belong to
 the buffer with the new name.
 
 
-1.5.4 Hardcopy                                          *bashsupport-hardcopy*
+1.5.4 START DEBUGGER                                    *bashsupport-debugger*
+--------------------
+
+The menu entry 'start debugger' starts the bash debugger 'bashdb'. Your version
+of the bash must be prepared for debugging and the debugger must be installed
+(see http://bashdb.sourceforge.net/).
+If you are working under a running GUI the debugger will be started in an
+independent xterm. In the non-GUI version starting the debugger is done by
+  :!bash --debugger  <command line arguments>
+In both cases the command line arguments come from the argument setting
+|bashsupport-cmdline-args| if any.
+
+
+1.5.5 Hardcopy                                          *bashsupport-hardcopy*
 --------------
 
 Normal mode, insert mode: a Postscript file is made from the whole file.
 Visual mode             : a Postscript file is made from the marked area.
 
 
-1.5.5 Xterm size                                           *bashsupport-xterm*
+1.5.6 Xterm size                                           *bashsupport-xterm*
 ----------------
 
 The size of the xterm (see below) can be changes for the current session.  The
 size has to be specified as COLUMNS LINES (e.g. 96 32 ).
 
-1.5.6 Output redirection                                  *bashsupport-output*
+1.5.7 Output redirection                                  *bashsupport-output*
 ------------------------
 
 The last menu entry 'output: ... ' has 3 states:
@@ -407,10 +427,12 @@ key mappings:
   \ckr    Keyword comment TRICKY          (normal)
   \ckw    Keyword comment WARNING         (normal)
   \ckn    Keyword comment New_Keyword     (normal)
-  \cc     code to comment                 (visual)
-  \co     comment to code                 (visual)
+  \cc     code to comment                 (normal, visual)
+  \co     comment to code                 (normal, visual)
   \cd     Date                            (normal)
   \ct     Date & Time                     (normal)
+  \ce     echo "..."                      (normal)
+  \cr     remove echo "..."               (normal)
   \cv     vim modeline                    (normal)
                                      
   -- Statements ------------------------------------------
@@ -423,14 +445,14 @@ key mappings:
   \as     select in do done               (normal, visual)
   \at     until do done                   (normal, visual)
   \aw     while do done                   (normal, visual)
-  \ao     echo "..."                      (normal, visual)
-  \av     remove echo "..."               (normal)
+  \ao     echo -e "..."                   (normal, visual)
 
   -- Run ------------------------------------------------
 
   \rr     update file, run script         (normal)
   \rc     update file, check syntax       (normal)
   \ra     set command line arguments      (normal)
+  \rd     start debugger                  (normal)
   \re     make script executable          (normal)
   \rh     hardcopy buffer to FILENAME.ps  (normal)
   \rs     settings and hot keys           (normal)
@@ -439,7 +461,8 @@ key mappings:
 
   -- bash help ------------------------------------------
 
-  \rh     hardcopy buffer to FILENAME.ps  (normal)
+  \h      display help for the builtin    (normal)
+          under the cursor
 
 
 File bash-hot-keys.pdf contains a reference card for these key mappings.
@@ -460,6 +483,7 @@ The following hot keys are defined in NORMAL, VISUAL and INSERT MODE:
     Ctrl-F9   run script
      Alt-F9   run syntax check
    Shift-F9   command line arguments (for the current buffer)
+         F9   start debugger (bashdb)
 
 
 ==============================================================================

@@ -3,8 +3,8 @@
 " Language   :  bash
 " Plugin     :  bash-support.vim
 " Maintainer :  Fritz Mehner <mehner@fh-swf.de>
-" Version    :  1.10
-" Last Change:  30.09.2005
+" Version    :  1.11
+" Last Change:  30.10.2005
 "
 " -----------------------------------------------------------------
 "
@@ -41,6 +41,9 @@ imap  <buffer>  <silent>  <C-F9>   <C-C><C-C>:call BASH_Run("n")<CR>
 "
  map  <buffer>  <silent>  <S-F9>             :call BASH_Arguments()<CR>
 imap  <buffer>  <silent>  <S-F9>        <Esc>:call BASH_Arguments()<CR>
+  "
+ map  <buffer>  <silent>    <F9>        <C-C>:call BASH_Debugger()<CR>
+imap  <buffer>  <silent>    <F9>   <C-C><C-C>:call BASH_Debugger()<CR>
 "
 "
  map  <buffer>  <silent>  <S-F1>             :call BASH_help()<CR>
@@ -54,9 +57,13 @@ nmap  <buffer>  <silent>  <Leader>cl      <Tab><Tab><Tab>#<Space>
 vmap  <buffer>  <silent>  <Leader>cl      <Esc><Esc>:call BASH_MultiLineEndComments()<CR>
 nmap  <buffer>  <silent>  <Leader>cf      :call BASH_CommentTemplates('frame')<CR>
 nmap  <buffer>  <silent>  <Leader>cu      :call BASH_CommentTemplates('function')<CR>
-nmap  <buffer>  <silent>  <Leader>ch      :call BASH_CommentTemplates('header')<CR>
-vmap  <buffer>  <silent>  <Leader>cc      <Esc><Esc>:'<,'>s/^/#/<CR><Esc>:nohlsearch<CR>
 vmap  <buffer>  <silent>  <Leader>co      <Esc><Esc>:'<,'>s/^#//<CR><Esc>:nohlsearch<CR>
+
+nmap  <buffer>  <silent>  <Leader>cc      <Esc><Esc>:s/^/\#/<CR><Esc>:nohlsearch<CR>"
+vmap  <buffer>  <silent>  <Leader>cc      <Esc><Esc>:'<,'>s/^/\#/<CR><Esc>:nohlsearch<CR>"
+nmap  <buffer>  <silent>  <Leader>co      <Esc><Esc>:s/^\\(\\s*\\)#/\\1/<CR><Esc>:nohlsearch<CR>"
+nmap  <buffer>  <silent>  <Leader>co      <Esc><Esc>:'<,'>s/^\\(\\s*\\)#/\\1/<CR><Esc>:nohlsearch<CR>"
+
 nmap  <buffer>  <silent>  <Leader>cd      i<C-R>=strftime("%x")<CR>
 nmap  <buffer>  <silent>  <Leader>ct      i<C-R>=strftime("%x %X %Z")<CR>
 nmap  <buffer>  <silent>  <Leader>ckb     $<Esc>:call BASH_CommentClassified("BUG")     <CR>kJA
@@ -64,6 +71,8 @@ nmap  <buffer>  <silent>  <Leader>ckt     $<Esc>:call BASH_CommentClassified("TO
 nmap  <buffer>  <silent>  <Leader>ckr     $<Esc>:call BASH_CommentClassified("TRICKY")  <CR>kJA
 nmap  <buffer>  <silent>  <Leader>ckw     $<Esc>:call BASH_CommentClassified("WARNING") <CR>kJA
 nmap  <buffer>  <silent>  <Leader>ckn     $<Esc>:call BASH_CommentClassified("")        <CR>kJf:a
+nmap  <buffer>  <silent>  <Leader>ce			<Esc><Esc>^iecho<Space>"<Esc>$a"<Esc>j'
+nmap  <buffer>  <silent>  <Leader>cr      <Esc><Esc>0:s/^\s*echo\s\+\"// \| s/\s*\"\s*$// \| :normal ==<CR><Esc>j'
 nmap  <buffer>  <silent>  <Leader>cv      :call BASH_CommentVimModeline()<CR>
 
 nmap  <buffer>  <silent>  <Leader>ac      ocase  in<CR>)<CR>;;<CR><CR>)<CR>;;<CR><CR>*)<CR>;;<CR><CR>esac    # --- end of case ---<CR><Esc>11kf<Space>a
@@ -82,9 +91,8 @@ vmap  <buffer>  <silent>  <Leader>as      DOselect  in <CR>do<CR>done<Esc>P2k^<E
 vmap  <buffer>  <silent>  <Leader>at      DOuntil <CR>do<CR>done<Esc>P2k<Esc>:exe "normal =".(line("'>")-line(".")-1)."+"<CR>A
 vmap  <buffer>  <silent>  <Leader>aw      DOwhile <CR>do<CR>done<Esc>P2k<Esc>:exe "normal =".(line("'>")-line(".")-1)."+"<CR>A
 
-nmap  <buffer>  <silent>  <Leader>ao      ^iecho<Space>"<Esc>$a"<Esc>j
-vmap  <buffer>  <silent>  <Leader>ao      secho<Space>""<Esc>P
-nmap  <buffer>  <silent>  <Leader>av      0:s/echo\s\+\"// \| s/\s*\"\s*$//<CR><Esc>j
+nmap  <buffer>  <silent>  <Leader>ao      ^iecho<Space>-e<Space>"\n"<Esc>2hi
+vmap  <buffer>  <silent>  <Leader>ao      secho<Space>-e<Space>"\n"<Esc>2hP
 
 if !has('win32')
 	nmap  <buffer>  <silent>  <Leader>re      <Esc>:call BASH_MakeScriptExecutable()<CR>
@@ -93,6 +101,7 @@ endif
 vmap  <buffer>  <silent>  <Leader>rr      <Esc>:call BASH_Run("v")<CR>
  map  <buffer>  <silent>  <Leader>rc      <Esc>:call BASH_SyntaxCheck()<CR>
  map  <buffer>  <silent>  <Leader>ra      <Esc>:call BASH_Arguments()<CR>
+ map  <buffer>  <silent>  <Leader>rd      <Esc>:call BASH_Debugger()<CR>
  map  <buffer>  <silent>  <Leader>rs      <Esc>:call BASH_Settings()<CR>
 if has("gui_running") && has("unix")
  map  <buffer>  <silent>  <Leader>rt      <Esc>:call BASH_XtermSize()<CR>

@@ -1,0 +1,42 @@
+
+ScriptVersion="1.0"
+
+#===  FUNCTION  ================================================================
+#         NAME:  usage
+#  DESCRIPTION:  Display usage text.
+#===============================================================================
+function usage ()
+{
+	cat <<- EOT
+
+  < one line description >
+
+  usage : $0 [options]  
+
+  options: 
+  -h|help       display this message
+  -v|version    display script version
+
+	EOT
+}    # ----------  end of function usage  ----------
+
+
+#-----------------------------------------------------------------------
+#  handle command line arguments
+#-----------------------------------------------------------------------
+
+while getopts ":hv" opt
+do
+  case $opt in
+
+    h|help     )  usage; exit 0   ;;
+
+    v|version  )  echo "$0 -- Version $ScriptVersion"; exit 0   ;;
+
+    \? )  echo -e "\n  option does not exist : $OPTARG\n"
+          usage; exit 1   ;;
+
+  esac    # --- end of case ---
+done
+shift $(($OPTIND-1))
+
