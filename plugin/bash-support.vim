@@ -18,7 +18,7 @@
 "          Email:  mehner@fh-swf.de
 "          
 "        Version:  see variable  g:BASH_Version  below 
-"       Revision:  01.11.2005
+"       Revision:  13.11.2005
 "        Created:  26.02.2001
 "        License:  GPL (GNU Public License)
 "  
@@ -29,7 +29,7 @@
 if exists("g:BASH_Version") || &cp
  finish
 endif
-let g:BASH_Version= "1.11"  						" version number of this script; do not change
+let g:BASH_Version= "1.12"  						" version number of this script; do not change
 "
 "#########################################################################################
 "
@@ -46,62 +46,75 @@ endif
 "
 "  Modul global variables (with default values) which can be overridden.
 "
-let s:BASH_AuthorName            = ""
-let s:BASH_AuthorRef             = ""
-let s:BASH_Email                 = ""
-let s:BASH_Company               = ""
-let s:BASH_Project               = ""
-let s:BASH_CopyrightHolder       = ""
+let s:BASH_AuthorName              = ""
+let s:BASH_AuthorRef               = ""
+let s:BASH_Company                 = ""
+let s:BASH_CopyrightHolder         = ""
+let s:BASH_Email                   = ""
+let s:BASH_Project                 = ""
 "
-let	s:BASH_Root 				         = 'B&ash.'					" the name of the root menu of this plugin
-let s:BASH_LoadMenus             = "yes"
-let s:BASH_CodeSnippets          = s:root_dir."codesnippets-bash/"
-let s:BASH_Template_Directory    = s:root_dir."plugin/templates/"
-let s:BASH_Template_File         = "bash-file-header"
-let s:BASH_Template_Frame        = "bash-frame"
-let s:BASH_Template_Function     = "bash-function-description"
-let s:BASH_MenuHeader            = "yes"
-let s:BASH_OutputGvim            = "vim"
-let s:BASH_XtermDefaults         = "-fa courier -fs 12 -geometry 80x24"
-let s:BASH_LineEndCommColDefault = 49
+let s:BASH_CodeSnippets            = s:root_dir."codesnippets-bash/"
+let s:BASH_LineEndCommColDefault   = 49
+let s:BASH_LoadMenus               = "yes"
+let s:BASH_MenuHeader              = "yes"
+let s:BASH_OutputGvim              = "vim"
+let s:BASH_Root                    = 'B&ash.'         " the name of the root menu of this plugin
+let s:BASH_SyntaxCheckOptionsGlob  = ""
+let s:BASH_Template_Directory      = s:root_dir."plugin/templates/"
+let s:BASH_Template_File           = "bash-file-header"
+let s:BASH_Template_Frame          = "bash-frame"
+let s:BASH_Template_Function       = "bash-function-description"
+let s:BASH_XtermDefaults           = "-fa courier -fs 12 -geometry 80x24"
 "
 "
 "------------------------------------------------------------------------------
 "  Some variables for internal use only
 "------------------------------------------------------------------------------
-let s:BASH_Errorformat    = '%f:\ line\ %l:\ %m'
 let s:BASH_Active         = -1                    " state variable controlling the Bash-menus
+let s:BASH_Errorformat    = '%f:\ line\ %l:\ %m'
 let s:BASH_SetCounter     = 0                     " 
-let s:BASH_Set_Txt		 		= "SetOptionNumber_"
-let s:BASH_Shopt_Txt			= "ShoptOptionNumber_"
+let s:BASH_Set_Txt        = "SetOptionNumber_"
+let s:BASH_Shopt_Txt      = "ShoptOptionNumber_"
 let s:escfilename         = ' \%#[]'
+"
+" Bash 3.0 shopt options (GNU Bash-3.0, manual: 2004 June 26) 
+"
+let s:BASH_ShoptAllowed =                     "cdable_vars:cdspell:checkhash:checkwinsize:"
+let s:BASH_ShoptAllowed = s:BASH_ShoptAllowed."cmdhist:dotglob:execfail:expand_aliases:"
+let s:BASH_ShoptAllowed = s:BASH_ShoptAllowed."extdebug:extglob:extquote:failglob:"
+let s:BASH_ShoptAllowed = s:BASH_ShoptAllowed."force_fignore:gnu_errfmt:histappend:histreedit:"
+let s:BASH_ShoptAllowed = s:BASH_ShoptAllowed."histverify:hostcomplete:huponexit:interactive_comments:"
+let s:BASH_ShoptAllowed = s:BASH_ShoptAllowed."lithist:login_shell:mailwarn:no_empty_cmd_completion:"
+let s:BASH_ShoptAllowed = s:BASH_ShoptAllowed."nocaseglob:nullglob:progcomp:promptvars:"
+let s:BASH_ShoptAllowed = s:BASH_ShoptAllowed."restricted_shell:shift_verbose:sourcepath:xpg_echo:"
 "
 "------------------------------------------------------------------------------
 "  Look for global variables (if any), to override the defaults.
 "------------------------------------------------------------------------------
 function! BASH_CheckGlobal ( name )
-	if exists('g:'.a:name)
-		exe 'let s:'.a:name.'  = g:'.a:name
-	endif
-endfunction		" ---------- end of function  BASH_CheckGlobal  ----------
+  if exists('g:'.a:name)
+    exe 'let s:'.a:name.'  = g:'.a:name
+  endif
+endfunction   " ---------- end of function  BASH_CheckGlobal  ----------
 "
-call BASH_CheckGlobal("BASH_AuthorName           ")
-call BASH_CheckGlobal("BASH_AuthorRef            ")
-call BASH_CheckGlobal("BASH_CodeSnippets         ")
-call BASH_CheckGlobal("BASH_Company              ")
-call BASH_CheckGlobal("BASH_CopyrightHolder      ")
-call BASH_CheckGlobal("BASH_Email                ")
-call BASH_CheckGlobal("BASH_LoadMenus            ")
-call BASH_CheckGlobal("BASH_MenuHeader           ")
-call BASH_CheckGlobal("BASH_Project              ")
-call BASH_CheckGlobal("BASH_Root                 ")
-call BASH_CheckGlobal("BASH_Template_Directory   ")
-call BASH_CheckGlobal("BASH_Template_File        ")
-call BASH_CheckGlobal("BASH_Template_Frame       ")
-call BASH_CheckGlobal("BASH_Template_Function    ")
-call BASH_CheckGlobal("BASH_OutputGvim           ")
-call BASH_CheckGlobal("BASH_XtermDefaults        ")
-call BASH_CheckGlobal("BASH_LineEndCommColDefault")
+call BASH_CheckGlobal("BASH_AuthorName             ")
+call BASH_CheckGlobal("BASH_AuthorRef              ")
+call BASH_CheckGlobal("BASH_CodeSnippets           ")
+call BASH_CheckGlobal("BASH_Company                ")
+call BASH_CheckGlobal("BASH_CopyrightHolder        ")
+call BASH_CheckGlobal("BASH_Email                  ")
+call BASH_CheckGlobal("BASH_LineEndCommColDefault  ")
+call BASH_CheckGlobal("BASH_LoadMenus              ")
+call BASH_CheckGlobal("BASH_MenuHeader             ")
+call BASH_CheckGlobal("BASH_OutputGvim             ")
+call BASH_CheckGlobal("BASH_Project                ")
+call BASH_CheckGlobal("BASH_Root                   ")
+call BASH_CheckGlobal("BASH_SyntaxCheckOptionsGlob ")
+call BASH_CheckGlobal("BASH_Template_Directory     ")
+call BASH_CheckGlobal("BASH_Template_File          ")
+call BASH_CheckGlobal("BASH_Template_Frame         ")
+call BASH_CheckGlobal("BASH_Template_Function      ")
+call BASH_CheckGlobal("BASH_XtermDefaults          ")
 "
 " set default geometry if not specified 
 "
@@ -359,7 +372,7 @@ function!	BASH_InitMenu ()
 		exe "	menu ".s:BASH_Root.'&Tests.string\ &comparison.strings\ are\ n&ot\ equal<Tab>!=													<Esc>a[  !=  ]<Esc>F[la'
 		exe "	menu ".s:BASH_Root.'&Tests.string\ &comparison.string1\ sorts\ &before\ string2\ lexicograph\.<Tab><		<Esc>a[  <  ]<Esc>F[la'
 		exe "	menu ".s:BASH_Root.'&Tests.string\ &comparison.string1\ sorts\ &after\ string2\ lexicograph\.<Tab>>			<Esc>a[  >  ]<Esc>F[la'
-		exe "	menu ".s:BASH_Root.'&Tests.string\ &comparison.string\ matches\ &regexp<Tab>=~													<Esc>a[  =~  ]<Esc>F[la'
+		exe "	menu ".s:BASH_Root.'&Tests.string\ &comparison.string\ matches\ &regexp<Tab>=~													<Esc>a[[  =~  ]]<Esc>F[la'
 		"                                         
 		exe "imenu ".s:BASH_Root.'&Tests.string\ &comparison.length\ of\ string\ is\ &zero<Tab>-z											[ -z  ]<Esc>hi'
 		exe "imenu ".s:BASH_Root.'&Tests.string\ &comparison.length\ of\ string\ is\ &non-zero<Tab>-n									[ -n  ]<Esc>hi'
@@ -367,7 +380,7 @@ function!	BASH_InitMenu ()
 		exe "imenu ".s:BASH_Root.'&Tests.string\ &comparison.strings\ are\ n&ot\ equal<Tab>!=													[  !=  ]<Esc>F[la'
 		exe "imenu ".s:BASH_Root.'&Tests.string\ &comparison.string1\ sorts\ &before\ string2\ lexicograph\.<Tab><		[  <  ]<Esc>F[la'
 		exe "imenu ".s:BASH_Root.'&Tests.string\ &comparison.string1\ sorts\ &after\ string2\ lexicograph\.<Tab>>			[  >  ]<Esc>F[la'
-		exe "imenu ".s:BASH_Root.'&Tests.string\ &comparison.string\ matches\ &regexp<Tab>=~													[  =~  ]<Esc>F[la'
+		exe "imenu ".s:BASH_Root.'&Tests.string\ &comparison.string\ matches\ &regexp<Tab>=~													[[  =~  ]]<Esc>F[la'
 		"
 		exe "	menu ".s:BASH_Root.'&Tests.-Sep2-                         :'
 		exe "	menu ".s:BASH_Root.'&Tests.file\ exists\ and\ is\ &owned\ by\ the\ effective\ UID<Tab>-O								<Esc>a[ -O  ]<Esc>hi'
@@ -877,6 +890,67 @@ function!	BASH_InitMenu ()
     exe "vmenu ".s:BASH_Root.'sh&opt.xpg_echo                  D<Esc>:call BASH_shopt("xpg_echo")<CR>'
 
 		"
+		"---------- submenu : POSIX character classes --------------------------------------------
+		"
+		if s:BASH_MenuHeader == "yes"
+			exe "amenu ".s:BASH_Root.'Rege&x.Regex<Tab>bash   <Esc>'
+			exe "amenu ".s:BASH_Root.'Rege&x.-Sep0-      :'
+		endif
+		"
+		exe "amenu ".s:BASH_Root.'Rege&x.zero\ or\ more\ \ \ &*(\ \|\ )              	<Esc><Esc>a*(\|)<Esc>hi'
+		exe "amenu ".s:BASH_Root.'Rege&x.one\ or\ more\ \ \ \ &+(\ \|\ )              <Esc><Esc>a+(\|)<Esc>hi'
+		exe "amenu ".s:BASH_Root.'Rege&x.zero\ or\ one\ \ \ \ \ &?(\ \|\ )            <Esc><Esc>a?(\|)<Esc>hi'
+		exe "amenu ".s:BASH_Root.'Rege&x.exactly\ one\ \ \ \ \ &@(\ \|\ )  				   	<Esc><Esc>a@(\|)<Esc>hi'
+		exe "amenu ".s:BASH_Root.'Rege&x.anyth\.\ except\ \ \ &!(\ \|\ )            	<Esc><Esc>a!(\|)<Esc>hi'
+		"
+		exe "vmenu ".s:BASH_Root.'Rege&x.zero\ or\ more\ \ \ &*(\ \|\ )              	s*(\|)<Esc>hPla'
+		exe "vmenu ".s:BASH_Root.'Rege&x.one\ or\ more\ \ \ \ &+(\ \|\ )              s+(\|)<Esc>hPla'
+		exe "vmenu ".s:BASH_Root.'Rege&x.zero\ or\ one\ \ \ \ \ &?(\ \|\ )            s?(\|)<Esc>hPla'
+		exe "vmenu ".s:BASH_Root.'Rege&x.exactly\ one\ \ \ \ \ &@(\ \|\ )  				   	s@(\|)<Esc>hPla'
+		exe "vmenu ".s:BASH_Root.'Rege&x.anyth\.\ except\ \ \ &!(\ \|\ )            	s!(\|)<Esc>hPla'
+		"
+		exe "amenu ".s:BASH_Root.'Rege&x.-Sep1-      :'
+		"
+		exe " menu ".s:BASH_Root.'Rege&x.[:&alnum:]		<Esc>a[:alnum:]'
+		exe " menu ".s:BASH_Root.'Rege&x.[:alp&ha:]		<Esc>a[:alpha:]'
+		exe " menu ".s:BASH_Root.'Rege&x.[:asc&ii:]		<Esc>a[:ascii:]'
+		exe " menu ".s:BASH_Root.'Rege&x.[:&cntrl:]		<Esc>a[:cntrl:]'
+		exe " menu ".s:BASH_Root.'Rege&x.[:&digit:]		<Esc>a[:digit:]'
+		exe " menu ".s:BASH_Root.'Rege&x.[:&graph:]		<Esc>a[:graph:]'
+		exe " menu ".s:BASH_Root.'Rege&x.[:&lower:]		<Esc>a[:lower:]'
+		exe " menu ".s:BASH_Root.'Rege&x.[:&print:]		<Esc>a[:print:]'
+		exe " menu ".s:BASH_Root.'Rege&x.[:pu&nct:]		<Esc>a[:punct:]'
+		exe " menu ".s:BASH_Root.'Rege&x.[:&space:]		<Esc>a[:space:]'
+		exe " menu ".s:BASH_Root.'Rege&x.[:&upper:]		<Esc>a[:upper:]'
+		exe " menu ".s:BASH_Root.'Rege&x.[:&word:]		<Esc>a[:word:]'
+		exe " menu ".s:BASH_Root.'Rege&x.[:&xdigit:]	<Esc>a[:xdigit:]'
+		"
+		exe "imenu ".s:BASH_Root.'Rege&x.[:&alnum:]		[:alnum:]'
+		exe "imenu ".s:BASH_Root.'Rege&x.[:alp&ha:]		[:alpha:]'
+		exe "imenu ".s:BASH_Root.'Rege&x.[:asc&ii:]		[:ascii:]'
+		exe "imenu ".s:BASH_Root.'Rege&x.[:&cntrl:]		[:cntrl:]'
+		exe "imenu ".s:BASH_Root.'Rege&x.[:&digit:]		[:digit:]'
+		exe "imenu ".s:BASH_Root.'Rege&x.[:&graph:]		[:graph:]'
+		exe "imenu ".s:BASH_Root.'Rege&x.[:&lower:]		[:lower:]'
+		exe "imenu ".s:BASH_Root.'Rege&x.[:&print:]		[:print:]'
+		exe "imenu ".s:BASH_Root.'Rege&x.[:pu&nct:]		[:punct:]'
+		exe "imenu ".s:BASH_Root.'Rege&x.[:&space:]		[:space:]'
+		exe "imenu ".s:BASH_Root.'Rege&x.[:&upper:]		[:upper:]'
+		exe "imenu ".s:BASH_Root.'Rege&x.[:&word:]		[:word:]'
+		exe "imenu ".s:BASH_Root.'Rege&x.[:&xdigit:]	[:xdigit:]'
+		"
+		exe " menu ".s:BASH_Root.'Rege&x.&[\ \ \ ]    <Esc>a[]<Esc>i'
+		exe "imenu ".s:BASH_Root.'Rege&x.&[\ \ \ ]    <Esc>a[]<Esc>i'
+		exe "vmenu ".s:BASH_Root.'Rege&x.&[\ \ \ ]    s[]<Esc>Pl'
+		"
+		exe "amenu ".s:BASH_Root.'Rege&x.-Sep2-      :'
+		"
+		exe "amenu ".s:BASH_Root.'Rege&x.${BASH_REMATCH[&0]}       			<Esc><Esc>a${BASH_REMATCH[0]}'
+		exe "amenu ".s:BASH_Root.'Rege&x.${BASH_REMATCH[&1]}       			<Esc><Esc>a${BASH_REMATCH[1]}'
+		exe "amenu ".s:BASH_Root.'Rege&x.${BASH_REMATCH[&2]}       			<Esc><Esc>a${BASH_REMATCH[2]}'
+		exe "amenu ".s:BASH_Root.'Rege&x.${BASH_REMATCH[&3]}       			<Esc><Esc>a${BASH_REMATCH[3]}'
+		"
+		"
 		"-------------------------------------------------------------------------------
 		" menu I/O redirection
 		"-------------------------------------------------------------------------------
@@ -936,18 +1010,22 @@ function!	BASH_InitMenu ()
 
 		exe "amenu <silent> ".s:BASH_Root.'&Run.save\ +\ &run\ script<Tab><C-F9>       <C-C>:call BASH_Run("n")<CR>'
 		exe "vmenu <silent> ".s:BASH_Root.'&Run.save\ +\ &run\ script<Tab><C-F9>       <C-C>:call BASH_Run("v")<CR>'
-		exe "amenu <silent> ".s:BASH_Root.'&Run.save\ +\ &check\ syntax<Tab><A-F9>     <C-C>:call BASH_SyntaxCheck()<CR>'
 		"
 		"   set execution right only for the user ( may be user root ! )
 		"
-		exe "amenu <silent> ".s:BASH_Root.'&Run.cmd\.\ line\ &arg\.<Tab><S-F9>         <C-C>:call BASH_Arguments()<CR>'
+		exe "amenu <silent> ".s:BASH_Root.'&Run.cmd\.\ line\ &arg\.<Tab><S-F9>         <C-C>:call BASH_CmdLineArguments()<CR>'
 		exe "amenu <silent> ".s:BASH_Root.'&Run.start\ &debugger<Tab><F9>              <C-C>:call BASH_Debugger()<CR>'
 		exe "amenu <silent> ".s:BASH_Root.'&Run.make\ script\ &executable              <C-C>:call BASH_MakeScriptExecutable()<CR>'
+		exe "amenu <silent> ".s:BASH_Root.'&Run.save\ +\ &check\ syntax<Tab><A-F9>     <C-C>:call BASH_SyntaxCheck()<CR>'
+		exe "amenu <silent> ".s:BASH_Root.'&Run.syntax\ check\ o&ptions                <C-C>:call BASH_SyntaxCheckOptionsLocal()<CR>'
+		"
 		exe "amenu          ".s:BASH_Root.'&Run.-Sep1-                                 :'
+		"
 		exe "amenu <silent> ".s:BASH_Root.'&Run.&hardcopy\ to\ FILENAME\.ps            <C-C>:call BASH_Hardcopy("n")<CR>'
 		exe "vmenu <silent> ".s:BASH_Root.'&Run.&hardcopy\ to\ FILENAME\.ps            <C-C>:call BASH_Hardcopy("v")<CR>'
 		exe "imenu          ".s:BASH_Root.'&Run.-SEP2-                                 :'
 		exe "amenu <silent> ".s:BASH_Root.'&Run.plugin\ &settings                      <C-C>:call BASH_Settings()<CR>'
+		"
 		exe "imenu          ".s:BASH_Root.'&Run.-SEP3-                                 :'
 		"
 		exe "amenu  <silent>  ".s:BASH_Root.'&Run.x&term\ size                         <C-C>:call BASH_XtermSize()<CR>'
@@ -1252,6 +1330,56 @@ function! BASH_help()
 endfunction		" ---------- end of function  BASH_help  ----------
 "
 "------------------------------------------------------------------------------
+"  run : Syntax Check, check if local options does exist
+"------------------------------------------------------------------------------
+"
+function! BASH_SyntaxCheckOptions( options )
+	let startpos=0
+	while startpos < strlen( a:options )
+		" match option switch ' -O ' or ' +O '
+		let startpos		=  matchend  ( a:options, '\s*[+-]O\s\+', startpos ) 
+		" match option name
+		let optionname	=  matchstr  ( a:options, '\h\w*\s*', startpos ) 
+		" remove trailing whitespaces
+		let optionname  =  substitute( optionname, '\s\+$', "", "" )			
+		" check name
+		let found				=  match     ( s:BASH_ShoptAllowed, optionname.':' )
+		if found < 0
+			redraw
+			echohl WarningMsg | echo ' no such shopt name :  "'.optionname.'"  ' | echohl None
+			return 1
+		endif
+		" increment start position for next search
+		let startpos		=  matchend  ( a:options, '\h\w*\s*', startpos ) 
+	endwhile
+	return 0
+endfunction		" ---------- end of function  BASH_SyntaxCheckOptions----------
+"
+"------------------------------------------------------------------------------
+"  run : Syntax Check, local options
+"------------------------------------------------------------------------------
+"
+function! BASH_SyntaxCheckOptionsLocal ()
+	let filename = expand("%")
+  if filename == ""
+		redraw
+		echohl WarningMsg | echo " no file name or not a shell file " | echohl None
+		return
+  endif
+	let	prompt	= 'syntax check options for "'.filename.'" : '
+
+	if exists("b:BASH_SyntaxCheckOptionsLocal")
+		let	b:BASH_SyntaxCheckOptionsLocal= BASH_Input( prompt, b:BASH_SyntaxCheckOptionsLocal )
+	else
+		let	b:BASH_SyntaxCheckOptionsLocal= BASH_Input( prompt , "" )
+	endif
+	
+	if BASH_SyntaxCheckOptions( b:BASH_SyntaxCheckOptionsLocal ) != 0
+		let b:BASH_SyntaxCheckOptionsLocal	= ""
+	endif
+endfunction		" ---------- end of function  BASH_SyntaxCheckOptionsLocal  ----------
+"
+"------------------------------------------------------------------------------
 "  run : syntax check
 "------------------------------------------------------------------------------
 function! BASH_SyntaxCheck ()
@@ -1260,13 +1388,22 @@ function! BASH_SyntaxCheck ()
 	exe	":update"
 	exe	"set makeprg=$SHELL"
 	" 
+	" check global syntax check options / reset in case of an error
+	if BASH_SyntaxCheckOptions( s:BASH_SyntaxCheckOptionsGlob ) != 0
+		let s:BASH_SyntaxCheckOptionsGlob	= ""
+	endif
+	" 
+	let	options=s:BASH_SyntaxCheckOptionsGlob
+	if exists("b:BASH_SyntaxCheckOptionsLocal")
+		let	options=options." ".b:BASH_SyntaxCheckOptionsLocal
+	endif
+	" 
 	" match the Bash error messages (quickfix commands)
 	" errorformat will be reset by function BASH_Handle()
-	" 
 	" ignore any lines that didn't match one of the patterns
-	" 
+	"
 	exe	':setlocal errorformat='.s:BASH_Errorformat
-	exe "make -n  ./%"
+	exe "make -n ".options." -- ./% "
 	exe	":botright cwindow"								
 	exe	':setlocal errorformat='
 	exe	"set makeprg=make"
@@ -1553,9 +1690,9 @@ function! BASH_shopt (arg)
 endfunction		" ---------- end of function  BASH_shopt  ----------
 "
 "------------------------------------------------------------------------------
-"  run : Arguments
+"  run : Command line arguments
 "------------------------------------------------------------------------------
-function! BASH_Arguments ()
+function! BASH_CmdLineArguments ()
 	let filename = expand("%")
   if filename == ""
 		redraw
@@ -1568,7 +1705,7 @@ function! BASH_Arguments ()
 	else
 		let	b:BASH_CmdLineArgs= BASH_Input( prompt , "" )
 	endif
-endfunction		" ---------- end of function  BASH_Arguments  ----------
+endfunction		" ---------- end of function  BASH_CmdLineArguments  ----------
 "
 "------------------------------------------------------------------------------
 "  Bash-Idioms : read / edit code snippet
@@ -1664,28 +1801,32 @@ endfunction		" ---------- end of function  BASH_Hardcopy  ----------
 "  Run : settings
 "------------------------------------------------------------------------------
 function! BASH_Settings ()
-	let	txt	=     "  Bash-Support settings\n\n"
-	let txt = txt."            author name :  \"".s:BASH_AuthorName."\"\n"
-	let txt = txt."               initials :  \"".s:BASH_AuthorRef."\"\n"
-	let txt = txt."           autho  email :  \"".s:BASH_Email."\"\n"
-	let txt = txt."                company :  \"".s:BASH_Company."\"\n"
-	let txt = txt."                project :  \"".s:BASH_Project."\"\n"
-	let txt = txt."       copyright holder :  \"".s:BASH_CopyrightHolder."\"\n"
-	let txt = txt." code snippet directory :  ".s:BASH_CodeSnippets."\n"
-	let txt = txt."     template directory :  ".s:BASH_Template_Directory."\n"
+	let	txt	=     "     Bash-Support settings\n\n"
+	let txt = txt."               author name :  \"".s:BASH_AuthorName."\"\n"
+	let txt = txt."                  initials :  \"".s:BASH_AuthorRef."\"\n"
+	let txt = txt."              autho  email :  \"".s:BASH_Email."\"\n"
+	let txt = txt."                   company :  \"".s:BASH_Company."\"\n"
+	let txt = txt."                   project :  \"".s:BASH_Project."\"\n"
+	let txt = txt."          copyright holder :  \"".s:BASH_CopyrightHolder."\"\n"
+	let txt = txt."    code snippet directory :  ".s:BASH_CodeSnippets."\n"
+	let txt = txt."        template directory :  ".s:BASH_Template_Directory."\n"
+	let txt = txt."glob. syntax check options :  ".s:BASH_SyntaxCheckOptionsGlob."\n"
+	if exists("b:BASH_SyntaxCheckOptionsLocal")
+		let txt = txt." buf. syntax check options :  ".b:BASH_SyntaxCheckOptionsLocal."\n"
+	endif
 	if g:BASH_Dictionary_File != ""
 		let ausgabe= substitute( g:BASH_Dictionary_File, ",", ",\n                         + ", "g" )
-		let txt = txt."     dictionary file(s) :  ".ausgabe."\n"
+		let txt = txt."        dictionary file(s) :  ".ausgabe."\n"
 	endif
-	let txt = txt."   current output dest. :  ".s:BASH_OutputGvim."\n"
+	let txt = txt."      current output dest. :  ".s:BASH_OutputGvim."\n"
 	let txt = txt."\n"
-	let txt = txt."    Additional hot keys\n\n"
-	let txt = txt."               Shift-F1  :  help for builtin under the cursor \n"
-	let txt = txt."                Ctrl-F9  :  update file, run script           \n"
-	let txt = txt."                 Alt-F9  :  update file, run syntax check     \n"
-	let txt = txt."               Shift-F9  :  edit command line arguments       \n"
-	let txt = txt."                     F9  :  debug script                      \n"
-	let	txt = txt."________________________________________________________________________\n"
+	let txt = txt."       Additional hot keys\n\n"
+	let txt = txt."                  Shift-F1  :  help for builtin under the cursor \n"
+	let txt = txt."                   Ctrl-F9  :  update file, run script           \n"
+	let txt = txt."                    Alt-F9  :  update file, run syntax check     \n"
+	let txt = txt."                  Shift-F9  :  edit command line arguments       \n"
+	let txt = txt."                        F9  :  debug script                      \n"
+	let	txt = txt."___________________________________________________________________________\n"
 	let	txt = txt." Bash-Support, Version ".g:BASH_Version." / Dr.-Ing. Fritz Mehner / mehner@fh-swf.de\n\n"
 	echo txt
 endfunction		" ---------- end of function  BASH_Settings  ----------

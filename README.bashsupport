@@ -1,4 +1,4 @@
-README for bash-support.vim (Version 1.11) / Oct 30 2005
+README for bash-support.vim (Version 1.12) / Nov 11 2005
 
   *  INSTALLATION
   *  RELEASE NOTES 
@@ -57,11 +57,18 @@ and look at the bashsupport help with
 =======================================================================================
 
 ---------------------------------------------------------------------------------------
+  RELEASE NOTES FOR VERSION 1.12
+---------------------------------------------------------------------------------------
++ Bugfix: hotkey <S-F9> now working again.
++ Syntax check recognizes shopt options.
++ New regex menu: compose regular expressions with a few keystrokes from the menu.
+
+---------------------------------------------------------------------------------------
   RELEASE NOTES FOR VERSION 1.11
 ---------------------------------------------------------------------------------------
 + Start debugger bashdb with a keystroke.
 + Parameter substitutions completed.
-+ Environmnent variables completed / menu rearranged.
++ Environment variables completed / menu rearranged.
 + Builtins completed.
 + Code <-> comment working in all modes.
 + Insert/remove echo for commenting/uncommenting statements.

@@ -11,7 +11,7 @@ function usage ()
 
   < one line description >
 
-  usage : $0 [options]  
+  usage : ${0##/*/} [options]  
 
   options: 
   -h|help       display this message
