@@ -1,7 +1,7 @@
-*bashsupport.txt*                Bash Support                      Nov 11 2005
+*bashsupport.txt*                Bash Support                      Apr 23 2006
 
 bash Support                                      *bash-support* *bashsupport*
-                             Plugin version 1.12
+                             Plugin version 1.13
                         for Vim version 6.0 and above
                        Fritz Mehner  <mehner@fh-swf.de>
 
@@ -356,21 +356,52 @@ the buffer with the new name.
 1.6.4 START DEBUGGER                                    *bashsupport-debugger*
 --------------------
 
-The menu entry 'start debugger' starts the bash debugger 'bashdb'. Your version
-of the bash must be prepared for debugging and the debugger must be installed
-(see http://bashdb.sourceforge.net/).
-If you are working under a running GUI the debugger will be started in an
-independent xterm. In the non-GUI version starting the debugger is done by
+Start the debugger 'bashdb' or the frontend 'ddd' from the menu entry
+Run->debug (GUI), with hotkey \rd or F9.  Your version of the bash must be
+prepared for debugging and the debugger must be installed (see
+http://bashdb.sourceforge.net/).
+
+(1) Using bashdb
+When using gvim or vim running under a GUI the debugger will be started in an
+independent xterm. This is done because the shell integration in gvim has
+deficiencies (see also :h shell-window).
+
+When using vim from a console terminal the debugger will be started as
   :!bash --debugger  <command line arguments>
-In both cases the command line arguments come from the argument setting
-|bashsupport-cmdline-args| if any.
+The debugger now will be run inside vim. 
+
+(2) Using ddd
+The frontend ddd can be started via the menu or the hotkeys instead of bashdb
+as described above.  The preference can be set with the global variable
+g:BASH_Debugger (possible values: 'term', 'ddd' ) in '.vimrc' : 
+
+  let g:BASH_Debugger     = 'ddd'     
+
+The default is 'term'.
+
+In all cases the command line arguments from the argument setting
+(|bashsupport-cmdline-args|) are passed to the debugger.
 
 
 1.6.5 Hardcopy                                          *bashsupport-hardcopy*
 --------------
 
-Normal mode, insert mode: a Postscript file is made from the whole file.
-Visual mode             : a Postscript file is made from the marked area.
+Generates a PostScript file from the whole buffer or from a marked region.
+
+The print header contains date and time for the current locale. The definition
+used is
+ 
+  let s:C_Printheader = "%<%f%h%m%<  %=%{strftime('%x %X')}     Page %N"
+
+The current locale can be overwritten by changing the language, e.g. 
+
+  :language C
+
+or by setting a global variable in the file .vimrc , e.g. :
+
+  let g:C_Printheader = "%<%f%h%m%<  %=%{strftime('%x %X')}     SEITE %N"
+
+See :h printheader and :h strftime()  for more details. 
 
 
 1.6.6 Xterm size                                           *bashsupport-xterm*
@@ -445,8 +476,12 @@ The methods are "vim", "buffer" and "xterm".
 2.  USAGE without GUI  (Vim)                           *bashsupport-usage-vim*
 ==============================================================================
 
-The frequently used constructs and commands can also be inserted and used with
-key mappings:
+The frequently used constructs can be inserted with key mappings.  The
+mappings are also described in the document bash-hot-keys.pdf (reference card,
+part of this package).
+Hint: Typing speed matters. The combination of a leader ('\') and the
+following character(s) will only be recognized for a short time.
+
 
   -- Load / Unload bash Support -------------------------
 
@@ -522,6 +557,8 @@ The following hot keys are defined in NORMAL, VISUAL and INSERT MODE:
    Shift-F9   command line arguments (for the current buffer)
          F9   start debugger (bashdb)
 
+See |bashsupport-usage-vim| for more hotkeys.
+
 
 ==============================================================================
 4.0  CUSTOMIZATION                                 *bashsupport-customization*
@@ -532,6 +569,7 @@ The following hot keys are defined in NORMAL, VISUAL and INSERT MODE:
 ------------------------------------------------------------------------------
 
 README.bashsupport        This file.
+ChangeLog                 The change log.
 
 codesnippets-bash/*       Some code snippets as a starting point.
 
@@ -599,6 +637,8 @@ g:BASH_OutputGvim              "vim"
 g:BASH_XtermDefaults           "-fa courier -fs 12 -geometry 80x24"
 g:BASH_LineEndCommColDefault   49
 g:BASH_SyntaxCheckOptionsGlob  ""
+g:BASH_Printheader             "%<%f%h%m%<  %=%{strftime('%x %X')}     Page %N"
+g:BASH_Debugger                "term"
 
 --------------------------------------------------------------------------------
 
@@ -627,6 +667,8 @@ g:BASH_SyntaxCheckOptionsGlob  ""
           g:BASH_XtermDefaults          : The xterm defaults (see |bashsupport-xterm|).
           g:BASH_LineEndCommColDefault  : default starting column for line end comments 
           g:BASH_SyntaxCheckOptionsGlob : shopt options used with syntax checking
+          g:BASH_Printheader            : hardcopy header format 
+          g:BASH_Debugger               : the debugger called by F9 (term, ddd).
           
 To override the defaults add appropriate assignments in .vimrc .
 Here are my settings as an example:

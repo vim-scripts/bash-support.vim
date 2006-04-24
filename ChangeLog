@@ -1,0 +1,114 @@
+
+---------------------------------------------------------------------------------------
+  RELEASE NOTES FOR VERSION 1.13
+---------------------------------------------------------------------------------------
++ The hotkeys F9 and \rd now also starts the debugger if vim is running without GUI.
++ The debugger frontend ddd can be started as preferred debugger.
++ New help entry in the main menu of this plugin (shows the plugin documentation).
++ A hardcopy shows the localized date and time in the header line.
+
+---------------------------------------------------------------------------------------
+  RELEASE NOTES FOR VERSION 1.12
+---------------------------------------------------------------------------------------
++ Bugfix: hotkey <S-F9> now working again.
++ Syntax check recognizes shopt options.
++ New regex menu: compose regular expressions with a few keystrokes from the menu.
+
+---------------------------------------------------------------------------------------
+  RELEASE NOTES FOR VERSION 1.11
+---------------------------------------------------------------------------------------
++ Start debugger bashdb with a keystroke.
++ Parameter substitutions completed.
++ Environment variables completed / menu rearranged.
++ Builtins completed.
++ Code <-> comment working in all modes.
++ Insert/remove echo for commenting/uncommenting statements.
++ Script will be made executable before running it (e.g. after a "Save As...").
++ Statement menu now in alphabetical order.
+
+---------------------------------------------------------------------------------------
+  RELEASE NOTES FOR VERSION 1.10.1
+---------------------------------------------------------------------------------------
++ Starting an xterm was not possible with some installations (bugfix).
+
+---------------------------------------------------------------------------------------
+  RELEASE NOTES FOR VERSION 1.10
+---------------------------------------------------------------------------------------
++ New Bash 3.0 set options added.
++ Shopt-menu added.
++ More builtins.
++ <S-F1> or \h displays help for the Bash builtin command under the cursor.
++ Key mappings for all run menu entries.
++ Line end comments start in a fixed column now (can be set from the menu).
++ Spaces in path names and file names are now possible.
++ Template files and snippet files are no longer kept in the list of alternate files.
++ Global variable is_bash is set to avoid a wrong highlighting for $(..) and $((..)).
+
+---------------------------------------------------------------------------------------
+  RELEASE NOTES FOR VERSION 1.9
+---------------------------------------------------------------------------------------
++ Running a Bash-script 
+  (1) The script can be run from the command line as usual.
+  (2) The output can be directed into a window with name "Bash-Output". 
+      The buffer and its content will disappear when closing the window. 
+      The buffer is reused when still open.
+  (3) The script can be run in an xterm.
++ The new hotkey Shift-F9 or the "cmd. line arg." sets command line arguments for the
+  current buffer (that is, each buffer can have its own arguments).
++ A code snippet with the file name extension "ni" or "noindent" will not be
+  indented on insertion.
++ 'Line End Comments' ignores blank lines in a marked block.
++ Calling a set-command (submenu "Set") for a marked block will set this option above
+  this block and unset it below.
+
+---------------------------------------------------------------------------------------
+  RELEASE NOTES FOR VERSION 1.8
+---------------------------------------------------------------------------------------
++ Installation simplified. 
++ Run syntax check / list errors in an error window
++ Append aligned comments to all lines of a marked block.
++ The root menu can be removed (default is not removed).
++ The dialog windows (GUI) have been replaced by more flexible command line inputs.
++ User will now be asked before a snippet file will be overwritten.
++ The undocumented and unnecessary hot key F12 has been removed.
+
+---------------------------------------------------------------------------------------
+  RELEASE NOTES FOR VERSION 1.7
+---------------------------------------------------------------------------------------
++ Only one entry in the gVim root menu.
++ All hotkeys are only defined for bash files.
++ Install script added.
++ Customization improved. 
++ Documentation improved.
++ Bug fix (template file handling)
+
+---------------------------------------------------------------------------------------
+  RELEASE NOTES FOR VERSION 1.6
+---------------------------------------------------------------------------------------
++ 28 key mappings for Vim without GUI. See bash-hot-keys.pdf (reference card).
++ Vim doc added (file bashsupport.txt).
+
+---------------------------------------------------------------------------------------
+  RELEASE NOTES FOR VERSION 1.5
+---------------------------------------------------------------------------------------
++ Tag substitution rewritten (Some characters in a substitution text for a tag 
+  prevented the tag from being substituted).
++ All bash variables can now be inserted from the menus.
++ A marked region can be surrounded by a for-, if, select- while- or until
+  statement (with indentation).
++ A marked text can be surrounded with quotes.
++ A marked region or a complete line can be surrounded with echo " ".
++ The echo " " can be removed from a line.
+
+---------------------------------------------------------------------------------------
+  RELEASE NOTES FOR VERSION 1.4
+---------------------------------------------------------------------------------------
++ Block comments are now read as templates or skeletons from files:
+    frame Comment,  function description,  file header
++ These templates can contain tags like |FILENAME|, |AUTHOR| etc. which are replaced
+  after reading.
++ indentation: multiline inserts and code snippets will be indented after insertion.
++ Most menu entries are now also active in normal mode.
++ Reading the templates is done in one function which can be called in an autocmd.
++ Code cleanup: register z no longer used. Most function calls are silent now.
+

@@ -3,8 +3,8 @@
 " Language   :  bash
 " Plugin     :  bash-support.vim
 " Maintainer :  Fritz Mehner <mehner@fh-swf.de>
-" Version    :  1.12
-" Last Change:  11.11.2005
+" Version    :  1.13
+" Last Change:  15.04.2006
 "
 " -----------------------------------------------------------------
 "
@@ -42,8 +42,8 @@ imap  <buffer>  <silent>  <C-F9>   <C-C><C-C>:call BASH_Run("n")<CR>
  map  <buffer>  <silent>  <S-F9>             :call BASH_CmdLineArguments()<CR>
 imap  <buffer>  <silent>  <S-F9>        <Esc>:call BASH_CmdLineArguments()<CR>
   "
- map  <buffer>  <silent>    <F9>        <C-C>:call BASH_Debugger()<CR>
-imap  <buffer>  <silent>    <F9>   <C-C><C-C>:call BASH_Debugger()<CR>
+ map  <buffer>  <silent>    <F9>        <C-C>:call BASH_Debugger()<CR>:redraw!<CR>
+imap  <buffer>  <silent>    <F9>   <C-C><C-C>:call BASH_Debugger()<CR>:redraw!<CR>
 "
 "
  map  <buffer>  <silent>  <S-F1>             :call BASH_help()<CR>
@@ -101,7 +101,7 @@ endif
 vmap  <buffer>  <silent>  <Leader>rr      <Esc>:call BASH_Run("v")<CR>
  map  <buffer>  <silent>  <Leader>rc      <Esc>:call BASH_SyntaxCheck()<CR>
  map  <buffer>  <silent>  <Leader>ra      <Esc>:call BASH_CmdLineArguments()<CR>
- map  <buffer>  <silent>  <Leader>rd      <Esc>:call BASH_Debugger()<CR>
+ map  <buffer>  <silent>  <Leader>rd      <Esc>:call BASH_Debugger()<CR>:redraw!<CR>
  map  <buffer>  <silent>  <Leader>rs      <Esc>:call BASH_Settings()<CR>
 if has("gui_running") && has("unix")
  map  <buffer>  <silent>  <Leader>rt      <Esc>:call BASH_XtermSize()<CR>
@@ -110,4 +110,4 @@ endif
 
  map  <buffer>  <silent>  <Leader>rh      <Esc>:call BASH_Hardcopy("n")<CR>
 vmap  <buffer>  <silent>  <Leader>rh      <Esc>:call BASH_Hardcopy("v")<CR>
-
+"
