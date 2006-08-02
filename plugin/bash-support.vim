@@ -18,9 +18,18 @@
 "          Email:  mehner@fh-swf.de
 "          
 "        Version:  see variable  g:BASH_Version  below 
-"       Revision:  23.04.2006
+"       Revision:  01.08.2006
 "        Created:  26.02.2001
-"        License:  GPL (GNU Public License)
+"        License:  Copyright (c) 2001-2006, Fritz Mehner
+"                  This program is free software; you can redistribute it and/or
+"                  modify it under the terms of the GNU General Public License as
+"                  published by the Free Software Foundation, version 2 of the
+"                  License.
+"                  This program is distributed in the hope that it will be
+"                  useful, but WITHOUT ANY WARRANTY; without even the implied
+"                  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+"                  PURPOSE.
+"                  See the GNU General Public License version 2 for more details.
 "  
 "------------------------------------------------------------------------------
 " 
@@ -29,7 +38,7 @@
 if exists("g:BASH_Version") || &cp
  finish
 endif
-let g:BASH_Version= "1.13"  						" version number of this script; do not change
+let g:BASH_Version= "1.14"  						" version number of this script; do not change
 "
 "#########################################################################################
 "
@@ -141,7 +150,7 @@ function!	BASH_InitMenu ()
 		"===============================================================================================
 		if s:BASH_Root != ""
 			if s:BASH_MenuHeader == "yes"
-				exe "amenu   ".s:BASH_Root.'<Tab>Bash     <Esc>'
+				exe "amenu   ".s:BASH_Root.'Bash          <Esc>'
 				exe "amenu   ".s:BASH_Root.'-Sep0-        :'
 			endif
 		endif
@@ -1051,7 +1060,9 @@ function!	BASH_InitMenu ()
 		"----- Menu : help  ----------------------------------------------------------------------------
 		"===============================================================================================
 		"
-		exe "menu  <silent>  ".s:BASH_Root.'&help\ \(plugin\)        <C-C><C-C>:call BASH_HelpBASHsupport()<CR>'
+		if s:BASH_Root != ""
+			exe "menu  <silent>  ".s:BASH_Root.'&help\ \(plugin\)        <C-C><C-C>:call BASH_HelpBASHsupport()<CR>'
+		endif
 		"
 	endif
 
@@ -1073,7 +1084,12 @@ endfunction		" ---------- end of function  BASH_Input  ----------
 "  Comments : get line-end comment position
 "------------------------------------------------------------------------------
 function! BASH_GetLineEndCommCol ()
-  let	b:BASH_LineEndCommentColumn	= virtcol(".") 
+	let actcol	= virtcol(".")
+	if actcol+1 == virtcol("$")
+		let	b:BASH_LineEndCommentColumn	= BASH_Input( 'start line-end comment at virtual column : ', actcol )
+	else
+		let	b:BASH_LineEndCommentColumn	= virtcol(".") 
+	endif
   echomsg "line end comments will start at column  ".b:BASH_LineEndCommentColumn
 endfunction		" ---------- end of function  BASH_GetLineEndCommCol  ----------
 "

@@ -1,10 +1,16 @@
-README for bash-support.vim (Version 1.13) / Apr 22 2006
+README for bash-support.vim (Version 1.14) / Aug 01 2006
 
   *  INSTALLATION
   *  RELEASE NOTES 
   *  FILES
   *  ADDITIONAL TIPS
- 
+
+Bash Support implements a bash-IDE for Vim/gVim. It is written to considerably
+speed up writing code in a consistent style.  This is done by inserting
+complete statements, comments, idioms, and code snippets.  Syntax checking,
+running a script, starting a debugger  can be done with a keystroke.  There
+are many additional hints and options which can improve speed and comfort when
+writing shell scripts. 
  
 =======================================================================================
   INSTALLATION
@@ -56,13 +62,14 @@ and look at the bashsupport help with
   RELEASE NOTES 
 =======================================================================================
 
-  RELEASE NOTES FOR VERSION 1.13
+  RELEASE NOTES FOR VERSION 1.14
 
-+ The hotkeys F9 and \rd now also starts the debugger if vim is running without GUI.
-+ The debugger frontend ddd can be started as preferred debugger.
-+ New help entry in the main menu of this plugin (shows the plugin documentation).
-+ A hardcopy shows the localized date and time in the header line.
++ Setting the column for the start of line-end comments improved.
++ Mac OS X : circumvent a Vim bug which caused a crash when loading plugin version 1.13.
 
+=======================================================================================
+  OLDER RELEASE NOTES : see file 'ChangeLog'
+=======================================================================================
 
 =======================================================================================
   FILES

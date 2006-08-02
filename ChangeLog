@@ -1,5 +1,11 @@
 
 ---------------------------------------------------------------------------------------
+  RELEASE NOTES FOR VERSION 1.14
+---------------------------------------------------------------------------------------
++ Setting the column for the start of line-end comments improved.
++ Mac OS X : circumvent a Vim bug which caused a crash when loading plugin version 1.13.
+
+---------------------------------------------------------------------------------------
   RELEASE NOTES FOR VERSION 1.13
 ---------------------------------------------------------------------------------------
 + The hotkeys F9 and \rd now also starts the debugger if vim is running without GUI.
