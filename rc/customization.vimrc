@@ -34,6 +34,7 @@ set complete+=k           " scan the files given with the 'dictionary' option
 " Various settings
 "-------------------------------------------------------------------------------
 "
+set autochdir             " change the current working directory
 set autoread              " read open files again when changed outside Vim
 set autowrite             " write a modified buffer on each :next , ...
 set browsedir  =current   " which directory to use for the file browser
@@ -53,9 +54,6 @@ set visualbell            " visual bell instead of beeping
 "    F6   -  list all errors           
 "    F7   -  display previous error
 "    F8   -  display next error   
-"    F12  -  toggle line numbers
-"  S-Tab  -  Fast switching between buffers (see below)
-"    C-q  -  Leave the editor with Ctrl-q (see below)
 "-------------------------------------------------------------------------------
 "
 map   <silent> <F2>    :write<CR>
@@ -64,7 +62,6 @@ nmap  <silent> <F4>    :exe ":ptag ".expand("<cword>")<CR>
 map   <silent> <F6>    :copen<CR>
 map   <silent> <F7>    :cp<CR>
 map   <silent> <F8>    :cn<CR>
-map   <silent> <F12>   :let &number=1-&number<CR>
 "
 imap  <silent> <F2>    <Esc>:write<CR>
 imap  <silent> <F3>    <Esc>:Explore<CR>
@@ -72,7 +69,17 @@ imap  <silent> <F4>    <Esc>:exe ":ptag ".expand("<cword>")<CR>
 imap  <silent> <F6>    <Esc>:copen<CR>
 imap  <silent> <F7>    <Esc>:cp<CR>
 imap  <silent> <F8>    <Esc>:cn<CR>
-imap  <silent> <F12>   <Esc>:let &number=1-&number<CR>
+"
+"-------------------------------------------------------------------------------
+" autocomplete parenthesis, brackets and braces
+"-------------------------------------------------------------------------------
+inoremap ( ()<Left>
+inoremap [ []<Left>
+inoremap { {}<Left>
+"
+vnoremap ( s()<Esc>P
+vnoremap [ s[]<Esc>P
+vnoremap { s{}<Esc>P
 "
 "-------------------------------------------------------------------------------
 " Fast switching between buffers
@@ -89,13 +96,6 @@ imap  <silent> <s-tab>  <Esc>:if &modifiable && !&readonly &&
 " Leave the editor with Ctrl-q : Write all changed buffers and exit Vim
 "-------------------------------------------------------------------------------
 nmap  <C-q>    :wqa<CR>
-"
-"-------------------------------------------------------------------------------
-" Change the working directory to the directory containing the current file
-"-------------------------------------------------------------------------------
-if has("autocmd")
-  autocmd BufEnter * :lcd %:p:h
-endif " has("autocmd")
 "
 "-------------------------------------------------------------------------------
 " Filename completion

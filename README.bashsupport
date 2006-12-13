@@ -1,4 +1,4 @@
-README for bash-support.vim (Version 1.14) / Aug 01 2006
+README for bash-support.vim (Version 1.15) / Dec 13 2006
 
   *  INSTALLATION
   *  RELEASE NOTES 
@@ -62,10 +62,11 @@ and look at the bashsupport help with
   RELEASE NOTES 
 =======================================================================================
 
-  RELEASE NOTES FOR VERSION 1.14
+  RELEASE NOTES FOR VERSION 1.15
 
-+ Setting the column for the start of line-end comments improved.
-+ Mac OS X : circumvent a Vim bug which caused a crash when loading plugin version 1.13.
++ Needs Vim version 7.0+.
++ Inserting a function can be used in visual mode (+ new key mapping).
++ Bugfix: cursor misplaced after some visual mode operations.
 
 =======================================================================================
   OLDER RELEASE NOTES : see file 'ChangeLog'

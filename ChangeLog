@@ -1,5 +1,12 @@
 
 ---------------------------------------------------------------------------------------
+  RELEASE NOTES FOR VERSION 1.15
+---------------------------------------------------------------------------------------
++ Needs Vim version 7.0+.
++ Inserting a function can be used in visual mode (+ new key mapping).
++ Bugfix: cursor misplaced after some visual mode operations.
+
+---------------------------------------------------------------------------------------
   RELEASE NOTES FOR VERSION 1.14
 ---------------------------------------------------------------------------------------
 + Setting the column for the start of line-end comments improved.

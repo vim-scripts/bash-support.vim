@@ -1,7 +1,7 @@
-*bashsupport.txt*                Bash Support                      Aug 01 2006
+*bashsupport.txt*                Bash Support                      Dec 13 2006
 
 bash Support                                      *bash-support* *bashsupport*
-                             Plugin version 1.14
+                             Plugin version 1.15
                         for Vim version 6.0 and above
                        Fritz Mehner  <mehner@fh-swf.de>
 
@@ -198,6 +198,7 @@ quotes or an echo with quotes:
   select  in do ... done
   until do ... done
   while do ... done
+  function NAME () { ... } 
 
   ${...}
   $(...)
@@ -494,8 +495,8 @@ following character(s) will only be recognized for a short time.
 
   -- Load / Unload bash Support -------------------------
 
-  \lbs    Load Bash Support    (normal)
-  \ubs    Unload Bash Support  (normal)
+  \lbs    Load Bash Support               (normal, GUI only)
+  \ubs    Unload Bash Support             (normal, GUI only)
 
   -- Comments -------------------------------------------
 
@@ -526,6 +527,7 @@ following character(s) will only be recognized for a short time.
   \as     select in do done               (normal, visual)
   \at     until do done                   (normal, visual)
   \aw     while do done                   (normal, visual)
+  \au     function                        (normal, visual)
   \ao     echo -e "..."                   (normal, visual)
 
   -- Run ------------------------------------------------

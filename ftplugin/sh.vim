@@ -3,8 +3,8 @@
 " Language   :  bash
 " Plugin     :  bash-support.vim
 " Maintainer :  Fritz Mehner <mehner@fh-swf.de>
-" Version    :  1.13
-" Last Change:  15.04.2006
+" Version    :  1.15
+" Last Change:  13.12.2006
 "
 " -----------------------------------------------------------------
 "
@@ -83,6 +83,7 @@ nmap  <buffer>  <silent>  <Leader>al      oelif <CR>then<Esc>1kA
 nmap  <buffer>  <silent>  <Leader>as      oselect  in <CR>do<CR>done<Esc>2kf a
 nmap  <buffer>  <silent>  <Leader>at      ountil <CR>do<CR>done<Esc>2kA
 nmap  <buffer>  <silent>  <Leader>aw      owhile <CR>do<CR>done<Esc>2kA
+nmap  <buffer>  <silent>  <Leader>au			:call BASH_CodeFunction("a")<CR>O
 
 vmap  <buffer>  <silent>  <Leader>ae      DOif <CR>then<CR>else<CR>fi<Esc>kP<Esc>:exe "normal =".(line("'>")-line(".")-1)."+"<CR>2kA
 vmap  <buffer>  <silent>  <Leader>af      DOfor  in <CR>do<CR>done<Esc>P2k^<Esc>:exe "normal =".(line("'>")-line(".")-1)."+"<CR>f<Space>a
@@ -90,6 +91,7 @@ vmap  <buffer>  <silent>  <Leader>ai      DOif <CR>then<CR>fi<Esc>P2k<Esc>:exe "
 vmap  <buffer>  <silent>  <Leader>as      DOselect  in <CR>do<CR>done<Esc>P2k^<Esc>:exe "normal =".(line("'>")-line(".")-1)."+"<CR>f<Space>a
 vmap  <buffer>  <silent>  <Leader>at      DOuntil <CR>do<CR>done<Esc>P2k<Esc>:exe "normal =".(line("'>")-line(".")-1)."+"<CR>A
 vmap  <buffer>  <silent>  <Leader>aw      DOwhile <CR>do<CR>done<Esc>P2k<Esc>:exe "normal =".(line("'>")-line(".")-1)."+"<CR>A
+vmap  <buffer>  <silent>  <Leader>au			<Esc><Esc>:call BASH_CodeFunction("v")<CR>
 
 nmap  <buffer>  <silent>  <Leader>ao      ^iecho<Space>-e<Space>"\n"<Esc>2hi
 vmap  <buffer>  <silent>  <Leader>ao      secho<Space>-e<Space>"\n"<Esc>2hP
