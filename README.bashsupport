@@ -1,4 +1,4 @@
-README for bash-support.vim (Version 1.15) / Dec 13 2006
+README for bash-support.vim (Version 2.0) / Jan 19 2007
 
   *  INSTALLATION
   *  RELEASE NOTES 
@@ -59,14 +59,14 @@ and look at the bashsupport help with
 
 
 =======================================================================================
-  RELEASE NOTES 
+  RELEASE NOTES FOR VERSION 2.0
 =======================================================================================
-
-  RELEASE NOTES FOR VERSION 1.15
-
-+ Needs Vim version 7.0+.
-+ Inserting a function can be used in visual mode (+ new key mapping).
-+ Bugfix: cursor misplaced after some visual mode operations.
++ PLUGIN DIRECTORIES REARRANGED.
++ One new mapping (\cs). 
++ Statement menu extended.
++ Bash keyword help (S-F1) improved.
++ Bugfix: empty new file after removing the header template can't be closed.
++ Bugfix : Tools entry missing when root menu not shown from the start.
 
 =======================================================================================
   OLDER RELEASE NOTES : see file 'ChangeLog'
@@ -76,43 +76,36 @@ and look at the bashsupport help with
   FILES
 =======================================================================================
 
-README.bashsupport        This file.
-ChangeLog                 The change log.
+README.bashsupport                  This file.
 
-codesnippets-bash/*       Some code snippets as a starting point.
+ftplugin/sh.vim                     A filetype plugin. Defines hotkeys and more.
 
-doc/bashsupport.txt       The help file for the local online help. 
+plugin/bash-support.vim             The bash plugin for Vim/gVim.
+plugin/wrapper.sh                   A wrapper script for the use of an xterm.
 
-ftplugin/sh.vim           A filetype plugin. Define hotkeys, creates a local dictionary 
-                          for each bash file.
+doc/bashsupport.txt                 The help file for the local online help. 
 
-plugin/bash-support.vim   The bash plugin for Vim/gVim.
-plugin/wrapper.sh         The wrapper script for the use of an xterm.
+bash-support/codesnippets/*         Some code snippets as a starting point.
 
-plugin/templates/bash-file-header           -+-  bash template files 
-plugin/templates/bash-frame                  |   (see bashsupport.txt)
-plugin/templates/bash-function-description  -+
+bash-support/templates/*            bash template files (see bashsupport.txt).
 
-wordlists/bash.list       A file with words used as dictionary for automatic word 
-                          completion. This file is referenced in the file 
-                          customization.vimrc .
+bash-support/wordlists/*            Additional word lists (dictionaries).
 
 -----------------------   -------------------------------------------------------------
 -----------------------   The following files and extensions are for convenience only.
                           bash-support.vim will work without them.
                           -------------------------------------------------------------
 
-rc/customization.vimrc    Additional settings I use in  .vimrc:  incremental search,
-                          tabstop, hot keys, font, use of dictionaries, ...
-                          The file is commented. Append it to your .vimrc if you like.
+bash-support/rc/costumization.vimrc   Additional settings I use in .vimrc: incremental 
+                                      search, tabstop, hot keys, font, use of dictionaries, 
+                                      ...  The file is commented. Append it to your .vimrc
+                                      if you like.
 
-rc/customization.gvimrc   Additional settings I use in  .gvimrc:
-                            hot keys, mouse settings, ...
-                          The file is commented. Append it to your .gvimrc if you like.
+bash-support/rc/costumization.gvimrc  Additional settings I use in .gvimrc: hot keys, 
+                                      mouse settings, ...  The file is commented. 
+                                      Append it to your .gvimrc if you like.
 
-doc/bash-hot-keys.pdf     Reference card for the key mappings. 
-                          The mappings can be used with the non-GUI Vim, 
-                          because the menus are not available.
+bash-support/doc/*                    Hotkey reference card (PDF), changelog. 
 
 
 =======================================================================================

@@ -1,5 +1,15 @@
 
 ---------------------------------------------------------------------------------------
+  RELEASE NOTES FOR VERSION 2.0
+---------------------------------------------------------------------------------------
++ PLUGIN DIRECTORIES REARRANGED.
++ One new mapping (\cs). 
++ Statement menu extended.
++ Bash keyword help (S-F1) improved.
++ Bugfix: empty new file after removing the header template can't be closed.
++ Bugfix : Tools entry missing when root menu not shown from the start.
+
+---------------------------------------------------------------------------------------
   RELEASE NOTES FOR VERSION 1.15
 ---------------------------------------------------------------------------------------
 + Needs Vim version 7.0+.

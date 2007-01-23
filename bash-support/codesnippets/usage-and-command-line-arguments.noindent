@@ -3,26 +3,23 @@ ScriptVersion="1.0"
 
 #===  FUNCTION  ================================================================
 #         NAME:  usage
-#  DESCRIPTION:  Display usage text.
+#  DESCRIPTION:  Display usage information.
 #===============================================================================
 function usage ()
 {
 	cat <<- EOT
 
-  < one line description >
+  Usage :  ${0##/*/} [options] [--] 
 
-  usage : ${0##/*/} [options]  
-
-  options: 
-  -h|help       display this message
-  -v|version    display script version
+  Options: 
+  -h|help       Display this message
+  -v|version    Display script version
 
 	EOT
 }    # ----------  end of function usage  ----------
 
-
 #-----------------------------------------------------------------------
-#  handle command line arguments
+#  Handle command line arguments
 #-----------------------------------------------------------------------
 
 while getopts ":hv" opt
@@ -33,7 +30,7 @@ do
 
     v|version  )  echo "$0 -- Version $ScriptVersion"; exit 0   ;;
 
-    \? )  echo -e "\n  option does not exist : $OPTARG\n"
+    \? )  echo -e "\n  Option does not exist : $OPTARG\n"
           usage; exit 1   ;;
 
   esac    # --- end of case ---

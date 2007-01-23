@@ -1,7 +1,7 @@
-*bashsupport.txt*                Bash Support                      Dec 13 2006
+*bashsupport.txt*                Bash Support                      Jan 05 2007
 
 bash Support                                      *bash-support* *bashsupport*
-                             Plugin version 1.15
+                             Plugin version 2.0
                         for Vim version 6.0 and above
                        Fritz Mehner  <mehner@fh-swf.de>
 
@@ -184,7 +184,20 @@ will insert an if-statement:
  then
  fi
 
-Inner statements will be indented.
+The statements will be indented.
+
+The for-, if-, if-else-, select-, until- and while-statement can be changed
+so that the 'do' or 'then' stands on the first line:
+
+ if  ; then
+ fi
+
+This is achived by setting the global variable g:BASH_DoOnNewLine in '.vimrc': 
+
+  let g:BASH_DoOnNewLine   = 'yes'     
+
+The default value is 'no'.
+
 
 1.2.1  VISUAL MODE                                   *bashsupport-stat-visual*
 ------------------
@@ -215,8 +228,8 @@ quotes or an echo with quotes:
 
 Code snippets are pieces of code which are kept in separate files in a special
 directory. File names are used to identify the snippets.  The default snippet
-directory is  $HOME/.vim/codesnippets-bash.  Snippets are managed with the 3
-entries 
+directory is  $HOME/.vim/bash-support/codesnippets.  Snippets are managed with
+the 3 entries 
 
    bash -> Statements -> read  code snippet
    bash -> Statements -> write code snippet
@@ -489,6 +502,11 @@ The methods are "vim", "buffer" and "xterm".
 The frequently used constructs can be inserted with key mappings.  The
 mappings are also described in the document bash-hot-keys.pdf (reference card,
 part of this package).
+
+ * All mappings (except \lbs and \ubs) are filetype specific: they are only
+ * defined for buffers with filetype 'sh' to minimize conflicts with mappings
+ * from other plugins.
+
 Hint: Typing speed matters. The combination of a leader ('\') and the
 following character(s) will only be recognized for a short time.
 
@@ -500,19 +518,20 @@ following character(s) will only be recognized for a short time.
 
   -- Comments -------------------------------------------
 
-  \cl     Line End Comment                (normal)
-  \cf     Frame Comment                   (normal)
-  \cu     Function Description            (normal)
-  \ch     File Header                     (normal)
-  \ckb    Keyword comment BUG             (normal)
-  \ckt    Keyword comment TODO            (normal)
-  \ckr    Keyword comment TRICKY          (normal)
-  \ckw    Keyword comment WARNING         (normal)
-  \ckn    Keyword comment New_Keyword     (normal)
+  \cl     line end comment                (normal, visual)
+  \cs     set end comment column          (normal, visual)
+  \cf     frame comment                   (normal)
+  \cu     function description            (normal)
+  \ch     file header                     (normal)
+  \ckb    keyword comment BUG             (normal)
+  \ckt    keyword comment TODO            (normal)
+  \ckr    keyword comment TRICKY          (normal)
+  \ckw    keyword comment WARNING         (normal)
+  \ckn    keyword comment New_Keyword     (normal)
   \cc     code to comment                 (normal, visual)
   \co     comment to code                 (normal, visual)
-  \cd     Date                            (normal)
-  \ct     Date & Time                     (normal)
+  \cd     date                            (normal)
+  \ct     date & time                     (normal)
   \ce     echo "..."                      (normal)
   \cr     remove echo "..."               (normal)
   \cv     vim modeline                    (normal)
@@ -579,43 +598,37 @@ See |bashsupport-usage-vim| for more hotkeys.
 4.1  FILES                                          *bashsupport-custom-files*
 ------------------------------------------------------------------------------
 
-README.bashsupport        This file.
-ChangeLog                 The change log.
+README.bashsupport                  Release notes, installation description.
 
-codesnippets-bash/*       Some code snippets as a starting point.
+ftplugin/sh.vim                     The filetype plugin. Defines hotkeys and more.
 
-doc/bashsupport.txt       The help file for the local online help. 
+plugin/bash-support.vim             The bash plugin for Vim/gVim.
+plugin/wrapper.sh                   A wrapper script for the use of an xterm.
 
-ftplugin/sh.vim           A file type plugin. Define hot keys, creates a local 
-                          dictionary for each bash file.
+doc/bashsupport.txt                 The help file for the local online help. 
 
-plugin/bash-support.vim   The bash plugin for Vim/gVim.
-plugin/wrapper.sh         The wrapper script for the use with a xterm.
+bash-support/codesnippets/*         Some code snippets as a starting point.
 
-plugin/templates/bash-file-header           -+-  bash template files 
-plugin/templates/bash-frame                  |   (see bashsupport.txt)
-plugin/templates/bash-function-description  -+
+bash-support/templates/*            bash template files (see |bashsupport-comm-templates|).
 
-wordlists/bash.list       A file with words used as dictionary for automatic word 
-                          completion. This file is referenced in the file 
-                          customization.vimrc .
+bash-support/wordlists/*            Additional word lists (dictionaries).
 
 -----------------------   -------------------------------------------------------------
 -----------------------   The following files and extensions are for convenience only.
                           bash-support.vim will work without them.
                           -------------------------------------------------------------
 
-rc/customization.vimrc    Additional settings I use in  .vimrc:  incremental search,
-                          tabstop, hot keys, font, use of dictionaries, ...
-                          The file is commented. Append it to your .vimrc if you like.
+bash-support/rc/costumization.vimrc   Additional settings I use in .vimrc: incremental 
+                                      search, tabstop, hot keys, font, use of dictionaries, 
+                                      ...  The file is commented. Append it to your .vimrc
+                                      if you like.
 
-rc/customization.gvimrc   Additional settings I use in  .gvimrc:
-                            hot keys, mouse settings, ...
-                          The file is commented. Append it to your .gvimrc if you like.
+bash-support/rc/costumization.gvimrc  Additional settings I use in .gvimrc: hot keys, 
+                                      mouse settings, ...  The file is commented. 
+                                      Append it to your .gvimrc if you like.
 
-doc/bash-hot-keys.pdf     Reference card for the key mappings. 
-                          The mappings can be used with the non-GUI Vim, 
-                          because the menus are not available.
+bash-support/doc/*                    Hotkey reference card (PDF), changelog. 
+
 
 ------------------------------------------------------------------------------
 4.2  GLOBAL VARIABLES                           *bashsupport-custom-variables*
@@ -634,16 +647,17 @@ g:BASH_Company                 ""                                |COMPANY|
 g:BASH_Project                 ""                                |PROJECT|
 g:BASH_CopyrightHolder         ""                                |COPYRIGHTHOLDER|
 
-g:BASH_Template_Directory      $HOME."/.vim/plugin/templates/"
+g:BASH_Template_Directory      $HOME."/.vim/bash-support/templates/"
 g:BASH_Template_File           "bash-file-header"
 g:BASH_Template_Frame          "bash-frame"
 g:BASH_Template_Function       "bash-function-description"
 
-g:BASH_CodeSnippets            $HOME."/.vim/codesnippets-bash"
+g:BASH_CodeSnippets            $HOME."/.vim/bash-support/codesnippets"
 g:BASH_LoadMenus               "yes"
-g:BASH_Dictionary_File         $HOME."/.vim/wordlists/bash.list"
+g:BASH_Dictionary_File         $HOME."/.vim/bash-support/wordlists/bash.list"
 g:BASH_Root                    'B&ash.'
 
+g:BASH_DoOnNewLine             'no'     
 g:BASH_OutputGvim              "vim"
 g:BASH_XtermDefaults           "-fa courier -fs 12 -geometry 80x24"
 g:BASH_LineEndCommColDefault   49
@@ -680,6 +694,7 @@ g:BASH_Debugger                "term"
           g:BASH_SyntaxCheckOptionsGlob : shopt options used with syntax checking
           g:BASH_Printheader            : hardcopy header format 
           g:BASH_Debugger               : the debugger called by F9 (term, ddd).
+          g:BASH_DoOnNewLine            : see |bashsupport-stat-norm-ins|
           
 To override the defaults add appropriate assignments in .vimrc .
 Here are my settings as an example:
@@ -776,13 +791,13 @@ The template files can actually be links pointing to existing templates.
 The file  bash.list  contains words used as dictionary for automatic word
 completion.  This feature is enabled by default. The default word list is
 
-  $HOME/.vim/wordlists/bash.list
+  $HOME/.vim/bash-support/wordlists/bash.list
 
 If you want to use an additional list MyBash.List put the following line into
  $HOME/.vimrc :
 
-  let g:BASH_Dictionary_File   =  "$HOME/.vim/wordlists/bash.list,".
-                              \   "$HOME/.vim/wordlists/MyBash.List"
+  let g:BASH_Dictionary_File   =  "$HOME/.vim/bash-support/wordlists/bash.list,".
+                              \   "$HOME/.vim/bash-support/wordlists/MyBash.List"
 
 The right side is a comma separated list of files. Note the point at the end
 of the first line (string concatenation) and the backslash in front of the 

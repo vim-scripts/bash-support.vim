@@ -13,5 +13,7 @@ trap  cleanup_temp  SIGHUP SIGINT SIGPIPE SIGTERM
 
 tmpfile=$(mktemp) || { echo "$0: creation of temporary file failed!"; exit 1; }
 
+# use tmpfile ...
+
 rm --force $tmpfile
 
