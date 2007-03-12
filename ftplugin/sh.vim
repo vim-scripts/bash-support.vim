@@ -3,8 +3,8 @@
 " Language   :  bash
 " Plugin     :  bash-support.vim
 " Maintainer :  Fritz Mehner <mehner@fh-swf.de>
-" Version    :  2.0
-" Last Change:  01.01.2007
+" Version    :  2.0.1
+" Last Change:  12.03.2007
 "
 " -----------------------------------------------------------------
 "
@@ -53,28 +53,29 @@ imap  <buffer>  <silent>  <S-F1>        <Esc>:call BASH_help()<CR>
 "
  map  <buffer>  <silent>  <Leader>h     	<Esc>:call BASH_help()<CR>
 "
-nmap  <buffer>  <silent>  <Leader>cl      <Esc><Esc>:call BASH_LineEndComment()<CR>A
-vmap  <buffer>  <silent>  <Leader>cl      <Esc><Esc>:call BASH_MultiLineEndComments()<CR>A
-nmap  <buffer>  <silent>  <Leader>cs      <Esc><Esc>:call BASH_GetLineEndCommCol()<CR>
-nmap  <buffer>  <silent>  <Leader>cf      :call BASH_CommentTemplates('frame')<CR>
-nmap  <buffer>  <silent>  <Leader>cu      :call BASH_CommentTemplates('function')<CR>
-vmap  <buffer>  <silent>  <Leader>co      <Esc><Esc>:'<,'>s/^#//<CR><Esc>:nohlsearch<CR>
+nnoremap  <buffer>  <silent>  <Leader>cl      <Esc><Esc>:call BASH_LineEndComment()<CR>A
+vnoremap  <buffer>  <silent>  <Leader>cl      <Esc><Esc>:call BASH_MultiLineEndComments()<CR>A
+nnoremap  <buffer>  <silent>  <Leader>cs      <Esc><Esc>:call BASH_GetLineEndCommCol()<CR>
+nnoremap  <buffer>  <silent>  <Leader>cf      :call BASH_CommentTemplates('frame')<CR>
+nnoremap  <buffer>  <silent>  <Leader>cu      :call BASH_CommentTemplates('function')<CR>
+nnoremap  <buffer>  <silent>  <Leader>ch      :call BASH_CommentTemplates('header')<CR>
+vnoremap  <buffer>  <silent>  <Leader>co      <Esc><Esc>:'<,'>s/^#//<CR><Esc>:nohlsearch<CR>
 
-nmap  <buffer>  <silent>  <Leader>cc      <Esc><Esc>:s/^/\#/<CR><Esc>:nohlsearch<CR>j"
-vmap  <buffer>  <silent>  <Leader>cc      <Esc><Esc>:'<,'>s/^/\#/<CR><Esc>:nohlsearch<CR>j"
-nmap  <buffer>  <silent>  <Leader>co      <Esc><Esc>:s/^\\(\\s*\\)#/\\1/<CR><Esc>:nohlsearch<CR>j"
-nmap  <buffer>  <silent>  <Leader>co      <Esc><Esc>:'<,'>s/^\\(\\s*\\)#/\\1/<CR><Esc>:nohlsearch<CR>j"
+nnoremap  <buffer>  <silent>  <Leader>cc      <Esc><Esc>:s/^/\#/<CR><Esc>:nohlsearch<CR>j"
+vnoremap  <buffer>  <silent>  <Leader>cc      <Esc><Esc>:'<,'>s/^/\#/<CR><Esc>:nohlsearch<CR>j"
+nnoremap  <buffer>  <silent>  <Leader>co      <Esc><Esc>:s/^\\(\\s*\\)#/\\1/<CR><Esc>:nohlsearch<CR>j"
+nnoremap  <buffer>  <silent>  <Leader>co      <Esc><Esc>:'<,'>s/^\\(\\s*\\)#/\\1/<CR><Esc>:nohlsearch<CR>j"
 
-nmap  <buffer>  <silent>  <Leader>cd      i<C-R>=strftime("%x")<CR>
-nmap  <buffer>  <silent>  <Leader>ct      i<C-R>=strftime("%x %X %Z")<CR>
-nmap  <buffer>  <silent>  <Leader>ckb     $<Esc>:call BASH_CommentClassified("BUG")     <CR>kJA
-nmap  <buffer>  <silent>  <Leader>ckt     $<Esc>:call BASH_CommentClassified("TODO")    <CR>kJA
-nmap  <buffer>  <silent>  <Leader>ckr     $<Esc>:call BASH_CommentClassified("TRICKY")  <CR>kJA
-nmap  <buffer>  <silent>  <Leader>ckw     $<Esc>:call BASH_CommentClassified("WARNING") <CR>kJA
-nmap  <buffer>  <silent>  <Leader>ckn     $<Esc>:call BASH_CommentClassified("")        <CR>kJf:a
+nnoremap  <buffer>  <silent>  <Leader>cd      i<C-R>=strftime("%x")<CR>
+nnoremap  <buffer>  <silent>  <Leader>ct      i<C-R>=strftime("%x %X %Z")<CR>
+nnoremap  <buffer>  <silent>  <Leader>ckb     $<Esc>:call BASH_CommentClassified("BUG")     <CR>kJA
+nnoremap  <buffer>  <silent>  <Leader>ckt     $<Esc>:call BASH_CommentClassified("TODO")    <CR>kJA
+nnoremap  <buffer>  <silent>  <Leader>ckr     $<Esc>:call BASH_CommentClassified("TRICKY")  <CR>kJA
+nnoremap  <buffer>  <silent>  <Leader>ckw     $<Esc>:call BASH_CommentClassified("WARNING") <CR>kJA
+nnoremap  <buffer>  <silent>  <Leader>ckn     $<Esc>:call BASH_CommentClassified("")        <CR>kJf:a
 nnoremap  <buffer>  <silent>  <Leader>ce			<Esc><Esc>^iecho<Space>"<Esc>$a"<Esc>j'
 nnoremap  <buffer>  <silent>  <Leader>cr      <Esc><Esc>0:s/^\s*echo\s\+\"// \| s/\s*\"\s*$// \| :normal ==<CR><Esc>j'
-nmap  <buffer>  <silent>  <Leader>cv      :call BASH_CommentVimModeline()<CR>
+nnoremap  <buffer>  <silent>  <Leader>cv      :call BASH_CommentVimModeline()<CR>
 
 nnoremap  <buffer>  <silent>  <Leader>ac      ocase  in<CR>)<CR>;;<CR><CR>)<CR>;;<CR><CR>*)<CR>;;<CR><CR>esac    # --- end of case ---<CR><Esc>11kf<Space>a
 nnoremap  <buffer>  <silent>  <Leader>al      oelif <CR>then<Esc>1kA
@@ -100,8 +101,8 @@ vnoremap  <buffer>  <silent>  <Leader>as      <Esc><Esc>:call BASH_FlowControl( 
 vnoremap  <buffer>  <silent>  <Leader>at      <Esc><Esc>:call BASH_FlowControl( "until _ ",     "do",   "done",     "v" )<CR>
 vnoremap  <buffer>  <silent>  <Leader>aw      <Esc><Esc>:call BASH_FlowControl( "while _ ",     "do",   "done",     "v" )<CR>
 
-nmap  <buffer>  <silent>  <Leader>au			:call BASH_CodeFunction("a")<CR>O
-vmap  <buffer>  <silent>  <Leader>au			<Esc><Esc>:call BASH_CodeFunction("v")<CR>
+nnoremap  <buffer>  <silent>  <Leader>au			:call BASH_CodeFunction("a")<CR>O
+vnoremap  <buffer>  <silent>  <Leader>au			<Esc><Esc>:call BASH_CodeFunction("v")<CR>
 
 nnoremap  <buffer>  <silent>  <Leader>ao      ^iecho<Space>-e<Space>"\n"<Esc>2hi
 vnoremap  <buffer>  <silent>  <Leader>ao      secho<Space>-e<Space>"\n"<Esc>2hP
@@ -109,7 +110,7 @@ vnoremap  <buffer>  <silent>  <Leader>ao      secho<Space>-e<Space>"\n"<Esc>2hP
 if !has('win32')
 	nmap  <buffer>  <silent>  <Leader>re      <Esc>:call BASH_MakeScriptExecutable()<CR>
 endif
- map  <buffer>  <silent>  <Leader>rr      <Esc>:call BASH_Run("n")<CR>
+nmap  <buffer>  <silent>  <Leader>rr      <Esc>:call BASH_Run("n")<CR>
 vmap  <buffer>  <silent>  <Leader>rr      <Esc>:call BASH_Run("v")<CR>
  map  <buffer>  <silent>  <Leader>rc      <Esc>:call BASH_SyntaxCheck()<CR>
  map  <buffer>  <silent>  <Leader>ra      <Esc>:call BASH_CmdLineArguments()<CR>
@@ -120,6 +121,6 @@ if has("gui_running") && has("unix")
 endif
  map  <buffer>  <silent>  <Leader>ro      <Esc>:call BASH_Toggle_Gvim_Xterm()<CR>
 
- map  <buffer>  <silent>  <Leader>rh      <Esc>:call BASH_Hardcopy("n")<CR>
+nmap  <buffer>  <silent>  <Leader>rh      <Esc>:call BASH_Hardcopy("n")<CR>
 vmap  <buffer>  <silent>  <Leader>rh      <Esc>:call BASH_Hardcopy("v")<CR>
 "

@@ -18,7 +18,7 @@
 "          Email:  mehner@fh-swf.de
 "          
 "        Version:  see variable  g:BASH_Version  below 
-"       Revision:  19.01.2007 
+"       Revision:  12.03.2007
 "        Created:  26.02.2001
 "        License:  Copyright (c) 2001-2007, Fritz Mehner
 "                  This program is free software; you can redistribute it and/or
@@ -38,7 +38,7 @@
 if exists("g:BASH_Version") || &cp
  finish
 endif
-let g:BASH_Version= "2.0"  						" version number of this script; do not change
+let g:BASH_Version= "2.0.1"  						" version number of this script; do not change
 "
 if v:version < 700
   echohl WarningMsg | echo 'plugin bash-support.vim needs Vim version >= 7'| echohl None
@@ -82,6 +82,7 @@ let s:BASH_Template_Frame          = "bash-frame"
 let s:BASH_Template_Function       = "bash-function-description"
 let s:BASH_XtermDefaults           = "-fa courier -fs 12 -geometry 80x24"
 let s:BASH_Printheader             = "%<%f%h%m%<  %=%{strftime('%x %X')}     Page %N"
+let s:BASH_Wrapper                 = s:root_dir.'bash-support/scripts/wrapper.sh'
 "
 "
 "------------------------------------------------------------------------------
@@ -1725,7 +1726,7 @@ function! BASH_Run ( mode )
 	if s:BASH_OutputGvim == "xterm"
 		"
 		if a:mode=="n"
-			silent exe "!xterm -title ".l:fullname." ".s:BASH_XtermDefaults.' -e '.s:root_dir.'plugin/wrapper.sh '.l:fullname.l:arguments
+			silent exe "!xterm -title ".l:fullname." ".s:BASH_XtermDefaults.' -e '.s:BASH_Wrapper.' '.l:fullname.l:arguments
 		endif
 		"
 		if a:mode=="v"

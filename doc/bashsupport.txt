@@ -1,7 +1,7 @@
-*bashsupport.txt*                Bash Support                      Jan 05 2007
+*bashsupport.txt*                Bash Support                      Mar 12 2007
 
 bash Support                                      *bash-support* *bashsupport*
-                             Plugin version 2.0
+                            Plugin version 2.0.1
                         for Vim version 6.0 and above
                        Fritz Mehner  <mehner@fh-swf.de>
 
@@ -603,7 +603,7 @@ README.bashsupport                  Release notes, installation description.
 ftplugin/sh.vim                     The filetype plugin. Defines hotkeys and more.
 
 plugin/bash-support.vim             The bash plugin for Vim/gVim.
-plugin/wrapper.sh                   A wrapper script for the use of an xterm.
+bash-support/scripts/wrapper.sh     A wrapper script for the use of an xterm.
 
 doc/bashsupport.txt                 The help file for the local online help. 
 
@@ -720,9 +720,18 @@ The default is
 Note the terminating dot. A single root menu entry is appropriate if the
 screen is limited or several plugins are in use.
 
-If set to "", this single root menu entry will not appear.  Now all submenus
-are put into the gVim root menu. Nice for a Bash-only-programmer and Bash
-courses. 
+If g:BASH_Root is set to "", this single root menu entry will not appear.  Put
+the following line in '.vimrc'
+
+  let g:BASH_Root = ""
+
+Now all submenus are put into the gVim root menu. Nice for a
+Bash-only-programmer and Bash courses. 
+
+If you want to set the plugin root menu into another menu, e.g. 'Plugin', 
+this is done by the following line in '.vimrc'
+
+  let g:BASH_Root = "&Plugin.B&ash."
 
 
 ==============================================================================

@@ -1,4 +1,4 @@
-README for bash-support.vim (Version 2.0) / Jan 19 2007
+README for bash-support.vim (Version 2.0.1) / Mar 12 2007
 
   *  INSTALLATION
   *  RELEASE NOTES 
@@ -59,14 +59,10 @@ and look at the bashsupport help with
 
 
 =======================================================================================
-  RELEASE NOTES FOR VERSION 2.0
+  RELEASE NOTES FOR VERSION 2.0.1
 =======================================================================================
-+ PLUGIN DIRECTORIES REARRANGED.
-+ One new mapping (\cs). 
-+ Statement menu extended.
-+ Bash keyword help (S-F1) improved.
-+ Bugfix: empty new file after removing the header template can't be closed.
-+ Bugfix : Tools entry missing when root menu not shown from the start.
++ Bugfix: missing hotkey \ch added.
++ File wrapper.sh moved to the new directory 'bash-support/scripts'.
 
 =======================================================================================
   OLDER RELEASE NOTES : see file 'ChangeLog'
@@ -81,7 +77,7 @@ README.bashsupport                  This file.
 ftplugin/sh.vim                     A filetype plugin. Defines hotkeys and more.
 
 plugin/bash-support.vim             The bash plugin for Vim/gVim.
-plugin/wrapper.sh                   A wrapper script for the use of an xterm.
+bash-support/scripts/wrapper.sh     A wrapper script for the use of an xterm.
 
 doc/bashsupport.txt                 The help file for the local online help. 
 
