@@ -1,3 +1,9 @@
+=======================================================================================
+  RELEASE NOTES FOR VERSION 2.1
+=======================================================================================
++ New menu item and key mapping to adjust end-of-line comments.
++ New insert mode mappings.
++ A few mappings have been renamed (to bring them into line with my C/C++ and Perl plugin).
 
 =======================================================================================
   RELEASE NOTES FOR VERSION 2.0.1

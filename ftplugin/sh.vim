@@ -1,10 +1,10 @@
 " Vim filetype plugin file
 "
-" Language   :  bash
-" Plugin     :  bash-support.vim
+"   Language :  bash
+"     Plugin :  bash-support.vim
 " Maintainer :  Fritz Mehner <mehner@fh-swf.de>
-" Version    :  2.0.1
-" Last Change:  12.03.2007
+"    Version :  2.1
+"   Revision :  $Id: sh.vim,v 1.5 2007/05/13 15:06:26 mehner Exp $
 "
 " -----------------------------------------------------------------
 "
@@ -55,10 +55,23 @@ imap  <buffer>  <silent>  <S-F1>        <Esc>:call BASH_help()<CR>
 "
 nnoremap  <buffer>  <silent>  <Leader>cl      <Esc><Esc>:call BASH_LineEndComment()<CR>A
 vnoremap  <buffer>  <silent>  <Leader>cl      <Esc><Esc>:call BASH_MultiLineEndComments()<CR>A
+inoremap  <buffer>  <silent>  <Leader>cl      <Esc><Esc>:call BASH_MultiLineEndComments()<CR>A
+
+nnoremap  <buffer>  <silent>  <Leader>cj      <Esc><Esc>:call BASH_AdjustLineEndComm("a")<CR>
+vnoremap  <buffer>  <silent>  <Leader>cj      <Esc><Esc>:call BASH_AdjustLineEndComm("v")<CR>
+inoremap  <buffer>  <silent>  <Leader>cj      <Esc><Esc>:call BASH_AdjustLineEndComm("a")<CR>
+
 nnoremap  <buffer>  <silent>  <Leader>cs      <Esc><Esc>:call BASH_GetLineEndCommCol()<CR>
-nnoremap  <buffer>  <silent>  <Leader>cf      :call BASH_CommentTemplates('frame')<CR>
-nnoremap  <buffer>  <silent>  <Leader>cu      :call BASH_CommentTemplates('function')<CR>
-nnoremap  <buffer>  <silent>  <Leader>ch      :call BASH_CommentTemplates('header')<CR>
+
+nnoremap  <buffer>  <silent>  <Leader>cfr               :call BASH_CommentTemplates('frame')<CR>
+inoremap  <buffer>  <silent>  <Leader>cfr     <Esc><Esc>:call BASH_CommentTemplates('frame')<CR>
+
+nnoremap  <buffer>  <silent>  <Leader>cfu               :call BASH_CommentTemplates('function')<CR>
+inoremap  <buffer>  <silent>  <Leader>cfu     <Esc><Esc>:call BASH_CommentTemplates('function')<CR>
+
+nnoremap  <buffer>  <silent>  <Leader>ch                :call BASH_CommentTemplates('header')<CR>
+inoremap  <buffer>  <silent>  <Leader>ch      <Esc><Esc>:call BASH_CommentTemplates('header')<CR>
+
 vnoremap  <buffer>  <silent>  <Leader>co      <Esc><Esc>:'<,'>s/^#//<CR><Esc>:nohlsearch<CR>
 
 nnoremap  <buffer>  <silent>  <Leader>cc      <Esc><Esc>:s/^/\#/<CR><Esc>:nohlsearch<CR>j"
@@ -66,8 +79,12 @@ vnoremap  <buffer>  <silent>  <Leader>cc      <Esc><Esc>:'<,'>s/^/\#/<CR><Esc>:n
 nnoremap  <buffer>  <silent>  <Leader>co      <Esc><Esc>:s/^\\(\\s*\\)#/\\1/<CR><Esc>:nohlsearch<CR>j"
 nnoremap  <buffer>  <silent>  <Leader>co      <Esc><Esc>:'<,'>s/^\\(\\s*\\)#/\\1/<CR><Esc>:nohlsearch<CR>j"
 
-nnoremap  <buffer>  <silent>  <Leader>cd      i<C-R>=strftime("%x")<CR>
-nnoremap  <buffer>  <silent>  <Leader>ct      i<C-R>=strftime("%x %X %Z")<CR>
+nnoremap  <buffer>  <silent>  <Leader>cd      a<C-R>=strftime("%x")<CR>
+inoremap  <buffer>  <silent>  <Leader>cd       <C-R>=strftime("%x")<CR>
+
+nnoremap  <buffer>  <silent>  <Leader>ct      a<C-R>=strftime("%x %X %Z")<CR>
+inoremap  <buffer>  <silent>  <Leader>ct       <C-R>=strftime("%x %X %Z")<CR>
+
 nnoremap  <buffer>  <silent>  <Leader>ckb     $<Esc>:call BASH_CommentClassified("BUG")     <CR>kJA
 nnoremap  <buffer>  <silent>  <Leader>ckt     $<Esc>:call BASH_CommentClassified("TODO")    <CR>kJA
 nnoremap  <buffer>  <silent>  <Leader>ckr     $<Esc>:call BASH_CommentClassified("TRICKY")  <CR>kJA
@@ -77,35 +94,43 @@ nnoremap  <buffer>  <silent>  <Leader>ce			<Esc><Esc>^iecho<Space>"<Esc>$a"<Esc>
 nnoremap  <buffer>  <silent>  <Leader>cr      <Esc><Esc>0:s/^\s*echo\s\+\"// \| s/\s*\"\s*$// \| :normal ==<CR><Esc>j'
 nnoremap  <buffer>  <silent>  <Leader>cv      :call BASH_CommentVimModeline()<CR>
 
-nnoremap  <buffer>  <silent>  <Leader>ac      ocase  in<CR>)<CR>;;<CR><CR>)<CR>;;<CR><CR>*)<CR>;;<CR><CR>esac    # --- end of case ---<CR><Esc>11kf<Space>a
-nnoremap  <buffer>  <silent>  <Leader>al      oelif <CR>then<Esc>1kA
+nnoremap  <buffer>  <silent>  <Leader>sc      ocase  in<CR>)<CR>;;<CR><CR>)<CR>;;<CR><CR>*)<CR>;;<CR><CR>esac    # --- end of case ---<CR><Esc>11kf<Space>a
+inoremap  <buffer>  <silent>  <Leader>sc      <Esc><Esc>ocase  in<CR>)<CR>;;<CR><CR>)<CR>;;<CR><CR>*)<CR>;;<CR><CR>esac    # --- end of case ---<CR><Esc>11kf<Space>a
 
-nnoremap  <buffer>  <silent>  <Leader>af      <Esc><Esc>:call BASH_FlowControl( "for _ in ",    "do",   "done",     "a" )<CR>i
-nnoremap  <buffer>  <silent>  <Leader>ai      <Esc><Esc>:call BASH_FlowControl( "if _ ",        "then", "fi",       "a" )<CR>i
-nnoremap  <buffer>  <silent>  <Leader>ae      <Esc><Esc>:call BASH_FlowControl( "if _ ",        "then", "else\nfi", "a" )<CR>i
-nnoremap  <buffer>  <silent>  <Leader>as      <Esc><Esc>:call BASH_FlowControl( "select _ in ", "do",   "done",     "a" )<CR>i
-nnoremap  <buffer>  <silent>  <Leader>at      <Esc><Esc>:call BASH_FlowControl( "until _ ",     "do",   "done",     "a" )<CR>i
-nnoremap  <buffer>  <silent>  <Leader>aw      <Esc><Esc>:call BASH_FlowControl( "while _ ",     "do",   "done",     "a" )<CR>i
+nnoremap  <buffer>  <silent>  <Leader>sl      oelif <CR>then<Esc>1kA
+inoremap  <buffer>  <silent>  <Leader>sl      <Esc><Esc>oelif <CR>then<Esc>1kA
 
-inoremap  <buffer>  <silent>  <Leader>af      <Esc><Esc>:call BASH_FlowControl( "for _ in ",    "do",   "done",     "a" )<CR>i
-inoremap  <buffer>  <silent>  <Leader>ai      <Esc><Esc>:call BASH_FlowControl( "if _ ",        "then", "fi",       "a" )<CR>i
-inoremap  <buffer>  <silent>  <Leader>ae      <Esc><Esc>:call BASH_FlowControl( "if _ ",        "then", "else\nfi", "a" )<CR>i
-inoremap  <buffer>  <silent>  <Leader>as      <Esc><Esc>:call BASH_FlowControl( "select _ in ", "do",   "done",     "a" )<CR>i
-inoremap  <buffer>  <silent>  <Leader>at      <Esc><Esc>:call BASH_FlowControl( "until _ ",     "do",   "done",     "a" )<CR>i
-inoremap  <buffer>  <silent>  <Leader>aw      <Esc><Esc>:call BASH_FlowControl( "while _ ",     "do",   "done",     "a" )<CR>i
+nnoremap  <buffer>  <silent>  <Leader>sf      <Esc><Esc>:call BASH_FlowControl( "for _ in ",    "do",   "done",     "a" )<CR>i
+inoremap  <buffer>  <silent>  <Leader>sf      <Esc><Esc>:call BASH_FlowControl( "for _ in ",    "do",   "done",     "a" )<CR>i
+vnoremap  <buffer>  <silent>  <Leader>sf      <Esc><Esc>:call BASH_FlowControl( "for _ in ",    "do",   "done",     "v" )<CR>
 
-vnoremap  <buffer>  <silent>  <Leader>af      <Esc><Esc>:call BASH_FlowControl( "for _ in ",    "do",   "done",     "v" )<CR>
-vnoremap  <buffer>  <silent>  <Leader>ai      <Esc><Esc>:call BASH_FlowControl( "if _ ",        "then", "fi",       "v" )<CR>
-vnoremap  <buffer>  <silent>  <Leader>ae      <Esc><Esc>:call BASH_FlowControl( "if _ ",        "then", "else\nfi", "v" )<CR>
-vnoremap  <buffer>  <silent>  <Leader>as      <Esc><Esc>:call BASH_FlowControl( "select _ in ", "do",   "done",     "v" )<CR>
-vnoremap  <buffer>  <silent>  <Leader>at      <Esc><Esc>:call BASH_FlowControl( "until _ ",     "do",   "done",     "v" )<CR>
-vnoremap  <buffer>  <silent>  <Leader>aw      <Esc><Esc>:call BASH_FlowControl( "while _ ",     "do",   "done",     "v" )<CR>
+nnoremap  <buffer>  <silent>  <Leader>si      <Esc><Esc>:call BASH_FlowControl( "if _ ",        "then", "fi",       "a" )<CR>i
+inoremap  <buffer>  <silent>  <Leader>si      <Esc><Esc>:call BASH_FlowControl( "if _ ",        "then", "fi",       "a" )<CR>i
+vnoremap  <buffer>  <silent>  <Leader>si      <Esc><Esc>:call BASH_FlowControl( "if _ ",        "then", "fi",       "v" )<CR>
 
-nnoremap  <buffer>  <silent>  <Leader>au			:call BASH_CodeFunction("a")<CR>O
-vnoremap  <buffer>  <silent>  <Leader>au			<Esc><Esc>:call BASH_CodeFunction("v")<CR>
+nnoremap  <buffer>  <silent>  <Leader>sie      <Esc><Esc>:call BASH_FlowControl( "if _ ",        "then", "else\nfi", "a" )<CR>i
+inoremap  <buffer>  <silent>  <Leader>sie      <Esc><Esc>:call BASH_FlowControl( "if _ ",        "then", "else\nfi", "a" )<CR>i
+vnoremap  <buffer>  <silent>  <Leader>sie      <Esc><Esc>:call BASH_FlowControl( "if _ ",        "then", "else\nfi", "v" )<CR>
 
-nnoremap  <buffer>  <silent>  <Leader>ao      ^iecho<Space>-e<Space>"\n"<Esc>2hi
-vnoremap  <buffer>  <silent>  <Leader>ao      secho<Space>-e<Space>"\n"<Esc>2hP
+nnoremap  <buffer>  <silent>  <Leader>ss      <Esc><Esc>:call BASH_FlowControl( "select _ in ", "do",   "done",     "a" )<CR>i
+inoremap  <buffer>  <silent>  <Leader>ss      <Esc><Esc>:call BASH_FlowControl( "select _ in ", "do",   "done",     "a" )<CR>i
+vnoremap  <buffer>  <silent>  <Leader>ss      <Esc><Esc>:call BASH_FlowControl( "select _ in ", "do",   "done",     "v" )<CR>
+
+nnoremap  <buffer>  <silent>  <Leader>st      <Esc><Esc>:call BASH_FlowControl( "until _ ",     "do",   "done",     "a" )<CR>i
+inoremap  <buffer>  <silent>  <Leader>st      <Esc><Esc>:call BASH_FlowControl( "until _ ",     "do",   "done",     "a" )<CR>i
+vnoremap  <buffer>  <silent>  <Leader>st      <Esc><Esc>:call BASH_FlowControl( "until _ ",     "do",   "done",     "v" )<CR>
+
+nnoremap  <buffer>  <silent>  <Leader>sw      <Esc><Esc>:call BASH_FlowControl( "while _ ",     "do",   "done",     "a" )<CR>i
+inoremap  <buffer>  <silent>  <Leader>sw      <Esc><Esc>:call BASH_FlowControl( "while _ ",     "do",   "done",     "a" )<CR>i
+vnoremap  <buffer>  <silent>  <Leader>sw      <Esc><Esc>:call BASH_FlowControl( "while _ ",     "do",   "done",     "v" )<CR>
+
+nnoremap  <buffer>  <silent>  <Leader>sfu			:call BASH_CodeFunction("a")<CR>O
+inoremap  <buffer>  <silent>  <Leader>sfu			<Esc><Esc>:call BASH_CodeFunction("a")<CR>O
+vnoremap  <buffer>  <silent>  <Leader>sfu			<Esc><Esc>:call BASH_CodeFunction("v")<CR>
+
+nnoremap  <buffer>  <silent>  <Leader>se      ^iecho<Space>-e<Space>"\n"<Esc>2hi
+inoremap  <buffer>  <silent>  <Leader>se      echo<Space>-e<Space>"\n"<Esc>2hi
+vnoremap  <buffer>  <silent>  <Leader>se      secho<Space>-e<Space>"\n"<Esc>2hP
 
 if !has('win32')
 	nmap  <buffer>  <silent>  <Leader>re      <Esc>:call BASH_MakeScriptExecutable()<CR>
@@ -124,3 +149,4 @@ endif
 nmap  <buffer>  <silent>  <Leader>rh      <Esc>:call BASH_Hardcopy("n")<CR>
 vmap  <buffer>  <silent>  <Leader>rh      <Esc>:call BASH_Hardcopy("v")<CR>
 "
+

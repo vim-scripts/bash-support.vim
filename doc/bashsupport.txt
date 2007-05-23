@@ -1,7 +1,7 @@
-*bashsupport.txt*                Bash Support                      Mar 12 2007
+*bashsupport.txt*                Bash Support                      May 13 2007
 
 bash Support                                      *bash-support* *bashsupport*
-                            Plugin version 2.0.1
+                             Plugin version 2.1
                         for Vim version 6.0 and above
                        Fritz Mehner  <mehner@fh-swf.de>
 
@@ -510,60 +510,61 @@ part of this package).
 Hint: Typing speed matters. The combination of a leader ('\') and the
 following character(s) will only be recognized for a short time.
 
+  Legend:  (i) insert mode, (n) normal mode, (v) visual mode
 
   -- Load / Unload bash Support -------------------------
 
-  \lbs    Load Bash Support               (normal, GUI only)
-  \ubs    Unload Bash Support             (normal, GUI only)
+  \lbs    Load Bash Support               (n, GUI only)
+  \ubs    Unload Bash Support             (n, GUI only)
 
   -- Comments -------------------------------------------
 
-  \cl     line end comment                (normal, visual)
-  \cs     set end comment column          (normal, visual)
-  \cf     frame comment                   (normal)
-  \cu     function description            (normal)
-  \ch     file header                     (normal)
-  \ckb    keyword comment BUG             (normal)
-  \ckt    keyword comment TODO            (normal)
-  \ckr    keyword comment TRICKY          (normal)
-  \ckw    keyword comment WARNING         (normal)
-  \ckn    keyword comment New_Keyword     (normal)
-  \cc     code to comment                 (normal, visual)
-  \co     comment to code                 (normal, visual)
-  \cd     date                            (normal)
-  \ct     date & time                     (normal)
-  \ce     echo "..."                      (normal)
-  \cr     remove echo "..."               (normal)
-  \cv     vim modeline                    (normal)
+  \cl     line end comment                (n, i, v)
+  \cs     set end comment column          (n, i, v)
+  \cfr    frame comment                   (n, i)
+  \cfu    function description            (n, i)
+  \ch     file header                     (n, i)
+  \ckb    keyword comment BUG             (n)
+  \ckt    keyword comment TODO            (n)
+  \ckr    keyword comment TRICKY          (n)
+  \ckw    keyword comment WARNING         (n)
+  \ckn    keyword comment New_Keyword     (n)
+  \cc     code to comment                 (n, v)
+  \co     comment to code                 (n, v)
+  \cd     date                            (n, i)
+  \ct     date & time                     (n, i)
+  \ce     echo "..."                      (n)
+  \cr     remove echo "..."               (n)
+  \cv     vim modeline                    (n)
                                      
   -- Statements ------------------------------------------
 
-  \ac     case in ... esac                (normal)
-  \al     elif then                       (normal)
-  \af     for in do done                  (normal, visual)
-  \ai     if then fi                      (normal, visual)
-  \ae     if then else fi                 (normal, visual)
-  \as     select in do done               (normal, visual)
-  \at     until do done                   (normal, visual)
-  \aw     while do done                   (normal, visual)
-  \au     function                        (normal, visual)
-  \ao     echo -e "..."                   (normal, visual)
+  \sc     case in ... esac                (n, i)
+  \sl     elif then                       (n, i)
+  \sf     for in do done                  (n, i, v)
+  \si     if then fi                      (n, i, v)
+  \sie    if then else fi                 (n, i, v)
+  \ss     select in do done               (n, i, v)
+  \st     until do done                   (n, i, v)
+  \sw     while do done                   (n, i, v)
+  \sfu    function                        (n, i, v)
+  \se     echo -e "..."                   (n, i, v)
 
   -- Run ------------------------------------------------
 
-  \rr     update file, run script         (normal)
-  \rc     update file, check syntax       (normal)
-  \ra     set command line arguments      (normal)
-  \rd     start debugger                  (normal)
-  \re     make script executable          (normal)
-  \rh     hardcopy buffer to FILENAME.ps  (normal)
-  \rs     settings and hot keys           (normal)
-  \rt     set xterm size                  (normal)
-  \ro     change output destination       (normal)
+  \rr     update file, run script         (n)
+  \rc     update file, check syntax       (n)
+  \ra     set command line arguments      (n)
+  \rd     start debugger                  (n)
+  \re     make script executable          (n)
+  \rh     hardcopy buffer to FILENAME.ps  (n)
+  \rs     settings and hot keys           (n)
+  \rt     set xterm size                  (n)
+  \ro     change output destination       (n)
 
   -- bash help ------------------------------------------
 
-  \h      display help for the builtin    (normal)
+  \h      display help for the builtin    (n)
           under the cursor
 
 

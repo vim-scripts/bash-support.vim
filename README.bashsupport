@@ -1,4 +1,4 @@
-README for bash-support.vim (Version 2.0.1) / Mar 12 2007
+README for bash-support.vim (Version 2.1) / May 11 2007
 
   *  INSTALLATION
   *  RELEASE NOTES 
@@ -59,10 +59,11 @@ and look at the bashsupport help with
 
 
 =======================================================================================
-  RELEASE NOTES FOR VERSION 2.0.1
+  RELEASE NOTES FOR VERSION 2.1
 =======================================================================================
-+ Bugfix: missing hotkey \ch added.
-+ File wrapper.sh moved to the new directory 'bash-support/scripts'.
++ New menu item and key mapping to adjust end-of-line comments.
++ New insert mode mappings.
++ A few mappings have been renamed (to bring them into line with my C/C++ and Perl plugin).
 
 =======================================================================================
   OLDER RELEASE NOTES : see file 'ChangeLog'
