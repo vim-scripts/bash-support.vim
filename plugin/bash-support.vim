@@ -29,7 +29,7 @@
 "                  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 "                  PURPOSE.
 "                  See the GNU General Public License version 2 for more details.
-"       Revision:  $Id: bash-support.vim,v 1.5 2007/05/13 15:06:26 mehner Exp $
+"       Revision:  $Id: bash-support.vim,v 1.8 2007/06/24 17:13:20 mehner Exp $
 "  
 "------------------------------------------------------------------------------
 " 
@@ -38,7 +38,7 @@
 if exists("g:BASH_Version") || &cp
  finish
 endif
-let g:BASH_Version= "2.1"  						" version number of this script; do not change
+let g:BASH_Version= "2.2"  						" version number of this script; do not change
 "
 if v:version < 700
   echohl WarningMsg | echo 'plugin bash-support.vim needs Vim version >= 7'| echohl None
@@ -274,33 +274,22 @@ function!	BASH_InitMenu ()
 		exe "anoremenu ".s:BASH_Root.'&Statements.tra&p						<Esc><Esc>otrap '
 		"
 		exe "anoremenu ".s:BASH_Root.'&Statements.-SEP1-          :'
+
+		exe "anoremenu ".s:BASH_Root.'&Statements.&$(\.\.\.)			<Esc>a$()<Left>'
+		exe "inoremenu ".s:BASH_Root.'&Statements.&$(\.\.\.)			$()<Left>'
+		exe "vnoremenu ".s:BASH_Root.'&Statements.&$(\.\.\.)			s$()<Esc>P'
+
+		exe "anoremenu ".s:BASH_Root.'&Statements.$&{\.\.\.}			<Esc>a${}<Left>'
+		exe "inoremenu ".s:BASH_Root.'&Statements.$&{\.\.\.}			${}<Left>'
+		exe "vnoremenu ".s:BASH_Root.'&Statements.$&{\.\.\.}			s${}<Esc>P'
 		"
 		exe " noremenu ".s:BASH_Root.'&Statements.$&((\.\.\.))		<Esc>a$(())<Esc>hi'
 		exe "vnoremenu ".s:BASH_Root.'&Statements.$&((\.\.\.))		s$(())<Esc>hP'
 		exe "inoremenu ".s:BASH_Root.'&Statements.$&((\.\.\.))		$(())<Left><Left>'
+
 		exe " noremenu ".s:BASH_Root.'&Statements.$&[[\.\.\.]]		<Esc>a$[[]]<Esc>hi'
 		exe "vnoremenu ".s:BASH_Root.'&Statements.$&[[\.\.\.]]		s$[[]]<Esc>hP'
 		exe "inoremenu ".s:BASH_Root.'&Statements.$&[[\.\.\.]]		$[[]]<Left><Left>'
-		"
-		exe "amenu ".s:BASH_Root.'&Statements.-SEP4-              :'
-		"
-		exe "anoremenu ".s:BASH_Root."&Statements.&'\\.\\.\\.'		 <Esc>a''<Left>"
-		exe "anoremenu ".s:BASH_Root.'&Statements.&"\.\.\."				 <Esc>a""<Left>'
-		exe "anoremenu ".s:BASH_Root.'&Statements.&`\.\.\.`				 <Esc>a``<Left>'
-		exe "anoremenu ".s:BASH_Root.'&Statements.&$(\.\.\.)			<Esc>a$()<Left>'
-		exe "anoremenu ".s:BASH_Root.'&Statements.$&{\.\.\.}			<Esc>a${}<Left>'
-
-		exe "inoremenu ".s:BASH_Root."&Statements.&'\\.\\.\\.'		 ''<Left>"
-		exe "inoremenu ".s:BASH_Root.'&Statements.&"\.\.\."				 ""<Left>'
-		exe "inoremenu ".s:BASH_Root.'&Statements.&`\.\.\.`				 ``<Left>'
-		exe "inoremenu ".s:BASH_Root.'&Statements.&$(\.\.\.)			$()<Left>'
-		exe "inoremenu ".s:BASH_Root.'&Statements.$&{\.\.\.}			${}<Left>'
-
-		exe "vnoremenu ".s:BASH_Root."&Statements.&'\\.\\.\\.'		s''<Esc>Pla"
-		exe "vnoremenu ".s:BASH_Root.'&Statements.&"\.\.\."				s""<Esc>Pla'
-		exe "vnoremenu ".s:BASH_Root.'&Statements.&`\.\.\.`				s``<Esc>Pla'
-		exe "vnoremenu ".s:BASH_Root.'&Statements.&$(\.\.\.)			s$()<Esc>P'
-		exe "vnoremenu ".s:BASH_Root.'&Statements.$&{\.\.\.}			s${}<Esc>P'
 		"
 		exe "anoremenu ".s:BASH_Root.'&Statements.ech&o\ -e\ "\\n"		<Esc><Esc>oecho<Space>-e<Space>"\n"<Esc>2hi'
 		exe "inoremenu ".s:BASH_Root.'&Statements.ech&o\ -e\ "\\n"		echo<Space>-e<Space>"\n"<Esc>2hi'
@@ -1916,7 +1905,11 @@ function! BASH_CodeSnippets(arg1)
 		" read snippet file, put content below current line
 		"
 		if a:arg1 == "r"
-			let	l:snippetfile=browse(0,"read a code snippet",s:BASH_CodeSnippets,"")
+			if has("gui_running")
+				let	l:snippetfile=browse(0,"read a code snippet",s:BASH_CodeSnippets,"")
+			else
+				let	l:snippetfile=input("read snippet ", s:BASH_CodeSnippets, "file" )
+			end
 			if filereadable(l:snippetfile)
 				let	linesread= line("$")
 				"
@@ -1936,37 +1929,35 @@ function! BASH_CodeSnippets(arg1)
 		" update current buffer / split window / edit snippet file
 		" 
 		if a:arg1 == "e"
-			let	l:snippetfile=browse(0,"edit a code snippet",s:BASH_CodeSnippets,"")
+			if has("gui_running")
+				let	l:snippetfile=browse(0,"edit a code snippet",s:BASH_CodeSnippets,"")
+			else
+				let	l:snippetfile=input("edit snippet ", s:BASH_CodeSnippets, "file" )
+			end
 			if l:snippetfile != ""
 				:execute "update! | split | edit ".l:snippetfile
 			endif
 		endif
 		"
-		" write whole buffer into snippet file 
+		" write whole buffer or marked area into snippet file 
 		" 
-		if a:arg1 == "w"
-			let	l:snippetfile=browse(0,"write a code snippet",s:BASH_CodeSnippets,"")
+		if a:arg1 == "w" || a:arg1 == "wv"
+			if has("gui_running")
+				let	l:snippetfile=browse(0,"write a code snippet",s:BASH_CodeSnippets,"")
+			else
+				let	l:snippetfile=input("write snippet ", s:BASH_CodeSnippets, "file" )
+			end
 			if l:snippetfile != ""
 				if filereadable(l:snippetfile)
 					if confirm("File exists ! Overwrite ? ", "&Cancel\n&No\n&Yes") != 3
 						return
 					endif
 				endif
-				:execute ":write! ".l:snippetfile
-			endif
-		endif
-		"
-		" write marked area into snippet file 
-		" 
-		if a:arg1 == "wv"
-			let	l:snippetfile=browse(0,"write a code snippet",s:BASH_CodeSnippets,"")
-			if l:snippetfile != ""
-				if filereadable(l:snippetfile)
-					if confirm("File exists ! Overwrite ? ", "&Cancel\n&No\n&Yes") != 3
-						return
-					endif
-				endif
-				:execute ":*write! ".l:snippetfile
+				if a:arg1 == "w"
+					:execute ":write! ".l:snippetfile
+				else
+					:execute ":*write! ".l:snippetfile
+				end
 			endif
 		endif
 

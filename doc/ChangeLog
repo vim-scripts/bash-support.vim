@@ -1,4 +1,11 @@
 =======================================================================================
+  RELEASE NOTES FOR VERSION 2.2
+=======================================================================================
++ Snippets can now be managed in the console mode.
++ Three new key mappings for snippet handling.
++ Three items from the statements menu removed (quoting; but see file customization.vimrc).
+
+=======================================================================================
   RELEASE NOTES FOR VERSION 2.1
 =======================================================================================
 + New menu item and key mapping to adjust end-of-line comments.

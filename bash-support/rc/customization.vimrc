@@ -82,6 +82,29 @@ vnoremap [ s[]<Esc>P
 vnoremap { s{}<Esc>P
 "
 "-------------------------------------------------------------------------------
+" autocomplete quotes
+"-------------------------------------------------------------------------------
+vnoremap  '  s''<Esc>P<Right>
+vnoremap  "  s""<Esc>P<Right>
+vnoremap  `  s``<Esc>P<Right>
+"
+inoremap	'  '<Esc>:call QuoteInsertionWrapper("'")<CR>a
+inoremap	"  "<Esc>:call QuoteInsertionWrapper('"')<CR>a
+inoremap	`  `<Esc>:call QuoteInsertionWrapper('`')<CR>a
+"
+"-------------------------------------------------------------------------------
+" Add a second quote only if the left and the right character are not keyword
+" characters.
+"-------------------------------------------------------------------------------
+function! QuoteInsertionWrapper (quote)
+	let	col	= col('.')
+	if getline('.')[col-2] !~ '\k' && getline('.')[col] !~ '\k'
+		normal ax
+		exe "normal r".a:quote."h"
+	end
+endfunction    " ----------  end of function QuoteInsertionWrapper  ----------
+"
+"-------------------------------------------------------------------------------
 " Fast switching between buffers
 " The current buffer will be saved before switching to the next one.
 " Choose :bprevious or :bnext

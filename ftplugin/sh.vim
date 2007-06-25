@@ -3,8 +3,8 @@
 "   Language :  bash
 "     Plugin :  bash-support.vim
 " Maintainer :  Fritz Mehner <mehner@fh-swf.de>
-"    Version :  2.1
-"   Revision :  $Id: sh.vim,v 1.5 2007/05/13 15:06:26 mehner Exp $
+"    Version :  2.2
+"   Revision :  $Id: sh.vim,v 1.7 2007/06/22 12:51:57 mehner Exp $
 "
 " -----------------------------------------------------------------
 "
@@ -53,6 +53,8 @@ imap  <buffer>  <silent>  <S-F1>        <Esc>:call BASH_help()<CR>
 "
  map  <buffer>  <silent>  <Leader>h     	<Esc>:call BASH_help()<CR>
 "
+" ---------- comment menu ----------------------------------------------------
+"
 nnoremap  <buffer>  <silent>  <Leader>cl      <Esc><Esc>:call BASH_LineEndComment()<CR>A
 vnoremap  <buffer>  <silent>  <Leader>cl      <Esc><Esc>:call BASH_MultiLineEndComments()<CR>A
 inoremap  <buffer>  <silent>  <Leader>cl      <Esc><Esc>:call BASH_MultiLineEndComments()<CR>A
@@ -93,7 +95,9 @@ nnoremap  <buffer>  <silent>  <Leader>ckn     $<Esc>:call BASH_CommentClassified
 nnoremap  <buffer>  <silent>  <Leader>ce			<Esc><Esc>^iecho<Space>"<Esc>$a"<Esc>j'
 nnoremap  <buffer>  <silent>  <Leader>cr      <Esc><Esc>0:s/^\s*echo\s\+\"// \| s/\s*\"\s*$// \| :normal ==<CR><Esc>j'
 nnoremap  <buffer>  <silent>  <Leader>cv      :call BASH_CommentVimModeline()<CR>
-
+"
+" ---------- statement menu ----------------------------------------------------
+"
 nnoremap  <buffer>  <silent>  <Leader>sc      ocase  in<CR>)<CR>;;<CR><CR>)<CR>;;<CR><CR>*)<CR>;;<CR><CR>esac    # --- end of case ---<CR><Esc>11kf<Space>a
 inoremap  <buffer>  <silent>  <Leader>sc      <Esc><Esc>ocase  in<CR>)<CR>;;<CR><CR>)<CR>;;<CR><CR>*)<CR>;;<CR><CR>esac    # --- end of case ---<CR><Esc>11kf<Space>a
 
@@ -131,7 +135,16 @@ vnoremap  <buffer>  <silent>  <Leader>sfu			<Esc><Esc>:call BASH_CodeFunction("v
 nnoremap  <buffer>  <silent>  <Leader>se      ^iecho<Space>-e<Space>"\n"<Esc>2hi
 inoremap  <buffer>  <silent>  <Leader>se      echo<Space>-e<Space>"\n"<Esc>2hi
 vnoremap  <buffer>  <silent>  <Leader>se      secho<Space>-e<Space>"\n"<Esc>2hP
-
+"
+" ---------- snippet menu ----------------------------------------------------
+"
+ noremap    <buffer>  <silent>  <Leader>nr    <Esc>:call BASH_CodeSnippets("r")<CR>
+ noremap    <buffer>  <silent>  <Leader>nw    <Esc>:call BASH_CodeSnippets("w")<CR>
+vnoremap    <buffer>  <silent>  <Leader>nw    <Esc>:call BASH_CodeSnippets("wv")<CR>
+ noremap    <buffer>  <silent>  <Leader>ne    <Esc>:call BASH_CodeSnippets("e")<CR>
+"
+" ---------- run menu ----------------------------------------------------
+"
 if !has('win32')
 	nmap  <buffer>  <silent>  <Leader>re      <Esc>:call BASH_MakeScriptExecutable()<CR>
 endif
@@ -149,4 +162,3 @@ endif
 nmap  <buffer>  <silent>  <Leader>rh      <Esc>:call BASH_Hardcopy("n")<CR>
 vmap  <buffer>  <silent>  <Leader>rh      <Esc>:call BASH_Hardcopy("v")<CR>
 "
-

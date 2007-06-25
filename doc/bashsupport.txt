@@ -1,7 +1,7 @@
-*bashsupport.txt*                Bash Support                      May 13 2007
+*bashsupport.txt*                Bash Support                     June 17 2007
 
 bash Support                                      *bash-support* *bashsupport*
-                             Plugin version 2.1
+                             Plugin version 2.2
                         for Vim version 6.0 and above
                        Fritz Mehner  <mehner@fh-swf.de>
 
@@ -216,10 +216,8 @@ quotes or an echo with quotes:
   ${...}
   $(...)
   $((...))
+  $[[...]]
 
-  '...'
-  "..."
-  `...`
   echo -e ""
 
 ------------------------------------------------------------------------------
@@ -334,7 +332,7 @@ applied parameters and the shell return code are shown in the bottom line.
 1.6.2 Save and check syntax                         *bashsupport-syntax-check*
 ---------------------------
 
-Save the current buffer to his file and run this file with the -n flag
+Save the current buffer to this file and run this file with the -n flag
 (bash: Read commands but do not execute them).
 Errors are listed in an error window; now the quickfix commands can be used.
 
@@ -550,6 +548,10 @@ following character(s) will only be recognized for a short time.
   \sfu    function                        (n, i, v)
   \se     echo -e "..."                   (n, i, v)
 
+  \nr     read code snippet               (n)
+  \nw     write code snippet              (n, v)
+  \ne     edit code snippet               (n)
+                                     
   -- Run ------------------------------------------------
 
   \rr     update file, run script         (n)
