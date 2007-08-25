@@ -29,7 +29,7 @@
 "                  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 "                  PURPOSE.
 "                  See the GNU General Public License version 2 for more details.
-"       Revision:  $Id: bash-support.vim,v 1.8 2007/06/24 17:13:20 mehner Exp $
+"       Revision:  $Id: bash-support.vim,v 1.9 2007/08/25 09:13:55 mehner Exp $
 "  
 "------------------------------------------------------------------------------
 " 
@@ -38,7 +38,7 @@
 if exists("g:BASH_Version") || &cp
  finish
 endif
-let g:BASH_Version= "2.2"  						" version number of this script; do not change
+let g:BASH_Version= "2.3"  						" version number of this script; do not change
 "
 if v:version < 700
   echohl WarningMsg | echo 'plugin bash-support.vim needs Vim version >= 7'| echohl None
@@ -50,15 +50,27 @@ endif
 "
 "  Key word completion is enabled by the filetype plugin 'sh.vim'
 "  g:BASH_Dictionary_File  must be global
-"          
-let s:root_dir  	= $HOME.'/.vim/'
+" ==========  Linux/Unix  ======================================================
+"
+" user / system wide installation
+"
+if match( expand("<sfile>"), $VIM ) >= 0
+	"
+	" system wide installation 
+	let s:plugin_dir  = $VIM.'/vimfiles/'
+else
+	"
+	" user installation assumed
+	let s:plugin_dir  = $HOME.'/.vim/'
+end
+"
+"------------------------------------------------------------------------------
 "
 if !exists("g:BASH_Dictionary_File")
-	let g:BASH_Dictionary_File     = s:root_dir.'bash-support/wordlists/bash.list'
+	let g:BASH_Dictionary_File     = s:plugin_dir.'bash-support/wordlists/bash.list'
 endif
 "
 "  Modul global variables (with default values) which can be overridden.
-"
 "
 let s:BASH_AuthorName              = ""
 let s:BASH_AuthorRef               = ""
@@ -67,7 +79,7 @@ let s:BASH_CopyrightHolder         = ""
 let s:BASH_Email                   = ""
 let s:BASH_Project                 = ""
 "
-let s:BASH_CodeSnippets            = s:root_dir."bash-support/codesnippets/"
+let s:BASH_CodeSnippets            = $HOME."/.vim/bash-support/codesnippets/"
 let s:BASH_Debugger                = 'term'
 let s:BASH_DoOnNewLine             = 'no'
 let s:BASH_LineEndCommColDefault   = 49
@@ -76,13 +88,13 @@ let s:BASH_MenuHeader              = "yes"
 let s:BASH_OutputGvim              = "vim"
 let s:BASH_Root                    = 'B&ash.'         " the name of the root menu of this plugin
 let s:BASH_SyntaxCheckOptionsGlob  = ""
-let s:BASH_Template_Directory      = s:root_dir."bash-support/templates/"
+let s:BASH_Template_Directory      = s:plugin_dir."bash-support/templates/"
 let s:BASH_Template_File           = "bash-file-header"
 let s:BASH_Template_Frame          = "bash-frame"
 let s:BASH_Template_Function       = "bash-function-description"
 let s:BASH_XtermDefaults           = "-fa courier -fs 12 -geometry 80x24"
 let s:BASH_Printheader             = "%<%f%h%m%<  %=%{strftime('%x %X')}     Page %N"
-let s:BASH_Wrapper                 = s:root_dir.'bash-support/scripts/wrapper.sh'
+let s:BASH_Wrapper                 = s:plugin_dir.'bash-support/scripts/wrapper.sh'
 "
 "
 "------------------------------------------------------------------------------
@@ -2032,7 +2044,7 @@ function! BASH_HelpBASHsupport ()
 	try
 		:help bashsupport
 	catch
-		exe ':helptags '.s:root_dir.'doc'
+		exe ':helptags '.s:plugin_dir.'doc'
 		:help bashsupport
 	endtry
 endfunction    " ----------  end of function BASH_HelpBASHsupport ----------

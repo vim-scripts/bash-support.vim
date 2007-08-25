@@ -1,7 +1,7 @@
-*bashsupport.txt*                Bash Support                     June 17 2007
+*bashsupport.txt*                Bash Support                  August 25 2007
 
 bash Support                                      *bash-support* *bashsupport*
-                             Plugin version 2.2
+                             Plugin version 2.3
                         for Vim version 6.0 and above
                        Fritz Mehner  <mehner@fh-swf.de>
 
@@ -41,6 +41,7 @@ writing shell scripts.
  4.1     Files                                   |bashsupport-custom-files|
  4.2     Global variables                        |bashsupport-custom-variables|
  4.3     The root menu                           |bashsupport-custom-root|
+ 4.3     System-wide installation                |bashsupport-system-wide|
  5.     Template files and tags                  |bashsupport-tempfiles|
  5.1     Template files                          |bashsupport-tempfiles|
  5.2     Tags                                    |bashsupport-tags|
@@ -735,6 +736,40 @@ If you want to set the plugin root menu into another menu, e.g. 'Plugin',
 this is done by the following line in '.vimrc'
 
   let g:BASH_Root = "&Plugin.B&ash."
+
+------------------------------------------------------------------------------
+4.4  System-wide installation                        *bashsupport-system-wide*
+------------------------------------------------------------------------------
+
+A system-wide installation (one installation for all users) is done as
+follows.
+
+As *** SUPERUSER *** :
+
+(1) Find the Vim installation directory.
+The Vim ex command ':echo $VIM' gives '/usr/local/share/vim' or something like
+that. Beyond this directory you will find the Vim installation,  e.g. in
+'/usr/local/share/vim/vim71' if Vim version 7.1 has been installed.
+
+(2) Create a new subdirectory 'vimfiles', e.g. '/usr/local/share/vim/vimfiles'.
+
+(3) Install Bash Support
+Copy the archive bash-support.zip to this new directory and unpack it:
+  unzip bash-support.zip
+
+(4) Generate the help tags:
+  :helptags $VIM/vimfiles/doc
+
+
+As *** USER *** :
+
+Create your private snippet directory:
+
+  mkdir --parents  ~/.vim/bash-support/codesnippets 
+
+You may want to copy the snippets comming with this plugin (in
+$VIM/vimfiles/bash-support/codesnippets) into the new directory or to set a
+link to the global directory.
 
 
 ==============================================================================

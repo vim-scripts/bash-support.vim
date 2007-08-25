@@ -1,4 +1,4 @@
-README for bash-support.vim (Version 2.2) / June 23 2007
+README for bash-support.vim (Version 2.3) / August 25 2007
 
   *  INSTALLATION
   *  RELEASE NOTES 
@@ -59,11 +59,9 @@ and look at the bashsupport help with
 
 
 =======================================================================================
-  RELEASE NOTES FOR VERSION 2.2
+  RELEASE NOTES FOR VERSION 2.3
 =======================================================================================
-+ Snippets can now be managed in the console mode.
-+ Three new key mappings for snippet handling.
-+ Three items from the statements menu removed (quoting; but see file customization.vimrc).
++ Changes to allow a system-wide installation.
 
 =======================================================================================
   OLDER RELEASE NOTES : see file 'ChangeLog'
