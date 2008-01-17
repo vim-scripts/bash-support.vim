@@ -1,8 +1,8 @@
-*bashsupport.txt*                Bash Support                  August 25 2007
+*bashsupport.txt*                Bash Support                 January 16 2008
 
 bash Support                                      *bash-support* *bashsupport*
-                             Plugin version 2.3
-                        for Vim version 6.0 and above
+                             Plugin version 2.4
+                        for Vim version 7.0 and above
                        Fritz Mehner  <mehner@fh-swf.de>
 
 Bash Support implements a bash-IDE for Vim/gVim. It is written to considerably
@@ -41,7 +41,7 @@ writing shell scripts.
  4.1     Files                                   |bashsupport-custom-files|
  4.2     Global variables                        |bashsupport-custom-variables|
  4.3     The root menu                           |bashsupport-custom-root|
- 4.3     System-wide installation                |bashsupport-system-wide|
+ 4.4     System-wide installation                |bashsupport-system-wide|
  5.     Template files and tags                  |bashsupport-tempfiles|
  5.1     Template files                          |bashsupport-tempfiles|
  5.2     Tags                                    |bashsupport-tags|
@@ -87,7 +87,7 @@ and choosing 'Line End Comm.' will yield
 The cursor position above is marked by '|' . Empty lines will be ignored.
 
 The default starting column is 49 ( = (multiple of 2,4, or 8) + 1 ).  This can
-be changed by setting a global variable in the file .vimrc , e.g. :
+be changed by setting a global variable in the file '.vimrc', e.g. :
 
   let g:BASH_LineEndCommColDefault    = 45
 
@@ -200,9 +200,8 @@ This is achived by setting the global variable g:BASH_DoOnNewLine in '.vimrc':
 The default value is 'no'.
 
 
-1.2.1  VISUAL MODE                                   *bashsupport-stat-visual*
+1.2.2  VISUAL MODE                                   *bashsupport-stat-visual*
 ------------------
-
 The highlighted area (...) will be surrounded by a statement, parentheses,
 quotes or an echo with quotes:
 
@@ -219,16 +218,20 @@ quotes or an echo with quotes:
   $((...))
   $[[...]]
 
-  echo -e ""
+  echo -e "...\n"
 
-------------------------------------------------------------------------------
+  ${...[@]}
+  ${...[*]}
+  ${#...[*]}
+  ${!...[*]}
+
 1.2.3 CODE SNIPPETS                                *bashsupport-stat-snippets*
-------------------------------------------------------------------------------
+-------------------
 
 Code snippets are pieces of code which are kept in separate files in a special
 directory. File names are used to identify the snippets.  The default snippet
-directory is  $HOME/.vim/bash-support/codesnippets.  Snippets are managed with
-the 3 entries 
+directory is  '$HOME/.vim/bash-support/codesnippets'.  Snippets are managed
+with the 3 entries 
 
    bash -> Statements -> read  code snippet
    bash -> Statements -> write code snippet
@@ -338,7 +341,7 @@ Save the current buffer to this file and run this file with the -n flag
 Errors are listed in an error window; now the quickfix commands can be used.
 
 The syntax check can be influenced by shopt options. Options which shall
-always take effect can be declared in .vimrc , e.g.
+always take effect can be declared in '.vimrc' , e.g.
 
   let g:BASH_SyntaxCheckOptionsGlob  = "-O extglob"
 
@@ -348,8 +351,8 @@ options' typing for instance
   +O extglob -O nocaseglob
 
 after the prompt. The options entered this way are buffer related.  The global
-options set in .vimrc and the buffer related options are checked.  Only the
-shopts options for Bash 3.0 (GNU Bash-3.0, manual: 2004 June 26) are
+options set in '.vimrc' and the buffer related options are checked.  Only the
+shopts options for Bash (GNU Bash-3.2, manual: 2006 September 27) are
 recognized:
 
    cdable_vars        cdspell         checkhash    checkwinsize
@@ -419,7 +422,7 @@ The current locale can be overwritten by changing the language, e.g.
 
   :language C
 
-or by setting a global variable in the file .vimrc , e.g. :
+or by setting a global variable in the file '.vimrc', e.g. :
 
   let g:C_Printheader = "%<%f%h%m%<  %=%{strftime('%x %X')}     SEITE %N"
 
@@ -480,7 +483,7 @@ g:BASH_XtermDefaults. The assignment
 
   let g:BASH_XtermDefaults = "-fa courier -fs 10 -geometry 96x32"
 
-placed in .vimrc would override the defaults. The defaults are
+placed in '.vimrc' would override the defaults. The defaults are
 
   "-fa courier -fs 12 -geometry 80x24"
 
@@ -488,7 +491,7 @@ FreeType font 'courier', FreeType font size 12 point, window width 80
 characters, window height 24 lines.
 
 The default output method is VIM. The preferred output method can be selected
-in .vimrc by the global variable g:BASH_OutputGvim, e.g.
+in '.vimrc' by the global variable g:BASH_OutputGvim, e.g.
 
   let g:BASH_OutputGvim            = "xterm"
 
@@ -499,8 +502,8 @@ The methods are "vim", "buffer" and "xterm".
 ==============================================================================
 
 The frequently used constructs can be inserted with key mappings.  The
-mappings are also described in the document bash-hot-keys.pdf (reference card,
-part of this package).
+mappings are also described in the document 'bash-hot-keys.pdf' (reference
+card, part of this package).
 
  * All mappings (except \lbs and \ubs) are filetype specific: they are only
  * defined for buffers with filetype 'sh' to minimize conflicts with mappings
@@ -571,10 +574,10 @@ following character(s) will only be recognized for a short time.
           under the cursor
 
 
-File bash-hot-keys.pdf contains a reference card for these key mappings.
+File 'bash-hot-keys.pdf' contains a reference card for these key mappings.
 Multiline inserts and code snippets will be indented after insertion.
 
-The hot keys are defined in the file type plugin sh.vim (part of this
+The hot keys are defined in the file type plugin 'sh.vim' (part of this
 bash-support plugin package).
 
 
@@ -622,14 +625,14 @@ bash-support/wordlists/*            Additional word lists (dictionaries).
                           bash-support.vim will work without them.
                           -------------------------------------------------------------
 
-bash-support/rc/costumization.vimrc   Additional settings I use in .vimrc: incremental 
+bash-support/rc/costumization.vimrc   Additional settings I use in '.vimrc': incremental 
                                       search, tabstop, hot keys, font, use of dictionaries, 
-                                      ...  The file is commented. Append it to your .vimrc
+                                      ...  The file is commented. Append it to your '.vimrc'
                                       if you like.
 
-bash-support/rc/costumization.gvimrc  Additional settings I use in .gvimrc: hot keys, 
+bash-support/rc/costumization.gvimrc  Additional settings I use in '.gvimrc': hot keys, 
                                       mouse settings, ...  The file is commented. 
-                                      Append it to your .gvimrc if you like.
+                                      Append it to your '.gvimrc' if you like.
 
 bash-support/doc/*                    Hotkey reference card (PDF), changelog. 
 
@@ -644,12 +647,12 @@ Several global variables are checked by the script to customize it:
 global variable                default value                     tag 
                                                                (see |bashsupport-tags|)
 ---------------------------------------------------------------------------------------
-g:BASH_AuthorName              ""                                |AUTHOR|
-g:BASH_AuthorRef               ""                                |AUTHORREF|
-g:BASH_Email                   ""                                |EMAIL|
-g:BASH_Company                 ""                                |COMPANY|   
-g:BASH_Project                 ""                                |PROJECT|
-g:BASH_CopyrightHolder         ""                                |COPYRIGHTHOLDER|
+g:BASH_AuthorName              ""                               *|AUTHOR|*
+g:BASH_AuthorRef               ""                               *|AUTHORREF|*
+g:BASH_Company                 ""                               *|COMPANY|*
+g:BASH_CopyrightHolder         ""                               *|COPYRIGHTHOLDER|*
+g:BASH_Email                   ""                               *|EMAIL|*
+g:BASH_Project                 ""                               *|PROJECT|*
 
 g:BASH_Template_Directory      $HOME."/.vim/bash-support/templates/"
 g:BASH_Template_File           "bash-file-header"
@@ -700,7 +703,7 @@ g:BASH_Debugger                "term"
           g:BASH_Debugger               : the debugger called by F9 (term, ddd).
           g:BASH_DoOnNewLine            : see |bashsupport-stat-norm-ins|
           
-To override the defaults add appropriate assignments in .vimrc .
+To override the defaults add appropriate assignments in '.vimrc'.
 Here are my settings as an example:
 
   let g:BASH_AuthorName   = "Dr.-Ing. Fritz Mehner"     
@@ -717,8 +720,8 @@ $((..)).
 4.3  THE ROOT MENU                                   *bashsupport-custom-root*
 ------------------------------------------------------------------------------
 
-The variable g:BASH_Root, if set (in .vimrc or in .gvimrc), gives the name of
-the single gVim root menu entry in which the Bash submenus will be put. 
+The variable g:BASH_Root, if set (in '.vimrc' or in '.gvimrc'), gives the name
+of the single gVim root menu entry in which the Bash submenus will be put.
 The default is 
                   'B&ash.'
 Note the terminating dot. A single root menu entry is appropriate if the
@@ -754,7 +757,7 @@ that. Beyond this directory you will find the Vim installation,  e.g. in
 (2) Create a new subdirectory 'vimfiles', e.g. '/usr/local/share/vim/vimfiles'.
 
 (3) Install Bash Support
-Copy the archive bash-support.zip to this new directory and unpack it:
+Copy the archive 'bash-support.zip' to this new directory and unpack it:
   unzip bash-support.zip
 
 (4) Generate the help tags:
@@ -810,19 +813,22 @@ The comments in these files do not have to be personalized but they can be.
 The text can contain the following tags which are replaced by the appropriate
 information when the file is read in:
 
-    |AUTHOR|
-    |DATE|
-    |EMAIL|
-    |FILENAME|
-    |YEAR|
-
-    |AUTHORREF|
-    |COMPANY|
-    |COPYRIGHTHOLDER|
-    |PROJECT|
-    |TIME|
-
-    |CURSOR|
+*|AUTHOR|*           
+*|AUTHORREF|*        
+*|COMPANY|*          
+*|COPYRIGHTHOLDER|*  
+*|EMAIL|*            
+*|PROJECT|*          
+                     
+*|DATE|*            the preferred date representation for the current locale
+                    without the time
+*|DATETIME|*        date and time 
+*|FILENAME|*        filename without path
+*|TIME|*            the preferred time representation for the current locale
+                    without the date and the time zone or name or abbreviation
+*|YEAR|*            the year as a decimal number including the century
+                        
+*|CURSOR|*          the cursor position after insertion of a template
 
 Each tag can occur more than once. The tag |CURSOR| may appear only once.
 The tag |CURSOR| will be the cursor position after the block is read in.
@@ -830,17 +836,32 @@ There is no need to use any of these tags, some or all can be missing.
 
 The template files can actually be links pointing to existing templates.
 
+The format for *|DATE|* ,*|TIME|* , and*|YEAR|* can be set by the user. The
+defaults are
+    *|DATE|*        '%x'    
+    *|TIME|*        '%X %Z'    
+    *|YEAR|*        '%Y'        
+See the manual page of the C function strftime() for the format.  The accepted
+format depends on your system, thus this is not portable!  The maximum length
+of the result is 80 characters.
+
+User defined formats can be set using the following global variables in
+'~/.vimrc' ,  e.g.
+    let g:BASH_FormatDate       = '%D'
+    let g:BASH_FormatTime       = '%H:%M'
+    let g:BASH_FormatYear       = 'year %Y'
+
 
 ==============================================================================
 6.  BASH DICTIONARY                                   *bashsupport-dictionary*
 ==============================================================================
 
-The file  bash.list  contains words used as dictionary for automatic word
+The file 'bash.list' contains words used as dictionary for automatic word
 completion.  This feature is enabled by default. The default word list is
 
   $HOME/.vim/bash-support/wordlists/bash.list
 
-If you want to use an additional list MyBash.List put the following line into
+If you want to use an additional list 'MyBash.List' put the following line into
  $HOME/.vimrc :
 
   let g:BASH_Dictionary_File   =  "$HOME/.vim/bash-support/wordlists/bash.list,".
@@ -856,7 +877,7 @@ You can use Vim's dictionary feature CTRL-X, CTRL-K (and CTRL-P, CTRL-N).
 7.  Release Notes                                  *bashsupport-release-notes*
 ==============================================================================
 
-See file README.bashsupport .
+See file 'README.bashsupport'.
 
 ==============================================================================
 vim:tw=78:noet:ts=2:ft=help:norl:

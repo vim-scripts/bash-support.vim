@@ -4,7 +4,7 @@
 "     Plugin :  bash-support.vim
 " Maintainer :  Fritz Mehner <mehner@fh-swf.de>
 "    Version :  2.2
-"   Revision :  $Id: sh.vim,v 1.7 2007/06/22 12:51:57 mehner Exp $
+"   Revision :  $Id: sh.vim,v 1.9 2007/11/18 11:12:31 mehner Exp $
 "
 " -----------------------------------------------------------------
 "
@@ -81,11 +81,11 @@ vnoremap  <buffer>  <silent>  <Leader>cc      <Esc><Esc>:'<,'>s/^/\#/<CR><Esc>:n
 nnoremap  <buffer>  <silent>  <Leader>co      <Esc><Esc>:s/^\\(\\s*\\)#/\\1/<CR><Esc>:nohlsearch<CR>j"
 nnoremap  <buffer>  <silent>  <Leader>co      <Esc><Esc>:'<,'>s/^\\(\\s*\\)#/\\1/<CR><Esc>:nohlsearch<CR>j"
 
-nnoremap  <buffer>  <silent>  <Leader>cd      a<C-R>=strftime("%x")<CR>
-inoremap  <buffer>  <silent>  <Leader>cd       <C-R>=strftime("%x")<CR>
+nnoremap  <buffer>  <silent>  <Leader>cd      a<C-R>=BASH_InsertDateAndTime('d')<CR>
+inoremap  <buffer>  <silent>  <Leader>cd       <C-R>=BASH_InsertDateAndTime('d')<CR>
 
-nnoremap  <buffer>  <silent>  <Leader>ct      a<C-R>=strftime("%x %X %Z")<CR>
-inoremap  <buffer>  <silent>  <Leader>ct       <C-R>=strftime("%x %X %Z")<CR>
+nnoremap  <buffer>  <silent>  <Leader>ct      a<C-R>=BASH_InsertDateAndTime('dt')<CR>
+inoremap  <buffer>  <silent>  <Leader>ct       <C-R>=BASH_InsertDateAndTime('dt')<CR>
 
 nnoremap  <buffer>  <silent>  <Leader>ckb     $<Esc>:call BASH_CommentClassified("BUG")     <CR>kJA
 nnoremap  <buffer>  <silent>  <Leader>ckt     $<Esc>:call BASH_CommentClassified("TODO")    <CR>kJA

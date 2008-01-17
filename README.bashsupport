@@ -1,4 +1,4 @@
-README for bash-support.vim (Version 2.3) / August 25 2007
+README for bash-support.vim (Version 2.4) / January 16 2008
 
   *  INSTALLATION
   *  RELEASE NOTES 
@@ -59,9 +59,12 @@ and look at the bashsupport help with
 
 
 =======================================================================================
-  RELEASE NOTES FOR VERSION 2.3
+  RELEASE NOTES FOR VERSION 2.4
 =======================================================================================
-+ Changes to allow a system-wide installation.
++ Format for the macros |DATE|, |TIME|, and |YEAR| can be defined by the user.
++ Help text improved.
++ Option 'nocasematch' added
++ Additional menu entries: 1 parameter substitution, 1 special variable, array index list. 
 
 =======================================================================================
   OLDER RELEASE NOTES : see file 'ChangeLog'
