@@ -1,4 +1,12 @@
 =======================================================================================
+  RELEASE NOTES FOR VERSION 2.4
+=======================================================================================
++ Format for the macros |DATE|, |TIME|, and |YEAR| can be defined by the user.
++ Help text improved.
++ Option 'nocasematch' added
++ Additional menu entries: 1 parameter substitution, 1 special variable, array index list. 
+
+=======================================================================================
   RELEASE NOTES FOR VERSION 2.3
 =======================================================================================
 + Changes to allow a system-wide installation.

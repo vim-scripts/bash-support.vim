@@ -3,8 +3,8 @@
 "   Language :  bash
 "     Plugin :  bash-support.vim
 " Maintainer :  Fritz Mehner <mehner@fh-swf.de>
-"    Version :  2.2
-"   Revision :  $Id: sh.vim,v 1.9 2007/11/18 11:12:31 mehner Exp $
+"    Version :  2.4
+"   Revision :  $Id: sh.vim,v 1.11 2008/05/29 09:06:56 mehner Exp $
 "
 " -----------------------------------------------------------------
 "
@@ -57,7 +57,7 @@ imap  <buffer>  <silent>  <S-F1>        <Esc>:call BASH_help()<CR>
 "
 nnoremap  <buffer>  <silent>  <Leader>cl      <Esc><Esc>:call BASH_LineEndComment()<CR>A
 vnoremap  <buffer>  <silent>  <Leader>cl      <Esc><Esc>:call BASH_MultiLineEndComments()<CR>A
-inoremap  <buffer>  <silent>  <Leader>cl      <Esc><Esc>:call BASH_MultiLineEndComments()<CR>A
+inoremap  <buffer>  <silent>  <Leader>cl      <Esc><Esc>:call BASH_LineEndComment()<CR>A
 
 nnoremap  <buffer>  <silent>  <Leader>cj      <Esc><Esc>:call BASH_AdjustLineEndComm("a")<CR>
 vnoremap  <buffer>  <silent>  <Leader>cj      <Esc><Esc>:call BASH_AdjustLineEndComm("v")<CR>
@@ -76,10 +76,8 @@ inoremap  <buffer>  <silent>  <Leader>ch      <Esc><Esc>:call BASH_CommentTempla
 
 vnoremap  <buffer>  <silent>  <Leader>co      <Esc><Esc>:'<,'>s/^#//<CR><Esc>:nohlsearch<CR>
 
-nnoremap  <buffer>  <silent>  <Leader>cc      <Esc><Esc>:s/^/\#/<CR><Esc>:nohlsearch<CR>j"
-vnoremap  <buffer>  <silent>  <Leader>cc      <Esc><Esc>:'<,'>s/^/\#/<CR><Esc>:nohlsearch<CR>j"
-nnoremap  <buffer>  <silent>  <Leader>co      <Esc><Esc>:s/^\\(\\s*\\)#/\\1/<CR><Esc>:nohlsearch<CR>j"
-nnoremap  <buffer>  <silent>  <Leader>co      <Esc><Esc>:'<,'>s/^\\(\\s*\\)#/\\1/<CR><Esc>:nohlsearch<CR>j"
+nnoremap    <buffer>  <silent>  <Leader>cc    <Esc><Esc>:call BASH_CommentToggle()<CR>j
+vnoremap    <buffer>  <silent>  <Leader>cc    <Esc><Esc>:'<,'>call BASH_CommentToggle()<CR>j
 
 nnoremap  <buffer>  <silent>  <Leader>cd      a<C-R>=BASH_InsertDateAndTime('d')<CR>
 inoremap  <buffer>  <silent>  <Leader>cd       <C-R>=BASH_InsertDateAndTime('d')<CR>

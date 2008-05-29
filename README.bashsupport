@@ -1,4 +1,4 @@
-README for bash-support.vim (Version 2.4) / January 16 2008
+README for bash-support.vim (Version 2.5) / May 29 2008
 
   *  INSTALLATION
   *  RELEASE NOTES 
@@ -59,12 +59,13 @@ and look at the bashsupport help with
 
 
 =======================================================================================
-  RELEASE NOTES FOR VERSION 2.4
+  RELEASE NOTES FOR VERSION 2.5
 =======================================================================================
-+ Format for the macros |DATE|, |TIME|, and |YEAR| can be defined by the user.
-+ Help text improved.
-+ Option 'nocasematch' added
-+ Additional menu entries: 1 parameter substitution, 1 special variable, array index list. 
++ Menu item 'toggle comment' replaces 'code->comment' and 'comment->code'
++ Hotkey \co removed,  \cc is now a toggle.
++ Bugfix. Adjusting comments (\cj): # in '$#' and '${#...}' is no longer
+  regarded as a start of a comment.
++ Bugfix. \cl in insert mode called function for visual mode.
 
 =======================================================================================
   OLDER RELEASE NOTES : see file 'ChangeLog'

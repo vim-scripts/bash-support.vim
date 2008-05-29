@@ -1,7 +1,7 @@
-*bashsupport.txt*                Bash Support                 January 16 2008
+*bashsupport.txt*                Bash Support                    May 29 2008
 
 bash Support                                      *bash-support* *bashsupport*
-                             Plugin version 2.4
+                             Plugin version 2.5
                         for Vim version 7.0 and above
                        Fritz Mehner  <mehner@fh-swf.de>
 
@@ -522,7 +522,8 @@ following character(s) will only be recognized for a short time.
   -- Comments -------------------------------------------
 
   \cl     line end comment                (n, i, v)
-  \cs     set end comment column          (n, i, v)
+  \cj     adjust end-of-line comments     (n, i, v)
+  \cs     set end-of-line comment column  (n)
   \cfr    frame comment                   (n, i)
   \cfu    function description            (n, i)
   \ch     file header                     (n, i)
@@ -531,8 +532,7 @@ following character(s) will only be recognized for a short time.
   \ckr    keyword comment TRICKY          (n)
   \ckw    keyword comment WARNING         (n)
   \ckn    keyword comment New_Keyword     (n)
-  \cc     code to comment                 (n, v)
-  \co     comment to code                 (n, v)
+  \cc     toggle comment                  (n, v)
   \cd     date                            (n, i)
   \ct     date & time                     (n, i)
   \ce     echo "..."                      (n)

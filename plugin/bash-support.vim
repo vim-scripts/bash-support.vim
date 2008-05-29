@@ -19,7 +19,7 @@
 "          
 "        Version:  see variable  g:BASH_Version  below 
 "        Created:  26.02.2001
-"        License:  Copyright (c) 2001-2007, Fritz Mehner
+"        License:  Copyright (c) 2001-2008, Fritz Mehner
 "                  This program is free software; you can redistribute it and/or
 "                  modify it under the terms of the GNU General Public License as
 "                  published by the Free Software Foundation, version 2 of the
@@ -29,7 +29,7 @@
 "                  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 "                  PURPOSE.
 "                  See the GNU General Public License version 2 for more details.
-"       Revision:  $Id: bash-support.vim,v 1.13 2008/01/16 17:52:11 mehner Exp $
+"       Revision:  $Id: bash-support.vim,v 1.16 2008/05/29 09:08:48 mehner Exp $
 "  
 "------------------------------------------------------------------------------
 " 
@@ -198,10 +198,8 @@ function!	BASH_InitMenu ()
 		exe "amenu <silent>  ".s:BASH_Root.'&Comments.f&unction\ description      <Esc><Esc>:call BASH_CommentTemplates("function")<CR>'
 		exe "amenu <silent>  ".s:BASH_Root.'&Comments.file\ &header               <Esc><Esc>:call BASH_CommentTemplates("header")<CR>'
 		exe "amenu ".s:BASH_Root.'&Comments.-Sep1-                    :'
-		exe "amenu ".s:BASH_Root."&Comments.&code->comment            <Esc><Esc>:s/^/\#/<CR><Esc>:nohlsearch<CR>j"
-		exe "vmenu ".s:BASH_Root."&Comments.&code->comment            <Esc><Esc>:'<,'>s/^/\#/<CR><Esc>:nohlsearch<CR>j"
-		exe "amenu ".s:BASH_Root."&Comments.c&omment->code            <Esc><Esc>:s/^\\(\\s*\\)#/\\1/<CR><Esc>:nohlsearch<CR>j"
-		exe "vmenu ".s:BASH_Root."&Comments.c&omment->code            <Esc><Esc>:'<,'>s/^\\(\\s*\\)#/\\1/<CR><Esc>:nohlsearch<CR>j"
+    exe "amenu <silent>  ".s:BASH_Root."&Comments.toggle\\ &comment    <Esc><Esc>:call BASH_CommentToggle()<CR>j"
+    exe "vmenu <silent>  ".s:BASH_Root."&Comments.toggle\\ &comment    <Esc><Esc>:'<,'>call BASH_CommentToggle()<CR>j"
 		exe "amenu ".s:BASH_Root.'&Comments.-SEP2-                    :'
 		exe " menu ".s:BASH_Root.'&Comments.&date                     a<C-R>=BASH_InsertDateAndTime("d")<CR>'
 		exe "imenu ".s:BASH_Root.'&Comments.&date                      <C-R>=BASH_InsertDateAndTime("d")<CR>'
@@ -295,34 +293,34 @@ function!	BASH_InitMenu ()
 		exe "anoremenu ".s:BASH_Root.'&Statements.-SEP1-          :'
 
 		exe "anoremenu ".s:BASH_Root.'&Statements.&$(\.\.\.)			<Esc>a$()<Left>'
-		exe "inoremenu ".s:BASH_Root.'&Statements.&$(\.\.\.)			$()<Left>'
-		exe "vnoremenu ".s:BASH_Root.'&Statements.&$(\.\.\.)			s$()<Esc>P'
+		exe "inoremenu ".s:BASH_Root.'&Statements.&$(\.\.\.)					 $()<Left>'
+		exe "vnoremenu ".s:BASH_Root.'&Statements.&$(\.\.\.)					s$()<Esc>P'
 
 		exe "anoremenu ".s:BASH_Root.'&Statements.$&{\.\.\.}			<Esc>a${}<Left>'
-		exe "inoremenu ".s:BASH_Root.'&Statements.$&{\.\.\.}			${}<Left>'
-		exe "vnoremenu ".s:BASH_Root.'&Statements.$&{\.\.\.}			s${}<Esc>P'
+		exe "inoremenu ".s:BASH_Root.'&Statements.$&{\.\.\.}						${}<Left>'
+		exe "vnoremenu ".s:BASH_Root.'&Statements.$&{\.\.\.}					 s${}<Esc>P'
 		"
 		exe " noremenu ".s:BASH_Root.'&Statements.$&((\.\.\.))		<Esc>a$(())<Esc>hi'
-		exe "vnoremenu ".s:BASH_Root.'&Statements.$&((\.\.\.))		s$(())<Esc>hP'
-		exe "inoremenu ".s:BASH_Root.'&Statements.$&((\.\.\.))		$(())<Left><Left>'
+		exe "vnoremenu ".s:BASH_Root.'&Statements.$&((\.\.\.))				 s$(())<Esc>hP'
+		exe "inoremenu ".s:BASH_Root.'&Statements.$&((\.\.\.))					$(())<Left><Left>'
 
 		exe " noremenu ".s:BASH_Root.'&Statements.$&[[\.\.\.]]		<Esc>a$[[]]<Esc>hi'
-		exe "vnoremenu ".s:BASH_Root.'&Statements.$&[[\.\.\.]]		s$[[]]<Esc>hP'
-		exe "inoremenu ".s:BASH_Root.'&Statements.$&[[\.\.\.]]		$[[]]<Left><Left>'
+		exe "vnoremenu ".s:BASH_Root.'&Statements.$&[[\.\.\.]]				 s$[[]]<Esc>hP'
+		exe "inoremenu ".s:BASH_Root.'&Statements.$&[[\.\.\.]]					$[[]]<Left><Left>'
 		"
 		exe "anoremenu ".s:BASH_Root.'&Statements.ech&o\ -e\ "\\n"		<Esc><Esc>oecho<Space>-e<Space>"\n"<Esc>2hi'
-		exe "inoremenu ".s:BASH_Root.'&Statements.ech&o\ -e\ "\\n"		echo<Space>-e<Space>"\n"<Esc>2hi'
-		exe "vnoremenu ".s:BASH_Root.'&Statements.ech&o\ -e\ "\\n" 		secho<Space>-e<Space>"\n"<Esc>2hP'
+		exe "inoremenu ".s:BASH_Root.'&Statements.ech&o\ -e\ "\\n"							 echo<Space>-e<Space>"\n"<Esc>2hi'
+		exe "vnoremenu ".s:BASH_Root.'&Statements.ech&o\ -e\ "\\n" 							secho<Space>-e<Space>"\n"<Esc>2hP'
 		"
-		exe "amenu  ".s:BASH_Root.'&Statements.-SEP5-                    		  :'
-		exe "anoremenu ".s:BASH_Root.'&Statements.&array\ elem\.<Tab>${[@]}      										<Esc><Esc>a${[@]}<Left><Left><Left><Left>'
-		exe "vnoremenu ".s:BASH_Root.'&Statements.&array\ elem\.<Tab>${[@]}      										s${[@]}<Left><Left><Left><Esc>P'
-		exe "anoremenu ".s:BASH_Root.'&Statements.arra&y\ (1\ word)<Tab>${[*]}												<Esc><Esc>a${[*]}<Left><Left><Left><Left>'
-		exe "vnoremenu ".s:BASH_Root.'&Statements.arra&y\ (1\ word)<Tab>${[*]}												s${[*]}<Left><Left><Left><Esc>P'
-		exe "anoremenu ".s:BASH_Root.'&Statements.no\.\ of\ ele&m\.<Tab>${#[@]}											<Esc><Esc>a${#[*]}<Left><Left><Left><Left>'
-		exe "vnoremenu ".s:BASH_Root.'&Statements.no\.\ of\ ele&m\.<Tab>${#[@]}											s${#[*]}<Left><Left><Left><Esc>P'
-    exe "anoremenu ".s:BASH_Root.'&Statements.list\ of\ in&dices<tab>${![*]}   <Esc><Esc>a${![*]}<Left><Left><Left><Left>'
-    exe "vnoremenu ".s:BASH_Root.'&Statements.list\ of\ in&dices<tab>${![*]}   s${![*]}<Left><Left><Left><Esc>P'
+		exe "amenu  ".s:BASH_Root.'&Statements.-SEP5-                                 :'
+		exe "anoremenu ".s:BASH_Root.'&Statements.&array\ elem\.<Tab>${\ [@]}      		<Esc><Esc>a${[@]}<Left><Left><Left><Left>'
+		exe "vnoremenu ".s:BASH_Root.'&Statements.&array\ elem\.<Tab>${\ [@]}      		          s${[@]}<Left><Left><Left><Esc>P'
+		exe "anoremenu ".s:BASH_Root.'&Statements.arra&y\ (1\ word)<Tab>${\ [*]}			<Esc><Esc>a${[*]}<Left><Left><Left><Left>'
+		exe "vnoremenu ".s:BASH_Root.'&Statements.arra&y\ (1\ word)<Tab>${\ [*]}								s${[*]}<Left><Left><Left><Esc>P'
+		exe "anoremenu ".s:BASH_Root.'&Statements.no\.\ of\ ele&m\.<Tab>${#\ [@]}			<Esc><Esc>a${#[*]}<Left><Left><Left><Left>'
+		exe "vnoremenu ".s:BASH_Root.'&Statements.no\.\ of\ ele&m\.<Tab>${#\ [@]}								s${#[*]}<Left><Left><Left><Esc>P'
+    exe "anoremenu ".s:BASH_Root.'&Statements.list\ of\ in&dices<tab>${!\ [*]}   	<Esc><Esc>a${![*]}<Left><Left><Left><Left>'
+    exe "vnoremenu ".s:BASH_Root.'&Statements.list\ of\ in&dices<tab>${!\ [*]}   						s${![*]}<Left><Left><Left><Esc>P'
 		"
 		if s:BASH_CodeSnippets != ""
 			exe "amenu  ".s:BASH_Root.'&Statements.-SEP6-                    		  :'
@@ -466,39 +464,39 @@ function!	BASH_InitMenu ()
 			exe "amenu ".s:BASH_Root.'&ParmSub.-Sep0-           :'
 		endif
 
-    exe " noremenu ".s:BASH_Root.'&ParmSub.s&ubstitution\ <tab>${}                                <Esc>a${}<Left>'
-    exe " noremenu ".s:BASH_Root.'&ParmSub.use\ &default\ value<tab>${:-}                         <Esc>a${:-}<ESC>3ha'
-    exe " noremenu ".s:BASH_Root.'&ParmSub.&assign\ default\ value<tab>${:=}                      <Esc>a${:=}<ESC>3ha'
-    exe " noremenu ".s:BASH_Root.'&ParmSub.display\ &error\ if\ null\ or\ unset<tab>${:?}         <Esc>a${:?}<ESC>3ha'
-    exe " noremenu ".s:BASH_Root.'&ParmSub.use\ alternate\ &value<tab>${:+}                       <Esc>a${:+}<ESC>3ha'
-    exe " noremenu ".s:BASH_Root.'&ParmSub.&substring\ expansion<tab>${::}                        <Esc>a${::}<ESC>3ha'
-    exe " noremenu ".s:BASH_Root.'&ParmSub.list\ of\ var\.s\ &beginning\ with\ prefix<tab>${!*} 	<Esc>a${!*}<ESC>2ha'
+    exe " noremenu ".s:BASH_Root.'&ParmSub.s&ubstitution\ <tab>${\ }                                <Esc>a${}<Left>'
+    exe " noremenu ".s:BASH_Root.'&ParmSub.use\ &default\ value<tab>${\ :-\ }                       <Esc>a${:-}<ESC>3ha'
+    exe " noremenu ".s:BASH_Root.'&ParmSub.&assign\ default\ value<tab>${\ :=\ }                    <Esc>a${:=}<ESC>3ha'
+    exe " noremenu ".s:BASH_Root.'&ParmSub.display\ &error\ if\ null\ or\ unset<tab>${\ :?\ }       <Esc>a${:?}<ESC>3ha'
+    exe " noremenu ".s:BASH_Root.'&ParmSub.use\ alternate\ &value<tab>${\ :+\ }                     <Esc>a${:+}<ESC>3ha'
+    exe " noremenu ".s:BASH_Root.'&ParmSub.&substring\ expansion<tab>${\ :\ :\ }                    <Esc>a${::}<ESC>3ha'
+    exe " noremenu ".s:BASH_Root.'&ParmSub.list\ of\ var\.s\ &beginning\ with\ prefix<tab>${!\ *} 	<Esc>a${!*}<ESC>2ha'
 		exe " noremenu ".s:BASH_Root.'&ParmSub.-Sep1-           :'
-    exe " noremenu ".s:BASH_Root.'&ParmSub.&parameter\ length\ in\ characters<Tab>${#}            <Esc>a${#}<Left>'
-    exe " noremenu ".s:BASH_Root.'&ParmSub.match\ beginning;\ del\.\ &shortest\ part<Tab>${#}     <Esc>a${#}<Left><Left>'
-    exe " noremenu ".s:BASH_Root.'&ParmSub.match\ beginning;\ del\.\ &longest\ part<Tab>${##}     <Esc>a${##}<Left><Left><Left>'
-    exe " noremenu ".s:BASH_Root.'&ParmSub.match\ end;\ delete\ s&hortest\ part<Tab>${%}          <Esc>a${%}<Left><Left>'
-    exe " noremenu ".s:BASH_Root.'&ParmSub.match\ end;\ delete\ l&ongest\ part<Tab>${%%}          <Esc>a${%%}<Left><Left><Left>'
-    exe " noremenu ".s:BASH_Root.'&ParmSub.&replace\ first\ match<Tab>${/\ /\ }                   <Esc>a${/ / }<ESC>F{a'
-    exe " noremenu ".s:BASH_Root.'&ParmSub.replace\ all\ &matches<Tab>${//\ /\ }                  <Esc>a${// / }<ESC>F{a'
+    exe " noremenu ".s:BASH_Root.'&ParmSub.&parameter\ length\ in\ characters<Tab>${#\ }            <Esc>a${#}<Left>'
+    exe " noremenu ".s:BASH_Root.'&ParmSub.match\ beginning;\ del\.\ &shortest\ part<Tab>${\ #\ }   <Esc>a${#}<Left><Left>'
+    exe " noremenu ".s:BASH_Root.'&ParmSub.match\ beginning;\ del\.\ &longest\ part<Tab>${\ ##\ }   <Esc>a${##}<Left><Left><Left>'
+    exe " noremenu ".s:BASH_Root.'&ParmSub.match\ end;\ delete\ s&hortest\ part<Tab>${\ %\ }        <Esc>a${%}<Left><Left>'
+    exe " noremenu ".s:BASH_Root.'&ParmSub.match\ end;\ delete\ l&ongest\ part<Tab>${\ %%\ }        <Esc>a${%%}<Left><Left><Left>'
+    exe " noremenu ".s:BASH_Root.'&ParmSub.&replace\ first\ match<Tab>${\ /\ /\ }                   <Esc>a${/ / }<ESC>F{a'
+    exe " noremenu ".s:BASH_Root.'&ParmSub.replace\ all\ &matches<Tab>${\ //\ /\ }                  <Esc>a${// / }<ESC>F{a'
 
-    exe "vnoremenu ".s:BASH_Root.'&ParmSub.s&ubstitution\ <tab>${}                                      s${}<Esc>Pl'
+    exe "vnoremenu ".s:BASH_Root.'&ParmSub.s&ubstitution\ <tab>${\ }                                      s${}<Esc>Pl'
     "
-    exe "inoremenu ".s:BASH_Root.'&ParmSub.s&ubstitution\ <tab>${}                                ${}<Left>'
-    exe "inoremenu ".s:BASH_Root.'&ParmSub.use\ &default\ value<tab>${:-}                         ${:-}<Left><Left><Left>'
-    exe "inoremenu ".s:BASH_Root.'&ParmSub.&assign\ default\ value<tab>${:=}                      ${:=}<Left><Left><Left>'
-    exe "inoremenu ".s:BASH_Root.'&ParmSub.display\ &error\ if\ null\ or\ unset<tab>${:?}         ${:?}<Left><Left><Left>'
-    exe "inoremenu ".s:BASH_Root.'&ParmSub.use\ alternate\ &value<tab>${:+}                       ${:+}<Left><Left><Left>'
-    exe "inoremenu ".s:BASH_Root.'&ParmSub.&substring\ expansion<tab>${::}                        ${::}<Left><Left><Left>'
-    exe "inoremenu ".s:BASH_Root.'&ParmSub.list\ of\ var\.s\ &beginning\ with\ prefix<Tab>${!*} 	${!*}<Left><Left>'
+    exe "inoremenu ".s:BASH_Root.'&ParmSub.s&ubstitution\ <tab>${\ }                                ${}<Left>'
+    exe "inoremenu ".s:BASH_Root.'&ParmSub.use\ &default\ value<tab>${\ :-\ }                       ${:-}<Left><Left><Left>'
+    exe "inoremenu ".s:BASH_Root.'&ParmSub.&assign\ default\ value<tab>${\ :=\ }                    ${:=}<Left><Left><Left>'
+    exe "inoremenu ".s:BASH_Root.'&ParmSub.display\ &error\ if\ null\ or\ unset<tab>${\ :?\ }       ${:?}<Left><Left><Left>'
+    exe "inoremenu ".s:BASH_Root.'&ParmSub.use\ alternate\ &value<tab>${\ :+\ }                     ${:+}<Left><Left><Left>'
+    exe "inoremenu ".s:BASH_Root.'&ParmSub.&substring\ expansion<tab>${\ :\ :\ }                    ${::}<Left><Left><Left>'
+    exe "inoremenu ".s:BASH_Root.'&ParmSub.list\ of\ var\.s\ &beginning\ with\ prefix<Tab>${!\ *} 	${!*}<Left><Left>'
 		exe "inoremenu ".s:BASH_Root.'&ParmSub.-Sep1-           :'
-    exe "inoremenu ".s:BASH_Root.'&ParmSub.&parameter\ length\ in\ characters<tab>${#}            ${#}<Left>'
-    exe "inoremenu ".s:BASH_Root.'&ParmSub.match\ beginning;\ del\.\ &shortest\ part<Tab>${#}     ${#}<Left><Left>'
-    exe "inoremenu ".s:BASH_Root.'&ParmSub.match\ beginning;\ del\.\ &longest\ part<Tab>${##}     ${##}<Left><Left><Left>'
-    exe "inoremenu ".s:BASH_Root.'&ParmSub.match\ end;\ delete\ s&hortest\ part<Tab>${%}          ${%}<Left><Left>'
-    exe "inoremenu ".s:BASH_Root.'&ParmSub.match\ end;\ delete\ l&ongest\ part<Tab>${%%}          ${%%}<Left><Left><Left>'
-    exe "inoremenu ".s:BASH_Root.'&ParmSub.&replace\ first\ match<Tab>${/\ /\ }                   ${/ / }<Esc>F{a'
-    exe "inoremenu ".s:BASH_Root.'&ParmSub.replace\ all\ &matches<Tab>${//\ /\ }                  ${// / }<Esc>F{a'
+    exe "inoremenu ".s:BASH_Root.'&ParmSub.&parameter\ length\ in\ characters<tab>${#\ }            ${#}<Left>'
+    exe "inoremenu ".s:BASH_Root.'&ParmSub.match\ beginning;\ del\.\ &shortest\ part<Tab>${\ #\ }   ${#}<Left><Left>'
+    exe "inoremenu ".s:BASH_Root.'&ParmSub.match\ beginning;\ del\.\ &longest\ part<Tab>${\ ##\ }   ${##}<Left><Left><Left>'
+    exe "inoremenu ".s:BASH_Root.'&ParmSub.match\ end;\ delete\ s&hortest\ part<Tab>${\ %\ }        ${%}<Left><Left>'
+    exe "inoremenu ".s:BASH_Root.'&ParmSub.match\ end;\ delete\ l&ongest\ part<Tab>${\ %%\ }        ${%%}<Left><Left><Left>'
+    exe "inoremenu ".s:BASH_Root.'&ParmSub.&replace\ first\ match<Tab>${\ /\ /\ }                   ${/ / }<Esc>F{a'
+    exe "inoremenu ".s:BASH_Root.'&ParmSub.replace\ all\ &matches<Tab>${\ //\ /\ }                  ${// / }<Esc>F{a'
 		"
 		"-------------------------------------------------------------------------------
 		" menu Special Variables
@@ -1153,9 +1151,9 @@ function! BASH_AdjustLineEndComm ( mode ) range
 
 	while linenumber <= pos1
 		let	line= getline(".")
-		" look for a Perl comment
-		let idx1	= 1 + match( line, '\s*#.*$' )
-		let idx2	= 1 + match( line, '#.*$' )
+		" look for a Bash comment, don't match '$#' and '${#..'
+		let idx1	= 1 + match( line, '\s*\(\${\?\)\@<!#.*$' )
+		let idx2	= 1 + match( line,    '\(\${\?\)\@<!#.*$' )
 
 		let	ln	= line(".")
 		call setpos(".", [ 0, ln, idx1, 0 ] )
@@ -1272,6 +1270,19 @@ function! BASH_MultiLineEndComments ()
 	" ----- back to the begin of the marked block -----
 	normal '<
 endfunction		" ---------- end of function  BASH_MultiLineEndComments  ----------
+"
+"------------------------------------------------------------------------------
+"  toggle comments
+"------------------------------------------------------------------------------
+function! BASH_CommentToggle ()
+  if match( getline("."), '^\s*#' ) != -1
+		" remove comment sign, keep leading whitespaces
+		exe ":s/^\\(\\s*\\)#/\\1/"
+	else
+		" add comment leader
+		exe ":s/^/#/"
+	endif
+endfunction    " ----------  end of function BASH_CommentToggle  ----------
 "
 "------------------------------------------------------------------------------
 "  Substitute tags
