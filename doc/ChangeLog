@@ -1,4 +1,13 @@
 =======================================================================================
+  RELEASE NOTES FOR VERSION 2.5
+=======================================================================================
++ Menu item 'toggle comment' replaces 'code->comment' and 'comment->code'
++ Hotkey \co removed,  \cc is now a toggle.
++ Bugfix. Adjusting comments (\cj): # in '$#' and '${#...}' is no longer
+  regarded as a start of a comment.
++ Bugfix. \cl in insert mode called function for visual mode.
+
+=======================================================================================
   RELEASE NOTES FOR VERSION 2.4
 =======================================================================================
 + Format for the macros |DATE|, |TIME|, and |YEAR| can be defined by the user.

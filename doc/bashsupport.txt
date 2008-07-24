@@ -1,7 +1,7 @@
-*bashsupport.txt*                Bash Support                    May 29 2008
+*bashsupport.txt*                Bash Support                    July 23 2008
 
 bash Support                                      *bash-support* *bashsupport*
-                             Plugin version 2.5
+                             Plugin version 2.6
                         for Vim version 7.0 and above
                        Fritz Mehner  <mehner@fh-swf.de>
 
@@ -10,7 +10,7 @@ speed up writing code in a consistent style.  This is done by inserting
 complete statements, comments, idioms, and code snippets.  Syntax checking,
 running a script, starting a debugger  can be done with a keystroke.  There
 are many additional hints and options which can improve speed and comfort when
-writing shell scripts. 
+writing shell scripts.
 
  1.     Usage with GUI                           |bashsupport-usage-gvim|
  1.1     Menu 'Comments'                         |bashsupport-comments|
@@ -66,7 +66,7 @@ in the standard Tools-menu.
 --------------------------------------------------
 
 In NORMAL MODE the menu entry
- 'Line End Comm.' 
+ 'Line End Comm.'
 will append a comment to the current line.
 
 In VISUAL MODE this entry will append aligned comments to all marked lines.
@@ -74,15 +74,15 @@ Marking the 4 lines
 
  x11=11;
  x1111=1111;
- 
+
  x11111111=11111111;
 
-and choosing 'Line End Comm.' will yield 
+and choosing 'Line End Comm.' will yield
 
  x11=11;                                        # |
- x1111=1111;                                    # 
- 
- x11111111=11111111;                            # 
+ x1111=1111;                                    #
+
+ x11111111=11111111;                            #
 
 The cursor position above is marked by '|' . Empty lines will be ignored.
 
@@ -112,28 +112,28 @@ A marked block will be changed into
  #x11111111=11111111;
 
 The menu entry works also for a single line. A single line needs not to be
-marked (normal mode). 
+marked (normal mode).
 
 
 1.1.3 COMMENT TO CODE                               *bashsupport-comm-to-code*
 ---------------------
 
-A marked block 
+A marked block
 
  #x11=11;
  x1111=1111;
- 
+
  #x11111111=11111111;
 
 will be changed into
 
  x11=11;
  x1111=1111;
- 
+
  x11111111=11111111;
 
 The menu entry works also for a single line. A single line needs not to be
-marked (normal mode). 
+marked (normal mode).
 
 
 1.1.4 FRAME COMMENTS, FILE HEADER, ...            *bashsupport-comm-templates*
@@ -181,7 +181,7 @@ Usually not meant for the final documentation.
 An empty statement will be inserted and properly indented. The entry 'if'
 will insert an if-statement:
 
- if 
+ if
  then
  fi
 
@@ -193,9 +193,9 @@ so that the 'do' or 'then' stands on the first line:
  if  ; then
  fi
 
-This is achived by setting the global variable g:BASH_DoOnNewLine in '.vimrc': 
+This is achieved by setting the global variable g:BASH_DoOnNewLine in '.vimrc':
 
-  let g:BASH_DoOnNewLine   = 'yes'     
+  let g:BASH_DoOnNewLine   = 'yes'
 
 The default value is 'no'.
 
@@ -211,7 +211,7 @@ quotes or an echo with quotes:
   select  in do ... done
   until do ... done
   while do ... done
-  function NAME () { ... } 
+  function NAME () { ... }
 
   ${...}
   $(...)
@@ -231,7 +231,7 @@ quotes or an echo with quotes:
 Code snippets are pieces of code which are kept in separate files in a special
 directory. File names are used to identify the snippets.  The default snippet
 directory is  '$HOME/.vim/bash-support/codesnippets'.  Snippets are managed
-with the 3 entries 
+with the 3 entries
 
    bash -> Statements -> read  code snippet
    bash -> Statements -> write code snippet
@@ -239,9 +239,9 @@ with the 3 entries
 
 from the Statements submenu.
 
-Creating a new snippet:  
+Creating a new snippet:
 -----------------------
-When nothing is marked, "write code snippet" will write the whole buffer 
+When nothing is marked, "write code snippet" will write the whole buffer
 to a snippet file, otherwise the marked area will be written to a file.
 
 Insert a snippet:
@@ -317,7 +317,7 @@ The marked text
   xxxxx
 will be changed into
   *(xxxxx|)
-by the first choice. 
+by the first choice.
 
 ------------------------------------------------------------------------------
 1.6  MENU 'Run'                                              *bashsupport-run*
@@ -346,7 +346,7 @@ always take effect can be declared in '.vimrc' , e.g.
   let g:BASH_SyntaxCheckOptionsGlob  = "-O extglob"
 
 These options can be augmented or canceled using the menu entry 'syntax check
-options' typing for instance 
+options' typing for instance
 
   +O extglob -O nocaseglob
 
@@ -372,7 +372,7 @@ The entry 'com. line arg.' calls an input dialog which asks for command line
 arguments. These arguments are forwarded to the script which is run by the
 'run' entry. The arguments are kept until you change them.
 
-The arguments belong to the current buffer (that is, each buffer can have its 
+The arguments belong to the current buffer (that is, each buffer can have its
 own arguments).
 If the buffer gets a new name with "save as" the arguments will now belong to
 the buffer with the new name.
@@ -393,14 +393,14 @@ deficiencies (see also :h shell-window).
 
 When using vim from a console terminal the debugger will be started as
   :!bash --debugger  <command line arguments>
-The debugger now will be run inside vim. 
+The debugger now will be run inside vim.
 
 (2) Using ddd
 The frontend ddd can be started via the menu or the hotkeys instead of bashdb
 as described above.  The preference can be set with the global variable
-g:BASH_Debugger (possible values: 'term', 'ddd' ) in '.vimrc' : 
+g:BASH_Debugger (possible values: 'term', 'ddd' ) in '.vimrc' :
 
-  let g:BASH_Debugger     = 'ddd'     
+  let g:BASH_Debugger     = 'ddd'
 
 The default is 'term'.
 
@@ -415,10 +415,10 @@ Generates a PostScript file from the whole buffer or from a marked region.
 
 The print header contains date and time for the current locale. The definition
 used is
- 
+
   let s:C_Printheader = "%<%f%h%m%<  %=%{strftime('%x %X')}     Page %N"
 
-The current locale can be overwritten by changing the language, e.g. 
+The current locale can be overwritten by changing the language, e.g.
 
   :language C
 
@@ -426,7 +426,7 @@ or by setting a global variable in the file '.vimrc', e.g. :
 
   let g:C_Printheader = "%<%f%h%m%<  %=%{strftime('%x %X')}     SEITE %N"
 
-See :h printheader and :h strftime()  for more details. 
+See :h printheader and :h strftime()  for more details.
 
 
 1.6.6 Xterm size                                           *bashsupport-xterm*
@@ -479,7 +479,7 @@ The wrapper shows the complete command line and the return code of the script.
 Appearance of the xterm
 -----------------------
 The appearance of the xterm can be controlled by the global variable
-g:BASH_XtermDefaults. The assignment 
+g:BASH_XtermDefaults. The assignment
 
   let g:BASH_XtermDefaults = "-fa courier -fs 10 -geometry 96x32"
 
@@ -514,10 +514,10 @@ following character(s) will only be recognized for a short time.
 
   Legend:  (i) insert mode, (n) normal mode, (v) visual mode
 
-  -- Load / Unload bash Support -------------------------
+  -- bash help ------------------------------------------
 
-  \lbs    Load Bash Support               (n, GUI only)
-  \ubs    Unload Bash Support             (n, GUI only)
+  \h      display help for the builtin    (n, i)
+          under the cursor
 
   -- Comments -------------------------------------------
 
@@ -527,18 +527,18 @@ following character(s) will only be recognized for a short time.
   \cfr    frame comment                   (n, i)
   \cfu    function description            (n, i)
   \ch     file header                     (n, i)
-  \ckb    keyword comment BUG             (n)
-  \ckt    keyword comment TODO            (n)
-  \ckr    keyword comment TRICKY          (n)
-  \ckw    keyword comment WARNING         (n)
-  \ckn    keyword comment New_Keyword     (n)
-  \cc     toggle comment                  (n, v)
+  \ckb    keyword comment BUG             (n, i)
+  \ckt    keyword comment TODO            (n, i)
+  \ckr    keyword comment TRICKY          (n, i)
+  \ckw    keyword comment WARNING         (n, i)
+  \ckn    keyword comment New_Keyword     (n, i)
+  \cc     toggle comment                  (n, i, v)
   \cd     date                            (n, i)
   \ct     date & time                     (n, i)
-  \ce     echo "..."                      (n)
-  \cr     remove echo "..."               (n)
-  \cv     vim modeline                    (n)
-                                     
+  \ce     echo "..."                      (n, i)
+  \cr     remove echo "..."               (n, i)
+  \cv     vim modeline                    (n, i)
+
   -- Statements ------------------------------------------
 
   \sc     case in ... esac                (n, i)
@@ -555,23 +555,23 @@ following character(s) will only be recognized for a short time.
   \nr     read code snippet               (n)
   \nw     write code snippet              (n, v)
   \ne     edit code snippet               (n)
-                                     
+
   -- Run ------------------------------------------------
 
-  \rr     update file, run script         (n)
-  \rc     update file, check syntax       (n)
-  \ra     set command line arguments      (n)
-  \rd     start debugger                  (n)
-  \re     make script executable          (n)
-  \rh     hardcopy buffer to FILENAME.ps  (n)
-  \rs     settings and hot keys           (n)
-  \rt     set xterm size                  (n)
-  \ro     change output destination       (n)
+  \rr     update file, run script         (n, i)
+  \rc     update file, check syntax       (n, i)
+  \ra     set command line arguments      (n, i)
+  \rd     start debugger                  (n, i)
+  \re     make script executable          (n, i)
+  \rh     hardcopy buffer to FILENAME.ps  (n, i)
+  \rs     settings and hot keys           (n, i)
+  \rt     set xterm size                  (n, i)
+  \ro     change output destination       (n, i)
 
-  -- bash help ------------------------------------------
+  -- Load / Unload bash Support -------------------------
 
-  \h      display help for the builtin    (n)
-          under the cursor
+  \lbs    Load Bash Support               (n, GUI only)
+  \ubs    Unload Bash Support             (n, GUI only)
 
 
 File 'bash-hot-keys.pdf' contains a reference card for these key mappings.
@@ -585,7 +585,7 @@ bash-support plugin package).
 3.  HOT KEYS                                             *bashsupport-hotkeys*
 ==============================================================================
 
-The following hot keys are defined in NORMAL, VISUAL and INSERT MODE: 
+The following hot keys are defined in NORMAL, VISUAL and INSERT MODE:
 
    Shift-F1   display help for a the built command under the cursor or ask
                for a name
@@ -612,7 +612,7 @@ ftplugin/sh.vim                     The filetype plugin. Defines hotkeys and mor
 plugin/bash-support.vim             The bash plugin for Vim/gVim.
 bash-support/scripts/wrapper.sh     A wrapper script for the use of an xterm.
 
-doc/bashsupport.txt                 The help file for the local online help. 
+doc/bashsupport.txt                 The help file for the local online help.
 
 bash-support/codesnippets/*         Some code snippets as a starting point.
 
@@ -625,16 +625,16 @@ bash-support/wordlists/*            Additional word lists (dictionaries).
                           bash-support.vim will work without them.
                           -------------------------------------------------------------
 
-bash-support/rc/costumization.vimrc   Additional settings I use in '.vimrc': incremental 
-                                      search, tabstop, hot keys, font, use of dictionaries, 
+bash-support/rc/costumization.vimrc   Additional settings I use in '.vimrc': incremental
+                                      search, tabstop, hot keys, font, use of dictionaries,
                                       ...  The file is commented. Append it to your '.vimrc'
                                       if you like.
 
-bash-support/rc/costumization.gvimrc  Additional settings I use in '.gvimrc': hot keys, 
-                                      mouse settings, ...  The file is commented. 
+bash-support/rc/costumization.gvimrc  Additional settings I use in '.gvimrc': hot keys,
+                                      mouse settings, ...  The file is commented.
                                       Append it to your '.gvimrc' if you like.
 
-bash-support/doc/*                    Hotkey reference card (PDF), changelog. 
+bash-support/doc/*                    Hotkey reference card (PDF), changelog.
 
 
 ------------------------------------------------------------------------------
@@ -644,7 +644,7 @@ bash-support/doc/*                    Hotkey reference card (PDF), changelog.
 Several global variables are checked by the script to customize it:
 
 ---------------------------------------------------------------------------------------
-global variable                default value                     tag 
+global variable                default value                     tag
                                                                (see |bashsupport-tags|)
 ---------------------------------------------------------------------------------------
 g:BASH_AuthorName              ""                               *|AUTHOR|*
@@ -664,7 +664,7 @@ g:BASH_LoadMenus               "yes"
 g:BASH_Dictionary_File         $HOME."/.vim/bash-support/wordlists/bash.list"
 g:BASH_Root                    'B&ash.'
 
-g:BASH_DoOnNewLine             'no'     
+g:BASH_DoOnNewLine             'no'
 g:BASH_OutputGvim              "vim"
 g:BASH_XtermDefaults           "-fa courier -fs 12 -geometry 80x24"
 g:BASH_LineEndCommColDefault   49
@@ -674,7 +674,7 @@ g:BASH_Debugger                "term"
 
 --------------------------------------------------------------------------------
 
-1. group: Defines the text which will be inserted for the tags when a template  
+1. group: Defines the text which will be inserted for the tags when a template
           is read in (see |bashsupport-tempfiles|).
 
           g:BASH_AuthorName      : author name
@@ -686,30 +686,30 @@ g:BASH_Debugger                "term"
 
 2. group: Sets the template directory and the names of the template files (see below).
 
-3. group: g:BASH_CodeSnippets    : The name of the code snippet directory 
+3. group: g:BASH_CodeSnippets    : The name of the code snippet directory
                                    (see |bashsupport-stat-snippets|).
           g:BASH_LoadMenus       : Load menus and mappings ("yes", "no") at start up.
           g:BASH_Dictionary_File : Path and file name of the bash word list used for
                                    dictionary completion (see |bashsupport-dictionary|).
-          g:BASH_Root            : The name of the root menu entry of this plugin 
+          g:BASH_Root            : The name of the root menu entry of this plugin
                                    (see |bashsupport-custom-root|).
 
-4. group: g:BASH_OutputGvim             : Target for a script output 
+4. group: g:BASH_OutputGvim             : Target for a script output
                                           (see |bashsupport-output|).
           g:BASH_XtermDefaults          : The xterm defaults (see |bashsupport-xterm|).
-          g:BASH_LineEndCommColDefault  : default starting column for line end comments 
+          g:BASH_LineEndCommColDefault  : default starting column for line end comments
           g:BASH_SyntaxCheckOptionsGlob : shopt options used with syntax checking
-          g:BASH_Printheader            : hardcopy header format 
+          g:BASH_Printheader            : hardcopy header format
           g:BASH_Debugger               : the debugger called by F9 (term, ddd).
           g:BASH_DoOnNewLine            : see |bashsupport-stat-norm-ins|
-          
+
 To override the defaults add appropriate assignments in '.vimrc'.
 Here are my settings as an example:
 
-  let g:BASH_AuthorName   = "Dr.-Ing. Fritz Mehner"     
-  let g:BASH_AuthorRef    = "Mn"                         
-  let g:BASH_Email        = "mehner@fh-swf.de"            
-  let g:BASH_Company      = "FH Südwestfalen, Iserlohn"    
+  let g:BASH_AuthorName   = "Dr.-Ing. Fritz Mehner"
+  let g:BASH_AuthorRef    = "Mn"
+  let g:BASH_Email        = "mehner@fh-swf.de"
+  let g:BASH_Company      = "FH Südwestfalen, Iserlohn"
 
 This plugin sets the global variable is_bash:
   let is_bash             = 1
@@ -722,7 +722,7 @@ $((..)).
 
 The variable g:BASH_Root, if set (in '.vimrc' or in '.gvimrc'), gives the name
 of the single gVim root menu entry in which the Bash submenus will be put.
-The default is 
+The default is
                   'B&ash.'
 Note the terminating dot. A single root menu entry is appropriate if the
 screen is limited or several plugins are in use.
@@ -733,9 +733,9 @@ the following line in '.vimrc'
   let g:BASH_Root = ""
 
 Now all submenus are put into the gVim root menu. Nice for a
-Bash-only-programmer and Bash courses. 
+Bash-only-programmer and Bash courses.
 
-If you want to set the plugin root menu into another menu, e.g. 'Plugin', 
+If you want to set the plugin root menu into another menu, e.g. 'Plugin',
 this is done by the following line in '.vimrc'
 
   let g:BASH_Root = "&Plugin.B&ash."
@@ -768,9 +768,9 @@ As *** USER *** :
 
 Create your private snippet directory:
 
-  mkdir --parents  ~/.vim/bash-support/codesnippets 
+  mkdir --parents  ~/.vim/bash-support/codesnippets
 
-You may want to copy the snippets comming with this plugin (in
+You may want to copy the snippets coming with this plugin (in
 $VIM/vimfiles/bash-support/codesnippets) into the new directory or to set a
 link to the global directory.
 
@@ -780,7 +780,7 @@ link to the global directory.
 ==============================================================================
 
 ------------------------------------------------------------------------------
-5.1  TEMPLATE FILES 
+5.1  TEMPLATE FILES
 ------------------------------------------------------------------------------
 
 Three menu entries generate block comments:
@@ -789,15 +789,15 @@ Three menu entries generate block comments:
     bash -> Comments -> Function Description
     bash -> Comments -> File Header
 
-The comments which will be inserted by these menu entries are read from 
+The comments which will be inserted by these menu entries are read from
 template files:
 
 ------------------------------------------------------------------------------
-MENU ENTRY              FILE                          GLOBAL VARIABLE         
+MENU ENTRY              FILE                          GLOBAL VARIABLE
 ------------------------------------------------------------------------------
-Frame Comment           bash-frame                    g:BASH_Template_Frame   
+Frame Comment           bash-frame                    g:BASH_Template_Frame
 Function Description    bash-function-description     g:BASH_Template_Function
-File Header             bash-file-header              g:BASH_Template_File    
+File Header             bash-file-header              g:BASH_Template_File
 ------------------------------------------------------------------------------
 
 The template files can be written or changed by the user to fulfill special
@@ -813,21 +813,21 @@ The comments in these files do not have to be personalized but they can be.
 The text can contain the following tags which are replaced by the appropriate
 information when the file is read in:
 
-*|AUTHOR|*           
-*|AUTHORREF|*        
-*|COMPANY|*          
-*|COPYRIGHTHOLDER|*  
-*|EMAIL|*            
-*|PROJECT|*          
-                     
+*|AUTHOR|*
+*|AUTHORREF|*
+*|COMPANY|*
+*|COPYRIGHTHOLDER|*
+*|EMAIL|*
+*|PROJECT|*
+
 *|DATE|*            the preferred date representation for the current locale
                     without the time
-*|DATETIME|*        date and time 
+*|DATETIME|*        date and time
 *|FILENAME|*        filename without path
 *|TIME|*            the preferred time representation for the current locale
                     without the date and the time zone or name or abbreviation
 *|YEAR|*            the year as a decimal number including the century
-                        
+
 *|CURSOR|*          the cursor position after insertion of a template
 
 Each tag can occur more than once. The tag |CURSOR| may appear only once.
@@ -838,9 +838,9 @@ The template files can actually be links pointing to existing templates.
 
 The format for *|DATE|* ,*|TIME|* , and*|YEAR|* can be set by the user. The
 defaults are
-    *|DATE|*        '%x'    
-    *|TIME|*        '%X %Z'    
-    *|YEAR|*        '%Y'        
+    *|DATE|*        '%x'
+    *|TIME|*        '%X %Z'
+    *|YEAR|*        '%Y'
 See the manual page of the C function strftime() for the format.  The accepted
 format depends on your system, thus this is not portable!  The maximum length
 of the result is 80 characters.
@@ -868,8 +868,8 @@ If you want to use an additional list 'MyBash.List' put the following line into
                               \   "$HOME/.vim/bash-support/wordlists/MyBash.List"
 
 The right side is a comma separated list of files. Note the point at the end
-of the first line (string concatenation) and the backslash in front of the 
-second line (continuation line). 
+of the first line (string concatenation) and the backslash in front of the
+second line (continuation line).
 You can use Vim's dictionary feature CTRL-X, CTRL-K (and CTRL-P, CTRL-N).
 
 
