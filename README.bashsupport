@@ -1,4 +1,4 @@
-README for bash-support.vim (Version 2.6) / July 23 2008
+README for bash-support.vim (Version 2.7) / August 02 2008
 
   *  INSTALLATION
   *  RELEASE NOTES 
@@ -59,10 +59,12 @@ and look at the bashsupport help with
 
 
 =======================================================================================
-  RELEASE NOTES FOR VERSION 2.6
+  RELEASE NOTES FOR VERSION 2.7
 =======================================================================================
-+ Superfluous control characters for mode switching (menus, hotkeys) removed. Caused beeps.
-+ Most hotkeys now work in insert mode.
++ When a Bash script is started from the Vim command line errors and warnings (if any)
+  are caught in an error window allowing quickfix commands to be used.
++ Scripts which are not set executable can be run under Vim.
++ One new hotkey.
 
 =======================================================================================
   OLDER RELEASE NOTES : see file 'ChangeLog'

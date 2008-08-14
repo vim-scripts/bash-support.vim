@@ -1,23 +1,23 @@
 "#########################################################################################
 "
 "       Filename:  bash-support.vim
-"  
+"
 "    Description:  BASH support     (VIM Version 7.0+)
-"  
-"                  Write BASH-scripts by inserting comments, statements, tests, 
+"
+"                  Write BASH-scripts by inserting comments, statements, tests,
 "                  variables and builtins.
-"  
-"  Configuration:  There are some personal details which should be configured 
+"
+"  Configuration:  There are some personal details which should be configured
 "                    (see the files README.bashsupport and bashsupport.txt).
-"                    
+"
 "   Dependencies:  The environmnent variables $HOME und $SHELL are used.
-"  
+"
 "   GVIM Version:  7.0+
-"  
+"
 "         Author:  Dr.-Ing. Fritz Mehner, FH Südwestfalen, 58644 Iserlohn, Germany
 "          Email:  mehner@fh-swf.de
-"          
-"        Version:  see variable  g:BASH_Version  below 
+"
+"        Version:  see variable  g:BASH_Version  below
 "        Created:  26.02.2001
 "        License:  Copyright (c) 2001-2008, Fritz Mehner
 "                  This program is free software; you can redistribute it and/or
@@ -29,16 +29,16 @@
 "                  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 "                  PURPOSE.
 "                  See the GNU General Public License version 2 for more details.
-"       Revision:  $Id: bash-support.vim,v 1.18 2008/07/23 15:05:35 mehner Exp $
-"  
+"       Revision:  $Id: bash-support.vim,v 1.20 2008/08/02 16:20:40 mehner Exp $
+"
 "------------------------------------------------------------------------------
-" 
-" Prevent duplicate loading: 
-" 
+"
+" Prevent duplicate loading:
+"
 if exists("g:BASH_Version") || &cp
  finish
 endif
-let g:BASH_Version= "2.6"  						" version number of this script; do not change
+let g:BASH_Version= "2.7"  						" version number of this script; do not change
 "
 if v:version < 700
   echohl WarningMsg | echo 'plugin bash-support.vim needs Vim version >= 7'| echohl None
@@ -56,7 +56,7 @@ endif
 "
 if match( expand("<sfile>"), $VIM ) >= 0
 	"
-	" system wide installation 
+	" system wide installation
 	let s:plugin_dir  = $VIM.'/vimfiles/'
 else
 	"
@@ -106,12 +106,12 @@ let s:BASH_FormatYear						= '%Y'
 "------------------------------------------------------------------------------
 let s:BASH_Active         = -1                    " state variable controlling the Bash-menus
 let s:BASH_Errorformat    = '%f:\ line\ %l:\ %m'
-let s:BASH_SetCounter     = 0                     " 
+let s:BASH_SetCounter     = 0                     "
 let s:BASH_Set_Txt        = "SetOptionNumber_"
 let s:BASH_Shopt_Txt      = "ShoptOptionNumber_"
 let s:escfilename         = ' \%#[]'
 "
-" Bash shopt options (GNU Bash-3.2, manual: 2006 September 28) 
+" Bash shopt options (GNU Bash-3.2, manual: 2006 September 28)
 "
 let s:BASH_ShoptAllowed =                     "cdable_vars:cdspell:checkhash:checkwinsize:"
 let s:BASH_ShoptAllowed = s:BASH_ShoptAllowed."cmdhist:dotglob:execfail:expand_aliases:"
@@ -156,7 +156,7 @@ call BASH_CheckGlobal("BASH_Template_Frame        ")
 call BASH_CheckGlobal("BASH_Template_Function     ")
 call BASH_CheckGlobal("BASH_XtermDefaults         ")
 "
-" set default geometry if not specified 
+" set default geometry if not specified
 "
 if match( s:BASH_XtermDefaults, "-geometry\\s\\+\\d\\+x\\d\\+" ) < 0
 	let s:BASH_XtermDefaults	= s:BASH_XtermDefaults." -geometry 80x24"
@@ -383,10 +383,10 @@ function!	BASH_InitMenu ()
 		endif
 		exe "	noremenu ".s:BASH_Root.'&Tests.file\ &exists<Tab>-e															    					a[ -e  ]<Left><Left>'
 		exe "	noremenu ".s:BASH_Root.'&Tests.file\ exists\ and\ has\ a\ &size\ greater\ than\ zero<Tab>-s		a[ -s  ]<Left><Left>'
-		" 
+		"
 		exe "inoremenu ".s:BASH_Root.'&Tests.file\ &exists<Tab>-e																						[ -e  ]<Left><Left>'
 		exe "inoremenu ".s:BASH_Root.'&Tests.file\ exists\ and\ has\ a\ &size\ greater\ than\ zero<Tab>-s		[ -s  ]<Left><Left>'
-		" 
+		"
 		exe "imenu ".s:BASH_Root.'&Tests.-Sep1-                         :'
 		"
 		"---------- submenu arithmetic tests -----------------------------------------------------------
@@ -468,7 +468,7 @@ function!	BASH_InitMenu ()
 		exe "	noremenu ".s:BASH_Root.'&Tests.string\ &comparison.string1\ sorts\ &before\ string2\ lexicograph\.<Tab><		  a[  <  ]<Esc>bhi'
 		exe "	noremenu ".s:BASH_Root.'&Tests.string\ &comparison.string1\ sorts\ &after\ string2\ lexicograph\.<Tab>>			  a[  >  ]<Esc>bhi'
 		exe "	noremenu ".s:BASH_Root.'&Tests.string\ &comparison.string\ matches\ &regexp<Tab>=~												 a[[  =~  ]]<Esc>2bhi'
-		"                                         
+		"
 		exe "inoremenu ".s:BASH_Root.'&Tests.string\ &comparison.length\ of\ string\ is\ &zero<Tab>-z											  [ -z  ]<Left><Left>'
 		exe "inoremenu ".s:BASH_Root.'&Tests.string\ &comparison.length\ of\ string\ is\ &non-zero<Tab>-n									  [ -n  ]<Left><Left>'
 		exe "inoremenu ".s:BASH_Root.'&Tests.string\ &comparison.strings\ are\ &equal<Tab>==															 [  ==  ]<Esc>bhi'
@@ -792,7 +792,7 @@ function!	BASH_InitMenu ()
 		exe "	menu ".s:BASH_Root.'Builtins\ \ &a-l.&kill      akill<Space>'
 		exe "	menu ".s:BASH_Root.'Builtins\ \ &a-l.&let       alet<Space>'
 		exe "	menu ".s:BASH_Root.'Builtins\ \ &a-l.l&ocal     alocal<Space>'
-		"                                      
+		"
 		exe "imenu ".s:BASH_Root.'Builtins\ \ &a-l.&alias      alias<Space>'
 		exe "imenu ".s:BASH_Root.'Builtins\ \ &a-l.&bind       bind<Space>'
 		exe "imenu ".s:BASH_Root.'Builtins\ \ &a-l.b&uiltin    builtin<Space>'
@@ -839,7 +839,7 @@ function!	BASH_InitMenu ()
 		exe "	menu ".s:BASH_Root.'Builtins\ \ &n-w.un&alias      aunalias<Space>'
 		exe "	menu ".s:BASH_Root.'Builtins\ \ &n-w.unset\ (&2)   aunset<Space>'
 		exe "	menu ".s:BASH_Root.'Builtins\ \ &n-w.&wait         await<Space>'
-		"                                      
+		"
 		exe "imenu ".s:BASH_Root.'Builtins\ \ &n-w.&popd          popd<Space>'
 		exe "imenu ".s:BASH_Root.'Builtins\ \ &n-w.print&f        printf<Space>"" '
 		exe "imenu ".s:BASH_Root.'Builtins\ \ &n-w.pus&hd         pushd<Space>'
@@ -1117,9 +1117,9 @@ function!	BASH_InitMenu ()
 		"------------------------------------------------------------------------------
 		"  menu Run    {{{2
 		"------------------------------------------------------------------------------
-		"   run the script from the local directory 
+		"   run the script from the local directory
 		"   ( the one in the current buffer ; other versions may exist elsewhere ! )
-		" 
+		"
 		if s:BASH_MenuHeader == "yes"
 			exe "amenu ".s:BASH_Root.'&Run.Run<Tab>Bash  <Nop>'
 			exe "amenu ".s:BASH_Root.'&Run.-Sep0-        :'
@@ -1156,11 +1156,11 @@ function!	BASH_InitMenu ()
 		"
 		exe " menu  <silent>  ".s:BASH_Root.'&Run.x&term\ size                              :call BASH_XtermSize()<CR>'
 		exe "imenu  <silent>  ".s:BASH_Root.'&Run.x&term\ size                         <C-C>:call BASH_XtermSize()<CR>'
-		if s:BASH_OutputGvim == "vim" 
+		if s:BASH_OutputGvim == "vim"
 			exe " menu  <silent>  ".s:BASH_Root.'&Run.&output:\ VIM->buffer->xterm            :call BASH_Toggle_Gvim_Xterm()<CR>'
 			exe "imenu  <silent>  ".s:BASH_Root.'&Run.&output:\ VIM->buffer->xterm       <C-C>:call BASH_Toggle_Gvim_Xterm()<CR>'
 		else
-			if s:BASH_OutputGvim == "buffer" 
+			if s:BASH_OutputGvim == "buffer"
 				exe " menu  <silent>  ".s:BASH_Root.'&Run.&output:\ BUFFER->xterm->vim          :call BASH_Toggle_Gvim_Xterm()<CR>'
 				exe "imenu  <silent>  ".s:BASH_Root.'&Run.&output:\ BUFFER->xterm->vim     <C-C>:call BASH_Toggle_Gvim_Xterm()<CR>'
 			else
@@ -1231,7 +1231,7 @@ function! BASH_AdjustLineEndComm ( mode ) range
 		call setpos(".", [ 0, ln, idx2, 0 ] )
 		let vpos2	= virtcol(".")
 
-		if   ! (   vpos2 == b:BASH_LineEndCommentColumn 
+		if   ! (   vpos2 == b:BASH_LineEndCommentColumn
 					\	|| vpos1 > b:BASH_LineEndCommentColumn
 					\	|| idx2  == 0 )
 
@@ -1269,7 +1269,7 @@ function! BASH_GetLineEndCommCol ()
 	if actcol+1 == virtcol("$")
 		let	b:BASH_LineEndCommentColumn	= BASH_Input( 'start line-end comment at virtual column : ', actcol )
 	else
-		let	b:BASH_LineEndCommentColumn	= virtcol(".") 
+		let	b:BASH_LineEndCommentColumn	= virtcol(".")
 	endif
   echomsg "line end comments will start at column  ".b:BASH_LineEndCommentColumn
 endfunction		" ---------- end of function  BASH_GetLineEndCommCol  ----------
@@ -1358,15 +1358,15 @@ endfunction    " ----------  end of function BASH_CommentToggle  ----------
 "  Substitute tags    {{{1
 "------------------------------------------------------------------------------
 function! BASH_SubstituteTag( pos1, pos2, tag, replacement )
-	" 
+	"
 	" loop over marked block
-	" 
+	"
 	let	linenumber=a:pos1
 	while linenumber <= a:pos2
 		let line=getline(linenumber)
-		" 
+		"
 		" loop for multiple tags in one line
-		" 
+		"
 		let	start=0
 		while match(line,a:tag,start)>=0				" do we have a tag ?
 			let frst=match(line,a:tag,start)
@@ -1377,7 +1377,7 @@ function! BASH_SubstituteTag( pos1, pos2, tag, replacement )
 				let line=part1.a:replacement.part2
 				"
 				" next search starts after the replacement to suppress recursion
-				" 
+				"
 				let start=strlen(part1)+strlen(a:replacement)
 			endif
 		endwhile
@@ -1413,7 +1413,7 @@ function! BASH_CommentTemplates (arg)
 		let	pos1  = line(".")+1
 		let l:old_cpoptions	= &cpoptions " Prevent the alternate buffer from being set to this files
 		setlocal cpoptions-=a
-		if  a:arg=='header' 
+		if  a:arg=='header'
 			:goto 1
 			let	pos1  = 1
 			exe '0read '.templatefile
@@ -1434,7 +1434,7 @@ function! BASH_CommentTemplates (arg)
 		"----------------------------------------------------------------------
 		"  substitute keywords
 		"----------------------------------------------------------------------
-		" 
+		"
 		call  BASH_SubstituteTag( pos1, pos2, '|FILENAME|',        expand("%:t")               )
 		call  BASH_SubstituteTag( pos1, pos2, '|DATE|',            BASH_InsertDateAndTime('d') )
 		call  BASH_SubstituteTag( pos1, pos2, '|DATETIME|',        BASH_InsertDateAndTime('dt'))
@@ -1573,8 +1573,8 @@ function! BASH_help()
 	end
 
 	let cuc		= getline(".")[col(".") - 1]	" character under the cursor
-	let	item=expand("<cword>")							" word under the cursor 
-	if item == "" || match( item, cuc ) == -1	
+	let	item=expand("<cword>")							" word under the cursor
+	if item == "" || match( item, cuc ) == -1
 		let	item=BASH_Input("name of a bash builtin command : ", "")
 	endif
 
@@ -1584,10 +1584,10 @@ function! BASH_help()
 	if item != ""
 		"
 		" jump to an already open bash help window or create one
-		" 
+		"
 		if bufloaded(s:BASH_DocBufferName) != 0 && bufwinnr(s:BASH_DocHelpBufferNumber) != -1
 			exe bufwinnr(s:BASH_DocHelpBufferNumber) . "wincmd w"
-			" buffer number may have changed, e.g. after a 'save as' 
+			" buffer number may have changed, e.g. after a 'save as'
 			if bufnr("%") != s:BASH_DocHelpBufferNumber
 				let s:BASH_DocHelpBufferNumber=bufnr(s:BASH_OutputBufferName)
 				exe ":bn ".s:BASH_DocHelpBufferNumber
@@ -1607,7 +1607,7 @@ function! BASH_help()
 		setlocal	modifiable
 		let command=":%!help  ".item."  2>/dev/null"
 		silent exe command
-		
+
 		if v:shell_error != 0
 			redraw!
 			let zz=   "No help found for '".item."'\n"
@@ -1627,11 +1627,11 @@ function! BASH_SyntaxCheckOptions( options )
 	let startpos=0
 	while startpos < strlen( a:options )
 		" match option switch ' -O ' or ' +O '
-		let startpos		=  matchend  ( a:options, '\s*[+-]O\s\+', startpos ) 
+		let startpos		=  matchend  ( a:options, '\s*[+-]O\s\+', startpos )
 		" match option name
-		let optionname	=  matchstr  ( a:options, '\h\w*\s*', startpos ) 
+		let optionname	=  matchstr  ( a:options, '\h\w*\s*', startpos )
 		" remove trailing whitespaces
-		let optionname  =  substitute( optionname, '\s\+$', "", "" )			
+		let optionname  =  substitute( optionname, '\s\+$', "", "" )
 		" check name
 		let found				=  match     ( s:BASH_ShoptAllowed, optionname.':' )
 		if found < 0
@@ -1640,7 +1640,7 @@ function! BASH_SyntaxCheckOptions( options )
 			return 1
 		endif
 		" increment start position for next search
-		let startpos		=  matchend  ( a:options, '\h\w*\s*', startpos ) 
+		let startpos		=  matchend  ( a:options, '\h\w*\s*', startpos )
 	endwhile
 	return 0
 endfunction		" ---------- end of function  BASH_SyntaxCheckOptions----------
@@ -1663,7 +1663,7 @@ function! BASH_SyntaxCheckOptionsLocal ()
 	else
 		let	b:BASH_SyntaxCheckOptionsLocal= BASH_Input( prompt , "" )
 	endif
-	
+
 	if BASH_SyntaxCheckOptions( b:BASH_SyntaxCheckOptionsLocal ) != 0
 		let b:BASH_SyntaxCheckOptionsLocal	= ""
 	endif
@@ -1676,27 +1676,28 @@ function! BASH_SyntaxCheck ()
 	exe	":cclose"
 	let	l:currentbuffer=bufname("%")
 	exe	":update"
-	exe	"set makeprg=$SHELL"
-	" 
+	let	makeprg_saved	= &makeprg
+	exe	":setlocal makeprg=$SHELL"
+	"
 	" check global syntax check options / reset in case of an error
 	if BASH_SyntaxCheckOptions( s:BASH_SyntaxCheckOptionsGlob ) != 0
 		let s:BASH_SyntaxCheckOptionsGlob	= ""
 	endif
-	" 
+	"
 	let	options=s:BASH_SyntaxCheckOptionsGlob
 	if exists("b:BASH_SyntaxCheckOptionsLocal")
 		let	options=options." ".b:BASH_SyntaxCheckOptionsLocal
 	endif
-	" 
+	"
 	" match the Bash error messages (quickfix commands)
 	" errorformat will be reset by function BASH_Handle()
 	" ignore any lines that didn't match one of the patterns
 	"
 	exe	':setlocal errorformat='.s:BASH_Errorformat
-	exe "make -n ".options." -- ./% "
-	exe	":botright cwindow"								
+	exe ":make -n ".options." -- ./% "
+	exe	":botright cwindow"
 	exe	':setlocal errorformat='
-	exe	"set makeprg=make"
+	exe ":setlocal makeprg=".makeprg_saved
 	"
 	" message in case of success
 	"
@@ -1711,8 +1712,8 @@ endfunction		" ---------- end of function  BASH_SyntaxCheck  ----------
 "  run : debugger    {{{1
 "------------------------------------------------------------------------------
 function! BASH_Debugger ()
-	if !executable("bashdb") 
-		echohl Search 
+	if !executable("bashdb")
+		echohl Search
 		echo   ' bashdb  is not executable or not installed! '
 		echohl None
 		return
@@ -1720,7 +1721,7 @@ function! BASH_Debugger ()
 	"
 	silent exe	":update"
 	let	l:arguments	= exists("b:BASH_CmdLineArgs") ? " ".b:BASH_CmdLineArgs : ""
-	let	Sou					= escape( expand("%"), s:escfilename ) 
+	let	Sou					= escape( expand("%"), s:escfilename )
 	"
 	"
 	if has("gui_running") || &term == "xterm"
@@ -1728,7 +1729,7 @@ function! BASH_Debugger ()
 		" debugger is ' bash --debugger ...'
 		"
 		if s:BASH_Debugger == "term"
-			silent exe "!xterm ".s:BASH_XtermDefaults.' -e bash --debugger ./'.Sou.l:arguments.' &'
+			silent exe "!xterm ".s:BASH_XtermDefaults.' -e ${SHELL} --debugger ./'.Sou.l:arguments.' &'
 		endif
 		"
 		" debugger is 'ddd'
@@ -1744,7 +1745,7 @@ function! BASH_Debugger ()
 			endif
 		endif
 	else
-		silent exe '!bash --debugger ./'.Sou.l:arguments
+		silent exe '!${SHELL} --debugger ./'.Sou.l:arguments
 	endif
 endfunction		" ---------- end of function  BASH_Debugger  ----------
 "
@@ -1752,7 +1753,7 @@ endfunction		" ---------- end of function  BASH_Debugger  ----------
 "  run : toggle output destination    {{{1
 "----------------------------------------------------------------------
 function! BASH_Toggle_Gvim_Xterm ()
-	
+
 	if has("gui_running")
 		if s:BASH_OutputGvim == "vim"
 			exe "aunmenu  <silent>  ".s:BASH_Root.'&Run.&output:\ VIM->buffer->xterm'
@@ -1808,38 +1809,63 @@ let s:BASH_OutputBufferName   = "Bash-Output"
 let s:BASH_OutputBufferNumber = -1
 "
 function! BASH_Run ( mode )
+	silent exe ':cclose'
 	"
 	let l:currentdir			= getcwd()
 	let	l:arguments				= exists("b:BASH_CmdLineArgs") ? " ".b:BASH_CmdLineArgs : ""
 	let	l:currentbuffer   = bufname("%")
 	let l:fullname				= l:currentdir."/".l:currentbuffer
-	" escape whitespaces
 	let l:fullname				= escape( l:fullname, s:escfilename )
-	" 
+	"
 	silent exe ":update"
 	"
 	if a:mode=="v"
 		let tmpfile	= tempname()
-		let pos1		= line("'<")
-		let pos2		= line("'>")
-		silent exe ":'<,'>write ".tmpfile 
-	endif
-	"
-	if a:mode=="n" && !executable(l:fullname) 
-		call BASH_MakeScriptExecutable ()
+		silent exe ":'<,'>write ".tmpfile
 	endif
 	"
 	"------------------------------------------------------------------------------
 	"  run : run from the vim command line
 	"------------------------------------------------------------------------------
+	"
 	if s:BASH_OutputGvim == "vim"
 		"
-		if a:mode=="n"
-			exe "!".l:fullname.l:arguments
-		endif
-		
+		" ----- visual mode ----------
+		"
 		if a:mode=="v"
-			exe "!bash < ".tmpfile." -s ".l:arguments
+			exe ":!${SHELL}< ".tmpfile." -s ".l:arguments
+			call delete(tmpfile)
+			return
+		endif
+		"
+		" ----- normal mode ----------
+		"
+		let	makeprg_saved	= &makeprg
+		exe	":setlocal makeprg=$SHELL"
+		exe	':setlocal errorformat='.s:BASH_Errorformat
+		"
+		if a:mode=="n"
+			exe ":make "l:fullname.l:arguments
+		endif
+		"
+		exe ":setlocal makeprg=".makeprg_saved
+		exe	':setlocal errorformat='
+		exe	":botright cwindow"
+
+		if l:currentbuffer != bufname("%") && a:mode=="n"
+			let	tmpfile_error	= tempname()
+			let	pattern	= '^||.*\n\?'
+			setlocal modifiable
+			" remove the regular script output (appears as comment)
+			if search(pattern) != 0
+				silent exe ':%s/'.pattern.'//'
+			endif
+			" read the buffer back to have it parsed and used as the new error list
+			silent exe ':write!   '.tmpfile_error
+			silent exe ':cgetfile '.tmpfile_error
+			setlocal nomodifiable
+			silent exe	':cc'
+			call delete(tmpfile_error)
 		endif
 		"
 	endif
@@ -1848,14 +1874,15 @@ function! BASH_Run ( mode )
 	"  run : redirect output to an output buffer
 	"------------------------------------------------------------------------------
 	if s:BASH_OutputGvim == "buffer"
+
 		let	l:currentbuffernr = bufnr("%")
 		let l:currentdir      = getcwd()
 
 		if l:currentbuffer ==  bufname("%")
 			"
-			if bufloaded(s:BASH_OutputBufferName) != 0 && bufwinnr(s:BASH_OutputBufferNumber)!=-1 
+			if bufloaded(s:BASH_OutputBufferName) != 0 && bufwinnr(s:BASH_OutputBufferNumber)!=-1
 				exe bufwinnr(s:BASH_OutputBufferNumber) . "wincmd w"
-				" buffer number may have changed, e.g. after a 'save as' 
+				" buffer number may have changed, e.g. after a 'save as'
 				if bufnr("%") != s:BASH_OutputBufferNumber
 					let s:BASH_OutputBufferNumber	= bufnr(s:BASH_OutputBufferName)
 					exe ":bn ".s:BASH_OutputBufferNumber
@@ -1863,22 +1890,22 @@ function! BASH_Run ( mode )
 			else
 				silent exe ":new ".s:BASH_OutputBufferName
 				let s:BASH_OutputBufferNumber=bufnr("%")
-				setlocal buftype=nofile
 				setlocal noswapfile
+				setlocal buftype=nofile
 				setlocal syntax=none
 				setlocal bufhidden=delete
 				setlocal tabstop=8
 			endif
 			"
-			" run script 
+			" run script
 			"
 			setlocal	modifiable
 			if a:mode=="n"
-				silent exe ":%!".l:fullname.l:arguments
+				silent exe ":%!${SHELL} ".l:fullname.l:arguments
 			endif
 			"
 			if a:mode=="v"
-				silent exe ":%!bash < ".tmpfile." -s ".l:arguments
+				silent exe ":%!${SHELL} < ".tmpfile." -s ".l:arguments
 			endif
 			setlocal	nomodifiable
 			"
@@ -1901,15 +1928,20 @@ function! BASH_Run ( mode )
 	if s:BASH_OutputGvim == "xterm"
 		"
 		if a:mode=="n"
-			silent exe "!xterm -title ".l:fullname." ".s:BASH_XtermDefaults.' -e '.s:BASH_Wrapper.' '.l:fullname.l:arguments
+			silent exe "!xterm -title ".l:fullname." ".s:BASH_XtermDefaults
+						\			.' -e '.s:BASH_Wrapper.' '.l:fullname.l:arguments
 		endif
 		"
 		if a:mode=="v"
-			silent exe ":!chmod u+x ".tmpfile
-			silent exe ":!echo 'read dummy' >> ".tmpfile
-			silent exe ":!xterm -title ".l:fullname."\\ lines\\ ".pos1."-".pos2." ".s:BASH_XtermDefaults." -e ".tmpfile.l:arguments
+			let titlestring	= l:fullname.'\ lines\ \ '.line("'<").'\ -\ '.line("'>")
+			silent exe ":!xterm -title ".titlestring." ".s:BASH_XtermDefaults
+						\			." -e ".s:BASH_Wrapper.' '.tmpfile.l:arguments
 		endif
 		"
+	endif
+	"
+	if a:mode=="v"
+		call delete(tmpfile)
 	endif
 	"
 endfunction    " ----------  end of function BASH_Run  ----------
@@ -2037,14 +2069,14 @@ function! BASH_CodeSnippets(arg1)
 				let &cpoptions	= l:old_cpoptions		" restore previous options
 				"
 				let	linesread= line("$")-linesread-1
-				if linesread>=0 && match( l:snippetfile, '\.\(ni\|noindent\)$' ) < 0 
+				if linesread>=0 && match( l:snippetfile, '\.\(ni\|noindent\)$' ) < 0
 					silent exe "normal =".linesread."+"
 				endif
 			endif
 		endif
 		"
 		" update current buffer / split window / edit snippet file
-		" 
+		"
 		if a:arg1 == "e"
 			if has("gui_running")
 				let	l:snippetfile=browse(0,"edit a code snippet",s:BASH_CodeSnippets,"")
@@ -2056,8 +2088,8 @@ function! BASH_CodeSnippets(arg1)
 			endif
 		endif
 		"
-		" write whole buffer or marked area into snippet file 
-		" 
+		" write whole buffer or marked area into snippet file
+		"
 		if a:arg1 == "w" || a:arg1 == "wv"
 			if has("gui_running")
 				let	l:snippetfile=browse(0,"write a code snippet",s:BASH_CodeSnippets,"")
@@ -2097,12 +2129,12 @@ function! BASH_Hardcopy (arg1)
 	exe  ':set printheader='.s:BASH_Printheader
 	" ----- normal mode ----------------
 	if a:arg1=="n"
-		silent exe	"hardcopy > ".Sou.".ps"		
+		silent exe	"hardcopy > ".Sou.".ps"
 		echo "file \"".Sou."\" printed to \"".Sou.".ps\""
 	endif
 	" ----- visual mode ----------------
 	if a:arg1=="v"
-		silent exe	"*hardcopy > ".Sou.".ps"		
+		silent exe	"*hardcopy > ".Sou.".ps"
 		echo "file \"".Sou."\" (lines ".line("'<")."-".line("'>").") printed to \"".Sou.".ps\""
 	endif
 	exe  ':set printheader='.escape( old_printheader, ' %' )
@@ -2180,7 +2212,7 @@ let s:BASH_MenuVisible = 0								" state : 0 = not visible / 1 = visible
 function! BASH_CreateGuiMenus ()
 	if s:BASH_MenuVisible != 1
 		aunmenu <silent> &Tools.Load\ Bash\ Support
-		amenu   <silent> 40.1000 &Tools.-SEP100- : 
+		amenu   <silent> 40.1000 &Tools.-SEP100- :
 		amenu   <silent> 40.1021 &Tools.Unload\ Bash\ Support <C-C>:call BASH_RemoveGuiMenus()<CR>
 		call BASH_InitMenu()
 		let s:BASH_MenuVisible = 1
@@ -2191,7 +2223,7 @@ endfunction    " ----------  end of function BASH_CreateGuiMenus  ----------
 "  BASH_ToolMenu    {{{1
 "------------------------------------------------------------------------------
 function! BASH_ToolMenu ()
-	amenu   <silent> 40.1000 &Tools.-SEP100- : 
+	amenu   <silent> 40.1000 &Tools.-SEP100- :
 	amenu   <silent> 40.1021 &Tools.Load\ Bash\ Support <C-C>:call BASH_CreateGuiMenus()<CR>
 endfunction    " ----------  end of function BASH_ToolMenu  ----------
 
@@ -2225,7 +2257,7 @@ endfunction    " ----------  end of function BASH_RemoveGuiMenus  ----------
 "
 "------------------------------------------------------------------------------
 "  show / hide the menus   {{{1
-"  define key mappings (gVim only) 
+"  define key mappings (gVim only)
 "------------------------------------------------------------------------------
 "
 if has("gui_running")
@@ -2246,10 +2278,10 @@ endif
 "------------------------------------------------------------------------------
 "
 if has("autocmd")
-	" 
+	"
 	" Bash-script : insert header, write file, make it executable
-	" 
-	autocmd BufNewFile  *.sh    call BASH_CommentTemplates('header') 	|	:w! 
+	"
+	autocmd BufNewFile  *.sh    call BASH_CommentTemplates('header') 	|	:w!
 	"
 endif " has("autocmd")
 "
@@ -2260,4 +2292,4 @@ endif " has("autocmd")
 let is_bash	            = 1
 "
 "------------------------------------------------------------------------------
-"  vim: set tabstop=2: set shiftwidth=2: 
+"  vim: set tabstop=2: set shiftwidth=2:

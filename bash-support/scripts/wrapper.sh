@@ -1,9 +1,9 @@
 #!/bin/bash
 #===============================================================================
 #          FILE:  wrapper.sh
-#         USAGE:  ./wrapper.sh executable [cmd-line-args] 
+#         USAGE:  ./wrapper.sh scriptname [cmd-line-args] 
 #   DESCRIPTION:  Wraps the execution of a programm or script.
-#                 Use with xterm: xterm -e wrapper.sh executable cmd-line-args
+#                 Use with xterm: xterm -e wrapper.sh scriptname cmd-line-args
 #                 This script is used by several plugins:
 #                  bash-support.vim, c.vim and perl-support.vim
 #       OPTIONS:  ---
@@ -13,22 +13,25 @@
 #        AUTHOR:  Dr.-Ing. Fritz Mehner (Mn), mehner@fh-swf.de
 #       COMPANY:  Fachhochschule Südwestfalen, Iserlohn
 #       CREATED:  23.11.2004 18:04:01 CET
-#      REVISION:  $Id: wrapper.sh,v 1.2 2007/10/06 15:00:11 mehner Exp $
+#      REVISION:  $Id: wrapper.sh,v 1.4 2008/08/02 15:50:55 mehner Exp $
 #===============================================================================
 
-command=${@}                             # the complete command line
-executable=${1}                          # name of the executable; may be quoted
+command=${@}                                    # the complete command line
+scriptname=${1}                                 # name of the scriptname; may be quoted
 
-fullname=$(which $executable)
-[ $? -eq 0 ] && executable=$fullname
+fullname=$(which $scriptname 2>/dev/null)
+[ $? -eq 0 ] && scriptname=$fullname
 
-if [ ${#} -ge 1 ] && [ -x "$executable" ]
-then
-  shift
-  "$executable" ${@}
-  echo -e "\"${command}\" returned ${?}"
+if [ ${#} -ge 1 ] ; then
+	shift
+	if [ -x "$scriptname" ] ; then                # start an executable script
+		"$scriptname" ${@}
+	else
+		$SHELL "$scriptname" ${@}                   # start a script which is not executable
+	fi
+	echo -e "\"${command}\" returned ${?}"
 else
-  echo -e "\n  !! file \"${executable}\" does not exist or is not executable !!"
+  echo -e "\n  !! ${0} : missing argument for wrapper script !!"
 fi
-echo -e "  ... press return key ... "
-read dummy
+
+read -p "  ... press return key ... " dummy

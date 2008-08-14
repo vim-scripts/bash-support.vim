@@ -4,7 +4,7 @@
 "     Plugin :  bash-support.vim
 " Maintainer :  Fritz Mehner <mehner@fh-swf.de>
 "    Version :  2.6
-"   Revision :  $Id: sh.vim,v 1.13 2008/07/24 15:16:09 mehner Exp $
+"   Revision :  $Id: sh.vim,v 1.14 2008/08/02 15:50:12 mehner Exp $
 "
 " -----------------------------------------------------------------
 "
@@ -141,6 +141,10 @@ vnoremap  <buffer>  <silent>  <Leader>sfu			<Esc>:call BASH_CodeFunction("v")<CR
  noremap  <buffer>  <silent>  <Leader>se      ^iecho<Space>-e<Space>"\n"<Esc>2hi
 inoremap  <buffer>  <silent>  <Leader>se        echo<Space>-e<Space>"\n"<Esc>2hi
 vnoremap  <buffer>  <silent>  <Leader>se       secho<Space>-e<Space>"\n"<Esc>2hP
+
+ noremap  <buffer>  <silent>  <Leader>sp      ^iprintf<Space>"\n"<Esc>2hi
+inoremap  <buffer>  <silent>  <Leader>sp        printf<Space>"\n"<Esc>2hi
+vnoremap  <buffer>  <silent>  <Leader>sp       sprintf<Space>"\n"<Esc>2hP
 "
 " ---------- snippet menu ----------------------------------------------------
 "

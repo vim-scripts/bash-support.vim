@@ -1,4 +1,10 @@
 =======================================================================================
+  RELEASE NOTES FOR VERSION 2.6
+=======================================================================================
++ Superfluous control characters for mode switching (menus, hotkeys) removed. Caused beeps.
++ Most hotkeys now work in insert mode.
+
+=======================================================================================
   RELEASE NOTES FOR VERSION 2.5
 =======================================================================================
 + Menu item 'toggle comment' replaces 'code->comment' and 'comment->code'

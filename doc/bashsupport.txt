@@ -1,7 +1,7 @@
-*bashsupport.txt*                Bash Support                    July 23 2008
+*bashsupport.txt*                Bash Support                  August 02 2008
 
 bash Support                                      *bash-support* *bashsupport*
-                             Plugin version 2.6
+                             Plugin version 2.7
                         for Vim version 7.0 and above
                        Fritz Mehner  <mehner@fh-swf.de>
 
@@ -332,6 +332,10 @@ applied parameters and the shell return code are shown in the bottom line.
  * In NORMAL MODE the whole buffer will be executed.
  * In VISUAL MODE only the marked lines will be executed.
 
+There are three output destinations (see|bashsupport-output|).  If the output
+destination is VIM runtime errors are caught in an error window allowing
+quickfix commands to be used (see|quickfix|).
+
 
 1.6.2 Save and check syntax                         *bashsupport-syntax-check*
 ---------------------------
@@ -446,8 +450,11 @@ The first state (upper-case) is the current one.
 
 Target VIM
 ----------
-The script is run from the command line like  ":!./% arguments".
-* This is suitable for scripts with dialog elements and few lines of output.
+The script is run from the command line like  ":!${SHELL}  %  arguments".
+This is suitable for scripts with dialog elements and few lines of output.
+
+When a script is started this way errors and warnings (if any) are caught in
+an error window allowing quickfix commands to be used (see|quickfix|).
 
 Target BUFFER
 -------------
@@ -551,6 +558,7 @@ following character(s) will only be recognized for a short time.
   \sw     while do done                   (n, i, v)
   \sfu    function                        (n, i, v)
   \se     echo -e "..."                   (n, i, v)
+  \sp     printf "..."                    (n, i, v)
 
   \nr     read code snippet               (n)
   \nw     write code snippet              (n, v)
