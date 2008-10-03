@@ -3,8 +3,8 @@
 "   Language :  bash
 "     Plugin :  bash-support.vim
 " Maintainer :  Fritz Mehner <mehner@fh-swf.de>
-"    Version :  2.6
-"   Revision :  $Id: sh.vim,v 1.14 2008/08/02 15:50:12 mehner Exp $
+"    Version :  2.7
+"   Revision :  $Id: sh.vim,v 1.15 2008/10/03 10:45:24 mehner Exp $
 "
 " -----------------------------------------------------------------
 "
@@ -107,8 +107,8 @@ inoremap  <buffer>  <silent>  <Leader>cv      <C-C>:call BASH_CommentVimModeline
  noremap  <buffer>  <silent>  <Leader>sc           ocase  in<CR>)<CR>;;<CR><CR>)<CR>;;<CR><CR>*)<CR>;;<CR><CR>esac    # --- end of case ---<CR><Esc>11kf<Space>a
 inoremap  <buffer>  <silent>  <Leader>sc      <Esc>ocase  in<CR>)<CR>;;<CR><CR>)<CR>;;<CR><CR>*)<CR>;;<CR><CR>esac    # --- end of case ---<CR><Esc>11kf<Space>a
 
- noremap  <buffer>  <silent>  <Leader>sl           oelif <CR>then<Esc>1kA
-inoremap  <buffer>  <silent>  <Leader>sl      <Esc>oelif <CR>then<Esc>1kA
+ noremap  <buffer>  <silent>  <Leader>sl           :call BASH_FlowControl( "elif _ ",      "then",   "",       "a" )<CR>i
+inoremap  <buffer>  <silent>  <Leader>sl      <Esc>:call BASH_FlowControl( "elif _ ",      "then",   "",       "a" )<CR>i
 
  noremap  <buffer>  <silent>  <Leader>sf           :call BASH_FlowControl( "for _ in ",    "do",   "done",     "a" )<CR>i
 inoremap  <buffer>  <silent>  <Leader>sf      <Esc>:call BASH_FlowControl( "for _ in ",    "do",   "done",     "a" )<CR>i

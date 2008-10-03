@@ -29,7 +29,7 @@
 "                  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 "                  PURPOSE.
 "                  See the GNU General Public License version 2 for more details.
-"       Revision:  $Id: bash-support.vim,v 1.20 2008/08/02 16:20:40 mehner Exp $
+"       Revision:  $Id: bash-support.vim,v 1.22 2008/10/03 10:45:29 mehner Exp $
 "
 "------------------------------------------------------------------------------
 "
@@ -38,7 +38,7 @@
 if exists("g:BASH_Version") || &cp
  finish
 endif
-let g:BASH_Version= "2.7"  						" version number of this script; do not change
+let g:BASH_Version= "2.7.1"  						" version number of this script; do not change
 "
 if v:version < 700
   echohl WarningMsg | echo 'plugin bash-support.vim needs Vim version >= 7'| echohl None
@@ -282,7 +282,7 @@ function!	BASH_InitMenu ()
 		endif
 
 		exe "anoremenu ".s:BASH_Root.'&Statements.&case			     ocase  in<CR>)<CR>;;<CR><CR>)<CR>;;<CR><CR>*)<CR>;;<CR><CR>esac    # --- end of case ---<CR><Esc>11kf<Space>a'
-		exe "anoremenu ".s:BASH_Root.'&Statements.e&lif			     oelif <CR>then<Esc>1kA'
+		exe "anoremenu ".s:BASH_Root.'&Statements.e&lif			     :call BASH_FlowControl( "elif _ ",        "then", "",       "a" )<CR>i'
 		exe "anoremenu ".s:BASH_Root.'&Statements.&for			     :call BASH_FlowControl( "for _ in ",    "do",   "done",     "a" )<CR>i'
 		exe "anoremenu ".s:BASH_Root.'&Statements.&if				     :call BASH_FlowControl( "if _ ",        "then", "fi",       "a" )<CR>i'
 		exe "anoremenu ".s:BASH_Root.'&Statements.if-&else	     :call BASH_FlowControl( "if _ ",        "then", "else\nfi", "a" )<CR>i'
@@ -292,6 +292,7 @@ function!	BASH_InitMenu ()
 
 		exe "inoremenu ".s:BASH_Root.'&Statements.&for			<Esc>:call BASH_FlowControl( "for _ in ",    "do",   "done",     "a" )<CR>i'
 		exe "inoremenu ".s:BASH_Root.'&Statements.&if				<Esc>:call BASH_FlowControl( "if _ ",        "then", "fi",       "a" )<CR>i'
+		exe "inoremenu ".s:BASH_Root.'&Statements.e&lif			<Esc>:call BASH_FlowControl( "elif _ ",        "then", "",       "a" )<CR>i'
 		exe "inoremenu ".s:BASH_Root.'&Statements.if-&else	<Esc>:call BASH_FlowControl( "if _ ",        "then", "else\nfi", "a" )<CR>i'
 		exe "inoremenu ".s:BASH_Root.'&Statements.&select		<Esc>:call BASH_FlowControl( "select _ in ", "do",   "done",     "a" )<CR>i'
 		exe "inoremenu ".s:BASH_Root.'&Statements.un&til		<Esc>:call BASH_FlowControl( "until _ ",     "do",   "done",     "a" )<CR>i'
@@ -1075,44 +1076,45 @@ function!	BASH_InitMenu ()
 			exe "amenu ".s:BASH_Root.'&I/O-Redir.I/O-Redir<Tab>Bash   <Nop>'
 			exe "amenu ".s:BASH_Root.'&I/O-Redir.-Sep0-    				    :'
 		endif
-
-		exe "	menu ".s:BASH_Root.'&I/O-Redir.take\ STDIN\ from\ file												a<Space><<Space><ESC>a'
-		exe "	menu ".s:BASH_Root.'&I/O-Redir.direct\ STDOUT\ to\ file												a<Space>><Space><ESC>a'
-		exe "	menu ".s:BASH_Root.'&I/O-Redir.direct\ STDOUT\ to\ file;\ append							a<Space>>><Space><ESC>a'
+"      
+		exe "	menu ".s:BASH_Root.'&I/O-Redir.take\ STDIN\ from\ file<Tab><												a<Space><<Space>'
+		exe "	menu ".s:BASH_Root.'&I/O-Redir.direct\ STDOUT\ to\ file<Tab>>												a<Space>><Space>'
+		exe "	menu ".s:BASH_Root.'&I/O-Redir.direct\ STDOUT\ to\ file;\ append<Tab>>>							a<Space>>><Space>'
 		"
-		exe "	menu ".s:BASH_Root.'&I/O-Redir.direct\ file\ descr\.\ to\ file								a<Space>><Space><ESC>2hi'
-		exe "	menu ".s:BASH_Root.'&I/O-Redir.direct\ file\ descr\.\ to\ file;\ append	  		a<Space>>><Space><ESC>2hi'
-		exe "	menu ".s:BASH_Root.'&I/O-Redir.take\ file\ descr\.\ from\ file								a<Space><<Space><ESC>2hi'
+		exe "	menu ".s:BASH_Root.'&I/O-Redir.direct\ file\ descr\.\ n\ to\ file<Tab>n>						a<Space>><Space><ESC>2hi'
+		exe "	menu ".s:BASH_Root.'&I/O-Redir.direct\ file\ descr\.\ n\ to\ file;\ append<Tab>n>> 	a<Space>>><Space><ESC>3hi'
+		exe "	menu ".s:BASH_Root.'&I/O-Redir.take\ file\ descr\.\ n\ from\ file<Tab>n< 						a<Space><<Space><ESC>2hi'
 		"
-		exe "	menu ".s:BASH_Root.'&I/O-Redir.duplicate\ STDIN\ from\ file\ descr\.					a<Space><& <ESC>a'
-		exe "	menu ".s:BASH_Root.'&I/O-Redir.duplicate\ STDOUT\ to\ file\ descr\.						a<Space>>& <ESC>a'
-		exe "	menu ".s:BASH_Root.'&I/O-Redir.direct\ STDOUT\ and\ STDERR\ to\ file					a<Space>&> <ESC>a'
+		exe "	menu ".s:BASH_Root.'&I/O-Redir.duplicate\ STDOUT\ to\ file\ descr\.\ n<Tab>n>&			a<Space>>& <ESC>2hi'
+		exe "	menu ".s:BASH_Root.'&I/O-Redir.duplicate\ STDIN\ from\ file\ descr\.\ n<Tab>n<&			a<Space><& <ESC>2hi'
+		exe "	menu ".s:BASH_Root.'&I/O-Redir.direct\ STDOUT\ and\ STDERR\ to\ file<Tab>&>					a<Space>&> '
 		"
-		exe "	menu ".s:BASH_Root.'&I/O-Redir.close\ STDIN																		a<Space><&- <ESC>a'
-		exe "	menu ".s:BASH_Root.'&I/O-Redir.close\ STDOUT																	a<Space>>&- <ESC>a'
-		exe "	menu ".s:BASH_Root.'&I/O-Redir.close\ input\ from\ file\ descr\.\ n						a<Space><&- <ESC>3hi'
-		exe "	menu ".s:BASH_Root.'&I/O-Redir.close\ output\ from\ file\ descr\.\ n					a<Space>>&- <ESC>3hi'
+		exe "	menu ".s:BASH_Root.'&I/O-Redir.close\ STDIN<Tab><&-																	a<Space><&- '
+		exe "	menu ".s:BASH_Root.'&I/O-Redir.close\ STDOUT<Tab>>&-																a<Space>>&- '
+		exe "	menu ".s:BASH_Root.'&I/O-Redir.close\ input\ from\ file\ descr\.\ n<Tab>n<&-				a<Space><&- <ESC>3hi'
+		exe "	menu ".s:BASH_Root.'&I/O-Redir.close\ output\ from\ file\ descr\.\ n<Tab>n>&-				a<Space>>&- <ESC>3hi'
 		"
-		exe "	menu ".s:BASH_Root.'&I/O-Redir.here-document																	a<< EOF<CR><CR>EOF<CR># ===== end of here-document =====<ESC>2ki'
+		exe "imenu ".s:BASH_Root.'&I/O-Redir.take\ STDIN\ from\ file<Tab><												<Space><<Space>'
+		exe "imenu ".s:BASH_Root.'&I/O-Redir.direct\ STDOUT\ to\ file<Tab>>												<Space>><Space>'
+		exe "imenu ".s:BASH_Root.'&I/O-Redir.direct\ STDOUT\ to\ file;\ append<Tab>>>							<Space>>><Space>'
 		"
-		exe "imenu ".s:BASH_Root.'&I/O-Redir.take\ STDIN\ from\ file												<Space><<Space><ESC>a'
-		exe "imenu ".s:BASH_Root.'&I/O-Redir.direct\ STDOUT\ to\ file												<Space>><Space><ESC>a'
-		exe "imenu ".s:BASH_Root.'&I/O-Redir.direct\ STDOUT\ to\ file;\ append							<Space>>><Space><ESC>a'
+		exe "imenu ".s:BASH_Root.'&I/O-Redir.direct\ file\ descr\.\ n\ to\ file<Tab>n>						<Space>><Space><ESC>2hi'
+		exe "imenu ".s:BASH_Root.'&I/O-Redir.direct\ file\ descr\.\ n\ to\ file;\ append<Tab>n>> 	<Space>>><Space><ESC>3hi'
+		exe "imenu ".s:BASH_Root.'&I/O-Redir.take\ file\ descr\.\ n\ from\ file<Tab>n< 						<Space><<Space><ESC>2hi'
 		"
-		exe "imenu ".s:BASH_Root.'&I/O-Redir.direct\ file\ descr\.\ to\ file								<Space>><Space><ESC>2hi'
-		exe "imenu ".s:BASH_Root.'&I/O-Redir.direct\ file\ descr\.\ to\ file;\ append				<Space>>><Space><ESC>2hi'
-		exe "imenu ".s:BASH_Root.'&I/O-Redir.take\ file\ descr\.\ from\ file								<Space><<Space><ESC>2hi'
+		exe "imenu ".s:BASH_Root.'&I/O-Redir.duplicate\ STDOUT\ to\ file\ descr\.\ n<Tab>n>&			<Space>>& <Left><Left><Left>'
+		exe "imenu ".s:BASH_Root.'&I/O-Redir.duplicate\ STDIN\ from\ file\ descr\.\ n<Tab>n<&			<Space><& <Left><Left><Left>'
+		exe "imenu ".s:BASH_Root.'&I/O-Redir.direct\ STDOUT\ and\ STDERR\ to\ file<Tab>&>					<Space>&> '
 		"
-		exe "imenu ".s:BASH_Root.'&I/O-Redir.duplicate\ STDIN\ from\ file\ descr\.					<Space><& <ESC>a'
-		exe "imenu ".s:BASH_Root.'&I/O-Redir.duplicate\ STDOUT\ to\ file\ descr\.						<Space>>& <ESC>a'
-		exe "imenu ".s:BASH_Root.'&I/O-Redir.direct\ STDOUT\ and\ STDERR\ to\ file					<Space>&> <ESC>a'
+		exe "imenu ".s:BASH_Root.'&I/O-Redir.close\ STDIN<Tab><&-																	<Space><&- '
+		exe "imenu ".s:BASH_Root.'&I/O-Redir.close\ STDOUT<Tab>>&-																<Space>>&- '
+		exe "imenu ".s:BASH_Root.'&I/O-Redir.close\ input\ from\ file\ descr\.\ n<Tab>n<&-				<Space><&- <ESC>3hi'
+		exe "imenu ".s:BASH_Root.'&I/O-Redir.close\ output\ from\ file\ descr\.\ n<Tab>n>&-				<Space>>&- <ESC>3hi'
 		"
-		exe "imenu ".s:BASH_Root.'&I/O-Redir.close\ STDIN																		<Space><&- <ESC>a'
-		exe "imenu ".s:BASH_Root.'&I/O-Redir.close\ STDOUT																	<Space>>&- <ESC>a'
-		exe "imenu ".s:BASH_Root.'&I/O-Redir.close\ input\ from\ file\ descr\.\ n						<Space><&- <ESC>3hi'
-		exe "imenu ".s:BASH_Root.'&I/O-Redir.close\ output\ from\ file\ descr\.\ n					<Space>>&- <ESC>3hi'
 		"
-		exe "imenu ".s:BASH_Root.'&I/O-Redir.here-document																	<< EOF<CR><CR>EOF<CR># ===== end of here-document =====<ESC>2ki'
+		exe "	menu ".s:BASH_Root.'&I/O-Redir.here-document																				a<< EOF<CR><CR>EOF<CR># ===== end of here-document =====<ESC>2ki'
+		exe "imenu ".s:BASH_Root.'&I/O-Redir.here-document																				<< EOF<CR><CR>EOF<CR># ===== end of here-document =====<ESC>2ki'
+		exe "vmenu ".s:BASH_Root.'&I/O-Redir.here-document																				S<< EOF<CR>EOF<CR># ===== end of here-document =====<ESC>kPk^i'
 		"
 		"------------------------------------------------------------------------------
 		"  menu Run    {{{2
@@ -1185,12 +1187,16 @@ endfunction		" ---------- end of function  BASH_InitMenu  ----------
 "------------------------------------------------------------------------------
 "  Input after a highlighted prompt    {{{1
 "------------------------------------------------------------------------------
-function! BASH_Input ( prompt, text )
-	echohl Search												" highlight prompt
-	call inputsave()										" preserve typeahead
-	let	retval=input( a:prompt, a:text )	" read input
-	call inputrestore()									" restore typeahead
-	echohl None													" reset highlighting
+function! BASH_Input ( prompt, text, completion )
+	echohl Search																				" highlight prompt
+	call inputsave()																		" preserve typeahead
+	if a:completion == ''
+		let	retval=input( a:prompt, a:text )
+	else
+		let	retval=input( a:prompt, a:text, a:completion )
+	endif
+	call inputrestore()																	" restore typeahead
+	echohl None																					" reset highlighting
 	return retval
 endfunction		" ---------- end of function  BASH_Input  ----------
 "
@@ -1267,7 +1273,7 @@ endfunction		" ---------- end of function  BASH_AdjustLineEndComm  ----------
 function! BASH_GetLineEndCommCol ()
 	let actcol	= virtcol(".")
 	if actcol+1 == virtcol("$")
-		let	b:BASH_LineEndCommentColumn	= BASH_Input( 'start line-end comment at virtual column : ', actcol )
+		let	b:BASH_LineEndCommentColumn	= BASH_Input( 'start line-end comment at virtual column : ', actcol, '' )
 	else
 		let	b:BASH_LineEndCommentColumn	= virtcol(".")
 	endif
@@ -1536,8 +1542,8 @@ endfunction    " ----------  end of function BASH_FlowControl  ----------
 "  Stmts : function    {{{1
 "------------------------------------------------------------------------------
 function! BASH_CodeFunction ( mode )
-	let	identifier=BASH_Input("function name : ", "" )
-	if identifier != ""
+	let	identifier=BASH_Input('function name : ', '', '' )
+	if identifier != ''
 		"
 		if a:mode == "a"
 			let zz=    "function ".identifier." ()\n{\n}"
@@ -1564,7 +1570,7 @@ endfunction		" ---------- end of function  BASH_CodeFunction  ----------
 "
 let s:BASH_DocBufferName       = "BASH_HELP"
 let s:BASH_DocHelpBufferNumber = -1
-let s:BASH_DocSearchWord       = ""
+let s:BASH_DocSearchWord       = ''
 "
 function! BASH_help()
 
@@ -1575,7 +1581,7 @@ function! BASH_help()
 	let cuc		= getline(".")[col(".") - 1]	" character under the cursor
 	let	item=expand("<cword>")							" word under the cursor
 	if item == "" || match( item, cuc ) == -1
-		let	item=BASH_Input("name of a bash builtin command : ", "")
+		let	item=BASH_Input("name of a bash builtin command : ", "", '')
 	endif
 
 	"------------------------------------------------------------------------------
@@ -1659,9 +1665,9 @@ function! BASH_SyntaxCheckOptionsLocal ()
 	let	prompt	= 'syntax check options for "'.filename.'" : '
 
 	if exists("b:BASH_SyntaxCheckOptionsLocal")
-		let	b:BASH_SyntaxCheckOptionsLocal= BASH_Input( prompt, b:BASH_SyntaxCheckOptionsLocal )
+		let	b:BASH_SyntaxCheckOptionsLocal= BASH_Input( prompt, b:BASH_SyntaxCheckOptionsLocal, '' )
 	else
-		let	b:BASH_SyntaxCheckOptionsLocal= BASH_Input( prompt , "" )
+		let	b:BASH_SyntaxCheckOptionsLocal= BASH_Input( prompt , "", '' )
 	endif
 
 	if BASH_SyntaxCheckOptions( b:BASH_SyntaxCheckOptionsLocal ) != 0
@@ -1954,9 +1960,9 @@ function! BASH_XtermSize ()
 	let geom	= matchstr( s:BASH_XtermDefaults, regex )
 	let geom	= matchstr( geom, '\d\+x\d\+' )
 	let geom	= substitute( geom, 'x', ' ', "" )
-	let	answer= BASH_Input("   xterm size (COLUMNS LINES) : ", geom )
+	let	answer= BASH_Input("   xterm size (COLUMNS LINES) : ", geom, '' )
 	while match(answer, '^\s*\d\+\s\+\d\+\s*$' ) < 0
-		let	answer= BASH_Input(" + xterm size (COLUMNS LINES) : ", geom )
+		let	answer= BASH_Input(" + xterm size (COLUMNS LINES) : ", geom, '' )
 	endwhile
 	let answer  = substitute( answer, '^\s\+', "", "" )		 				" remove leading whitespaces
 	let answer  = substitute( answer, '\s\+$', "", "" )						" remove trailing whitespaces
@@ -2039,9 +2045,9 @@ function! BASH_CmdLineArguments ()
   endif
 	let	prompt	= 'command line arguments for "'.filename.'" : '
 	if exists("b:BASH_CmdLineArgs")
-		let	b:BASH_CmdLineArgs= BASH_Input( prompt, b:BASH_CmdLineArgs )
+		let	b:BASH_CmdLineArgs= BASH_Input( prompt, b:BASH_CmdLineArgs , 'file' )
 	else
-		let	b:BASH_CmdLineArgs= BASH_Input( prompt , "" )
+		let	b:BASH_CmdLineArgs= BASH_Input( prompt , "", 'file' )
 	endif
 endfunction		" ---------- end of function  BASH_CmdLineArguments  ----------
 "

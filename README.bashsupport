@@ -1,4 +1,4 @@
-README for bash-support.vim (Version 2.7) / August 02 2008
+README for bash-support.vim (Version 2.7.1) / September 22 2008
 
   *  INSTALLATION
   *  RELEASE NOTES 
@@ -59,12 +59,12 @@ and look at the bashsupport help with
 
 
 =======================================================================================
-  RELEASE NOTES FOR VERSION 2.7
+  RELEASE NOTES FOR VERSION 2.7.1
 =======================================================================================
-+ When a Bash script is started from the Vim command line errors and warnings (if any)
-  are caught in an error window allowing quickfix commands to be used.
-+ Scripts which are not set executable can be run under Vim.
-+ One new hotkey.
++ Minor bugfix in the I/O-Redir-menu.
++ I/O-Redir-menu shows redirectors (sort of help).
++ I/O-Redir-menu: here-document item has a vmode.
++ File name expansion for the first command line argument entered with <S-F9>.
 
 =======================================================================================
   OLDER RELEASE NOTES : see file 'ChangeLog'

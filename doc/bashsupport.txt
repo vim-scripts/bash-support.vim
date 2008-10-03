@@ -1,7 +1,7 @@
-*bashsupport.txt*                Bash Support                  August 02 2008
+*bashsupport.txt*                Bash Support                September 29 2008
 
 bash Support                                      *bash-support* *bashsupport*
-                             Plugin version 2.7
+                            Plugin version 2.7.1
                         for Vim version 7.0 and above
                        Fritz Mehner  <mehner@fh-swf.de>
 
@@ -27,14 +27,15 @@ writing shell scripts.
  1.3     Menu 'set'                              |bashsupport-set|
  1.4     Menu 'shopt'                            |bashsupport-shopt|
  1.5     Menu 'Regex'                            |bashsupport-regex|
- 1.6     Menu 'Run'                              |bashsupport-run|
- 1.6.1    Save and run                           |bashsupport-run-script|
- 1.6.2    Save and check syntax                  |bashsupport-syntax-check|
- 1.6.3    Command line arguments                 |bashsupport-cmdline-args|
- 1.6.4    Start debugger                         |bashsupport-debugger|
- 1.6.5    Hardcopy                               |bashsupport-hardcopy|
- 1.6.6    Xterm size                             |bashsupport-xterm|
- 1.6.7    Output redirection                     |bashsupport-output|
+ 1.6     Menu 'I/O-Redir'                        |bashsupport-io-redir|
+ 1.7     Menu 'Run'                              |bashsupport-run|
+ 1.7.1    Save and run                           |bashsupport-run-script|
+ 1.7.2    Save and check syntax                  |bashsupport-syntax-check|
+ 1.7.3    Command line arguments                 |bashsupport-cmdline-args|
+ 1.7.4    Start debugger                         |bashsupport-debugger|
+ 1.7.5    Hardcopy                               |bashsupport-hardcopy|
+ 1.7.6    Xterm size                             |bashsupport-xterm|
+ 1.7.7    Output redirection                     |bashsupport-output|
  2.     Usage without GUI                        |bashsupport-usage-vim|
  3.     Hot keys                                 |bashsupport-hotkeys|
  4.     Customization and configuration          |bashsupport-customization|
@@ -310,7 +311,7 @@ can be searched for with the vim star command (*).
 1.5  MENU 'Regex'                                          *bashsupport-regex*
 ------------------------------------------------------------------------------
 
-These menu can be used to compose regular expressions with a few keystrokes.
+This menu can be used to compose regular expressions with a few keystrokes.
 In normal mode the entries insert the shown constructs after the cursor. The
 first group ( "*(|)" , ... ) and the entry '[ ]' can enclose a marked text.
 The marked text
@@ -320,10 +321,25 @@ will be changed into
 by the first choice.
 
 ------------------------------------------------------------------------------
-1.6  MENU 'Run'                                              *bashsupport-run*
+1.6  MENU 'I/O-Redir'                                   *bashsupport-io-redir*
 ------------------------------------------------------------------------------
 
-1.6.1 Save and run                                    *bashsupport-run-script*
+This menu can be used to insert I/O redirectors. The cursor will be positioned
+at the obvious or most likely continuation point.
+The item 'here-document' has a visual mode. A few marked lines will be
+surrounded by the necessary statements, e.g.
+
+<< EOF
+xxxxxxxxxxx
+xxxxxxxxxxx
+EOF
+# ===== end of here-document =====
+
+------------------------------------------------------------------------------
+1.7  MENU 'Run'                                              *bashsupport-run*
+------------------------------------------------------------------------------
+
+1.7.1 Save and run                                    *bashsupport-run-script*
 ------------------
 
 Save the current buffer to his file and run this file. The command line, the
@@ -337,7 +353,7 @@ destination is VIM runtime errors are caught in an error window allowing
 quickfix commands to be used (see|quickfix|).
 
 
-1.6.2 Save and check syntax                         *bashsupport-syntax-check*
+1.7.2 Save and check syntax                         *bashsupport-syntax-check*
 ---------------------------
 
 Save the current buffer to this file and run this file with the -n flag
@@ -369,12 +385,14 @@ recognized:
    restricted_shell   shift_verbose   sourcepath   xpg_echo
 
 
-1.6.3 Command line arguments                        *bashsupport-cmdline-args*
+1.7.3 Command line arguments                        *bashsupport-cmdline-args*
 ----------------------------
 
 The entry 'com. line arg.' calls an input dialog which asks for command line
 arguments. These arguments are forwarded to the script which is run by the
 'run' entry. The arguments are kept until you change them.
+For the first and only the first argument file name expansion will work (use
+the Tab-key).
 
 The arguments belong to the current buffer (that is, each buffer can have its
 own arguments).
@@ -382,7 +400,7 @@ If the buffer gets a new name with "save as" the arguments will now belong to
 the buffer with the new name.
 
 
-1.6.4 START DEBUGGER                                    *bashsupport-debugger*
+1.7.4 START DEBUGGER                                    *bashsupport-debugger*
 --------------------
 
 Start the debugger 'bashdb' or the frontend 'ddd' from the menu entry
@@ -412,7 +430,7 @@ In all cases the command line arguments from the argument setting
 (|bashsupport-cmdline-args|) are passed to the debugger.
 
 
-1.6.5 Hardcopy                                          *bashsupport-hardcopy*
+1.7.5 Hardcopy                                          *bashsupport-hardcopy*
 --------------
 
 Generates a PostScript file from the whole buffer or from a marked region.
@@ -433,13 +451,13 @@ or by setting a global variable in the file '.vimrc', e.g. :
 See :h printheader and :h strftime()  for more details.
 
 
-1.6.6 Xterm size                                           *bashsupport-xterm*
+1.7.6 Xterm size                                           *bashsupport-xterm*
 ----------------
 
 The size of the xterm (see below) can be changes for the current session.  The
 size has to be specified as COLUMNS LINES (e.g. 96 32 ).
 
-1.6.7 Output redirection                                  *bashsupport-output*
+1.7.7 Output redirection                                  *bashsupport-output*
 ------------------------
 
 The last menu entry 'output: ... ' has 3 states:

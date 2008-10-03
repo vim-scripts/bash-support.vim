@@ -1,5 +1,5 @@
 
-infilename=""                      # input data
+infilename=""                      # input filename
 
 exec 3<"$infilename"
 if [ $? -ne 0 ] ; then
@@ -8,9 +8,7 @@ if [ $? -ne 0 ] ; then
 fi
 
 while read line <&3 ; do
-
   echo -e "$line"
-
 done
 
 exec  3<&-                                      # close file descriptor
