@@ -29,7 +29,7 @@
 "                  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 "                  PURPOSE.
 "                  See the GNU General Public License version 2 for more details.
-"       Revision:  $Id: bash-support.vim,v 1.22 2008/10/03 10:45:29 mehner Exp $
+"       Revision:  $Id: bash-support.vim,v 1.24 2008/10/11 15:48:51 mehner Exp $
 "
 "------------------------------------------------------------------------------
 "
@@ -38,7 +38,7 @@
 if exists("g:BASH_Version") || &cp
  finish
 endif
-let g:BASH_Version= "2.7.1"  						" version number of this script; do not change
+let g:BASH_Version= "2.8"  						" version number of this script; do not change
 "
 if v:version < 700
   echohl WarningMsg | echo 'plugin bash-support.vim needs Vim version >= 7'| echohl None
@@ -1176,8 +1176,20 @@ function!	BASH_InitMenu ()
 		"===============================================================================================
 		"
 		if s:BASH_Root != ""
-			exe " menu  <silent>  ".s:BASH_Root.'&help\ \(plugin\)             :call BASH_HelpBASHsupport()<CR>'
-			exe "imenu  <silent>  ".s:BASH_Root.'&help\ \(plugin\)        <C-C>:call BASH_HelpBASHsupport()<CR>'
+			"
+			if s:BASH_MenuHeader == "yes"
+				exe "amenu ".s:BASH_Root.'&Help.Help<Tab>Bash  <Nop>'
+				exe "amenu ".s:BASH_Root.'&Help.-Sep0-        :'
+			endif
+			"
+			exe " menu  <silent>  ".s:BASH_Root.'&Help.&help\ (Bash\ builtins)          :call BASH_help("h")<CR>'
+			exe "imenu  <silent>  ".s:BASH_Root.'&Help.&help\ (Bash\ builtins)     <C-C>:call BASH_help("h")<CR>'
+			"
+			exe " menu  <silent>  ".s:BASH_Root.'&Help.&manual\ (utilities)             :call BASH_help("m")<CR>'
+			exe "imenu  <silent>  ".s:BASH_Root.'&Help.&manual\ (utilities)        <C-C>:call BASH_help("m")<CR>'
+			"
+			exe " menu  <silent>  ".s:BASH_Root.'&Help.bash-&support            :call BASH_HelpBASHsupport()<CR>'
+			exe "imenu  <silent>  ".s:BASH_Root.'&Help.bash-&support       <C-C>:call BASH_HelpBASHsupport()<CR>'
 		endif
 		"
 	endif
@@ -1572,57 +1584,96 @@ let s:BASH_DocBufferName       = "BASH_HELP"
 let s:BASH_DocHelpBufferNumber = -1
 let s:BASH_DocSearchWord       = ''
 "
-function! BASH_help()
+function! BASH_help( type )
 
-	if !( has("gui_running") || &term == "xterm" )
-		return
-	end
-
-	let cuc		= getline(".")[col(".") - 1]	" character under the cursor
-	let	item=expand("<cword>")							" word under the cursor
+	let cuc		= getline(".")[col(".") - 1]		" character under the cursor
+	let	item	= expand("<cword>")							" word under the cursor
 	if item == "" || match( item, cuc ) == -1
-		let	item=BASH_Input("name of a bash builtin command : ", "", '')
+		if a:type == 'm'
+			let	item=BASH_Input('name of command line utility : ', '', 'shellcmd' )
+		else
+			let	item=BASH_Input('name of bash builtin : ', '', '' )
+		endif
 	endif
 
+	if item == ""
+		return
+	endif
 	"------------------------------------------------------------------------------
 	"  replace buffer content with bash help text
 	"------------------------------------------------------------------------------
-	if item != ""
-		"
-		" jump to an already open bash help window or create one
-		"
-		if bufloaded(s:BASH_DocBufferName) != 0 && bufwinnr(s:BASH_DocHelpBufferNumber) != -1
-			exe bufwinnr(s:BASH_DocHelpBufferNumber) . "wincmd w"
-			" buffer number may have changed, e.g. after a 'save as'
-			if bufnr("%") != s:BASH_DocHelpBufferNumber
-				let s:BASH_DocHelpBufferNumber=bufnr(s:BASH_OutputBufferName)
-				exe ":bn ".s:BASH_DocHelpBufferNumber
-			endif
-		else
-			exe ":new ".s:BASH_DocBufferName
-			let s:BASH_DocHelpBufferNumber=bufnr("%")
-			setlocal buftype=nofile
-			setlocal noswapfile
-			setlocal bufhidden=delete
-			setlocal filetype=sh		" allows repeated use of <S-F1>
-			setlocal syntax=OFF
+	"
+	" jump to an already open bash help window or create one
+	"
+	if bufloaded(s:BASH_DocBufferName) != 0 && bufwinnr(s:BASH_DocHelpBufferNumber) != -1
+		exe bufwinnr(s:BASH_DocHelpBufferNumber) . "wincmd w"
+		" buffer number may have changed, e.g. after a 'save as'
+		if bufnr("%") != s:BASH_DocHelpBufferNumber
+			let s:BASH_DocHelpBufferNumber=bufnr(s:BASH_OutputBufferName)
+			exe ":bn ".s:BASH_DocHelpBufferNumber
 		endif
-		"
-		" read help
-		"
-		setlocal	modifiable
-		let command=":%!help  ".item."  2>/dev/null"
-		silent exe command
-
-		if v:shell_error != 0
-			redraw!
-			let zz=   "No help found for '".item."'\n"
-			silent put!	=zz
-		endif
-
-		setlocal nomodifiable
-		redraw!
+	else
+		exe ":new ".s:BASH_DocBufferName
+		let s:BASH_DocHelpBufferNumber=bufnr("%")
+		setlocal buftype=nofile
+		setlocal noswapfile
+		setlocal bufhidden=delete
+		setlocal filetype=sh		" allows repeated use of <S-F1>
+		setlocal syntax=OFF
 	endif
+	setlocal	modifiable
+	"
+	" BASH BUILTINS
+	"
+	if a:type == 'h'
+		let command=":%!help  ".item
+		silent exe command
+	endif
+	"
+	" UTILITIES
+	"
+	if a:type == 'm' 
+		"
+		" Is there more than one manual ?
+		"
+		let manpages	= system( "man -k ".item )
+		let	catalogs	= split( manpages, '\n', )
+		let	manual		= {}
+		"
+		" Select manuals where the name exactly matches
+		"
+		for line in catalogs
+			if line =~ '^'.item.'\s\+(' 
+				let	itempart	= split( line, '\s\+' )
+				let	number		= itempart[1][1:-2]
+				let	manual[number]	= number
+			endif
+		endfor
+		"
+		" Build a selection list if there are more than one manual
+		"
+		let	catalog	= ""
+		if len(keys(manual)) > 0
+			let	selectlist	= [ ]
+			let	number			= 0
+			for key in keys(manual)
+				let	number	= number+1
+				call	add( selectlist, ' '.number.' : '.item.' ('.key.')')
+			endfor
+			if len(selectlist) > 2
+				call insert( selectlist, "Select manual (number 1-".number."):" )
+				let catalog		= inputlist( selectlist )
+				let catalog		= keys(manual)[catalog-1]
+			endif
+		endif
+
+		set filetype=man
+		let command=":%!man ".catalog." ".item
+		silent exe command
+	endif
+
+	setlocal nomodifiable
+	redraw!
 endfunction		" ---------- end of function  BASH_help  ----------
 "
 "------------------------------------------------------------------------------
@@ -2250,6 +2301,7 @@ function! BASH_RemoveGuiMenus ()
 			aunmenu <silent> shopt
 			aunmenu <silent> I/O-Redir
 			aunmenu <silent> Run
+			aunmenu <silent> Help
 		else
 			exe "aunmenu <silent> ".s:BASH_Root
 		endif

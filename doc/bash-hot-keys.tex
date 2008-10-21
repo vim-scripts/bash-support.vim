@@ -8,15 +8,15 @@
 %%        Email:  mehner@fh-swf.de
 %%    Copyright:  Copyright (C)  2003-2008  Dr.-Ing. Fritz Mehner  (mehner@fh-swf.de)
 %%      Version:  see PluginVersion (below)
-%%     Revision:  $Id: bash-hot-keys.tex,v 1.9 2008/10/03 10:47:49 mehner Exp $
+%%     Revision:  $Id: bash-hot-keys.tex,v 1.11 2008/10/11 15:53:32 mehner Exp $
 %%      Created:  09.06.2003
 %%                
 %%        Notes:  
 %%                
 %%=====================================================================================
 
-\newcommand{\PluginVersion}{2.7}
-\newcommand{\ReleaseDate}{August 2008}
+\newcommand{\PluginVersion}{2.8}
+\newcommand{\ReleaseDate}{October 2008}
 
 \documentclass[oneside,12pt,a4paper,DIV18]{scrartcl}
 \usepackage[english]{babel}
@@ -88,7 +88,9 @@ All mappings also work for gVim.}\\
 \begin{tabular}[]{|p{11mm}|p{59mm}|}
 \hline 
 \multicolumn{2}{|r|}{\textsl{\textbf{H}elp}} \\
-\hline \verb'\h'   & show plugin help \hfill (n) \\
+\hline \verb'\hh'  & help (Bash builtins)             \hfill (n, i) \\
+\hline \verb'\hm'  & manual (command line utilities) \hfill (n, i) \\
+\hline \verb'\hp'  & Bash-support plugin              \hfill (n, i) \\
 \hline
 \hline 
 \hline
@@ -140,7 +142,7 @@ All mappings also work for gVim.}\\
 %%======================================================================
 %%~~~~~ TABULAR : begin ~~~~~~~~~~
 \begin{tabular}[]{l}
-   \\ [38.6ex]								%% offset
+   \\ [38.2ex]								%% offset
 \end{tabular} \\ 
 %%~~~~~ TABULAR :  end  ~~~~~~~~~~
 %%~~~~~ TABULAR : begin ~~~~~~~~~~

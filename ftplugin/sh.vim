@@ -3,8 +3,8 @@
 "   Language :  bash
 "     Plugin :  bash-support.vim
 " Maintainer :  Fritz Mehner <mehner@fh-swf.de>
-"    Version :  2.7
-"   Revision :  $Id: sh.vim,v 1.15 2008/10/03 10:45:24 mehner Exp $
+"    Version :  2.8
+"   Revision :  $Id: sh.vim,v 1.17 2008/10/11 15:48:04 mehner Exp $
 "
 " -----------------------------------------------------------------
 "
@@ -30,27 +30,36 @@ endif
 "  Ctrl-F9   update file and run script
 " Shift-F9   command line arguments
 "
- map  <buffer>  <silent>  <A-F9>        :call BASH_SyntaxCheck()<CR><CR>
-imap  <buffer>  <silent>  <A-F9>   <C-C>:call BASH_SyntaxCheck()<CR><CR>
-"
- map  <buffer>  <silent>  <C-F9>        :call BASH_Run("n")<CR>
-vmap  <buffer>  <silent>  <C-F9>   <C-C>:call BASH_Run("v")<CR>
-imap  <buffer>  <silent>  <C-F9>   <C-C>:call BASH_Run("n")<CR>
-"
- map  <buffer>  <silent>  <S-F9>        :call BASH_CmdLineArguments()<CR>
-imap  <buffer>  <silent>  <S-F9>   <C-C>:call BASH_CmdLineArguments()<CR>
+if has("gui_running")
+  "
+   map  <buffer>  <silent>  <S-F1>        :call BASH_HelpBASHsupport()<CR>
+  imap  <buffer>  <silent>  <S-F1>   <C-C>:call BASH_HelpBASHsupport()<CR>
+  "
+   map  <buffer>  <silent>  <A-F9>        :call BASH_SyntaxCheck()<CR><CR>
+  imap  <buffer>  <silent>  <A-F9>   <C-C>:call BASH_SyntaxCheck()<CR><CR>
+  "
+   map  <buffer>  <silent>  <C-F9>        :call BASH_Run("n")<CR>
+  vmap  <buffer>  <silent>  <C-F9>   <C-C>:call BASH_Run("v")<CR>
+  imap  <buffer>  <silent>  <C-F9>   <C-C>:call BASH_Run("n")<CR>
+  "
+  map   <buffer>  <silent>  <S-F9>        :call BASH_CmdLineArguments()<CR>
+  imap  <buffer>  <silent>  <S-F9>   <C-C>:call BASH_CmdLineArguments()<CR>
+endif
   "
  map  <buffer>  <silent>    <F9>        :call BASH_Debugger()<CR>:redraw!<CR>
 imap  <buffer>  <silent>    <F9>   <C-C>:call BASH_Debugger()<CR>:redraw!<CR>
 "
 "
- map  <buffer>  <silent>  <S-F1>        :call BASH_help()<CR>
-imap  <buffer>  <silent>  <S-F1>   <C-C>:call BASH_help()<CR>
+" ---------- help ----------------------------------------------------
 "
-" ---------- Key mappings  -------------------------------------
+ noremap  <buffer>  <silent>  <Leader>hh            :call BASH_help('h')<CR>
+inoremap  <buffer>  <silent>  <Leader>hh       <Esc>:call BASH_help('h')<CR>
 "
- map  <buffer>  <silent>  <Leader>h     	     :call BASH_help()<CR>
-imap  <buffer>  <silent>  <Leader>h     	<Esc>:call BASH_help()<CR>
+ noremap  <buffer>  <silent>  <Leader>hm            :call BASH_help('m')<CR>
+inoremap  <buffer>  <silent>  <Leader>hm       <Esc>:call BASH_help('m')<CR>
+"
+ noremap  <buffer>  <silent>  <Leader>hp           :call BASH_HelpBASHsupport()<CR>
+inoremap  <buffer>  <silent>  <Leader>hp      <Esc>:call BASH_HelpBASHsupport()<CR>
 "
 " ---------- comment menu ----------------------------------------------------
 "
@@ -89,7 +98,7 @@ inoremap  <buffer>  <silent>  <Leader>ct       <C-R>=BASH_InsertDateAndTime('dt'
  noremap  <buffer>  <silent>  <Leader>ckr     $:call BASH_CommentClassified("TRICKY")  <CR>kJA
  noremap  <buffer>  <silent>  <Leader>ckw     $:call BASH_CommentClassified("WARNING") <CR>kJA
  noremap  <buffer>  <silent>  <Leader>ckn     $:call BASH_CommentClassified("")        <CR>kJf:a
- noremap  <buffer>  <silent>  <Leader>ce			^iecho<Space>"<End>"<Esc>j'
+ noremap  <buffer>  <silent>  <Leader>ce      ^iecho<Space>"<End>"<Esc>j'
  noremap  <buffer>  <silent>  <Leader>cr      0:s/^\s*echo\s\+\"// \| s/\s*\"\s*$// \| :normal ==<CR>j'
  noremap  <buffer>  <silent>  <Leader>cv      :call BASH_CommentVimModeline()<CR>
 
@@ -98,7 +107,7 @@ inoremap  <buffer>  <silent>  <Leader>ckt     <C-C>$:call BASH_CommentClassified
 inoremap  <buffer>  <silent>  <Leader>ckr     <C-C>$:call BASH_CommentClassified("TRICKY")  <CR>kJA
 inoremap  <buffer>  <silent>  <Leader>ckw     <C-C>$:call BASH_CommentClassified("WARNING") <CR>kJA
 inoremap  <buffer>  <silent>  <Leader>ckn     <C-C>$:call BASH_CommentClassified("")        <CR>kJf:a
-inoremap  <buffer>  <silent>  <Leader>ce			<C-C>^iecho<Space>"<End>"<Esc>j'
+inoremap  <buffer>  <silent>  <Leader>ce      <C-C>^iecho<Space>"<End>"<Esc>j'
 inoremap  <buffer>  <silent>  <Leader>cr      <C-C>0:s/^\s*echo\s\+\"// \| s/\s*\"\s*$// \| :normal ==<CR>j'
 inoremap  <buffer>  <silent>  <Leader>cv      <C-C>:call BASH_CommentVimModeline()<CR>
 "
@@ -134,9 +143,9 @@ vnoremap  <buffer>  <silent>  <Leader>st      <Esc>:call BASH_FlowControl( "unti
 inoremap  <buffer>  <silent>  <Leader>sw      <Esc>:call BASH_FlowControl( "while _ ",     "do",   "done",     "a" )<CR>i
 vnoremap  <buffer>  <silent>  <Leader>sw      <Esc>:call BASH_FlowControl( "while _ ",     "do",   "done",     "v" )<CR>
 
- noremap  <buffer>  <silent>  <Leader>sfu			     :call BASH_CodeFunction("a")<CR>O
-inoremap  <buffer>  <silent>  <Leader>sfu			<Esc>:call BASH_CodeFunction("a")<CR>O
-vnoremap  <buffer>  <silent>  <Leader>sfu			<Esc>:call BASH_CodeFunction("v")<CR>
+ noremap  <buffer>  <silent>  <Leader>sfu          :call BASH_CodeFunction("a")<CR>O
+inoremap  <buffer>  <silent>  <Leader>sfu     <Esc>:call BASH_CodeFunction("a")<CR>O
+vnoremap  <buffer>  <silent>  <Leader>sfu     <Esc>:call BASH_CodeFunction("v")<CR>
 
  noremap  <buffer>  <silent>  <Leader>se      ^iecho<Space>-e<Space>"\n"<Esc>2hi
 inoremap  <buffer>  <silent>  <Leader>se        echo<Space>-e<Space>"\n"<Esc>2hi
@@ -156,8 +165,8 @@ vnoremap    <buffer>  <silent>  <Leader>nw    <C-C>:call BASH_CodeSnippets("wv")
 " ---------- run menu ----------------------------------------------------
 "
 if !has('win32')
-	 map  <buffer>  <silent>  <Leader>re           :call BASH_MakeScriptExecutable()<CR>
-	imap  <buffer>  <silent>  <Leader>re      <Esc>:call BASH_MakeScriptExecutable()<CR>
+   map  <buffer>  <silent>  <Leader>re           :call BASH_MakeScriptExecutable()<CR>
+  imap  <buffer>  <silent>  <Leader>re      <Esc>:call BASH_MakeScriptExecutable()<CR>
 endif
  map  <buffer>  <silent>  <Leader>rr           :call BASH_Run("n")<CR>
  map  <buffer>  <silent>  <Leader>rc           :call BASH_SyntaxCheck()<CR>
@@ -174,8 +183,8 @@ imap  <buffer>  <silent>  <Leader>rs      <Esc>:call BASH_Settings()<CR>
 vmap  <buffer>  <silent>  <Leader>rr      <Esc>:call BASH_Run("v")<CR>
 
 if has("gui_running") && has("unix")
-	 map  <buffer>  <silent>  <Leader>rt           :call BASH_XtermSize()<CR>
-	imap  <buffer>  <silent>  <Leader>rt      <Esc>:call BASH_XtermSize()<CR>
+   map  <buffer>  <silent>  <Leader>rt           :call BASH_XtermSize()<CR>
+  imap  <buffer>  <silent>  <Leader>rt      <Esc>:call BASH_XtermSize()<CR>
 endif
 
  map  <buffer>  <silent>  <Leader>ro           :call BASH_Toggle_Gvim_Xterm()<CR>

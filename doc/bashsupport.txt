@@ -1,7 +1,7 @@
-*bashsupport.txt*                Bash Support                September 29 2008
+*bashsupport.txt*                Bash Support                October 11 2008
 
 bash Support                                      *bash-support* *bashsupport*
-                            Plugin version 2.7.1
+                             Plugin version 2.8
                         for Vim version 7.0 and above
                        Fritz Mehner  <mehner@fh-swf.de>
 
@@ -36,6 +36,7 @@ writing shell scripts.
  1.7.5    Hardcopy                               |bashsupport-hardcopy|
  1.7.6    Xterm size                             |bashsupport-xterm|
  1.7.7    Output redirection                     |bashsupport-output|
+ 1.8     Menu 'Help'                             |bashsupport-help|
  2.     Usage without GUI                        |bashsupport-usage-vim|
  3.     Hot keys                                 |bashsupport-hotkeys|
  4.     Customization and configuration          |bashsupport-customization|
@@ -522,6 +523,29 @@ in '.vimrc' by the global variable g:BASH_OutputGvim, e.g.
 
 The methods are "vim", "buffer" and "xterm".
 
+------------------------------------------------------------------------------
+1.8  MENU 'Help'                                            *bashsupport-help*
+------------------------------------------------------------------------------
+
+Item 'help (Bash builtins)'
+---------------------------
+Look up Bash help for the word under the cursor. If there is no word under the
+cursor you will be asked for the name of a builtin.
+
+Item 'manual (utilities)'
+-------------------------
+Display the manual for the word under the cursor. If there are more than one
+hit a list of possibilities will be displayed to choose from.
+
+If there is no word under the cursor you will be asked for the name of a
+command line utility. In this case the command completion is on while entering
+a name.
+
+Item 'bash-support'
+-------------------
+Display this help text if it was properly added with ':helptags'.
+
+
 ==============================================================================
 2.  USAGE without GUI  (Vim)                           *bashsupport-usage-vim*
 ==============================================================================
@@ -541,8 +565,13 @@ following character(s) will only be recognized for a short time.
 
   -- bash help ------------------------------------------
 
-  \h      display help for the builtin    (n, i)
-          under the cursor
+  \hb     Displays help for the builtin   (n, i)
+          under the cursor (Bash help).
+  \hm     displays the manual for the     (n, i)
+          Bash command under the cursor
+          The tab expansion is active.
+  \hp     Displays the Vim help page for  (n, i)
+          this plugin.
 
   -- Comments -------------------------------------------
 
@@ -613,8 +642,7 @@ bash-support plugin package).
 
 The following hot keys are defined in NORMAL, VISUAL and INSERT MODE:
 
-   Shift-F1   display help for a the built command under the cursor or ask
-               for a name
+   Shift-F1   display help for this plugin
     Ctrl-F9   run script
      Alt-F9   run syntax check
    Shift-F9   command line arguments (for the current buffer)

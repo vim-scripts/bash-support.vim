@@ -1,4 +1,12 @@
 =======================================================================================
+  RELEASE NOTES FOR VERSION 2.7.1
+=======================================================================================
++ Minor bugfix in the I/O-Redir-menu.
++ I/O-Redir-menu shows redirectors (sort of help).
++ I/O-Redir-menu: here-document item has a vmode.
++ File name expansion for the first command line argument entered with <S-F9>.
+
+=======================================================================================
   RELEASE NOTES FOR VERSION 2.7
 =======================================================================================
 + When a Bash script is started from the Vim command line errors and warnings (if any)

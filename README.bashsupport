@@ -1,4 +1,4 @@
-README for bash-support.vim (Version 2.7.1) / September 22 2008
+README for bash-support.vim (Version 2.8) / October 11 2008
 
   *  INSTALLATION
   *  RELEASE NOTES 
@@ -59,12 +59,10 @@ and look at the bashsupport help with
 
 
 =======================================================================================
-  RELEASE NOTES FOR VERSION 2.7.1
+  RELEASE NOTES FOR VERSION 2.8
 =======================================================================================
-+ Minor bugfix in the I/O-Redir-menu.
-+ I/O-Redir-menu shows redirectors (sort of help).
-+ I/O-Redir-menu: here-document item has a vmode.
-+ File name expansion for the first command line argument entered with <S-F9>.
++ New help menu: help reorganized, 3 new help hotkeys.
++ The help hotkeys now also work when Vim is run on the console.
 
 =======================================================================================
   OLDER RELEASE NOTES : see file 'ChangeLog'
