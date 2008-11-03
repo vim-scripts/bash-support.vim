@@ -8,15 +8,15 @@
 %%        Email:  mehner@fh-swf.de
 %%    Copyright:  Copyright (C)  2003-2008  Dr.-Ing. Fritz Mehner  (mehner@fh-swf.de)
 %%      Version:  see PluginVersion (below)
-%%     Revision:  $Id: bash-hot-keys.tex,v 1.11 2008/10/11 15:53:32 mehner Exp $
+%%     Revision:  $Id: bash-hot-keys.tex,v 1.12 2008/10/31 12:09:15 mehner Exp $
 %%      Created:  09.06.2003
 %%                
 %%        Notes:  
 %%                
 %%=====================================================================================
 
-\newcommand{\PluginVersion}{2.8}
-\newcommand{\ReleaseDate}{October 2008}
+\newcommand{\PluginVersion}{2.9}
+\newcommand{\ReleaseDate}{November 2008}
 
 \documentclass[oneside,12pt,a4paper,DIV18]{scrartcl}
 \usepackage[english]{babel}
@@ -156,15 +156,15 @@ All mappings also work for gVim.}\\
 \hline 
 \hline
 \multicolumn{2}{|r|}{\textsl{\textbf{R}un}} \\
-\hline \verb'\rr'  & update file, run script    \hfill (n, i)\\
-\hline \verb'\rc'  & update file, check syntax  \hfill (n, i)\\
-\hline \verb'\ra'  & set command line arguments \hfill (n, i)\\
-\hline \verb'\rd'  & start debugger             \hfill (n, i)\\
-\hline \verb'\re'  & make script executable     \hfill (n, i)\\
-\hline \verb'\rh'  & hardcopy buffer            \hfill (n, i, v)\\
-\hline \verb'\rs'  & settings and hotkeys       \hfill (n, i)\\
-\hline \verb'\rt'  & set xterm size             \hfill (n, i, GUI only)\\
-\hline \verb'\ro'  & change output destination  \hfill (n, i)\\
+\hline \verb'\rr'  & update file, run script    		\hfill (n, i, v$^+$)\\
+\hline \verb'\ra'  & set command line arguments 		\hfill (n, i)\\
+\hline \verb'\rc'  & update file, check syntax$^+$  \hfill (n, i)\\
+\hline \verb'\rd'  & start debugger$^+$             \hfill (n, i)\\
+\hline \verb'\re'  & make script executable$^+$     \hfill (n, i)\\
+\hline \verb'\rh'  & hardcopy buffer            		\hfill (n, i, v)\\
+\hline \verb'\rs'  & settings and hotkeys       		\hfill (n, i)\\
+\hline \verb'\rt'  & set xterm size$^+$             \hfill (n, i, GUI only)\\
+\hline \verb'\ro'  & change output destination  		\hfill (n, i)\\
 \hline
 \hline
 \multicolumn{2}{|r|}{\textsl{Menu(s)}}\\
@@ -173,6 +173,9 @@ All mappings also work for gVim.}\\
 \hline 
 \end{tabular} \\ [5.0ex]
 %%~~~~~ TABULAR :  end  ~~~~~~~~~~
-
+\vfill
+\begin{flushleft}
+\hspace{5mm}$^+$ \footnotesize{Linux/U**x only}
+\end{flushleft}
 \end{center}
 \end{document}

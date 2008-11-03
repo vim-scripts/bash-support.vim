@@ -1,4 +1,4 @@
-README for bash-support.vim (Version 2.8) / October 11 2008
+README for bash-support.vim (Version 2.9) / October 31 2008
 
   *  INSTALLATION
   *  RELEASE NOTES 
@@ -59,10 +59,11 @@ and look at the bashsupport help with
 
 
 =======================================================================================
-  RELEASE NOTES FOR VERSION 2.8
+  RELEASE NOTES FOR VERSION 2.9
 =======================================================================================
-+ New help menu: help reorganized, 3 new help hotkeys.
-+ The help hotkeys now also work when Vim is run on the console.
++ Can now be used under Windows, e.g. with win-bash (few restrictions).
++ Name completion when entering a builtin name.
++ Bugfix: help shows no selection when just 2 manuals are available.
 
 =======================================================================================
   OLDER RELEASE NOTES : see file 'ChangeLog'

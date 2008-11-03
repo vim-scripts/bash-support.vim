@@ -4,7 +4,7 @@
 "     Plugin :  bash-support.vim
 " Maintainer :  Fritz Mehner <mehner@fh-swf.de>
 "    Version :  2.8
-"   Revision :  $Id: sh.vim,v 1.17 2008/10/11 15:48:04 mehner Exp $
+"   Revision :  $Id: sh.vim,v 1.18 2008/10/31 10:52:48 mehner Exp $
 "
 " -----------------------------------------------------------------
 "
@@ -14,6 +14,8 @@ if exists("b:did_BASH_ftplugin")
   finish
 endif
 let b:did_BASH_ftplugin = 1
+"
+let	s:MSWIN =		has("win16") || has("win32") || has("win64") || has("win95")
 "
 " ---------- BASH dictionary -----------------------------------
 "
@@ -31,23 +33,27 @@ endif
 " Shift-F9   command line arguments
 "
 if has("gui_running")
-  "
-   map  <buffer>  <silent>  <S-F1>        :call BASH_HelpBASHsupport()<CR>
-  imap  <buffer>  <silent>  <S-F1>   <C-C>:call BASH_HelpBASHsupport()<CR>
-  "
-   map  <buffer>  <silent>  <A-F9>        :call BASH_SyntaxCheck()<CR><CR>
-  imap  <buffer>  <silent>  <A-F9>   <C-C>:call BASH_SyntaxCheck()<CR><CR>
-  "
-   map  <buffer>  <silent>  <C-F9>        :call BASH_Run("n")<CR>
-  vmap  <buffer>  <silent>  <C-F9>   <C-C>:call BASH_Run("v")<CR>
-  imap  <buffer>  <silent>  <C-F9>   <C-C>:call BASH_Run("n")<CR>
-  "
-  map   <buffer>  <silent>  <S-F9>        :call BASH_CmdLineArguments()<CR>
-  imap  <buffer>  <silent>  <S-F9>   <C-C>:call BASH_CmdLineArguments()<CR>
+	"
+	 map  <buffer>  <silent>  <S-F1>        :call BASH_HelpBASHsupport()<CR>
+	imap  <buffer>  <silent>  <S-F1>   <C-C>:call BASH_HelpBASHsupport()<CR>
+	"
+	 map  <buffer>  <silent>  <A-F9>        :call BASH_SyntaxCheck()<CR><CR>
+	imap  <buffer>  <silent>  <A-F9>   <C-C>:call BASH_SyntaxCheck()<CR><CR>
+	"
+	 map  <buffer>  <silent>  <C-F9>        :call BASH_Run("n")<CR>
+	imap  <buffer>  <silent>  <C-F9>   <C-C>:call BASH_Run("n")<CR>
+	if !s:MSWIN
+		vmap  <buffer>  <silent>  <C-F9>   <C-C>:call BASH_Run("v")<CR>
+	endif
+	"
+	map   <buffer>  <silent>  <S-F9>        :call BASH_CmdLineArguments()<CR>
+	imap  <buffer>  <silent>  <S-F9>   <C-C>:call BASH_CmdLineArguments()<CR>
 endif
-  "
- map  <buffer>  <silent>    <F9>        :call BASH_Debugger()<CR>:redraw!<CR>
-imap  <buffer>  <silent>    <F9>   <C-C>:call BASH_Debugger()<CR>:redraw!<CR>
+"
+if !s:MSWIN
+	 map  <buffer>  <silent>    <F9>        :call BASH_Debugger()<CR>:redraw!<CR>
+	imap  <buffer>  <silent>    <F9>   <C-C>:call BASH_Debugger()<CR>:redraw!<CR>
+endif
 "
 "
 " ---------- help ----------------------------------------------------
@@ -164,33 +170,42 @@ vnoremap    <buffer>  <silent>  <Leader>nw    <C-C>:call BASH_CodeSnippets("wv")
 "
 " ---------- run menu ----------------------------------------------------
 "
-if !has('win32')
+if !s:MSWIN
    map  <buffer>  <silent>  <Leader>re           :call BASH_MakeScriptExecutable()<CR>
   imap  <buffer>  <silent>  <Leader>re      <Esc>:call BASH_MakeScriptExecutable()<CR>
 endif
+
  map  <buffer>  <silent>  <Leader>rr           :call BASH_Run("n")<CR>
- map  <buffer>  <silent>  <Leader>rc           :call BASH_SyntaxCheck()<CR>
- map  <buffer>  <silent>  <Leader>ra           :call BASH_CmdLineArguments()<CR>
- map  <buffer>  <silent>  <Leader>rd           :call BASH_Debugger()<CR>:redraw!<CR>
- map  <buffer>  <silent>  <Leader>rs           :call BASH_Settings()<CR>
-
 imap  <buffer>  <silent>  <Leader>rr      <Esc>:call BASH_Run("n")<CR>
-imap  <buffer>  <silent>  <Leader>rc      <Esc>:call BASH_SyntaxCheck()<CR>
+ map  <buffer>  <silent>  <Leader>ra           :call BASH_CmdLineArguments()<CR>
 imap  <buffer>  <silent>  <Leader>ra      <Esc>:call BASH_CmdLineArguments()<CR>
-imap  <buffer>  <silent>  <Leader>rd      <Esc>:call BASH_Debugger()<CR>:redraw!<CR>
-imap  <buffer>  <silent>  <Leader>rs      <Esc>:call BASH_Settings()<CR>
 
-vmap  <buffer>  <silent>  <Leader>rr      <Esc>:call BASH_Run("v")<CR>
+if !s:MSWIN
+	 map  <buffer>  <silent>  <Leader>rc           :call BASH_SyntaxCheck()<CR>
+	imap  <buffer>  <silent>  <Leader>rc      <Esc>:call BASH_SyntaxCheck()<CR>
 
-if has("gui_running") && has("unix")
-   map  <buffer>  <silent>  <Leader>rt           :call BASH_XtermSize()<CR>
-  imap  <buffer>  <silent>  <Leader>rt      <Esc>:call BASH_XtermSize()<CR>
+	 map  <buffer>  <silent>  <Leader>rd           :call BASH_Debugger()<CR>:redraw!<CR>
+	imap  <buffer>  <silent>  <Leader>rd      <Esc>:call BASH_Debugger()<CR>:redraw!<CR>
+
+	vmap  <buffer>  <silent>  <Leader>rr      <Esc>:call BASH_Run("v")<CR>
+
+	if has("gui_running")
+		 map  <buffer>  <silent>  <Leader>rt           :call BASH_XtermSize()<CR>
+		imap  <buffer>  <silent>  <Leader>rt      <Esc>:call BASH_XtermSize()<CR>
+	endif
 endif
-
- map  <buffer>  <silent>  <Leader>ro           :call BASH_Toggle_Gvim_Xterm()<CR>
-imap  <buffer>  <silent>  <Leader>ro      <Esc>:call BASH_Toggle_Gvim_Xterm()<CR>
 
  map  <buffer>  <silent>  <Leader>rh           :call BASH_Hardcopy("n")<CR>
 imap  <buffer>  <silent>  <Leader>rh      <Esc>:call BASH_Hardcopy("n")<CR>
 vmap  <buffer>  <silent>  <Leader>rh      <Esc>:call BASH_Hardcopy("v")<CR>
 "
+ map  <buffer>  <silent>  <Leader>rs           :call BASH_Settings()<CR>
+imap  <buffer>  <silent>  <Leader>rs      <Esc>:call BASH_Settings()<CR>
+
+if s:MSWIN
+	 map  <buffer>  <silent>  <Leader>ro           :call BASH_Toggle_Gvim_Xterm_MS()<CR>
+	imap  <buffer>  <silent>  <Leader>ro      <Esc>:call BASH_Toggle_Gvim_Xterm_MS()<CR>
+else
+	 map  <buffer>  <silent>  <Leader>ro           :call BASH_Toggle_Gvim_Xterm()<CR>
+	imap  <buffer>  <silent>  <Leader>ro      <Esc>:call BASH_Toggle_Gvim_Xterm()<CR>
+endif

@@ -1,7 +1,7 @@
-*bashsupport.txt*                Bash Support                October 11 2008
+*bashsupport.txt*                Bash Support                 November 1 2008
 
 bash Support                                      *bash-support* *bashsupport*
-                             Plugin version 2.8
+                             Plugin version 2.9
                         for Vim version 7.0 and above
                        Fritz Mehner  <mehner@fh-swf.de>
 
@@ -48,7 +48,8 @@ writing shell scripts.
  5.1     Template files                          |bashsupport-tempfiles|
  5.2     Tags                                    |bashsupport-tags|
  6.     Bash dictionary                          |bashsupport-dictionary|
- 7.     Release Notes                            |bashsupport-release-notes|
+ 7.     Windows particularities                  |bashsupport-windows|
+ 8.     Release Notes                            |bashsupport-release-notes|
 
         How to add this help file to Vim's help  |add-local-help|
 
@@ -534,12 +535,14 @@ cursor you will be asked for the name of a builtin.
 
 Item 'manual (utilities)'
 -------------------------
-Display the manual for the word under the cursor. If there are more than one
+Display the manual for the word under the cursor. If there is more than one
 hit a list of possibilities will be displayed to choose from.
 
 If there is no word under the cursor you will be asked for the name of a
 command line utility. In this case the command completion is on while entering
 a name.
+An interface to the on-line reference manuals must be installed (usually
+man(1) for Linux/Unix, see|bashsupport-custom-variables|).
 
 Item 'bash-support'
 -------------------
@@ -713,18 +716,24 @@ g:BASH_Template_File           "bash-file-header"
 g:BASH_Template_Frame          "bash-frame"
 g:BASH_Template_Function       "bash-function-description"
 
-g:BASH_CodeSnippets            $HOME."/.vim/bash-support/codesnippets"
+g:BASH_CodeSnippets            $HOME.'/.vim/bash-support/codesnippets'     (Linux/U**X)
+                               $VIM.'\vimfiles\bash-support/codesnippets/' (Windows)
 g:BASH_LoadMenus               "yes"
 g:BASH_Dictionary_File         $HOME."/.vim/bash-support/wordlists/bash.list"
 g:BASH_Root                    'B&ash.'
 
 g:BASH_DoOnNewLine             'no'
-g:BASH_OutputGvim              "vim"
+g:BASH_OutputGvim              'vim'   (Linux/U**X)
+                               'xterm' (Windows)
 g:BASH_XtermDefaults           "-fa courier -fs 12 -geometry 80x24"
 g:BASH_LineEndCommColDefault   49
 g:BASH_SyntaxCheckOptionsGlob  ""
 g:BASH_Printheader             "%<%f%h%m%<  %=%{strftime('%x %X')}     Page %N"
 g:BASH_Debugger                "term"
+g:BASH_BASH                    $SHELL         (Linux/U**X)
+                               'win-bash.exe' (Windows)
+g:BASH_Man                     'man'          (Linux/U**X)
+                               'man.exe'      (Windows)
 
 --------------------------------------------------------------------------------
 
@@ -755,6 +764,8 @@ g:BASH_Debugger                "term"
           g:BASH_SyntaxCheckOptionsGlob : shopt options used with syntax checking
           g:BASH_Printheader            : hardcopy header format
           g:BASH_Debugger               : the debugger called by F9 (term, ddd).
+          g:BASH_BASH                   : the shell used
+          g:BASH_Man                    : the interface to the on-line manuals
           g:BASH_DoOnNewLine            : see |bashsupport-stat-norm-ins|
 
 To override the defaults add appropriate assignments in '.vimrc'.
@@ -926,9 +937,36 @@ of the first line (string concatenation) and the backslash in front of the
 second line (continuation line).
 You can use Vim's dictionary feature CTRL-X, CTRL-K (and CTRL-P, CTRL-N).
 
+==============================================================================
+7.  WINDOWS PARTICULARITIES                              *bashsupport-windows*
+==============================================================================
+
+The plugin should go into the directory structure below the local
+installation directory $HOME/.vim/ for LINUX/UNIX and $VIM/vimfiles/ for
+Windows. The values of the two variables can be found from inside Vim:
+   :echo $VIM
+or
+   :echo $HOME
+
+Configuration files:
+
+  LINUX/UNIX :   $HOME/.vimrc  and  $HOME/.gvimrc
+  Windows    :   $VIM/_vimrc   and  $VIM/_gvimrc
+
+A Bash shell is not a part of a Windows system and has to be installed in
+addition. This plugin assumes that the shell port win-bash.exe
+(http://win-bash.sourceforge.net/) and the command line utilities you want to
+use can be reached via your path variable.
+This shell can be changed to xyz-shell.exe by setting the following line into
+the file _vimrc:
+
+  let g:BASH_BASH    = 'xyz-shell.exe'
+
+The run-menu and the corresponding hotkeys are restricted. Please see 
+the document 'bash-hot-keys.pdf' for this restrictions.
 
 ==============================================================================
-7.  Release Notes                                  *bashsupport-release-notes*
+8.  Release Notes                                  *bashsupport-release-notes*
 ==============================================================================
 
 See file 'README.bashsupport'.

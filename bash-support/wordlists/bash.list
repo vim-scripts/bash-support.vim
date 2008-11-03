@@ -109,7 +109,6 @@ kill
 let arg
 local
 logout
-logout
 newgrp
 popd
 printf
