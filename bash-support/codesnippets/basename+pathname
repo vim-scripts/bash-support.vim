@@ -1,5 +1,5 @@
-dirname=${pathname%/*}
 basename=${pathname##*/}
+dirname=${pathname%/*}
 filename=${basename%%.*}
-extension=${basename##*.}
-extensions=${basename#*.}
+lastextension=${basename##*.}
+allextensions=${basename#*.}

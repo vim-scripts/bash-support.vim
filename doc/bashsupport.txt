@@ -1,7 +1,7 @@
-*bashsupport.txt*                Bash Support                 November 1 2008
+*bashsupport.txt*                Bash Support                 December 1 2008
 
 bash Support                                      *bash-support* *bashsupport*
-                             Plugin version 2.9
+                            Plugin version 2.9.1
                         for Vim version 7.0 and above
                        Fritz Mehner  <mehner@fh-swf.de>
 
@@ -638,6 +638,17 @@ Multiline inserts and code snippets will be indented after insertion.
 The hot keys are defined in the file type plugin 'sh.vim' (part of this
 bash-support plugin package).
 
+Changing the default map leader '\'
+-----------------------------------
+The map leader can be changed by the user by setting a global variable in the
+file .vimrc 
+
+ let g:BASH_MapLeader  = ','
+
+The map leader is now a comma. The 'line end comment' command is now defined
+as ',cl'. This setting will be used as a so called local leader and influences
+only files with filetype 'sh'.
+
 
 ==============================================================================
 3.  HOT KEYS                                             *bashsupport-hotkeys*
@@ -734,6 +745,7 @@ g:BASH_BASH                    $SHELL         (Linux/U**X)
                                'win-bash.exe' (Windows)
 g:BASH_Man                     'man'          (Linux/U**X)
                                'man.exe'      (Windows)
+g:BASH_MapLeader               '\'
 
 --------------------------------------------------------------------------------
 
@@ -767,6 +779,7 @@ g:BASH_Man                     'man'          (Linux/U**X)
           g:BASH_BASH                   : the shell used
           g:BASH_Man                    : the interface to the on-line manuals
           g:BASH_DoOnNewLine            : see |bashsupport-stat-norm-ins|
+          g:BASH_MapLeader              : the map leader for hotkeys (see|bashsupport-usage-vim|)
 
 To override the defaults add appropriate assignments in '.vimrc'.
 Here are my settings as an example:

@@ -1,4 +1,11 @@
 =======================================================================================
+  RELEASE NOTES FOR VERSION 2.9
+=======================================================================================
++ Can now be used under Windows, e.g. with win-bash (few restrictions).
++ Name completion when entering a builtin name.
++ Bugfix: help shows no selection when just 2 manuals are available.
+
+=======================================================================================
   RELEASE NOTES FOR VERSION 2.8
 =======================================================================================
 + New help menu: help reorganized, 3 new help hotkeys.
