@@ -1,4 +1,10 @@
 =======================================================================================
+  RELEASE NOTES FOR VERSION 2.9.1
+=======================================================================================
+- Map leader for hotkeys now user definable: new global variable g:BASH_MapLeader.
+- Bugfix: 'Statements->no. of elem.s' inserts wrong text.
+
+=======================================================================================
   RELEASE NOTES FOR VERSION 2.9
 =======================================================================================
 + Can now be used under Windows, e.g. with win-bash (few restrictions).

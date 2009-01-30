@@ -1,7 +1,7 @@
-*bashsupport.txt*                Bash Support                 December 1 2008
+*bashsupport.txt*                Bash Support                January 30 2009
 
 bash Support                                      *bash-support* *bashsupport*
-                            Plugin version 2.9.1
+                             Plugin version 2.10
                         for Vim version 7.0 and above
                        Fritz Mehner  <mehner@fh-swf.de>
 
@@ -48,8 +48,9 @@ writing shell scripts.
  5.1     Template files                          |bashsupport-tempfiles|
  5.2     Tags                                    |bashsupport-tags|
  6.     Bash dictionary                          |bashsupport-dictionary|
- 7.     Windows particularities                  |bashsupport-windows|
- 8.     Release Notes                            |bashsupport-release-notes|
+ 7.     Additional Mappings                      |bashsupport-ad-mappings|
+ 8.     Windows particularities                  |bashsupport-windows|
+ 9.     Release Notes                            |bashsupport-release-notes|
 
         How to add this help file to Vim's help  |add-local-help|
 
@@ -601,6 +602,7 @@ following character(s) will only be recognized for a short time.
   \sc     case in ... esac                (n, i)
   \sl     elif then                       (n, i)
   \sf     for in do done                  (n, i, v)
+  \sfo    for ((...)) do done             (n, i, v)
   \si     if then fi                      (n, i, v)
   \sie    if then else fi                 (n, i, v)
   \ss     select in do done               (n, i, v)
@@ -951,7 +953,23 @@ second line (continuation line).
 You can use Vim's dictionary feature CTRL-X, CTRL-K (and CTRL-P, CTRL-N).
 
 ==============================================================================
-7.  WINDOWS PARTICULARITIES                              *bashsupport-windows*
+7.  ADDITIONAL MAPPINGS                              *bashsupport-ad-mappings*
+==============================================================================
+
+There are a few additional filetype specific key mappings defined in
+'~/.vim/ftplugin/sh.vim',
+
+Put single quotes around a Word (non-whitespaces). This masks the normal mode
+command '' (jump to the position before the latest jump):
+
+ nnoremap		<buffer>	 ''		ciW''<Esc>P
+
+Put double quotes around a Word (non-whitespaces):
+
+ nnoremap		<buffer>	 ""		ciW""<Esc>P
+
+==============================================================================
+8.  WINDOWS PARTICULARITIES                              *bashsupport-windows*
 ==============================================================================
 
 The plugin should go into the directory structure below the local
@@ -979,7 +997,7 @@ The run-menu and the corresponding hotkeys are restricted. Please see
 the document 'bash-hot-keys.pdf' for this restrictions.
 
 ==============================================================================
-8.  Release Notes                                  *bashsupport-release-notes*
+9.  Release Notes                                  *bashsupport-release-notes*
 ==============================================================================
 
 See file 'README.bashsupport'.

@@ -3,8 +3,8 @@
 "   Language :  bash
 "     Plugin :  bash-support.vim
 " Maintainer :  Fritz Mehner <mehner@fh-swf.de>
-"    Version :  2.8
-"   Revision :  $Id: sh.vim,v 1.19 2008/11/19 19:22:31 mehner Exp $
+"    Version :  2.10
+"   Revision :  $Id: sh.vim,v 1.21 2009/01/30 14:23:10 mehner Exp $
 "
 " -----------------------------------------------------------------
 "
@@ -135,6 +135,10 @@ inoremap  <buffer>  <silent>  <LocalLeader>sl      <Esc>:call BASH_FlowControl( 
 inoremap  <buffer>  <silent>  <LocalLeader>sf      <Esc>:call BASH_FlowControl( "for _ in ",    "do",   "done",     "a" )<CR>i
 vnoremap  <buffer>  <silent>  <LocalLeader>sf      <Esc>:call BASH_FlowControl( "for _ in ",    "do",   "done",     "v" )<CR>
 
+ noremap  <buffer>  <silent>  <LocalLeader>sfo          :call BASH_FlowControl( "for (( COUNTER=0; COUNTER<_0; COUNTER++ ))",    "do",   "done",     "a" )<CR>
+inoremap  <buffer>  <silent>  <LocalLeader>sfo     <Esc>:call BASH_FlowControl( "for (( COUNTER=0; COUNTER<_0; COUNTER++ ))",    "do",   "done",     "a" )<CR>
+vnoremap  <buffer>  <silent>  <LocalLeader>sfo     <Esc>:call BASH_FlowControl( "for (( COUNTER=0; COUNTER<_0; COUNTER++ ))",    "do",   "done",     "v" )<CR>
+
  noremap  <buffer>  <silent>  <LocalLeader>si           :call BASH_FlowControl( "if _ ",        "then", "fi",       "a" )<CR>i
 inoremap  <buffer>  <silent>  <LocalLeader>si      <Esc>:call BASH_FlowControl( "if _ ",        "then", "fi",       "a" )<CR>i
 vnoremap  <buffer>  <silent>  <LocalLeader>si      <Esc>:call BASH_FlowControl( "if _ ",        "then", "fi",       "v" )<CR>
@@ -163,16 +167,16 @@ vnoremap  <buffer>  <silent>  <LocalLeader>sfu     <Esc>:call BASH_CodeFunction(
 inoremap  <buffer>  <silent>  <LocalLeader>se        echo<Space>-e<Space>"\n"<Esc>2hi
 vnoremap  <buffer>  <silent>  <LocalLeader>se       secho<Space>-e<Space>"\n"<Esc>2hP
 
- noremap  <buffer>  <silent>  <LocalLeader>sp      ^iprintf<Space>"\n"<Esc>2hi
-inoremap  <buffer>  <silent>  <LocalLeader>sp        printf<Space>"\n"<Esc>2hi
-vnoremap  <buffer>  <silent>  <LocalLeader>sp       sprintf<Space>"\n"<Esc>2hP
+ noremap  <buffer>  <silent>  <LocalLeader>sp      ^iprintf<Space>"%s\n"<Esc>2hi
+inoremap  <buffer>  <silent>  <LocalLeader>sp        printf<Space>"%s\n"<Esc>2hi
+vnoremap  <buffer>  <silent>  <LocalLeader>sp       sprintf<Space>"%s\n"<Esc>2hP
 "
 " ---------- snippet menu ----------------------------------------------------
 "
- noremap    <buffer>  <silent>  <LocalLeader>nr         :call BASH_CodeSnippets("r")<CR>
- noremap    <buffer>  <silent>  <LocalLeader>nw         :call BASH_CodeSnippets("w")<CR>
-vnoremap    <buffer>  <silent>  <LocalLeader>nw    <C-C>:call BASH_CodeSnippets("wv")<CR>
- noremap    <buffer>  <silent>  <LocalLeader>ne         :call BASH_CodeSnippets("e")<CR>
+ noremap  <buffer>  <silent>  <LocalLeader>nr         :call BASH_CodeSnippets("r")<CR>
+ noremap  <buffer>  <silent>  <LocalLeader>nw         :call BASH_CodeSnippets("w")<CR>
+vnoremap  <buffer>  <silent>  <LocalLeader>nw    <C-C>:call BASH_CodeSnippets("wv")<CR>
+ noremap  <buffer>  <silent>  <LocalLeader>ne         :call BASH_CodeSnippets("e")<CR>
 "
 " ---------- run menu ----------------------------------------------------
 "
@@ -215,3 +219,14 @@ else
 	 map  <buffer>  <silent>  <LocalLeader>ro           :call BASH_Toggle_Gvim_Xterm()<CR>
 	imap  <buffer>  <silent>  <LocalLeader>ro      <Esc>:call BASH_Toggle_Gvim_Xterm()<CR>
 endif
+
+"-------------------------------------------------------------------------------
+" additional mapping : single quotes around a Word (non-whitespaces)
+"                      masks the normal mode command '' (jump to the position
+"                      before the latest jump)
+" additional mapping : double quotes around a Word (non-whitespaces)
+" additional mapping : parentheses around a word (word characters)
+"-------------------------------------------------------------------------------
+nnoremap		<buffer>	 ''		ciW''<Esc>P
+nnoremap		<buffer>	 ""		ciW""<Esc>P
+"nnoremap		<buffer>	 {{ 	ciw{}<Esc>PF{

@@ -8,15 +8,15 @@
 %%        Email:  mehner@fh-swf.de
 %%    Copyright:  Copyright (C)  2003-2008  Dr.-Ing. Fritz Mehner  (mehner@fh-swf.de)
 %%      Version:  see PluginVersion (below)
-%%     Revision:  $Id: bash-hot-keys.tex,v 1.12 2008/10/31 12:09:15 mehner Exp $
+%%     Revision:  $Id: bash-hot-keys.tex,v 1.13 2009/01/13 20:54:25 mehner Exp $
 %%      Created:  09.06.2003
 %%                
 %%        Notes:  
 %%                
 %%=====================================================================================
 
-\newcommand{\PluginVersion}{2.9}
-\newcommand{\ReleaseDate}{November 2008}
+\newcommand{\PluginVersion}{2.10}
+\newcommand{\ReleaseDate}{January 2009}
 
 \documentclass[oneside,12pt,a4paper,DIV18]{scrartcl}
 \usepackage[english]{babel}
@@ -66,9 +66,9 @@
 \textbf{\textsc{\small{Vim-Plugin}}}\\
 \textbf{\large{bash-support.vim}}\\
 \textbf{\textsc{\small{Version \PluginVersion}}}\\
-\vspace{6mm}%
+\vspace{5mm}%
 \textbf{\textsc{\huge{Hot keys}}}\\ 
-\vspace{6mm}%
+\vspace{5mm}%
 \footnotesize{Key mappings for Vim without GUI.}\\
 \vspace{1mm}%
 \footnotesize{
@@ -79,7 +79,7 @@ All mappings also work for gVim.}\\
 \footnotesize{Plugin: http://vim.sourceforge.net}\\
 \footnotesize{Fritz Mehner (mehner@fh-swf.de)}\\
 \footnotesize{\ReleaseDate}\\
-\vspace{6.5mm}
+\vspace{3.5mm}
 \small
 %%======================================================================
 %%  table, left part
@@ -119,6 +119,7 @@ All mappings also work for gVim.}\\
 \hline \verb'\sc'  & \verb'case in ... esac'    \hfill (n, i) \\
 \hline \verb'\sl'  & \verb'elif then'           \hfill (n, i) \\
 \hline \verb'\sf'  & \verb'for in do done'      \hfill (n, i, v) \\
+\hline \verb'\sfo' & \verb'for ((...)) do done'      \hfill (n, i, v) \\
 \hline \verb'\si'  & \verb'if then fi'          \hfill (n, i, v) \\
 \hline \verb'\sie' & \verb'if then else fi'     \hfill (n, i, v) \\
 \hline \verb'\ss'  & \verb'select in do done'   \hfill (n, i, v) \\
