@@ -1,4 +1,4 @@
-README for bash-support.vim (Version 2.10) / January 29 2009
+README for bash-support.vim (Version 2.11) / Mai 18 2009
 
   *  INSTALLATION
   *  RELEASE NOTES 
@@ -59,13 +59,11 @@ and look at the bashsupport help with
 
 
 =======================================================================================
-  RELEASE NOTES FOR VERSION 2.10
+  RELEASE NOTES FOR VERSION 2.11
 =======================================================================================
-- new item in the Statements-menu: 'for ((...)) do done'.
-- new item in the Statements-menu: 'printf "%s"'.
-- new item in the Statements-menu: indirect parameter expansion ${!name}
-- Bugfix: unnecessary submenu beyond 'Environ'.
-- Bugfix: shopt menu had no insert mode.
++ Additions for Bash version 4.0.
++ Comments menu (\cj): adjustment of end-of-line comments improved.
++ Two submenus rearranged.
 
 =======================================================================================
   OLDER RELEASE NOTES : see file 'ChangeLog'

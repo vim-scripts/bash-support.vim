@@ -1,4 +1,13 @@
 =======================================================================================
+  RELEASE NOTES FOR VERSION 2.10
+=======================================================================================
+- new item in the Statements-menu: 'for ((...)) do done'.
+- new item in the Statements-menu: 'printf "%s"'.
+- new item in the Statements-menu: indirect parameter expansion ${!name}
+- Bugfix: unnecessary submenu beyond 'Environ'.
+- Bugfix: shopt menu had no insert mode.
+
+=======================================================================================
   RELEASE NOTES FOR VERSION 2.9.1
 =======================================================================================
 - Map leader for hotkeys now user definable: new global variable g:BASH_MapLeader.

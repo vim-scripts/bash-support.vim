@@ -1,7 +1,7 @@
-*bashsupport.txt*                Bash Support                January 30 2009
+*bashsupport.txt*                Bash Support                     Mai 18 2009
 
 bash Support                                      *bash-support* *bashsupport*
-                             Plugin version 2.10
+                             Plugin version 2.11
                         for Vim version 7.0 and above
                        Fritz Mehner  <mehner@fh-swf.de>
 
@@ -10,13 +10,13 @@ speed up writing code in a consistent style.  This is done by inserting
 complete statements, comments, idioms, and code snippets.  Syntax checking,
 running a script, starting a debugger  can be done with a keystroke.  There
 are many additional hints and options which can improve speed and comfort when
-writing shell scripts.
+writing shell scripts. This plugin can be used for Bash version 4.0.
 
  1.     Usage with GUI                           |bashsupport-usage-gvim|
  1.1     Menu 'Comments'                         |bashsupport-comments|
  1.1.1   Append aligned comments                 |bashsupport-aligned-comm|
- 1.1.2   Code to comment                         |bashsupport-code-to-comm|
- 1.1.3   Comment to code                         |bashsupport-comm-to-code|
+ 1.1.2   Adjust end-of-line comments             |bashsupport-comm-realign|
+ 1.1.3   Toggle comments                         |bashsupport-comm-toggle|
  1.1.4   Frame comments, file header, ...        |bashsupport-comm-templates|
  1.1.5   Comment/uncomment with echo             |bashsupport-comm-echo|
  1.1.6   KEYWORD + comment                       |bashsupport-comm-keywords|
@@ -105,39 +105,41 @@ because this position is most likely not the desired starting column.
 Your choice will be confirmed.
 
 
-1.1.2 CODE TO COMMENT                               *bashsupport-code-to-comm*
----------------------
+1.1.2 ADJUST END-OF-LINE COMMENTS                   *bashsupport-comm-realign*
+---------------------------------
+After some copy/paste/change actions comments may be misaligned:
 
-A marked block will be changed into
+ pathname=$(pwd)                    # the complete path
+ basename=${pathname##*/}                # the basename
+ dirname=${pathname%/*}                        # the pathname
 
- #x11=11;
- #x1111=1111;
- #
- #x11111111=11111111;
+Realignment can be achieved with the menu item 'adjust end-of-line com.' In
+normal mode the comment (if any) in the current line will be aligned to the
+end-of-line comment column (see above) if possible. In visual mode the
+comments in the marked block will be aligned:
 
-The menu entry works also for a single line. A single line needs not to be
-marked (normal mode).
+ pathname=$(pwd)                                # the complete path
+ basename=${pathname##*/}                       # the basename
+ dirname=${pathname%/*}                         # the pathname
 
-
-1.1.3 COMMENT TO CODE                               *bashsupport-comm-to-code*
----------------------
+1.1.3  TOGGLE COMMENTS                               *bashsupport-comm-toggle*
+----------------------
+The comment sign # can be set or removed at the beginning of the current line
+or for a marked block.  A single line needs not to be marked (normal mode).
 
 A marked block
 
- #x11=11;
- x1111=1111;
+ pathname=$(pwd)                                # the complete path
+ basename=${pathname##*/}                       # the basename
+ dirname=${pathname%/*}                         # the pathname
 
- #x11111111=11111111;
+will be changed into (and vice versa)
 
-will be changed into
+ #pathname=$(pwd)                                # the complete path
+ #basename=${pathname##*/}                       # the basename
+ #dirname=${pathname%/*}                         # the pathname
 
- x11=11;
- x1111=1111;
-
- x11111111=11111111;
-
-The menu entry works also for a single line. A single line needs not to be
-marked (normal mode).
+Whitespaces in front of the hash sign will be preserved. 
 
 
 1.1.4 FRAME COMMENTS, FILE HEADER, ...            *bashsupport-comm-templates*
@@ -962,11 +964,11 @@ There are a few additional filetype specific key mappings defined in
 Put single quotes around a Word (non-whitespaces). This masks the normal mode
 command '' (jump to the position before the latest jump):
 
- nnoremap		<buffer>	 ''		ciW''<Esc>P
+ nnoremap   <buffer>   ''   ciW''<Esc>P
 
 Put double quotes around a Word (non-whitespaces):
 
- nnoremap		<buffer>	 ""		ciW""<Esc>P
+ nnoremap   <buffer>   ""   ciW""<Esc>P
 
 ==============================================================================
 8.  WINDOWS PARTICULARITIES                              *bashsupport-windows*
