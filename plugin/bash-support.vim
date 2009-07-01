@@ -29,7 +29,7 @@
 "                  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 "                  PURPOSE.
 "                  See the GNU General Public License version 2 for more details.
-"       Revision:  $Id: bash-support.vim,v 1.37 2009/05/18 13:16:29 mehner Exp $
+"       Revision:  $Id: bash-support.vim,v 1.41 2009/06/11 18:16:29 mehner Exp $
 "
 "------------------------------------------------------------------------------
 "
@@ -38,7 +38,7 @@
 if exists("g:BASH_Version") || &cp
  finish
 endif
-let g:BASH_Version= "2.11"  						" version number of this script; do not change
+let g:BASH_Version= "2.12"  						" version number of this script; do not change
 "
 if v:version < 700
   echohl WarningMsg | echo 'plugin bash-support.vim needs Vim version >= 7'| echohl None
@@ -109,6 +109,7 @@ let s:BASH_Template_File           = 'bash-file-header'
 let s:BASH_Template_Frame          = 'bash-frame'
 let s:BASH_Template_Function       = 'bash-function-description'
 let s:BASH_XtermDefaults           = '-fa courier -fs 12 -geometry 80x24'
+let s:BASH_GuiSnippetBrowser       = 'gui'										" gui / commandline
 let s:BASH_Printheader             = "%<%f%h%m%<  %=%{strftime('%x %X')}     Page %N"
 let s:BASH_Wrapper                 = s:plugin_dir.'bash-support/scripts/wrapper.sh'
 "
@@ -168,6 +169,7 @@ call BASH_CheckGlobal("BASH_Email                 ")
 call BASH_CheckGlobal("BASH_FormatDate            ")
 call BASH_CheckGlobal("BASH_FormatTime            ")
 call BASH_CheckGlobal("BASH_FormatYear            ")
+call BASH_CheckGlobal('BASH_GuiSnippetBrowser      ')
 call BASH_CheckGlobal("BASH_LineEndCommColDefault ")
 call BASH_CheckGlobal("BASH_LoadMenus             ")
 call BASH_CheckGlobal("BASH_Man                   ")
@@ -215,43 +217,43 @@ function!	BASH_InitMenu ()
 	"-------------------------------------------------------------------------------
 	"----- menu Comments   {{{2
 	"-------------------------------------------------------------------------------
-	exe " menu           ".s:BASH_Root.'&Comments.end-of-&line\ comment                    :call BASH_LineEndComment()<CR>A'
-	exe "imenu           ".s:BASH_Root.'&Comments.end-of-&line\ comment               <Esc>:call BASH_LineEndComment()<CR>A'
-	exe "vmenu <silent>  ".s:BASH_Root.'&Comments.end-of-&line\ comment               <Esc>:call BASH_MultiLineEndComments()<CR>A'
+	exe " menu           ".s:BASH_Root.'&Comments.end-of-&line\ comment<Tab>\\cl                    :call BASH_LineEndComment()<CR>A'
+	exe "imenu           ".s:BASH_Root.'&Comments.end-of-&line\ comment<Tab>\\cl               <Esc>:call BASH_LineEndComment()<CR>A'
+	exe "vmenu <silent>  ".s:BASH_Root.'&Comments.end-of-&line\ comment<Tab>\\cl               <Esc>:call BASH_MultiLineEndComments()<CR>A'
 
-	exe " menu <silent>  ".s:BASH_Root.'&Comments.ad&just\ end-of-line\ com\.              :call BASH_AdjustLineEndComm("a")<CR>'
-	exe "imenu <silent>  ".s:BASH_Root.'&Comments.ad&just\ end-of-line\ com\.         <Esc>:call BASH_AdjustLineEndComm("a")<CR>'
-	exe "vmenu <silent>  ".s:BASH_Root.'&Comments.ad&just\ end-of-line\ com\.         <Esc>:call BASH_AdjustLineEndComm("v")<CR>'
+	exe " menu <silent>  ".s:BASH_Root.'&Comments.ad&just\ end-of-line\ com\.<Tab>\\cj              :call BASH_AdjustLineEndComm("a")<CR>'
+	exe "imenu <silent>  ".s:BASH_Root.'&Comments.ad&just\ end-of-line\ com\.<Tab>\\cj         <Esc>:call BASH_AdjustLineEndComm("a")<CR>'
+	exe "vmenu <silent>  ".s:BASH_Root.'&Comments.ad&just\ end-of-line\ com\.<Tab>\\cj         <Esc>:call BASH_AdjustLineEndComm("v")<CR>'
 
-	exe " menu <silent>  ".s:BASH_Root.'&Comments.&set\ end-of-line\ com\.\ col\.          :call BASH_GetLineEndCommCol()<CR>'
-	exe "imenu <silent>  ".s:BASH_Root.'&Comments.&set\ end-of-line\ com\.\ col\.     <Esc>:call BASH_GetLineEndCommCol()<CR>'
+	exe " menu <silent>  ".s:BASH_Root.'&Comments.&set\ end-of-line\ com\.\ col\.<Tab>\\cs          :call BASH_GetLineEndCommCol()<CR>'
+	exe "imenu <silent>  ".s:BASH_Root.'&Comments.&set\ end-of-line\ com\.\ col\.<Tab>\\cs     <Esc>:call BASH_GetLineEndCommCol()<CR>'
 
-	exe " menu <silent>  ".s:BASH_Root.'&Comments.&frame\ comment                          :call BASH_CommentTemplates("frame")<CR>'
-	exe " menu <silent>  ".s:BASH_Root.'&Comments.f&unction\ description                   :call BASH_CommentTemplates("function")<CR>'
-	exe " menu <silent>  ".s:BASH_Root.'&Comments.file\ &header                            :call BASH_CommentTemplates("header")<CR>'
-
-	exe "imenu <silent>  ".s:BASH_Root.'&Comments.&frame\ comment                     <Esc>:call BASH_CommentTemplates("frame")<CR>'
-	exe "imenu <silent>  ".s:BASH_Root.'&Comments.f&unction\ description              <Esc>:call BASH_CommentTemplates("function")<CR>'
-	exe "imenu <silent>  ".s:BASH_Root.'&Comments.file\ &header                       <Esc>:call BASH_CommentTemplates("header")<CR>'
+	exe " menu <silent>  ".s:BASH_Root.'&Comments.&frame\ comment<Tab>\\cfr                         :call BASH_CommentTemplates("frame")<CR>'
+	exe "imenu <silent>  ".s:BASH_Root.'&Comments.&frame\ comment<Tab>\\cfr                    <Esc>:call BASH_CommentTemplates("frame")<CR>'
+	exe " menu <silent>  ".s:BASH_Root.'&Comments.f&unction\ description<Tab>\\cfu                  :call BASH_CommentTemplates("function")<CR>'
+	exe "imenu <silent>  ".s:BASH_Root.'&Comments.f&unction\ description<Tab>\\cfu             <Esc>:call BASH_CommentTemplates("function")<CR>'
+	exe " menu <silent>  ".s:BASH_Root.'&Comments.file\ &header<Tab>\\ch                            :call BASH_CommentTemplates("header")<CR>'
+	exe "imenu <silent>  ".s:BASH_Root.'&Comments.file\ &header<Tab>\\ch                       <Esc>:call BASH_CommentTemplates("header")<CR>'
 
 	exe "amenu ".s:BASH_Root.'&Comments.-Sep1-                    :'
-	exe " menu <silent>  ".s:BASH_Root."&Comments.toggle\\ &comment         :call BASH_CommentToggle()<CR>j"
-	exe "imenu <silent>  ".s:BASH_Root."&Comments.toggle\\ &comment    <Esc>:call BASH_CommentToggle()<CR>j"
-	exe "vmenu <silent>  ".s:BASH_Root."&Comments.toggle\\ &comment    <Esc>:'<,'>call BASH_CommentToggle()<CR>j"
+	exe " menu <silent>  ".s:BASH_Root."&Comments.toggle\\ &comment<Tab>\\\\cc              :call BASH_CommentToggle()<CR>j"
+	exe "imenu <silent>  ".s:BASH_Root."&Comments.toggle\\ &comment<Tab>\\\\cc         <Esc>:call BASH_CommentToggle()<CR>j"
+	exe "vmenu <silent>  ".s:BASH_Root."&Comments.toggle\\ &comment<Tab>\\\\cc    <Esc>:'<,'>call BASH_CommentToggle()<CR>j"
 	exe "amenu ".s:BASH_Root.'&Comments.-SEP2-                    :'
-	exe " menu ".s:BASH_Root.'&Comments.&date                     a<C-R>=BASH_InsertDateAndTime("d")<CR>'
-	exe "imenu ".s:BASH_Root.'&Comments.&date                      <C-R>=BASH_InsertDateAndTime("d")<CR>'
-	exe "vmenu ".s:BASH_Root.'&Comments.&date                     s<C-R>=BASH_InsertDateAndTime("d")<CR>'
-	exe " menu ".s:BASH_Root.'&Comments.date\ &time               a<C-R>=BASH_InsertDateAndTime("dt")<CR>'
-	exe "imenu ".s:BASH_Root.'&Comments.date\ &time                <C-R>=BASH_InsertDateAndTime("dt")<CR>'
-	exe "vmenu ".s:BASH_Root.'&Comments.date\ &time               s<C-R>=BASH_InsertDateAndTime("dt")<CR>'
+
+	exe " menu ".s:BASH_Root.'&Comments.&date<Tab>\\cd                     a<C-R>=BASH_InsertDateAndTime("d")<CR>'
+	exe "imenu ".s:BASH_Root.'&Comments.&date<Tab>\\cd                      <C-R>=BASH_InsertDateAndTime("d")<CR>'
+	exe "vmenu ".s:BASH_Root.'&Comments.&date<Tab>\\cd                     s<C-R>=BASH_InsertDateAndTime("d")<CR>'
+	exe " menu ".s:BASH_Root.'&Comments.date\ &time<Tab>\\ct               a<C-R>=BASH_InsertDateAndTime("dt")<CR>'
+	exe "imenu ".s:BASH_Root.'&Comments.date\ &time<Tab>\\ct                <C-R>=BASH_InsertDateAndTime("dt")<CR>'
+	exe "vmenu ".s:BASH_Root.'&Comments.date\ &time<Tab>\\ct               s<C-R>=BASH_InsertDateAndTime("dt")<CR>'
 	"
 	exe "amenu ".s:BASH_Root.'&Comments.-SEP3-                    :'
 	"
-	exe " noremenu ".s:BASH_Root.'&Comments.&echo\ "<line>"	  			 ^iecho<Space>"<End>"<Esc>j'
-	exe " noremenu ".s:BASH_Root.'&Comments.&remove\ echo            0:s/^\s*echo\s\+\"// \| s/\s*\"\s*$// \| :normal ==<CR>j'
-	exe "inoremenu ".s:BASH_Root.'&Comments.&echo\ "<line>"	  	<C-C>^iecho<Space>"<End>"<Esc>j'
-	exe "inoremenu ".s:BASH_Root.'&Comments.&remove\ echo       <C-C>0:s/^\s*echo\s\+\"// \| s/\s*\"\s*$// \| :normal ==<CR>j'
+	exe " noremenu ".s:BASH_Root.'&Comments.&echo\ "<line>"<Tab>\\ce	  			 ^iecho<Space>"<End>"<Esc>j'
+	exe "inoremenu ".s:BASH_Root.'&Comments.&echo\ "<line>"<Tab>\\ce	  	<C-C>^iecho<Space>"<End>"<Esc>j'
+	exe " noremenu ".s:BASH_Root.'&Comments.&remove\ echo<Tab>\\cr            0:s/^\s*echo\s\+\"// \| s/\s*\"\s*$// \| :normal ==<CR>j'
+	exe "inoremenu ".s:BASH_Root.'&Comments.&remove\ echo<Tab>\\cr       <C-C>0:s/^\s*echo\s\+\"// \| s/\s*\"\s*$// \| :normal ==<CR>j'
 	"
 	exe "amenu ".s:BASH_Root.'&Comments.-SEP4-                    :'
 	"
@@ -262,17 +264,17 @@ function!	BASH_InitMenu ()
 		exe "amenu ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:.-Sep1-                :'
 	endif
 	"
-	exe " menu ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:.&BUG                   $:call BASH_CommentClassified("BUG")     <CR>kgJA'
-	exe " menu ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:.&TODO                  $:call BASH_CommentClassified("TODO")    <CR>kgJA'
-	exe " menu ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:.T&RICKY                $:call BASH_CommentClassified("TRICKY")  <CR>kgJA'
-	exe " menu ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:.&WARNING               $:call BASH_CommentClassified("WARNING") <CR>kgJA'
-	exe " menu ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:.&new\ keyword          $:call BASH_CommentClassified("")        <CR>kgJf:a'
+	exe " menu ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:.&BUG<Tab>\\ckb                $:call BASH_CommentClassified("BUG")     <CR>kgJA'
+	exe " menu ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:.&TODO<Tab>\\ckt               $:call BASH_CommentClassified("TODO")    <CR>kgJA'
+	exe " menu ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:.T&RICKY<Tab>\\ckr             $:call BASH_CommentClassified("TRICKY")  <CR>kgJA'
+	exe " menu ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:.&WARNING<Tab>\\ckw            $:call BASH_CommentClassified("WARNING") <CR>kgJA'
+	exe " menu ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:.&new\ keyword<Tab>\\ckn       $:call BASH_CommentClassified("")        <CR>kgJf:a'
 	"
-	exe "imenu ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:.&BUG              <C-C>$:call BASH_CommentClassified("BUG")     <CR>kgJA'
-	exe "imenu ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:.&TODO             <C-C>$:call BASH_CommentClassified("TODO")    <CR>kgJA'
-	exe "imenu ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:.T&RICKY           <C-C>$:call BASH_CommentClassified("TRICKY")  <CR>kgJA'
-	exe "imenu ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:.&WARNING          <C-C>$:call BASH_CommentClassified("WARNING") <CR>kgJA'
-	exe "imenu ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:.&new\ keyword     <C-C>$:call BASH_CommentClassified("")        <CR>kgJf:a'
+	exe "imenu ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:.&BUG<Tab>\\ckb           <C-C>$:call BASH_CommentClassified("BUG")     <CR>kgJA'
+	exe "imenu ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:.&TODO<Tab>\\ckt          <C-C>$:call BASH_CommentClassified("TODO")    <CR>kgJA'
+	exe "imenu ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:.T&RICKY<Tab>\\ckr        <C-C>$:call BASH_CommentClassified("TRICKY")  <CR>kgJA'
+	exe "imenu ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:.&WARNING<Tab>\\ckw       <C-C>$:call BASH_CommentClassified("WARNING") <CR>kgJA'
+	exe "imenu ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:.&new\ keyword<Tab>\\ckn  <C-C>$:call BASH_CommentClassified("")        <CR>kgJf:a'
 	"
 	"----- Submenu : BASH-Comments : Tags  ----------------------------------------------------------
 	"
@@ -295,59 +297,59 @@ function!	BASH_InitMenu ()
 	exe "imenu  ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&EMAIL            <Esc>a'.s:BASH_Email
 	exe "imenu  ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&PROJECT          <Esc>a'.s:BASH_Project
 	"
-	exe " menu ".s:BASH_Root.'&Comments.&vim\ modeline               :call BASH_CommentVimModeline()<CR>'
-	exe "imenu ".s:BASH_Root.'&Comments.&vim\ modeline          <Esc>:call BASH_CommentVimModeline()<CR>'
+	exe " menu ".s:BASH_Root.'&Comments.&vim\ modeline<Tab>\\cv               :call BASH_CommentVimModeline()<CR>'
+	exe "imenu ".s:BASH_Root.'&Comments.&vim\ modeline<Tab>\\cv          <Esc>:call BASH_CommentVimModeline()<CR>'
 	"
 	"-------------------------------------------------------------------------------
 	"----- menu Statements   {{{2
 	"-------------------------------------------------------------------------------
 
-	exe "anoremenu ".s:BASH_Root.'&Statements.&case			     ocase  in<CR>)<CR>;;<CR><CR>)<CR>;;<CR><CR>*)<CR>;;<CR><CR>esac    # --- end of case ---<CR><Esc>11kf<Space>a'
-	exe "anoremenu ".s:BASH_Root.'&Statements.e&lif										:call BASH_FlowControl( "elif _ ",        "then", "",       "a" )<CR>i'
-	exe "anoremenu ".s:BASH_Root.'&Statements.&for\ in       					:call BASH_FlowControl( "for _ in ",    "do",   "done",     "a" )<CR>i'
-	exe "anoremenu ".s:BASH_Root.'&Statements.for\ ((\.\.\.))\ (&1)		:call BASH_FlowControl( "for (( COUNTER=0; COUNTER<_0; COUNTER++ ))",    "do",   "done",     "a" )<CR>i'
-	exe "anoremenu ".s:BASH_Root.'&Statements.&if											:call BASH_FlowControl( "if _ ",        "then", "fi",       "a" )<CR>i'
-	exe "anoremenu ".s:BASH_Root.'&Statements.if-&else								:call BASH_FlowControl( "if _ ",        "then", "else\nfi", "a" )<CR>i'
-	exe "anoremenu ".s:BASH_Root.'&Statements.&select									:call BASH_FlowControl( "select _ in ", "do",   "done",     "a" )<CR>i'
-	exe "anoremenu ".s:BASH_Root.'&Statements.un&til									:call BASH_FlowControl( "until _ ",     "do",   "done",     "a" )<CR>i'
-	exe "anoremenu ".s:BASH_Root.'&Statements.&while									:call BASH_FlowControl( "while _ ",     "do",   "done",     "a" )<CR>i'
+	exe "anoremenu ".s:BASH_Root.'&Statements.&case<Tab>\\sc	     ocase  in<CR>)<CR>;;<CR><CR>)<CR>;;<CR><CR>*)<CR>;;<CR><CR>esac    # --- end of case ---<CR><Esc>11kf<Space>a'
+	exe "anoremenu ".s:BASH_Root.'&Statements.e&lif<Tab>\\sl							:call BASH_FlowControl( "elif _ ",        "then", "",       "a" )<CR>i'
+	exe "anoremenu ".s:BASH_Root.'&Statements.&for\ in<Tab>\\sf						:call BASH_FlowControl( "for _ in ",    "do",   "done",     "a" )<CR>i'
+	exe "anoremenu ".s:BASH_Root.'&Statements.&for\ ((\.\.\.))<Tab>\\sfo	:call BASH_FlowControl( "for (( COUNTER=0; COUNTER<_0; COUNTER++ ))",    "do",   "done",     "a" )<CR>i'
+	exe "anoremenu ".s:BASH_Root.'&Statements.&if<Tab>\\si								:call BASH_FlowControl( "if _ ",        "then", "fi",       "a" )<CR>i'
+	exe "anoremenu ".s:BASH_Root.'&Statements.if-&else<Tab>\\sie					:call BASH_FlowControl( "if _ ",        "then", "else\nfi", "a" )<CR>i'
+	exe "anoremenu ".s:BASH_Root.'&Statements.&select<Tab>\\ss						:call BASH_FlowControl( "select _ in ", "do",   "done",     "a" )<CR>i'
+	exe "anoremenu ".s:BASH_Root.'&Statements.un&til<Tab>\\st							:call BASH_FlowControl( "until _ ",     "do",   "done",     "a" )<CR>i'
+	exe "anoremenu ".s:BASH_Root.'&Statements.&while<Tab>\\sw							:call BASH_FlowControl( "while _ ",     "do",   "done",     "a" )<CR>i'
 
-	exe "inoremenu ".s:BASH_Root.'&Statements.&for\ in								<Esc>:call BASH_FlowControl( "for _ in ",    "do",   "done",     "a" )<CR>i'
-	exe "inoremenu ".s:BASH_Root.'&Statements.for\ ((\.\.\.))\ (&1)		<Esc>:call BASH_FlowControl( "for (( COUNTER=0; COUNTER<_0; COUNTER++ ))",    "do",   "done",     "a" )<CR>i'
-	exe "inoremenu ".s:BASH_Root.'&Statements.&if											<Esc>:call BASH_FlowControl( "if _ ",        "then", "fi",       "a" )<CR>i'
-	exe "inoremenu ".s:BASH_Root.'&Statements.e&lif										<Esc>:call BASH_FlowControl( "elif _ ",        "then", "",       "a" )<CR>i'
-	exe "inoremenu ".s:BASH_Root.'&Statements.if-&else								<Esc>:call BASH_FlowControl( "if _ ",        "then", "else\nfi", "a" )<CR>i'
-	exe "inoremenu ".s:BASH_Root.'&Statements.&select									<Esc>:call BASH_FlowControl( "select _ in ", "do",   "done",     "a" )<CR>i'
-	exe "inoremenu ".s:BASH_Root.'&Statements.un&til									<Esc>:call BASH_FlowControl( "until _ ",     "do",   "done",     "a" )<CR>i'
-	exe "inoremenu ".s:BASH_Root.'&Statements.&while		<Esc>:call BASH_FlowControl( "while _ ",     "do",   "done",     "a" )<CR>i'
+	exe "inoremenu ".s:BASH_Root.'&Statements.e&lif<Tab>\\sl							<Esc>:call BASH_FlowControl( "elif _ ",        "then", "",       "a" )<CR>i'
+	exe "inoremenu ".s:BASH_Root.'&Statements.&for\ in<Tab>\\sf						<Esc>:call BASH_FlowControl( "for _ in ",    "do",   "done",     "a" )<CR>i'
+	exe "inoremenu ".s:BASH_Root.'&Statements.&for\ ((\.\.\.))<Tab>\\sfo	<Esc>:call BASH_FlowControl( "for (( COUNTER=0; COUNTER<_0; COUNTER++ ))",    "do",   "done",     "a" )<CR>i'
+	exe "inoremenu ".s:BASH_Root.'&Statements.&if<Tab>\\si								<Esc>:call BASH_FlowControl( "if _ ",        "then", "fi",       "a" )<CR>i'
+	exe "inoremenu ".s:BASH_Root.'&Statements.if-&else<Tab>\\sie					<Esc>:call BASH_FlowControl( "if _ ",        "then", "else\nfi", "a" )<CR>i'
+	exe "inoremenu ".s:BASH_Root.'&Statements.&select<Tab>\\ss						<Esc>:call BASH_FlowControl( "select _ in ", "do",   "done",     "a" )<CR>i'
+	exe "inoremenu ".s:BASH_Root.'&Statements.un&til<Tab>\\su							<Esc>:call BASH_FlowControl( "until _ ",     "do",   "done",     "a" )<CR>i'
+	exe "inoremenu ".s:BASH_Root.'&Statements.&while<Tab>\\sw							<Esc>:call BASH_FlowControl( "while _ ",     "do",   "done",     "a" )<CR>i'
 
-	exe "vnoremenu ".s:BASH_Root.'&Statements.&for\ in								<Esc>:call BASH_FlowControl( "for _ in ",    "do",   "done",     "v" )<CR>'
-	exe "vnoremenu ".s:BASH_Root.'&Statements.for\ ((\.\.\.))\ (&1)		<Esc>:call BASH_FlowControl( "for (( COUNTER=0; COUNTER<_0; COUNTER++ ))",    "do",   "done",     "v" )<CR>i'
-	exe "vnoremenu ".s:BASH_Root.'&Statements.&if											<Esc>:call BASH_FlowControl( "if _ ",        "then", "fi",       "v" )<CR>'
-	exe "vnoremenu ".s:BASH_Root.'&Statements.if-&else								<Esc>:call BASH_FlowControl( "if _ ",        "then", "else\nfi", "v" )<CR>'
-	exe "vnoremenu ".s:BASH_Root.'&Statements.&select									<Esc>:call BASH_FlowControl( "select _ in ", "do",   "done",     "v" )<CR>'
-	exe "vnoremenu ".s:BASH_Root.'&Statements.un&til									<Esc>:call BASH_FlowControl( "until _ ",     "do",   "done",     "v" )<CR>'
-	exe "vnoremenu ".s:BASH_Root.'&Statements.&while									<Esc>:call BASH_FlowControl( "while _ ",     "do",   "done",     "v" )<CR>'
+	exe "vnoremenu ".s:BASH_Root.'&Statements.&for\ in<Tab>\\sf						<Esc>:call BASH_FlowControl( "for _ in ",    "do",   "done",     "v" )<CR>'
+	exe "vnoremenu ".s:BASH_Root.'&Statements.&for\ ((\.\.\.))<Tab>\\sfo	<Esc>:call BASH_FlowControl( "for (( COUNTER=0; COUNTER<_0; COUNTER++ ))",    "do",   "done",     "v" )<CR>i'
+	exe "vnoremenu ".s:BASH_Root.'&Statements.&if<Tab>\\si								<Esc>:call BASH_FlowControl( "if _ ",        "then", "fi",       "v" )<CR>'
+	exe "vnoremenu ".s:BASH_Root.'&Statements.if-&else<Tab>\\sie					<Esc>:call BASH_FlowControl( "if _ ",        "then", "else\nfi", "v" )<CR>'
+	exe "vnoremenu ".s:BASH_Root.'&Statements.&select<Tab>\\ss						<Esc>:call BASH_FlowControl( "select _ in ", "do",   "done",     "v" )<CR>'
+	exe "vnoremenu ".s:BASH_Root.'&Statements.un&til<Tab>\\su							<Esc>:call BASH_FlowControl( "until _ ",     "do",   "done",     "v" )<CR>'
+	exe "vnoremenu ".s:BASH_Root.'&Statements.&while<Tab>\\sw							<Esc>:call BASH_FlowControl( "while _ ",     "do",   "done",     "v" )<CR>'
 	"
 	exe "anoremenu ".s:BASH_Root.'&Statements.-SEP3-          :'
 
-	exe "anoremenu ".s:BASH_Root.'&Statements.&break					     obreak '
-	exe "anoremenu ".s:BASH_Root.'&Statements.co&ntinue				     ocontinue '
-	exe "anoremenu ".s:BASH_Root.'&Statements.e&xit						     oexit '
-	exe "anoremenu ".s:BASH_Root.'&Statements.f&unction				     :call BASH_CodeFunction("a")<CR>O'
-	exe "anoremenu ".s:BASH_Root.'&Statements.&return					     oreturn '
-	exe "anoremenu ".s:BASH_Root.'&Statements.s&hift					     oshift '
-	exe "anoremenu ".s:BASH_Root.'&Statements.&trap						     otrap '
+	exe "anoremenu ".s:BASH_Root.'&Statements.&break										obreak '
+	exe "anoremenu ".s:BASH_Root.'&Statements.co&ntinue									ocontinue '
+	exe "anoremenu ".s:BASH_Root.'&Statements.e&xit											oexit '
+	exe "anoremenu ".s:BASH_Root.'&Statements.f&unction<Tab>\\sfu 			:call BASH_CodeFunction("a")<CR>O'
+	exe "anoremenu ".s:BASH_Root.'&Statements.&return										oreturn '
+	exe "anoremenu ".s:BASH_Root.'&Statements.s&hift										oshift '
+	exe "anoremenu ".s:BASH_Root.'&Statements.&trap											otrap '
 	"
-	exe "inoremenu ".s:BASH_Root.'&Statements.&break					<Esc>obreak '
-	exe "inoremenu ".s:BASH_Root.'&Statements.co&ntinue				<Esc>ocontinue '
-	exe "inoremenu ".s:BASH_Root.'&Statements.e&xit						<Esc>oexit '
-	exe "inoremenu ".s:BASH_Root.'&Statements.f&unction				<Esc>:call BASH_CodeFunction("a")<CR>O'
-	exe "inoremenu ".s:BASH_Root.'&Statements.&return					<Esc>oreturn '
-	exe "inoremenu ".s:BASH_Root.'&Statements.s&hift					<Esc>oshift '
-	exe "inoremenu ".s:BASH_Root.'&Statements.&trap						<Esc>otrap '
+	exe "inoremenu ".s:BASH_Root.'&Statements.&break								<Esc>obreak '
+	exe "inoremenu ".s:BASH_Root.'&Statements.co&ntinue							<Esc>ocontinue '
+	exe "inoremenu ".s:BASH_Root.'&Statements.e&xit									<Esc>oexit '
+	exe "inoremenu ".s:BASH_Root.'&Statements.f&unction<Tab>\\sfu		<Esc>:call BASH_CodeFunction("a")<CR>O'
+	exe "vnoremenu ".s:BASH_Root.'&Statements.f&unction<Tab>\\sfu		<Esc>:call BASH_CodeFunction("v")<CR>'
+	exe "inoremenu ".s:BASH_Root.'&Statements.&return								<Esc>oreturn '
+	exe "inoremenu ".s:BASH_Root.'&Statements.s&hift								<Esc>oshift '
+	exe "inoremenu ".s:BASH_Root.'&Statements.&trap									<Esc>otrap '
 	"
-	exe "vnoremenu ".s:BASH_Root.'&Statements.f&unction				<Esc>:call BASH_CodeFunction("v")<CR>'
 	"
 	exe "anoremenu ".s:BASH_Root.'&Statements.-SEP1-          :'
 
@@ -362,17 +364,13 @@ function!	BASH_InitMenu ()
 	exe " noremenu ".s:BASH_Root.'&Statements.$&((\.\.\.))		a$(())<Esc>hi'
 	exe "inoremenu ".s:BASH_Root.'&Statements.$&((\.\.\.))		 $(())<Left><Left>'
 	exe "vnoremenu ".s:BASH_Root.'&Statements.$&((\.\.\.))		s$(())<Esc>hP'
-
-""	exe " noremenu ".s:BASH_Root.'&Statements.$&[[\.\.\.]]		a$[[]]<Esc>hi'
-""	exe "inoremenu ".s:BASH_Root.'&Statements.$&[[\.\.\.]]		 $[[]]<Left><Left>'
-""	exe "vnoremenu ".s:BASH_Root.'&Statements.$&[[\.\.\.]]		s$[[]]<Esc>hP'
 	"
-	exe "anoremenu ".s:BASH_Root.'&Statements.&printf\ \ "%s\\n"		oprintf<Space>"%s\n" <Esc>2hi'
-	exe "inoremenu ".s:BASH_Root.'&Statements.&printf\ \ "%s\\n"		 printf<Space>"%s\n" <Esc>2hi'
+	exe "anoremenu ".s:BASH_Root.'&Statements.&printf\ \ "%s\\n"<Tab>\\sp		oprintf<Space>"%s\n" <Esc>2hi'
+	exe "inoremenu ".s:BASH_Root.'&Statements.&printf\ \ "%s\\n"<Tab>\\sp		 printf<Space>"%s\n" <Esc>2hi'
 	"
-	exe "anoremenu ".s:BASH_Root.'&Statements.ech&o\ \ -e\ "\\n"		oecho<Space>-e<Space>"\n"<Esc>2hi'
-	exe "inoremenu ".s:BASH_Root.'&Statements.ech&o\ \ -e\ "\\n"		 echo<Space>-e<Space>"\n"<Esc>2hi'
-	exe "vnoremenu ".s:BASH_Root.'&Statements.ech&o\ \ -e\ "\\n" 		secho<Space>-e<Space>"\n"<Esc>2hP'
+	exe "anoremenu ".s:BASH_Root.'&Statements.ech&o\ \ -e\ "\\n"<Tab>\\se		oecho<Space>-e<Space>"\n"<Esc>2hi'
+	exe "inoremenu ".s:BASH_Root.'&Statements.ech&o\ \ -e\ "\\n"<Tab>\\se		 echo<Space>-e<Space>"\n"<Esc>2hi'
+	exe "vnoremenu ".s:BASH_Root.'&Statements.ech&o\ \ -e\ "\\n"<Tab>\\se 		secho<Space>-e<Space>"\n"<Esc>2hP'
 	"
 	exe "amenu  ".s:BASH_Root.'&Statements.-SEP5-                                 :'
 	exe "anoremenu ".s:BASH_Root.'&Statements.&array\ elem\.s<Tab>${\.[@]}      	a${[@]}<Left><Left><Left><Left>'
@@ -393,13 +391,13 @@ function!	BASH_InitMenu ()
 	"
 	if s:BASH_CodeSnippets != ""
 		exe "amenu  ".s:BASH_Root.'&Statements.-SEP6-                    		  :'
-		exe " menu  <silent> ".s:BASH_Root.'&Statements.read\ code\ snippet        :call BASH_CodeSnippets("r")<CR>'
-		exe " menu  <silent> ".s:BASH_Root.'&Statements.write\ code\ snippet       :call BASH_CodeSnippets("w")<CR>'
-		exe " menu  <silent> ".s:BASH_Root.'&Statements.edit\ code\ snippet        :call BASH_CodeSnippets("e")<CR>'
-		exe "imenu  <silent> ".s:BASH_Root.'&Statements.read\ code\ snippet   <C-C>:call BASH_CodeSnippets("r")<CR>'
-		exe "imenu  <silent> ".s:BASH_Root.'&Statements.write\ code\ snippet  <C-C>:call BASH_CodeSnippets("w")<CR>'
-		exe "imenu  <silent> ".s:BASH_Root.'&Statements.edit\ code\ snippet   <C-C>:call BASH_CodeSnippets("e")<CR>'
-		exe "vmenu  <silent> ".s:BASH_Root.'&Statements.write\ code\ snippet  <C-C>:call BASH_CodeSnippets("wv")<CR>'
+		exe " menu  <silent> ".s:BASH_Root.'&Statements.read\ code\ snippet<Tab>\\nr        :call BASH_CodeSnippets("r")<CR>'
+		exe "imenu  <silent> ".s:BASH_Root.'&Statements.read\ code\ snippet<Tab>\\nr   <C-C>:call BASH_CodeSnippets("r")<CR>'
+		exe " menu  <silent> ".s:BASH_Root.'&Statements.write\ code\ snippet<Tab>\\nw       :call BASH_CodeSnippets("w")<CR>'
+		exe "imenu  <silent> ".s:BASH_Root.'&Statements.write\ code\ snippet<Tab>\\nw  <C-C>:call BASH_CodeSnippets("w")<CR>'
+		exe "vmenu  <silent> ".s:BASH_Root.'&Statements.write\ code\ snippet<Tab>\\nw  <C-C>:call BASH_CodeSnippets("wv")<CR>'
+		exe " menu  <silent> ".s:BASH_Root.'&Statements.edit\ code\ snippet<Tab>\\ne        :call BASH_CodeSnippets("e")<CR>'
+		exe "imenu  <silent> ".s:BASH_Root.'&Statements.edit\ code\ snippet<Tab>\\ne   <C-C>:call BASH_CodeSnippets("e")<CR>'
 	endif
 	"
 	"-------------------------------------------------------------------------------
@@ -785,68 +783,68 @@ function!	BASH_InitMenu ()
 	"   ( the one in the current buffer ; other versions may exist elsewhere ! )
 	"
 
-	exe " menu <silent> ".s:BASH_Root.'&Run.save\ +\ &run\ script<Tab><C-F9>            :call BASH_Run("n")<CR>'
-	exe "imenu <silent> ".s:BASH_Root.'&Run.save\ +\ &run\ script<Tab><C-F9>       <C-C>:call BASH_Run("n")<CR>'
+	exe " menu <silent> ".s:BASH_Root.'&Run.save\ +\ &run\ script<Tab>\\rr\ \r<C-F9>            :call BASH_Run("n")<CR>'
+	exe "imenu <silent> ".s:BASH_Root.'&Run.save\ +\ &run\ script<Tab>\\rr\ \r<C-F9>       <C-C>:call BASH_Run("n")<CR>'
 	if	!s:MSWIN
-		exe "vmenu <silent> ".s:BASH_Root.'&Run.save\ +\ &run\ script<Tab><C-F9>       <C-C>:call BASH_Run("v")<CR>'
+		exe "vmenu <silent> ".s:BASH_Root.'&Run.save\ +\ &run\ script<Tab>\\rr\ \r<C-F9>       <C-C>:call BASH_Run("v")<CR>'
 	endif
 	"
 	"   set execution right only for the user ( may be user root ! )
 	"
-	exe " menu <silent> ".s:BASH_Root.'&Run.cmd\.\ line\ &arg\.<Tab><S-F9>              :call BASH_CmdLineArguments()<CR>'
-	exe "imenu <silent> ".s:BASH_Root.'&Run.cmd\.\ line\ &arg\.<Tab><S-F9>         <C-C>:call BASH_CmdLineArguments()<CR>'
+	exe " menu <silent> ".s:BASH_Root.'&Run.cmd\.\ line\ &arg\.<Tab>\\ra\ \ <S-F9>            :call BASH_CmdLineArguments()<CR>'
+	exe "imenu <silent> ".s:BASH_Root.'&Run.cmd\.\ line\ &arg\.<Tab>\\ra\ \ <S-F9>       <C-C>:call BASH_CmdLineArguments()<CR>'
 	if	!s:MSWIN
-		exe " menu <silent> ".s:BASH_Root.'&Run.start\ &debugger<Tab><F9>                   :call BASH_Debugger()<CR>'
-		exe "imenu <silent> ".s:BASH_Root.'&Run.start\ &debugger<Tab><F9>              <C-C>:call BASH_Debugger()<CR>'
-		exe " menu <silent> ".s:BASH_Root.'&Run.make\ script\ &executable                   :call BASH_MakeScriptExecutable()<CR>'
-		exe "imenu <silent> ".s:BASH_Root.'&Run.make\ script\ &executable              <C-C>:call BASH_MakeScriptExecutable()<CR>'
-		exe " menu <silent> ".s:BASH_Root.'&Run.save\ +\ &check\ syntax<Tab><A-F9>          :call BASH_SyntaxCheck()<CR>'
-		exe "imenu <silent> ".s:BASH_Root.'&Run.save\ +\ &check\ syntax<Tab><A-F9>     <C-C>:call BASH_SyntaxCheck()<CR>'
-		exe " menu <silent> ".s:BASH_Root.'&Run.syntax\ check\ o&ptions                     :call BASH_SyntaxCheckOptionsLocal()<CR>'
-		exe "imenu <silent> ".s:BASH_Root.'&Run.syntax\ check\ o&ptions                <C-C>:call BASH_SyntaxCheckOptionsLocal()<CR>'
+		exe " menu <silent> ".s:BASH_Root.'&Run.start\ &debugger<Tab>\\rd\ \ \ \ <F9>           :call BASH_Debugger()<CR>'
+		exe "imenu <silent> ".s:BASH_Root.'&Run.start\ &debugger<Tab>\\rd\ \ \ \ <F9>      <C-C>:call BASH_Debugger()<CR>'
+		exe " menu <silent> ".s:BASH_Root.'&Run.save\ +\ &check\ syntax<Tab>\\rc\ \ <A-F9>      :call BASH_SyntaxCheck()<CR>'
+		exe "imenu <silent> ".s:BASH_Root.'&Run.save\ +\ &check\ syntax<Tab>\\rc\ \ <A-F9> <C-C>:call BASH_SyntaxCheck()<CR>'
+		exe " menu <silent> ".s:BASH_Root.'&Run.syntax\ check\ o&ptions<Tab>\\rco               :call BASH_SyntaxCheckOptionsLocal()<CR>'
+		exe "imenu <silent> ".s:BASH_Root.'&Run.syntax\ check\ o&ptions<Tab>\\rco          <C-C>:call BASH_SyntaxCheckOptionsLocal()<CR>'
+		exe " menu <silent> ".s:BASH_Root.'&Run.make\ script\ &executable<Tab>\\re              :call BASH_MakeScriptExecutable()<CR>'
+		exe "imenu <silent> ".s:BASH_Root.'&Run.make\ script\ &executable<Tab>\\re         <C-C>:call BASH_MakeScriptExecutable()<CR>'
 	endif
 	"
 	exe "amenu          ".s:BASH_Root.'&Run.-Sep1-                                 :'
 	"
 	if	s:MSWIN
-		exe " menu <silent> ".s:BASH_Root.'&Run.&hardcopy\ to\ printer\.ps                 :call BASH_Hardcopy("n")<CR>'
-		exe "imenu <silent> ".s:BASH_Root.'&Run.&hardcopy\ to\ printer\.ps            <C-C>:call BASH_Hardcopy("n")<CR>'
-		exe "vmenu <silent> ".s:BASH_Root.'&Run.&hardcopy\ to\ printer\.ps            <C-C>:call BASH_Hardcopy("v")<CR>'
+		exe " menu <silent> ".s:BASH_Root.'&Run.&hardcopy\ to\ printer\.ps<Tab>\\rh           :call BASH_Hardcopy("n")<CR>'
+		exe "imenu <silent> ".s:BASH_Root.'&Run.&hardcopy\ to\ printer\.ps<Tab>\\rh      <C-C>:call BASH_Hardcopy("n")<CR>'
+		exe "vmenu <silent> ".s:BASH_Root.'&Run.&hardcopy\ to\ printer\.ps<Tab>\\rh      <C-C>:call BASH_Hardcopy("v")<CR>'
 	else
-		exe " menu <silent> ".s:BASH_Root.'&Run.&hardcopy\ to\ FILENAME\.ps                 :call BASH_Hardcopy("n")<CR>'
-		exe "imenu <silent> ".s:BASH_Root.'&Run.&hardcopy\ to\ FILENAME\.ps            <C-C>:call BASH_Hardcopy("n")<CR>'
-		exe "vmenu <silent> ".s:BASH_Root.'&Run.&hardcopy\ to\ FILENAME\.ps            <C-C>:call BASH_Hardcopy("v")<CR>'
+		exe " menu <silent> ".s:BASH_Root.'&Run.&hardcopy\ to\ FILENAME\.ps<Tab>\\rh           :call BASH_Hardcopy("n")<CR>'
+		exe "imenu <silent> ".s:BASH_Root.'&Run.&hardcopy\ to\ FILENAME\.ps<Tab>\\rh      <C-C>:call BASH_Hardcopy("n")<CR>'
+		exe "vmenu <silent> ".s:BASH_Root.'&Run.&hardcopy\ to\ FILENAME\.ps<Tab>\\rh      <C-C>:call BASH_Hardcopy("v")<CR>'
 	endif
 	exe " menu          ".s:BASH_Root.'&Run.-SEP2-                                 :'
-	exe " menu <silent> ".s:BASH_Root.'&Run.plugin\ &settings                           :call BASH_Settings()<CR>'
-	exe "imenu <silent> ".s:BASH_Root.'&Run.plugin\ &settings                      <C-C>:call BASH_Settings()<CR>'
+	exe " menu <silent> ".s:BASH_Root.'&Run.plugin\ &settings<Tab>\\rs                       :call BASH_Settings()<CR>'
+	exe "imenu <silent> ".s:BASH_Root.'&Run.plugin\ &settings<Tab>\\rs                  <C-C>:call BASH_Settings()<CR>'
 	"
 	exe "imenu          ".s:BASH_Root.'&Run.-SEP3-                                 :'
 	"
 	if	!s:MSWIN
-		exe " menu  <silent>  ".s:BASH_Root.'&Run.x&term\ size                              :call BASH_XtermSize()<CR>'
-		exe "imenu  <silent>  ".s:BASH_Root.'&Run.x&term\ size                         <C-C>:call BASH_XtermSize()<CR>'
+		exe " menu  <silent>  ".s:BASH_Root.'&Run.x&term\ size<Tab>\\rt                       :call BASH_XtermSize()<CR>'
+		exe "imenu  <silent>  ".s:BASH_Root.'&Run.x&term\ size<Tab>\\rt                  <C-C>:call BASH_XtermSize()<CR>'
 	endif
 	"
 	if	s:MSWIN
 		if s:BASH_OutputGvim == "buffer"
-			exe " menu  <silent>  ".s:BASH_Root.'&Run.&output:\ BUFFER->term          :call BASH_Toggle_Gvim_Xterm_MS()<CR>'
-			exe "imenu  <silent>  ".s:BASH_Root.'&Run.&output:\ BUFFER->term     <C-C>:call BASH_Toggle_Gvim_Xterm_MS()<CR>'
+			exe " menu  <silent>  ".s:BASH_Root.'&Run.&output:\ BUFFER->term<Tab>\\ro          :call BASH_Toggle_Gvim_Xterm_MS()<CR>'
+			exe "imenu  <silent>  ".s:BASH_Root.'&Run.&output:\ BUFFER->term<Tab>\\ro     <C-C>:call BASH_Toggle_Gvim_Xterm_MS()<CR>'
 		else
-			exe " menu  <silent>  ".s:BASH_Root.'&Run.&output:\ TERM->buffer          :call BASH_Toggle_Gvim_Xterm_MS()<CR>'
-			exe "imenu  <silent>  ".s:BASH_Root.'&Run.&output:\ TERM->buffer     <C-C>:call BASH_Toggle_Gvim_Xterm_MS()<CR>'
+			exe " menu  <silent>  ".s:BASH_Root.'&Run.&output:\ TERM->buffer<Tab>\\ro          :call BASH_Toggle_Gvim_Xterm_MS()<CR>'
+			exe "imenu  <silent>  ".s:BASH_Root.'&Run.&output:\ TERM->buffer<Tab>\\ro     <C-C>:call BASH_Toggle_Gvim_Xterm_MS()<CR>'
 		endif
 	else
 		if s:BASH_OutputGvim == "vim"
-			exe " menu  <silent>  ".s:BASH_Root.'&Run.&output:\ VIM->buffer->xterm            :call BASH_Toggle_Gvim_Xterm()<CR>'
-			exe "imenu  <silent>  ".s:BASH_Root.'&Run.&output:\ VIM->buffer->xterm       <C-C>:call BASH_Toggle_Gvim_Xterm()<CR>'
+			exe " menu  <silent>  ".s:BASH_Root.'&Run.&output:\ VIM->buffer->xterm<Tab>\\ro          :call BASH_Toggle_Gvim_Xterm()<CR>'
+			exe "imenu  <silent>  ".s:BASH_Root.'&Run.&output:\ VIM->buffer->xterm<Tab>\\ro     <C-C>:call BASH_Toggle_Gvim_Xterm()<CR>'
 		else
 			if s:BASH_OutputGvim == "buffer"
-				exe " menu  <silent>  ".s:BASH_Root.'&Run.&output:\ BUFFER->xterm->vim          :call BASH_Toggle_Gvim_Xterm()<CR>'
-				exe "imenu  <silent>  ".s:BASH_Root.'&Run.&output:\ BUFFER->xterm->vim     <C-C>:call BASH_Toggle_Gvim_Xterm()<CR>'
+				exe " menu  <silent>  ".s:BASH_Root.'&Run.&output:\ BUFFER->xterm->vim<Tab>\\ro        :call BASH_Toggle_Gvim_Xterm()<CR>'
+				exe "imenu  <silent>  ".s:BASH_Root.'&Run.&output:\ BUFFER->xterm->vim<Tab>\\ro   <C-C>:call BASH_Toggle_Gvim_Xterm()<CR>'
 			else
-				exe " menu  <silent>  ".s:BASH_Root.'&Run.&output:\ XTERM->vim->buffer          :call BASH_Toggle_Gvim_Xterm()<CR>'
-				exe "imenu  <silent>  ".s:BASH_Root.'&Run.&output:\ XTERM->vim->buffer     <C-C>:call BASH_Toggle_Gvim_Xterm()<CR>'
+				exe " menu  <silent>  ".s:BASH_Root.'&Run.&output:\ XTERM->vim->buffer<Tab>\\ro        :call BASH_Toggle_Gvim_Xterm()<CR>'
+				exe "imenu  <silent>  ".s:BASH_Root.'&Run.&output:\ XTERM->vim->buffer<Tab>\\ro   <C-C>:call BASH_Toggle_Gvim_Xterm()<CR>'
 			endif
 		endif
 	endif
@@ -857,14 +855,17 @@ function!	BASH_InitMenu ()
 	"
 	if s:BASH_Root != ""
 		"
-		exe " menu  <silent>  ".s:BASH_Root.'&Help.&help\ (Bash\ builtins)          :call BASH_help("h")<CR>'
-		exe "imenu  <silent>  ".s:BASH_Root.'&Help.&help\ (Bash\ builtins)     <C-C>:call BASH_help("h")<CR>'
+		exe " menu  <silent>  ".s:BASH_Root.'&Help.&Bash\ manual<Tab>\\hb                    :call BASH_help("b")<CR>'
+		exe "imenu  <silent>  ".s:BASH_Root.'&Help.&Bash\ manual<Tab>\\hb               <C-C>:call BASH_help("b")<CR>'
 		"
-		exe " menu  <silent>  ".s:BASH_Root.'&Help.&manual\ (utilities)             :call BASH_help("m")<CR>'
-		exe "imenu  <silent>  ".s:BASH_Root.'&Help.&manual\ (utilities)        <C-C>:call BASH_help("m")<CR>'
+		exe " menu  <silent>  ".s:BASH_Root.'&Help.&help\ (Bash\ builtins)<Tab>\\hh          :call BASH_help("h")<CR>'
+		exe "imenu  <silent>  ".s:BASH_Root.'&Help.&help\ (Bash\ builtins)<Tab>\\hh     <C-C>:call BASH_help("h")<CR>'
 		"
-		exe " menu  <silent>  ".s:BASH_Root.'&Help.bash-&support            :call BASH_HelpBASHsupport()<CR>'
-		exe "imenu  <silent>  ".s:BASH_Root.'&Help.bash-&support       <C-C>:call BASH_HelpBASHsupport()<CR>'
+		exe " menu  <silent>  ".s:BASH_Root.'&Help.&manual\ (utilities)<Tab>\\hm             :call BASH_help("m")<CR>'
+		exe "imenu  <silent>  ".s:BASH_Root.'&Help.&manual\ (utilities)<Tab>\\hm        <C-C>:call BASH_help("m")<CR>'
+		"
+		exe " menu  <silent>  ".s:BASH_Root.'&Help.bash-&support<Tab>\\hp            :call BASH_HelpBASHsupport()<CR>'
+		exe "imenu  <silent>  ".s:BASH_Root.'&Help.bash-&support<Tab>\\hp       <C-C>:call BASH_HelpBASHsupport()<CR>'
 	endif
 	"
 endfunction		" ---------- end of function  BASH_InitMenu  ----------
@@ -1422,7 +1423,7 @@ function! BASH_CodeFunction ( mode )
 endfunction		" ---------- end of function  BASH_CodeFunction  ----------
 "
 "------------------------------------------------------------------------------
-"  BASH_help : builtin completion    {{{1
+"  BASH_BuiltinComplete : builtin completion    {{{1
 "------------------------------------------------------------------------------
 function!	BASH_BuiltinComplete ( ArgLead, CmdLine, CursorPos )
 	"
@@ -1456,12 +1457,13 @@ function! BASH_help( type )
 	if item == "" || match( item, cuc ) == -1
 		if a:type == 'm'
 			let	item=BASH_Input('[tab compl. on] name of command line utility : ', '', 'shellcmd' )
-		else
+		endif
+		if a:type == 'h'
 			let	item=BASH_Input('[tab compl. on] name of bash builtin : ', '', 'customlist,BASH_BuiltinComplete' )
 		endif
 	endif
 
-	if item == ""
+	if item == "" &&  a:type != 'b'
 		return
 	endif
 	"------------------------------------------------------------------------------
@@ -1488,14 +1490,16 @@ function! BASH_help( type )
 	endif
 	setlocal	modifiable
 	"
-	" BASH BUILTINS
-	"
+	"-------------------------------------------------------------------------------
+	" read Bash help
+	"-------------------------------------------------------------------------------
 	if a:type == 'h'
 		silent exe ":%!help  ".item
 	endif
 	"
-	" UTILITIES
-	"
+	"-------------------------------------------------------------------------------
+	" open a manual (utilities)
+	"-------------------------------------------------------------------------------
 	if a:type == 'm' 
 		"
 		" Is there more than one manual ?
@@ -1546,6 +1550,13 @@ function! BASH_help( type )
 		set filetype=man
 		silent exe ":%!".s:BASH_Man.' '.catalog.' '.item
 
+	endif
+	"
+	"-------------------------------------------------------------------------------
+	" open the bash maual
+	"-------------------------------------------------------------------------------
+	if a:type == 'b'
+		silent exe ":%!man 1 bash"
 	endif
 
 	setlocal nomodifiable
@@ -1715,6 +1726,7 @@ function! BASH_Toggle_Gvim_Xterm ()
 			let	s:BASH_OutputGvim	= "vim"
 		endif
 	endif
+	echomsg "output destination is '".s:BASH_OutputGvim."'"
 
 endfunction    " ----------  end of function BASH_Toggle_Gvim_Xterm ----------
 "
@@ -1799,7 +1811,6 @@ function! BASH_Run ( mode )
 		"
 		if a:mode=="n"
 			exe ":make "l:fullname.l:arguments
-			echomsg ":make "l:fullname.l:arguments
 		endif
 		"
 		exe ":setlocal makeprg=".makeprg_saved
@@ -2012,7 +2023,7 @@ function! BASH_CodeSnippets(arg1)
 		" read snippet file, put content below current line
 		"
 		if a:arg1 == "r"
-			if has("gui_running")
+			if has("gui_running") && s:BASH_GuiSnippetBrowser == 'gui'
 				let	l:snippetfile=browse(0,"read a code snippet",s:BASH_CodeSnippets,"")
 			else
 				let	l:snippetfile=input("read snippet ", s:BASH_CodeSnippets, "file" )
@@ -2036,7 +2047,7 @@ function! BASH_CodeSnippets(arg1)
 		" update current buffer / split window / edit snippet file
 		"
 		if a:arg1 == "e"
-			if has("gui_running")
+			if has("gui_running") && s:BASH_GuiSnippetBrowser == 'gui'
 				let	l:snippetfile=browse(0,"edit a code snippet",s:BASH_CodeSnippets,"")
 			else
 				let	l:snippetfile=input("edit snippet ", s:BASH_CodeSnippets, "file" )
@@ -2049,7 +2060,7 @@ function! BASH_CodeSnippets(arg1)
 		" write whole buffer or marked area into snippet file
 		"
 		if a:arg1 == "w" || a:arg1 == "wv"
-			if has("gui_running")
+			if has("gui_running") && s:BASH_GuiSnippetBrowser == 'gui'
 				let	l:snippetfile=browse(0,"write a code snippet",s:BASH_CodeSnippets,"")
 			else
 				let	l:snippetfile=input("write snippet ", s:BASH_CodeSnippets, "file" )

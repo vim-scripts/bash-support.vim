@@ -1,7 +1,7 @@
-*bashsupport.txt*                Bash Support                     Mai 18 2009
+*bashsupport.txt*                Bash Support                    June 11 2009
 
 bash Support                                      *bash-support* *bashsupport*
-                             Plugin version 2.11
+                             Plugin version 2.12
                         for Vim version 7.0 and above
                        Fritz Mehner  <mehner@fh-swf.de>
 
@@ -261,6 +261,16 @@ Code snippets are normally indented after insertion. To suppress indentation
 add the file extension "ni" or "noindent" to the snippet file name, e.g.
 
   parameter_handling.sh.noindent
+
+Snippet browser
+---------------
+Under a GUI a file requester will be put up. Without GUI the filename will be
+read from the command line. You can change this behavior by setting a global
+variable in your ~/.vimrc :
+
+ let g:BASH_GuiSnippetBrowser = 'commandline'
+
+The default value is 'gui'. 
 
 
 ------------------------------------------------------------------------------
@@ -571,7 +581,8 @@ following character(s) will only be recognized for a short time.
 
   -- bash help ------------------------------------------
 
-  \hb     Displays help for the builtin   (n, i)
+  \hb     Displays the Bash manual        (n, i)
+  \hh     Displays help for the builtin   (n, i)
           under the cursor (Bash help).
   \hm     displays the manual for the     (n, i)
           Bash command under the cursor
@@ -622,6 +633,7 @@ following character(s) will only be recognized for a short time.
 
   \rr     update file, run script         (n, i)
   \rc     update file, check syntax       (n, i)
+  \rco    syntax check options            (n, i)
   \ra     set command line arguments      (n, i)
   \rd     start debugger                  (n, i)
   \re     make script executable          (n, i)
@@ -750,6 +762,7 @@ g:BASH_BASH                    $SHELL         (Linux/U**X)
 g:BASH_Man                     'man'          (Linux/U**X)
                                'man.exe'      (Windows)
 g:BASH_MapLeader               '\'
+g:BASH_GuiSnippetBrowser       'gui'
 
 --------------------------------------------------------------------------------
 
@@ -784,6 +797,7 @@ g:BASH_MapLeader               '\'
           g:BASH_Man                    : the interface to the on-line manuals
           g:BASH_DoOnNewLine            : see |bashsupport-stat-norm-ins|
           g:BASH_MapLeader              : the map leader for hotkeys (see|bashsupport-usage-vim|)
+          g:BASH_GuiSnippetBrowser      : code snippet browser: 'gui', 'commandline'
 
 To override the defaults add appropriate assignments in '.vimrc'.
 Here are my settings as an example:

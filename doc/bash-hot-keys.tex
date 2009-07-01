@@ -8,15 +8,15 @@
 %%        Email:  mehner@fh-swf.de
 %%    Copyright:  Copyright (C)  2003-2008  Dr.-Ing. Fritz Mehner  (mehner@fh-swf.de)
 %%      Version:  see PluginVersion (below)
-%%     Revision:  $Id: bash-hot-keys.tex,v 1.14 2009/05/18 13:14:57 mehner Exp $
+%%     Revision:  $Id: bash-hot-keys.tex,v 1.16 2009/06/29 13:21:41 mehner Exp $
 %%      Created:  09.06.2003
 %%                
 %%        Notes:  
 %%                
 %%=====================================================================================
 
-\newcommand{\PluginVersion}{2.11}
-\newcommand{\ReleaseDate}{ Mai 2009}
+\newcommand{\PluginVersion}{2.12}
+\newcommand{\ReleaseDate}{ June 2009}
 
 \documentclass[oneside,12pt,a4paper,DIV18]{scrartcl}
 \usepackage[english]{babel}
@@ -86,13 +86,6 @@ All mappings also work for gVim.}\\
 %%======================================================================
 %%~~~~~ TABULAR : begin ~~~~~~~~~~
 \begin{tabular}[]{|p{11mm}|p{59mm}|}
-\hline 
-\multicolumn{2}{|r|}{\textsl{\textbf{H}elp}} \\
-\hline \verb'\hh'  & help (Bash builtins)             \hfill (n, i) \\
-\hline \verb'\hm'  & manual (command line utilities) \hfill (n, i) \\
-\hline \verb'\hp'  & Bash-support plugin              \hfill (n, i) \\
-\hline
-\hline 
 \hline
 \multicolumn{2}{|r|}{\textsl{\textbf{C}omments}} \\
 \hline \verb'\cl'  & end-of-line comment              \hfill (n, i, v) \\
@@ -112,7 +105,6 @@ All mappings also work for gVim.}\\
 \hline \verb'\ce'  & \verb'echo "<line>"'             \hfill (n, i) \\
 \hline \verb'\cr'  & remove \verb'echo'               \hfill (n, i) \\
 \hline \verb'\cv'  & vim modeline                     \hfill (n, i) \\
-\hline
 \hline 
 \hline
 \multicolumn{2}{|r|}{\textsl{\textbf{S}tatements}} \\
@@ -143,7 +135,7 @@ All mappings also work for gVim.}\\
 %%======================================================================
 %%~~~~~ TABULAR : begin ~~~~~~~~~~
 \begin{tabular}[]{l}
-   \\ [38.2ex]								%% offset
+   \\ [35.4ex]								%% offset
 \end{tabular} \\ 
 %%~~~~~ TABULAR :  end  ~~~~~~~~~~
 %%~~~~~ TABULAR : begin ~~~~~~~~~~
@@ -154,12 +146,12 @@ All mappings also work for gVim.}\\
 \hline \verb'\nw'  & write code snippet         \hfill (n, v)\\
 \hline \verb'\ne'  & edit code snippet          \hfill (n)\\
 \hline
-\hline 
 \hline
 \multicolumn{2}{|r|}{\textsl{\textbf{R}un}} \\
 \hline \verb'\rr'  & update file, run script    		\hfill (n, i, v$^+$)\\
 \hline \verb'\ra'  & set command line arguments 		\hfill (n, i)\\
 \hline \verb'\rc'  & update file, check syntax$^+$  \hfill (n, i)\\
+\hline \verb'\rco' & syntax check options$^+$       \hfill (n, i)\\
 \hline \verb'\rd'  & start debugger$^+$             \hfill (n, i)\\
 \hline \verb'\re'  & make script executable$^+$     \hfill (n, i)\\
 \hline \verb'\rh'  & hardcopy buffer            		\hfill (n, i, v)\\
@@ -167,6 +159,13 @@ All mappings also work for gVim.}\\
 \hline \verb'\rt'  & set xterm size$^+$             \hfill (n, i, GUI only)\\
 \hline \verb'\ro'  & change output destination  		\hfill (n, i)\\
 \hline
+\hline 
+\multicolumn{2}{|r|}{\textsl{\textbf{H}elp}} \\
+\hline \verb'\hb'  & Bash manual                     \hfill (n, i) \\
+\hline \verb'\hh'  & help (Bash builtins)            \hfill (n, i) \\
+\hline \verb'\hm'  & manual (command line utilities) \hfill (n, i) \\
+\hline \verb'\hp'  & Bash-support plugin             \hfill (n, i) \\
+\hline 
 \hline
 \multicolumn{2}{|r|}{\textsl{Menu(s)}}\\
 \hline \verb'\lbs'  & load    menus\hfill \scriptsize{(n \& GUI only)}\\

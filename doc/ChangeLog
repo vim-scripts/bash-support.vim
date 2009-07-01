@@ -1,4 +1,11 @@
 =======================================================================================
+  RELEASE NOTES FOR VERSION 2.11
+=======================================================================================
++ Additions for Bash version 4.0.
++ Comments menu (\cj): adjustment of end-of-line comments improved.
++ Two submenus rearranged.
+
+=======================================================================================
   RELEASE NOTES FOR VERSION 2.10
 =======================================================================================
 - new item in the Statements-menu: 'for ((...)) do done'.

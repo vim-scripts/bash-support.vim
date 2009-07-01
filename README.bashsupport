@@ -1,4 +1,4 @@
-README for bash-support.vim (Version 2.11) / Mai 18 2009
+README for bash-support.vim (Version 2.12) / June 29 2009
 
   *  INSTALLATION
   *  RELEASE NOTES 
@@ -59,11 +59,14 @@ and look at the bashsupport help with
 
 
 =======================================================================================
-  RELEASE NOTES FOR VERSION 2.11
+  RELEASE NOTES FOR VERSION 2.12
 =======================================================================================
-+ Additions for Bash version 4.0.
-+ Comments menu (\cj): adjustment of end-of-line comments improved.
-+ Two submenus rearranged.
++ Hotkeys are shown in the menus.
++ New menu item and hotkey \hb : open the Bash manual.
++ New hotkey \rco : syntax check options.
++ File browser for code snippets choosable (new global variable).
++ Bugfix: wrapper script for use of a xterm could not handle parameters containing blanks.
++ Minor improvements.
 
 =======================================================================================
   OLDER RELEASE NOTES : see file 'ChangeLog'

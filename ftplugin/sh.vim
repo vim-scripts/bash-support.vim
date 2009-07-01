@@ -4,7 +4,7 @@
 "     Plugin :  bash-support.vim
 " Maintainer :  Fritz Mehner <mehner@fh-swf.de>
 "    Version :  2.10
-"   Revision :  $Id: sh.vim,v 1.21 2009/01/30 14:23:10 mehner Exp $
+"   Revision :  $Id: sh.vim,v 1.24 2009/06/13 18:18:42 mehner Exp $
 "
 " -----------------------------------------------------------------
 "
@@ -63,6 +63,9 @@ endif
 "
 "
 " ---------- help ----------------------------------------------------
+"
+ noremap  <buffer>  <silent>  <LocalLeader>hb            :call BASH_help('b')<CR>
+inoremap  <buffer>  <silent>  <LocalLeader>hb       <Esc>:call BASH_help('b')<CR>
 "
  noremap  <buffer>  <silent>  <LocalLeader>hh            :call BASH_help('h')<CR>
 inoremap  <buffer>  <silent>  <LocalLeader>hh       <Esc>:call BASH_help('h')<CR>
@@ -193,6 +196,9 @@ imap  <buffer>  <silent>  <LocalLeader>ra      <Esc>:call BASH_CmdLineArguments(
 if !s:MSWIN
 	 map  <buffer>  <silent>  <LocalLeader>rc           :call BASH_SyntaxCheck()<CR>
 	imap  <buffer>  <silent>  <LocalLeader>rc      <Esc>:call BASH_SyntaxCheck()<CR>
+
+	 map  <buffer>  <silent>  <LocalLeader>rco          :call BASH_SyntaxCheckOptionsLocal()<CR>
+	imap  <buffer>  <silent>  <LocalLeader>rco     <Esc>:call BASH_SyntaxCheckOptionsLocal()<CR>
 
 	 map  <buffer>  <silent>  <LocalLeader>rd           :call BASH_Debugger()<CR>:redraw!<CR>
 	imap  <buffer>  <silent>  <LocalLeader>rd      <Esc>:call BASH_Debugger()<CR>:redraw!<CR>
