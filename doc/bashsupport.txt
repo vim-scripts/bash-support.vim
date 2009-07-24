@@ -1,7 +1,7 @@
-*bashsupport.txt*                Bash Support                    June 11 2009
+*bashsupport.txt*                Bash Support                     July 2 2009
 
 bash Support                                      *bash-support* *bashsupport*
-                             Plugin version 2.12
+                             Plugin version 2.13
                         for Vim version 7.0 and above
                        Fritz Mehner  <mehner@fh-swf.de>
 
@@ -449,6 +449,9 @@ In all cases the command line arguments from the argument setting
 --------------
 
 Generates a PostScript file from the whole buffer or from a marked region.
+The hardcopy goes to the current working directory.  If the buffer contains
+documentation or other material from non-writable directories the hardcopy
+goes to the HOME directory. The otput destination will be shown in a message.
 
 The print header contains date and time for the current locale. The definition
 used is
@@ -629,7 +632,24 @@ following character(s) will only be recognized for a short time.
   \nw     write code snippet              (n, v)
   \ne     edit code snippet               (n)
 
-  -- Run ------------------------------------------------
+  -- POSIX Character Classes -----------------------------
+
+  \pa     [:alnum:]                       (n, i)
+  \ph     [:alpha:]                       (n, i)
+  \pi     [:ascii:]                       (n, i)
+  \pb     [:blank:]                       (n, i)
+  \pc     [:cntrl:]                       (n, i)
+  \pd     [:digit:]                       (n, i)
+  \pg     [:graph:]                       (n, i)
+  \pl     [:lower:]                       (n, i)
+  \pp     [:print:]                       (n, i)
+  \pn     [:punct:]                       (n, i)
+  \ps     [:space:]                       (n, i)
+  \pu     [:upper:]                       (n, i)
+  \pw     [:word:]                        (n, i)
+  \px     [:xdigit:]                      (n, i)
+
+  -- Run -------------------------------------------------
 
   \rr     update file, run script         (n, i)
   \rc     update file, check syntax       (n, i)
@@ -642,7 +662,7 @@ following character(s) will only be recognized for a short time.
   \rt     set xterm size                  (n, i)
   \ro     change output destination       (n, i)
 
-  -- Load / Unload bash Support -------------------------
+  -- Load / Unload bash Support --------------------------
 
   \lbs    Load Bash Support               (n, GUI only)
   \ubs    Unload Bash Support             (n, GUI only)
@@ -709,6 +729,9 @@ bash-support/wordlists/*            Additional word lists (dictionaries).
                           bash-support.vim will work without them.
                           -------------------------------------------------------------
 
+bash-support/rc/costumization.bashrc  Additional settings I use in .bashrc: 
+                                      set the prompt P2, P3, P4 (for debugging).
+
 bash-support/rc/costumization.vimrc   Additional settings I use in '.vimrc': incremental
                                       search, tabstop, hot keys, font, use of dictionaries,
                                       ...  The file is commented. Append it to your '.vimrc'
@@ -766,38 +789,38 @@ g:BASH_GuiSnippetBrowser       'gui'
 
 --------------------------------------------------------------------------------
 
-1. group: Defines the text which will be inserted for the tags when a template
-          is read in (see |bashsupport-tempfiles|).
-
-          g:BASH_AuthorName      : author name
-          g:BASH_AuthorRef       : author reference (e.g. acronym)
-          g:BASH_Email           : email address
-          g:BASH_Company         : name of the company / institution
-          g:BASH_Project         : project
-          g:BASH_CopyrightHolder : the copyright holder
-
-2. group: Sets the template directory and the names of the template files (see below).
-
-3. group: g:BASH_CodeSnippets    : The name of the code snippet directory
-                                   (see |bashsupport-stat-snippets|).
-          g:BASH_LoadMenus       : Load menus and mappings ("yes", "no") at start up.
-          g:BASH_Dictionary_File : Path and file name of the bash word list used for
-                                   dictionary completion (see |bashsupport-dictionary|).
-          g:BASH_Root            : The name of the root menu entry of this plugin
-                                   (see |bashsupport-custom-root|).
-
-4. group: g:BASH_OutputGvim             : Target for a script output
-                                          (see |bashsupport-output|).
-          g:BASH_XtermDefaults          : The xterm defaults (see |bashsupport-xterm|).
-          g:BASH_LineEndCommColDefault  : default starting column for line end comments
-          g:BASH_SyntaxCheckOptionsGlob : shopt options used with syntax checking
-          g:BASH_Printheader            : hardcopy header format
-          g:BASH_Debugger               : the debugger called by F9 (term, ddd).
-          g:BASH_BASH                   : the shell used
-          g:BASH_Man                    : the interface to the on-line manuals
-          g:BASH_DoOnNewLine            : see |bashsupport-stat-norm-ins|
-          g:BASH_MapLeader              : the map leader for hotkeys (see|bashsupport-usage-vim|)
-          g:BASH_GuiSnippetBrowser      : code snippet browser: 'gui', 'commandline'
+ 1. group: Defines the text which will be inserted for the tags when a template
+           is read in (see |bashsupport-tempfiles|).
+ 
+           g:BASH_AuthorName      : author name
+           g:BASH_AuthorRef       : author reference (e.g. acronym)
+           g:BASH_Email           : email address
+           g:BASH_Company         : name of the company / institution
+           g:BASH_Project         : project
+           g:BASH_CopyrightHolder : the copyright holder
+ 
+ 2. group: Sets the template directory and the names of the template files (see below).
+ 
+ 3. group: g:BASH_CodeSnippets    : The name of the code snippet directory
+                                    (see |bashsupport-stat-snippets|).
+           g:BASH_LoadMenus       : Load menus and mappings ("yes", "no") at start up.
+           g:BASH_Dictionary_File : Path and file name of the bash word list used for
+                                    dictionary completion (see |bashsupport-dictionary|).
+           g:BASH_Root            : The name of the root menu entry of this plugin
+                                    (see |bashsupport-custom-root|).
+ 
+ 4. group: g:BASH_OutputGvim             : Target for a script output
+                                           (see |bashsupport-output|).
+           g:BASH_XtermDefaults          : The xterm defaults (see |bashsupport-xterm|).
+           g:BASH_LineEndCommColDefault  : default starting column for line end comments
+           g:BASH_SyntaxCheckOptionsGlob : shopt options used with syntax checking
+           g:BASH_Printheader            : hardcopy header format
+           g:BASH_Debugger               : the debugger called by F9 (term, ddd).
+           g:BASH_BASH                   : the shell used
+           g:BASH_Man                    : the interface to the on-line manuals
+           g:BASH_DoOnNewLine            : see |bashsupport-stat-norm-ins|
+           g:BASH_MapLeader              : the map leader for hotkeys (see|bashsupport-usage-vim|)
+           g:BASH_GuiSnippetBrowser      : code snippet browser: 'gui', 'commandline'
 
 To override the defaults add appropriate assignments in '.vimrc'.
 Here are my settings as an example:

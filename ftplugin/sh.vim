@@ -3,8 +3,7 @@
 "   Language :  bash
 "     Plugin :  bash-support.vim
 " Maintainer :  Fritz Mehner <mehner@fh-swf.de>
-"    Version :  2.10
-"   Revision :  $Id: sh.vim,v 1.24 2009/06/13 18:18:42 mehner Exp $
+"   Revision :  $Id: sh.vim,v 1.26 2009/07/16 15:50:16 mehner Exp $
 "
 " -----------------------------------------------------------------
 "
@@ -29,7 +28,9 @@ let	s:MSWIN =		has("win16") || has("win32") || has("win64") || has("win95")
 " using Vim's dictionary feature |i_CTRL-X_CTRL-K|.
 " 
 if exists("g:BASH_Dictionary_File")
-    silent! exec 'setlocal dictionary+='.g:BASH_Dictionary_File
+	let	save=&dictionary
+  silent! exe 'setlocal dictionary='.g:BASH_Dictionary_File
+  silent! exe 'setlocal dictionary+='.save
 endif    
 "
 " ---------- hot keys ------------------------------------------
@@ -173,6 +174,48 @@ vnoremap  <buffer>  <silent>  <LocalLeader>se       secho<Space>-e<Space>"\n"<Es
  noremap  <buffer>  <silent>  <LocalLeader>sp      ^iprintf<Space>"%s\n"<Esc>2hi
 inoremap  <buffer>  <silent>  <LocalLeader>sp        printf<Space>"%s\n"<Esc>2hi
 vnoremap  <buffer>  <silent>  <LocalLeader>sp       sprintf<Space>"%s\n"<Esc>2hP
+
+ noremap  <buffer>  <silent>  <LocalLeader>sa      a${[]}<Left><Left><Left>
+inoremap  <buffer>  <silent>  <LocalLeader>sa       ${[]}<Left><Left><Left>
+vnoremap  <buffer>  <silent>  <LocalLeader>sa      s${[]}<Left><Left><Esc>P
+
+ noremap  <buffer>  <silent>  <LocalLeader>sas     a${[@]}<Left><Left><Left><Left>
+inoremap  <buffer>  <silent>  <LocalLeader>sas      ${[@]}<Left><Left><Left><Left>
+vnoremap  <buffer>  <silent>  <LocalLeader>sas     s${[@]}<Left><Left><Left><Esc>P
+  "
+  " ----------------------------------------------------------------------------
+  " POSIX character classes
+  " ----------------------------------------------------------------------------
+  "
+nnoremap  <buffer>  <silent>  <LocalLeader>pa    a[:alnum:]<Esc>
+nnoremap  <buffer>  <silent>  <LocalLeader>ph    a[:alpha:]<Esc>
+nnoremap  <buffer>  <silent>  <LocalLeader>pi    a[:ascii:]<Esc>
+nnoremap  <buffer>  <silent>  <LocalLeader>pb    a[:blank:]<Esc>
+nnoremap  <buffer>  <silent>  <LocalLeader>pc    a[:cntrl:]<Esc>
+nnoremap  <buffer>  <silent>  <LocalLeader>pd    a[:digit:]<Esc>
+nnoremap  <buffer>  <silent>  <LocalLeader>pg    a[:graph:]<Esc>
+nnoremap  <buffer>  <silent>  <LocalLeader>pl    a[:lower:]<Esc>
+nnoremap  <buffer>  <silent>  <LocalLeader>pp    a[:print:]<Esc>
+nnoremap  <buffer>  <silent>  <LocalLeader>pn    a[:punct:]<Esc>
+nnoremap  <buffer>  <silent>  <LocalLeader>ps    a[:space:]<Esc>
+nnoremap  <buffer>  <silent>  <LocalLeader>pu    a[:upper:]<Esc>
+nnoremap  <buffer>  <silent>  <LocalLeader>pw    a[:word:]<Esc>
+nnoremap  <buffer>  <silent>  <LocalLeader>px    a[:xdigit:]<Esc>
+"
+inoremap  <buffer>  <silent>  <LocalLeader>pa    [:alnum:]
+inoremap  <buffer>  <silent>  <LocalLeader>ph    [:alpha:]
+inoremap  <buffer>  <silent>  <LocalLeader>pi    [:ascii:]
+inoremap  <buffer>  <silent>  <LocalLeader>pb    [:blank:]
+inoremap  <buffer>  <silent>  <LocalLeader>pc    [:cntrl:]
+inoremap  <buffer>  <silent>  <LocalLeader>pd    [:digit:]
+inoremap  <buffer>  <silent>  <LocalLeader>pg    [:graph:]
+inoremap  <buffer>  <silent>  <LocalLeader>pl    [:lower:]
+inoremap  <buffer>  <silent>  <LocalLeader>pp    [:print:]
+inoremap  <buffer>  <silent>  <LocalLeader>pn    [:punct:]
+inoremap  <buffer>  <silent>  <LocalLeader>ps    [:space:]
+inoremap  <buffer>  <silent>  <LocalLeader>pu    [:upper:]
+inoremap  <buffer>  <silent>  <LocalLeader>pw    [:word:]
+inoremap  <buffer>  <silent>  <LocalLeader>px    [:xdigit:]
 "
 " ---------- snippet menu ----------------------------------------------------
 "

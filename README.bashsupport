@@ -1,4 +1,4 @@
-README for bash-support.vim (Version 2.12) / June 29 2009
+README for bash-support.vim (Version 2.13) / July 16 2009
 
   *  INSTALLATION
   *  RELEASE NOTES 
@@ -59,13 +59,14 @@ and look at the bashsupport help with
 
 
 =======================================================================================
-  RELEASE NOTES FOR VERSION 2.12
+  RELEASE NOTES FOR VERSION 2.13
 =======================================================================================
-+ Hotkeys are shown in the menus.
-+ New menu item and hotkey \hb : open the Bash manual.
-+ New hotkey \rco : syntax check options.
-+ File browser for code snippets choosable (new global variable).
-+ Bugfix: wrapper script for use of a xterm could not handle parameters containing blanks.
++ New menu item 'array element'.
++ New hotkeys \sa, \sas.
++ New submenu 'Snippets'.
++ Hotkeys for the POSIX character classes.
++ Hardcopy (run menu) can print any buffer.
++ Bugfix: 'Run->save + run script' (\rr, <C-F9>) : visual mode broken. 
 + Minor improvements.
 
 =======================================================================================
@@ -95,6 +96,9 @@ bash-support/wordlists/*            Additional word lists (dictionaries).
 -----------------------   The following files and extensions are for convenience only.
                           bash-support.vim will work without them.
                           -------------------------------------------------------------
+
+bash-support/rc/costumization.bashrc  Additional settings I use in .bashrc: 
+                                      set the prompt P2, P3, P4 (for debugging).
 
 bash-support/rc/costumization.vimrc   Additional settings I use in .vimrc: incremental 
                                       search, tabstop, hot keys, font, use of dictionaries, 

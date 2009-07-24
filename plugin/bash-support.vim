@@ -29,7 +29,7 @@
 "                  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 "                  PURPOSE.
 "                  See the GNU General Public License version 2 for more details.
-"       Revision:  $Id: bash-support.vim,v 1.41 2009/06/11 18:16:29 mehner Exp $
+"       Revision:  $Id: bash-support.vim,v 1.44 2009/07/16 15:52:31 mehner Exp $
 "
 "------------------------------------------------------------------------------
 "
@@ -38,7 +38,7 @@
 if exists("g:BASH_Version") || &cp
  finish
 endif
-let g:BASH_Version= "2.12"  						" version number of this script; do not change
+let g:BASH_Version= "2.13"  						" version number of this script; do not change
 "
 if v:version < 700
   echohl WarningMsg | echo 'plugin bash-support.vim needs Vim version >= 7'| echohl None
@@ -373,9 +373,13 @@ function!	BASH_InitMenu ()
 	exe "vnoremenu ".s:BASH_Root.'&Statements.ech&o\ \ -e\ "\\n"<Tab>\\se 		secho<Space>-e<Space>"\n"<Esc>2hP'
 	"
 	exe "amenu  ".s:BASH_Root.'&Statements.-SEP5-                                 :'
-	exe "anoremenu ".s:BASH_Root.'&Statements.&array\ elem\.s<Tab>${\.[@]}      	a${[@]}<Left><Left><Left><Left>'
-	exe "inoremenu ".s:BASH_Root.'&Statements.&array\ elem\.s<Tab>${\.[@]}      	 ${[@]}<Left><Left><Left><Left>'
-	exe "vnoremenu ".s:BASH_Root.'&Statements.&array\ elem\.s<Tab>${\.[@]}      	s${[@]}<Left><Left><Left><Esc>P'
+	exe "anoremenu ".s:BASH_Root.'&Statements.&array\ elem\.\ \\sa<Tab>${\.[\.]}      	a${[]}<Left><Left><Left>'
+	exe "inoremenu ".s:BASH_Root.'&Statements.&array\ elem\.\ \\sa<Tab>${\.[\.]}      	 ${[]}<Left><Left><Left>'
+	exe "vnoremenu ".s:BASH_Root.'&Statements.&array\ elem\.\ \\sa<Tab>${\.[\.]}      	s${[]}<Left><Left><Esc>P'
+
+	exe "anoremenu ".s:BASH_Root.'&Statements.&array\ elem\.s\ \\sas<Tab>${\.[@]}      	a${[@]}<Left><Left><Left><Left>'
+	exe "inoremenu ".s:BASH_Root.'&Statements.&array\ elem\.s\ \\sas<Tab>${\.[@]}      	 ${[@]}<Left><Left><Left><Left>'
+	exe "vnoremenu ".s:BASH_Root.'&Statements.&array\ elem\.s\ \\sas<Tab>${\.[@]}      	s${[@]}<Left><Left><Left><Esc>P'
 
 	exe "anoremenu ".s:BASH_Root.'&Statements.arra&y\ (1\ word)<Tab>${\.[*]}			a${[*]}<Left><Left><Left><Left>'
 	exe "inoremenu ".s:BASH_Root.'&Statements.arra&y\ (1\ word)<Tab>${\.[*]}			 ${[*]}<Left><Left><Left><Left>'
@@ -390,14 +394,14 @@ function!	BASH_InitMenu ()
 	exe "vnoremenu ".s:BASH_Root.'&Statements.list\ of\ in&dices<tab>${!\.[*]}   	s${![*]}<Left><Left><Left><Esc>P'
 	"
 	if s:BASH_CodeSnippets != ""
-		exe "amenu  ".s:BASH_Root.'&Statements.-SEP6-                    		  :'
-		exe " menu  <silent> ".s:BASH_Root.'&Statements.read\ code\ snippet<Tab>\\nr        :call BASH_CodeSnippets("r")<CR>'
-		exe "imenu  <silent> ".s:BASH_Root.'&Statements.read\ code\ snippet<Tab>\\nr   <C-C>:call BASH_CodeSnippets("r")<CR>'
-		exe " menu  <silent> ".s:BASH_Root.'&Statements.write\ code\ snippet<Tab>\\nw       :call BASH_CodeSnippets("w")<CR>'
-		exe "imenu  <silent> ".s:BASH_Root.'&Statements.write\ code\ snippet<Tab>\\nw  <C-C>:call BASH_CodeSnippets("w")<CR>'
-		exe "vmenu  <silent> ".s:BASH_Root.'&Statements.write\ code\ snippet<Tab>\\nw  <C-C>:call BASH_CodeSnippets("wv")<CR>'
-		exe " menu  <silent> ".s:BASH_Root.'&Statements.edit\ code\ snippet<Tab>\\ne        :call BASH_CodeSnippets("e")<CR>'
-		exe "imenu  <silent> ".s:BASH_Root.'&Statements.edit\ code\ snippet<Tab>\\ne   <C-C>:call BASH_CodeSnippets("e")<CR>'
+		exe " menu  <silent> ".s:BASH_Root.'S&nippets.read\ code\ snippet<Tab>\\nr        :call BASH_CodeSnippets("r")<CR>'
+		exe "imenu  <silent> ".s:BASH_Root.'S&nippets.read\ code\ snippet<Tab>\\nr   <C-C>:call BASH_CodeSnippets("r")<CR>'
+		exe " menu  <silent> ".s:BASH_Root.'S&nippets.write\ code\ snippet<Tab>\\nw       :call BASH_CodeSnippets("w")<CR>'
+		exe "imenu  <silent> ".s:BASH_Root.'S&nippets.write\ code\ snippet<Tab>\\nw  <C-C>:call BASH_CodeSnippets("w")<CR>'
+		exe "vmenu  <silent> ".s:BASH_Root.'S&nippets.write\ code\ snippet<Tab>\\nw  <C-C>:call BASH_CodeSnippets("wv")<CR>'
+		exe " menu  <silent> ".s:BASH_Root.'S&nippets.edit\ code\ snippet<Tab>\\ne        :call BASH_CodeSnippets("e")<CR>'
+		exe "imenu  <silent> ".s:BASH_Root.'S&nippets.edit\ code\ snippet<Tab>\\ne   <C-C>:call BASH_CodeSnippets("e")<CR>'
+"		exe "amenu  ".s:BASH_Root.'S&nippets.-SEP6-                    		  :'
 	endif
 	"
 	"-------------------------------------------------------------------------------
@@ -685,38 +689,25 @@ function!	BASH_InitMenu ()
 	exe "vnoremenu ".s:BASH_Root.'Rege&x.anyth\.\ except\ \ \ &!(\ \|\ )             s!(\|)<Esc>hPla'
 	"
 	exe "amenu ".s:BASH_Root.'Rege&x.-Sep1-      :'
+  "
+  exe "anoremenu ".s:BASH_Root.'Rege&x.[:&alnum:]<Tab>\\pa   a[:alnum:]'
+  exe "anoremenu ".s:BASH_Root.'Rege&x.[:alp&ha:]<Tab>\\ph   a[:alpha:]'
+  exe "anoremenu ".s:BASH_Root.'Rege&x.[:asc&ii:]<Tab>\\pi   a[:ascii:]'
+  exe "anoremenu ".s:BASH_Root.'Rege&x.[:&blank:]<Tab>\\pb   a[:blank:]'
+  exe "anoremenu ".s:BASH_Root.'Rege&x.[:&cntrl:]<Tab>\\pc   a[:cntrl:]'
+  exe "anoremenu ".s:BASH_Root.'Rege&x.[:&digit:]<Tab>\\pd   a[:digit:]'
+  exe "anoremenu ".s:BASH_Root.'Rege&x.[:&graph:]<Tab>\\pg   a[:graph:]'
+  exe "anoremenu ".s:BASH_Root.'Rege&x.[:&lower:]<Tab>\\pl   a[:lower:]'
+  exe "anoremenu ".s:BASH_Root.'Rege&x.[:&print:]<Tab>\\pp   a[:print:]'
+  exe "anoremenu ".s:BASH_Root.'Rege&x.[:pu&nct:]<Tab>\\pn   a[:punct:]'
+  exe "anoremenu ".s:BASH_Root.'Rege&x.[:&space:]<Tab>\\ps   a[:space:]'
+  exe "anoremenu ".s:BASH_Root.'Rege&x.[:&upper:]<Tab>\\pu   a[:upper:]'
+  exe "anoremenu ".s:BASH_Root.'Rege&x.[:&word:]<Tab>\\pw    a[:word:]'
+  exe "anoremenu ".s:BASH_Root.'Rege&x.[:&xdigit:]<Tab>\\px  a[:xdigit:]'
 	"
-	exe " noremenu ".s:BASH_Root.'Rege&x.[:&alnum:]	 a[:alnum:]'
-	exe " noremenu ".s:BASH_Root.'Rege&x.[:alp&ha:]	 a[:alpha:]'
-	exe " noremenu ".s:BASH_Root.'Rege&x.[:asc&ii:]	 a[:ascii:]'
-	exe " noremenu ".s:BASH_Root.'Rege&x.[:&cntrl:]	 a[:cntrl:]'
-	exe " noremenu ".s:BASH_Root.'Rege&x.[:&digit:]	 a[:digit:]'
-	exe " noremenu ".s:BASH_Root.'Rege&x.[:&graph:]	 a[:graph:]'
-	exe " noremenu ".s:BASH_Root.'Rege&x.[:&lower:]	 a[:lower:]'
-	exe " noremenu ".s:BASH_Root.'Rege&x.[:&print:]	 a[:print:]'
-	exe " noremenu ".s:BASH_Root.'Rege&x.[:pu&nct:]	 a[:punct:]'
-	exe " noremenu ".s:BASH_Root.'Rege&x.[:&space:]	 a[:space:]'
-	exe " noremenu ".s:BASH_Root.'Rege&x.[:&upper:]	 a[:upper:]'
-	exe " noremenu ".s:BASH_Root.'Rege&x.[:&word:]	 a[:word:]'
-	exe " noremenu ".s:BASH_Root.'Rege&x.[:&xdigit:] a[:xdigit:]'
-	"
-	exe "inoremenu ".s:BASH_Root.'Rege&x.[:&alnum:]		[:alnum:]'
-	exe "inoremenu ".s:BASH_Root.'Rege&x.[:alp&ha:]		[:alpha:]'
-	exe "inoremenu ".s:BASH_Root.'Rege&x.[:asc&ii:]		[:ascii:]'
-	exe "inoremenu ".s:BASH_Root.'Rege&x.[:&cntrl:]		[:cntrl:]'
-	exe "inoremenu ".s:BASH_Root.'Rege&x.[:&digit:]		[:digit:]'
-	exe "inoremenu ".s:BASH_Root.'Rege&x.[:&graph:]		[:graph:]'
-	exe "inoremenu ".s:BASH_Root.'Rege&x.[:&lower:]		[:lower:]'
-	exe "inoremenu ".s:BASH_Root.'Rege&x.[:&print:]		[:print:]'
-	exe "inoremenu ".s:BASH_Root.'Rege&x.[:pu&nct:]		[:punct:]'
-	exe "inoremenu ".s:BASH_Root.'Rege&x.[:&space:]		[:space:]'
-	exe "inoremenu ".s:BASH_Root.'Rege&x.[:&upper:]		[:upper:]'
-	exe "inoremenu ".s:BASH_Root.'Rege&x.[:&word:]	 	[:word:]'
-	exe "inoremenu ".s:BASH_Root.'Rege&x.[:&xdigit:]	[:xdigit:]'
-	"
-	exe " noremenu ".s:BASH_Root.'Rege&x.&[\ \ \ ]   a[]<Left>'
-	exe "inoremenu ".s:BASH_Root.'Rege&x.&[\ \ \ ]    []<Left>'
-	exe "vnoremenu ".s:BASH_Root.'Rege&x.&[\ \ \ ]   s[]<Esc>P'
+"	exe " noremenu ".s:BASH_Root.'Rege&x.&[\ \ \ ]   a[]<Left>'
+"	exe "inoremenu ".s:BASH_Root.'Rege&x.&[\ \ \ ]    []<Left>'
+"	exe "vnoremenu ".s:BASH_Root.'Rege&x.&[\ \ \ ]   s[]<Esc>P'
 	"
 	exe "amenu ".s:BASH_Root.'Rege&x.-Sep2-      :'
 	"
@@ -882,6 +873,8 @@ function! BASH_InitMenuHeader ()
 	exe "amenu ".s:BASH_Root.'&Comments.-Sep0-              :'
 	exe "amenu ".s:BASH_Root.'&Statements.Statements<Tab>Bash  <Nop>'
 	exe "amenu ".s:BASH_Root.'&Statements.-Sep0-               :'
+	exe "amenu ".s:BASH_Root.'&Snippets.Snippets<Tab>Bash  <Nop>'
+	exe "amenu ".s:BASH_Root.'&Snippets.-Sep0-               :'
 	exe "amenu ".s:BASH_Root.'&Tests.Tests-0<Tab>Bash   <Nop>'
 	exe "amenu ".s:BASH_Root.'&Tests.-Sep0-             :'
 	exe "amenu ".s:BASH_Root.'&Tests.&arithmetic\ tests.Tests-1<Tab>Bash   <Nop>'
@@ -1404,13 +1397,13 @@ function! BASH_CodeFunction ( mode )
 	if identifier != ''
 		"
 		if a:mode == "a"
-			let zz=    "function ".identifier." ()\n{\n}"
+			let zz=    identifier." ()\n{\n}"
 			let zz= zz."    # ----------  end of function ".identifier."  ----------"
 			put =zz
 		endif
 		"
 		if a:mode == "v"
-			let zz= "function ".identifier." ()\n{\n"
+			let zz= identifier." ()\n{\n"
 			normal '<
 			put! =zz
 			let zz= "}    # ----------  end of function ".identifier."  ----------"
@@ -1798,7 +1791,7 @@ function! BASH_Run ( mode )
 		" ----- visual mode ----------
 		"
 		if a:mode=="v"
-			exe ":!$".s:BASH_BASH." < ".tmpfile." -s ".l:arguments
+			exe ":!".s:BASH_BASH." < ".tmpfile." -s ".l:arguments
 			call delete(tmpfile)
 			return
 		endif
@@ -2087,31 +2080,38 @@ endfunction		" ---------- end of function  BASH_CodeSnippets  ----------
 "------------------------------------------------------------------------------
 "  Run : hardcopy    {{{1
 "------------------------------------------------------------------------------
-function! BASH_Hardcopy (arg1)
-	let	Sou		= expand("%")								" name of the file in the current buffer
-	if Sou == ""
-		redraw
-		echohl WarningMsg | echo " no file name " | echohl None
-		return
+function! BASH_Hardcopy (mode)
+  let outfile = expand("%")
+  if outfile == ""
+    redraw
+    echohl WarningMsg | echo " no file name " | echohl None
+    return
+  endif
+	let outdir	= getcwd()
+	if filewritable(outdir) != 2
+		let outdir	= $HOME
 	endif
-	let	old_printheader=&printheader
-	exe  ':set printheader='.s:BASH_Printheader
-	" ----- normal mode ----------------
-	if a:arg1=="n"
-		silent exe	"hardcopy > ".Sou.".ps"
-		if	!s:MSWIN
-			echo "file \"".Sou."\" printed to \"".Sou.".ps\""
-		endif
+	if  !s:MSWIN
+		let outdir	= outdir.'/'
 	endif
-	" ----- visual mode ----------------
-	if a:arg1=="v"
-		silent exe	"*hardcopy > ".Sou.".ps"
-		if	!s:MSWIN
-			echo "file \"".Sou."\" (lines ".line("'<")."-".line("'>").") printed to \"".Sou.".ps\""
-		endif
-	endif
-	exe  ':set printheader='.escape( old_printheader, ' %' )
-endfunction		" ---------- end of function  BASH_Hardcopy  ----------
+  let old_printheader=&printheader
+  exe  ':set printheader='.s:BASH_Printheader
+  " ----- normal mode ----------------
+  if a:mode=="n"
+    silent exe  'hardcopy > '.outdir.outfile.'.ps'
+    if  !s:MSWIN
+      echo 'file "'.outfile.'" printed to "'.outdir.outfile.'.ps"'
+    endif
+  endif
+  " ----- visual mode ----------------
+  if a:mode=="v"
+    silent exe  "*hardcopy > ".outdir.outfile.".ps"
+    if  !s:MSWIN
+      echo 'file "'.outfile.'" (lines '.line("'<").'-'.line("'>").') printed to "'.outdir.outfile.'.ps"'
+    endif
+  endif
+  exe  ':set printheader='.escape( old_printheader, ' %' )
+endfunction   " ---------- end of function  BASH_Hardcopy  ----------
 "
 "------------------------------------------------------------------------------
 "  Run : settings    {{{1
@@ -2131,7 +2131,8 @@ function! BASH_Settings ()
 		let txt = txt." buf. syntax check options :  ".b:BASH_SyntaxCheckOptionsLocal."\n"
 	endif
 	if g:BASH_Dictionary_File != ""
-		let ausgabe= substitute( g:BASH_Dictionary_File, ",", ",\n                         + ", "g" )
+		let ausgabe= &dictionary
+		let ausgabe= substitute( ausgabe, ",", ",\n                            + ", "g" )
 		let txt = txt."        dictionary file(s) :  ".ausgabe."\n"
 	endif
 	let txt = txt."      current output dest. :  ".s:BASH_OutputGvim."\n"
@@ -2211,6 +2212,7 @@ function! BASH_RemoveGuiMenus ()
 		if s:BASH_Root == ""
 			aunmenu <silent> Comments
 			aunmenu <silent> Statements
+			aunmenu <silent> Snippets
 			aunmenu <silent> Tests
 			aunmenu <silent> ParamSub
 			aunmenu <silent> SpecVars
@@ -2218,6 +2220,7 @@ function! BASH_RemoveGuiMenus ()
 			aunmenu <silent> Builtins
 			aunmenu <silent> set
 			aunmenu <silent> shopt
+			aunmenu <silent> Regex
 			aunmenu <silent> I/O-Redir
 			aunmenu <silent> Run
 			aunmenu <silent> Help

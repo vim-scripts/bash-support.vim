@@ -8,15 +8,15 @@
 %%        Email:  mehner@fh-swf.de
 %%    Copyright:  Copyright (C)  2003-2008  Dr.-Ing. Fritz Mehner  (mehner@fh-swf.de)
 %%      Version:  see PluginVersion (below)
-%%     Revision:  $Id: bash-hot-keys.tex,v 1.16 2009/06/29 13:21:41 mehner Exp $
+%%     Revision:  $Id: bash-hot-keys.tex,v 1.18 2009/07/22 10:59:45 mehner Exp $
 %%      Created:  09.06.2003
 %%                
 %%        Notes:  
 %%                
 %%=====================================================================================
 
-\newcommand{\PluginVersion}{2.12}
-\newcommand{\ReleaseDate}{ June 2009}
+\newcommand{\PluginVersion}{2.13}
+\newcommand{\ReleaseDate}{ July 2009}
 
 \documentclass[oneside,12pt,a4paper,DIV18]{scrartcl}
 \usepackage[english]{babel}
@@ -108,18 +108,20 @@ All mappings also work for gVim.}\\
 \hline 
 \hline
 \multicolumn{2}{|r|}{\textsl{\textbf{S}tatements}} \\
-\hline \verb'\sc'  & \verb'case in ... esac'    \hfill (n, i) \\
-\hline \verb'\sl'  & \verb'elif then'           \hfill (n, i) \\
-\hline \verb'\sf'  & \verb'for in do done'      \hfill (n, i, v) \\
-\hline \verb'\sfo' & \verb'for ((...)) do done'      \hfill (n, i, v) \\
-\hline \verb'\si'  & \verb'if then fi'          \hfill (n, i, v) \\
-\hline \verb'\sie' & \verb'if then else fi'     \hfill (n, i, v) \\
-\hline \verb'\ss'  & \verb'select in do done'   \hfill (n, i, v) \\
-\hline \verb'\st'  & \verb'until do done'       \hfill (n, i, v) \\
-\hline \verb'\sw'  & \verb'while do done'       \hfill (n, i, v) \\
-\hline \verb'\sfu' & \verb'function'            \hfill (n, i, v) \\
-\hline \verb'\se'  & \verb'echo -e "\n"'        \hfill (n, i, v) \\
-\hline \verb'\sp'  & \verb'printf  "\n"'        \hfill (n, i, v) \\
+\hline \verb'\sc'  & \verb'case in ... esac'            \hfill (n, i) \\
+\hline \verb'\sl'  & \verb'elif then'                   \hfill (n, i) \\
+\hline \verb'\sf'  & \verb'for in do done'              \hfill (n, i, v)\\
+\hline \verb'\sfo' & \verb'for ((...)) do done'         \hfill (n, i, v)\\
+\hline \verb'\si'  & \verb'if then fi'                  \hfill (n, i, v)\\
+\hline \verb'\sie' & \verb'if then else fi'             \hfill (n, i, v)\\
+\hline \verb'\ss'  & \verb'select in do done'           \hfill (n, i, v)\\
+\hline \verb'\st'  & \verb'until do done'               \hfill (n, i, v)\\
+\hline \verb'\sw'  & \verb'while do done'               \hfill (n, i, v)\\
+\hline \verb'\sfu' & \verb'function'                    \hfill (n, i, v)\\
+\hline \verb'\se'  & \verb'echo -e "\n"'                \hfill (n, i, v)\\
+\hline \verb'\sp'  & \verb'printf  "\n"'                \hfill (n, i, v)\\
+\hline \verb'\sa'  & array element\ \ \ \verb'${.[.]}'  \hfill (n, i, v)\\
+\hline \verb'\sas' & array elements \ \verb'${.[@]}'    \hfill (n, i, v)\\
 \hline
 \end{tabular} \\
 %%~~~~~ TABULAR :  end  ~~~~~~~~~~
@@ -135,13 +137,33 @@ All mappings also work for gVim.}\\
 %%======================================================================
 %%~~~~~ TABULAR : begin ~~~~~~~~~~
 \begin{tabular}[]{l}
-   \\ [35.4ex]								%% offset
+   \\ [14.3ex]								%% offset
 \end{tabular} \\ 
 %%~~~~~ TABULAR :  end  ~~~~~~~~~~
 %%~~~~~ TABULAR : begin ~~~~~~~~~~
 \begin{tabular}[]{|p{11mm}|p{59mm}|}
+%%----------------------------------------------------------------------
+%%  menu Posix character classes
+%%----------------------------------------------------------------------
 \hline
-\multicolumn{2}{|r|}{\textsl{S\textbf{n}ippet}} \\
+\multicolumn{2}{|r|}{\textsl{\textbf{P}OSIX Character Classes}}\\
+\hline \verb'\pa' &  \verb'[:alnum:] '         \hfill (n, i)   \\
+\hline \verb'\ph' &  \verb'[:alpha:] '         \hfill (n, i)   \\
+\hline \verb'\pi' &  \verb'[:ascii:] '         \hfill (n, i)   \\
+\hline \verb'\pb' &  \verb'[:blank:] '         \hfill (n, i)   \\
+\hline \verb'\pc' &  \verb'[:cntrl:] '         \hfill (n, i)   \\
+\hline \verb'\pd' &  \verb'[:digit:] '         \hfill (n, i)   \\
+\hline \verb'\pg' &  \verb'[:graph:] '         \hfill (n, i)   \\
+\hline \verb'\pl' &  \verb'[:lower:] '         \hfill (n, i)   \\
+\hline \verb'\pp' &  \verb'[:print:] '         \hfill (n, i)   \\
+\hline \verb'\pn' &  \verb'[:punct:] '         \hfill (n, i)   \\
+\hline \verb'\ps' &  \verb'[:space:] '         \hfill (n, i)   \\
+\hline \verb'\pu' &  \verb'[:upper:] '         \hfill (n, i)   \\
+\hline \verb'\pw' &  \verb'[:word:]  '         \hfill (n, i)   \\
+\hline \verb'\px' &  \verb'[:xdigit:]'         \hfill (n, i)   \\
+\hline
+\hline
+\multicolumn{2}{|r|}{\textsl{S\textbf{n}ippets}} \\
 \hline \verb'\nr'  & read code snippet          \hfill (n)\\
 \hline \verb'\nw'  & write code snippet         \hfill (n, v)\\
 \hline \verb'\ne'  & edit code snippet          \hfill (n)\\
