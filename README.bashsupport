@@ -1,4 +1,4 @@
-README for bash-support.vim (Version 2.13) / July 16 2009
+README for bash-support.vim (Version 2.14) / September 16 2009
 
   *  INSTALLATION
   *  RELEASE NOTES 
@@ -59,14 +59,12 @@ and look at the bashsupport help with
 
 
 =======================================================================================
-  RELEASE NOTES FOR VERSION 2.13
+  RELEASE NOTES FOR VERSION 2.14
 =======================================================================================
-+ New menu item 'array element'.
-+ New hotkeys \sa, \sas.
-+ New submenu 'Snippets'.
-+ Hotkeys for the POSIX character classes.
-+ Hardcopy (run menu) can print any buffer.
-+ Bugfix: 'Run->save + run script' (\rr, <C-F9>) : visual mode broken. 
++ Debugging: ddd always called with bashdb(1).
++ More complete adaption to Bash 4.0: options, builtins, environment variables.
++ Bugfix: running and starting the debugger causes error if working directory is not
+  the directory of the current file.
 + Minor improvements.
 
 =======================================================================================

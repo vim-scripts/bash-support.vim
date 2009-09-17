@@ -29,7 +29,7 @@
 "                  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 "                  PURPOSE.
 "                  See the GNU General Public License version 2 for more details.
-"       Revision:  $Id: bash-support.vim,v 1.44 2009/07/16 15:52:31 mehner Exp $
+"       Revision:  $Id: bash-support.vim,v 1.47 2009/09/16 14:39:23 mehner Exp $
 "
 "------------------------------------------------------------------------------
 "
@@ -38,7 +38,7 @@
 if exists("g:BASH_Version") || &cp
  finish
 endif
-let g:BASH_Version= "2.13"  						" version number of this script; do not change
+let g:BASH_Version= "2.14"  						" version number of this script; do not change
 "
 if v:version < 700
   echohl WarningMsg | echo 'plugin bash-support.vim needs Vim version >= 7'| echohl None
@@ -127,27 +127,6 @@ let s:BASH_SetCounter     = 0                     "
 let s:BASH_Set_Txt        = "SetOptionNumber_"
 let s:BASH_Shopt_Txt      = "ShoptOptionNumber_"
 "
-" Bash shopt options (GNU Bash-3.2, manual: 2006 September 28)
-"
-let s:BASH_ShoptAllowed =                     "cdable_vars:cdspell:checkhash:checkwinsize:"
-let s:BASH_ShoptAllowed = s:BASH_ShoptAllowed."cmdhist:dotglob:execfail:expand_aliases:"
-let s:BASH_ShoptAllowed = s:BASH_ShoptAllowed."extdebug:extglob:extquote:failglob:"
-let s:BASH_ShoptAllowed = s:BASH_ShoptAllowed."force_fignore:gnu_errfmt:histappend:histreedit:"
-let s:BASH_ShoptAllowed = s:BASH_ShoptAllowed."histverify:hostcomplete:huponexit:interactive_comments:"
-let s:BASH_ShoptAllowed = s:BASH_ShoptAllowed."lithist:login_shell:mailwarn:no_empty_cmd_completion:"
-let s:BASH_ShoptAllowed = s:BASH_ShoptAllowed."nocaseglob:nocasematch:nocasematch:nullglob:progcomp:promptvars:"
-let s:BASH_ShoptAllowed = s:BASH_ShoptAllowed."restricted_shell:shift_verbose:sourcepath:xpg_echo:"
-let s:BASH_Builtins     = [
-    \ 'alias',   'bind',    'break',    'builtin', 'caller',   'case',    'cd',
-    \ 'command', 'compgen', 'complete', 'compopt', 'continue', 'declare', 'dirs',      'disown', 
-    \ 'echo',    'enable',  'eval',     'exec',    'exit',     'export',  'false',     'function', 
-    \ 'getopts', 'hash',    'history',  'jobs',    'kill',     'let',     'local',     'logout', 
-    \ 'mapfile', 'popd',    'printf',   'pushd',   'pwd',      'read',    'readarray', 'readonly',
-    \ 'return',  'select',  'shift',    'shopt',   'source',   'suspend',  'test',     'times',
-    \ 'trap',    'type',    'typeset',  'ulimit',  'umask',    'unalias',
-    \ 'unset',   'wait'
-    \ ]
-"
 "------------------------------------------------------------------------------
 "  Look for global variables (if any)    {{{1
 "------------------------------------------------------------------------------
@@ -157,33 +136,33 @@ function! BASH_CheckGlobal ( name )
   endif
 endfunction   " ---------- end of function  BASH_CheckGlobal  ----------
 "
-call BASH_CheckGlobal("BASH_AuthorName            ")
-call BASH_CheckGlobal("BASH_AuthorRef             ")
-call BASH_CheckGlobal("BASH_BASH                  ")
-call BASH_CheckGlobal("BASH_CodeSnippets          ")
-call BASH_CheckGlobal("BASH_Company               ")
-call BASH_CheckGlobal("BASH_CopyrightHolder       ")
-call BASH_CheckGlobal("BASH_Debugger              ")
-call BASH_CheckGlobal("BASH_DoOnNewLine           ")
-call BASH_CheckGlobal("BASH_Email                 ")
-call BASH_CheckGlobal("BASH_FormatDate            ")
-call BASH_CheckGlobal("BASH_FormatTime            ")
-call BASH_CheckGlobal("BASH_FormatYear            ")
-call BASH_CheckGlobal('BASH_GuiSnippetBrowser      ')
-call BASH_CheckGlobal("BASH_LineEndCommColDefault ")
-call BASH_CheckGlobal("BASH_LoadMenus             ")
-call BASH_CheckGlobal("BASH_Man                   ")
-call BASH_CheckGlobal("BASH_MenuHeader            ")
-call BASH_CheckGlobal("BASH_OutputGvim            ")
-call BASH_CheckGlobal("BASH_Printheader           ")
-call BASH_CheckGlobal("BASH_Project               ")
-call BASH_CheckGlobal("BASH_Root                  ")
-call BASH_CheckGlobal("BASH_SyntaxCheckOptionsGlob")
-call BASH_CheckGlobal("BASH_Template_Directory    ")
-call BASH_CheckGlobal("BASH_Template_File         ")
-call BASH_CheckGlobal("BASH_Template_Frame        ")
-call BASH_CheckGlobal("BASH_Template_Function     ")
-call BASH_CheckGlobal("BASH_XtermDefaults         ")
+call BASH_CheckGlobal('BASH_AuthorName            ')
+call BASH_CheckGlobal('BASH_AuthorRef             ')
+call BASH_CheckGlobal('BASH_BASH                  ')
+call BASH_CheckGlobal('BASH_CodeSnippets          ')
+call BASH_CheckGlobal('BASH_Company               ')
+call BASH_CheckGlobal('BASH_CopyrightHolder       ')
+call BASH_CheckGlobal('BASH_Debugger              ')
+call BASH_CheckGlobal('BASH_DoOnNewLine           ')
+call BASH_CheckGlobal('BASH_Email                 ')
+call BASH_CheckGlobal('BASH_FormatDate            ')
+call BASH_CheckGlobal('BASH_FormatTime            ')
+call BASH_CheckGlobal('BASH_FormatYear            ')
+call BASH_CheckGlobal('BASH_GuiSnippetBrowser     ')
+call BASH_CheckGlobal('BASH_LineEndCommColDefault ')
+call BASH_CheckGlobal('BASH_LoadMenus             ')
+call BASH_CheckGlobal('BASH_Man                   ')
+call BASH_CheckGlobal('BASH_MenuHeader            ')
+call BASH_CheckGlobal('BASH_OutputGvim            ')
+call BASH_CheckGlobal('BASH_Printheader           ')
+call BASH_CheckGlobal('BASH_Project               ')
+call BASH_CheckGlobal('BASH_Root                  ')
+call BASH_CheckGlobal('BASH_SyntaxCheckOptionsGlob')
+call BASH_CheckGlobal('BASH_Template_Directory    ')
+call BASH_CheckGlobal('BASH_Template_File         ')
+call BASH_CheckGlobal('BASH_Template_Frame        ')
+call BASH_CheckGlobal('BASH_Template_Function     ')
+call BASH_CheckGlobal('BASH_XtermDefaults         ')
 "
 " set default geometry if not specified
 "
@@ -585,22 +564,22 @@ function!	BASH_InitMenu ()
 	"----- menu Environment Variables   {{{2
 	"-------------------------------------------------------------------------------
 	"
-	call BASH_EnvirMenus ( s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ BASH_VERSION', s:BashEnvironmentVariables[0:12] )
+	call BASH_EnvirMenus ( s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ BASH_VERSION', s:BashEnvironmentVariables[0:14] )
 	"
-	call BASH_EnvirMenus ( s:BASH_Root.'E&nviron.&CDPATH\ \.\.\.\ FUNCNAME', s:BashEnvironmentVariables[13:26] )
+	call BASH_EnvirMenus ( s:BASH_Root.'E&nviron.&CDPATH\ \.\.\.\ FUNCNAME', s:BashEnvironmentVariables[15:30] )
 	"
-	call BASH_EnvirMenus ( s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG', s:BashEnvironmentVariables[27:43] )
+	call BASH_EnvirMenus ( s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG', s:BashEnvironmentVariables[31:47] )
 	"
-	call BASH_EnvirMenus ( s:BASH_Root.'E&nviron.&LC_ALL\ \.\.\.\ OSTYPE', s:BashEnvironmentVariables[44:59] )
+	call BASH_EnvirMenus ( s:BASH_Root.'E&nviron.&LC_ALL\ \.\.\.\ OSTYPE', s:BashEnvironmentVariables[48:63] )
 	"
-	call BASH_EnvirMenus ( s:BASH_Root.'E&nviron.&PATH\ \.\.\.\ UID', s:BashEnvironmentVariables[60:78] )
+	call BASH_EnvirMenus ( s:BASH_Root.'E&nviron.&PATH\ \.\.\.\ UID', s:BashEnvironmentVariables[64:84] )
 	"
 	"-------------------------------------------------------------------------------
 	"----- menu Builtins  a-l   {{{2
 	"-------------------------------------------------------------------------------
-	call	BASH_BuiltinMenus ( s:BASH_Root.'&Builtins.Builtins\ \ &a-f', s:BashBuiltins[0:18] )
-	call	BASH_BuiltinMenus ( s:BASH_Root.'&Builtins.Builtins\ \ &g-r', s:BashBuiltins[19:35] )
-	call	BASH_BuiltinMenus ( s:BASH_Root.'&Builtins.Builtins\ \ &s-w', s:BashBuiltins[36:49] )
+	call	BASH_BuiltinMenus ( s:BASH_Root.'&Builtins.Builtins\ \ &a-f', s:BashBuiltins[0:21] )
+	call	BASH_BuiltinMenus ( s:BASH_Root.'&Builtins.Builtins\ \ &g-r', s:BashBuiltins[22:41] )
+	call	BASH_BuiltinMenus ( s:BASH_Root.'&Builtins.Builtins\ \ &s-w', s:BashBuiltins[42:57] )
 	"
 	"
 	"-------------------------------------------------------------------------------
@@ -662,8 +641,8 @@ function!	BASH_InitMenu ()
 	"-------------------------------------------------------------------------------
 	"----- menu shopt   {{{2
 	"-------------------------------------------------------------------------------
-	call	BASH_ShoptMenus ( s:BASH_Root.'sh&opt.shopt\ \ &a-g', s:BashShopt[0:17] )
-	call	BASH_ShoptMenus ( s:BASH_Root.'sh&opt.shopt\ \ &h-x', s:BashShopt[18:36] )
+	call	BASH_ShoptMenus ( s:BASH_Root.'sh&opt.shopt\ \ &a-g', s:BashShopt[0:18] )
+	call	BASH_ShoptMenus ( s:BASH_Root.'sh&opt.shopt\ \ &h-x', s:BashShopt[19:37] )
 	"
 	"------------------------------------------------------------------------------
 	"----- menu Regex    {{{2
@@ -924,11 +903,13 @@ function! BASH_InitMenuHeader ()
 endfunction    " ----------  end of function BASH_InitMenuHeader  ----------
 
 let	s:BashEnvironmentVariables	= [
-	\	'&BASH',        'BASH&PID',               'BASH_ARG&C',       'BASH_ARG&V',       'BASH_C&OMMAND',
+	\	'&BASH',        'BASH&PID',               'BASH_&ALIASES',
+	\	'BASH_ARG&C',   'BASH_ARG&V',             'BASH_C&MDS',        'BASH_C&OMMAND',
 	\	'BASH_&ENV',    'BASH_E&XECUTION_STRING', 'BASH_&LINENO',     'BASH_&REMATCH',
 	\	'BASH_&SOURCE', 'BASH_S&UBSHELL',         'BASH_VERS&INFO',   'BASH_VERSIO&N',
 	\	'&CDPATH',      'C&OLUMNS',               'CO&MPREPLY',       'COM&P_CWORD',
-	\	'COMP_&LINE',   'COMP_POI&NT',            'COMP_WORD&BREAKS', 'COMP_&WORDS',
+	\	'COMP_&KEY',    'COMP_&LINE',             'COMP_POI&NT',      'COMP_&TYPE',
+	\	'COMP_WORD&BREAKS', 'COMP_&WORDS',
 	\	'&DIRSTACK',    '&EMAC&S',                '&EUID',            '&FCEDIT',
 	\	'F&IGNORE',     'F&UNCNAME',              '&GLOBIGNORE',      'GRO&UPS',
 	\	'&HISTCMD',     'HI&STCONTROL',           'HIS&TFILE',        'HIST&FILESIZE',
@@ -940,29 +921,30 @@ let	s:BashEnvironmentVariables	= [
 	\	'MAILCHEC&K',   'MAIL&PATH',              '&OLDPWD',          'OPTAR&G',
 	\	'OPTER&R',      'OPTIN&D',                'OST&YPE',          '&PATH',
 	\	'P&IPESTATUS',  'P&OSIXLY_CORRECT',       'PPI&D',            'PROMPT_&COMMAND',
+	\	'PROMPT_&DIRTRIM',
 	\	'PS&1',         'PS&2',                   'PS&3',             'PS&4',
 	\	'P&WD',         '&RANDOM',                'REPL&Y',           '&SECONDS',
 	\	'S&HELL',       'SH&ELLOPTS',             'SH&LVL',           '&TIMEFORMAT',
-	\	'T&MOUT',       '&UID',
+	\	'T&MOUT',       'TMP&DIR',                '&UID',
 	\	]
 
-let	s:BashBuiltins	= [
-	\	'&alias',   '&bind',    'b&uiltin',  '&caller',  'c&d',
-	\	'c&ommand', 'co&mpgen', 'com&plete', 'comp&opt', 'd&eclare', 'di&rs',
-	\	'diso&wn',  'ec&ho',    'e&nable',   'e&val',    'e&xec',    'ex&it', 
-	\	'expor&t',  '&false',    
-	\	'&getopts', '&hash',    'h&istory',  '&jobs', 
-	\	'&kill',    '&let',     'l&ocal',    'logout',   '&mapfile',   '&popd',
-	\	'print&f',  'p&ushd',   'p&wd',      '&read',    'read&array', 'readonl&y', 
-	\	'retur&n',  
-	\ '&shift',   's&hopt',   's&ource',  'susp&end',  '&test',
-	\	't&imes',   't&rap',    't&ype',    'ty&peset',  '&ulimit',  'u&mask',
-	\	'un&alias', 'u&nset',   '&wait',
-	\	]
+let s:BashBuiltins  = [
+  \ '&alias',   'b&g',      '&bind',     'brea&k',    'b&uiltin',  '&caller',
+  \ 'c&d',      'c&ommand', 'co&mpgen',  'com&plete', 'c&ontinue', 'comp&opt',
+  \ 'd&eclare', 'di&rs',    'diso&wn',   'ec&ho',     'e&nable',   'e&val',
+  \ 'e&xec',    'ex&it',    'expor&t',   '&false',    'f&c',       'f&g',  
+  \ '&getopts', '&hash',    'help',      'h&istory',  '&jobs', 
+  \ '&kill',    '&let',     'l&ocal',    'logout',    '&mapfile',   '&popd',
+  \ 'print&f',  'p&ushd',   'p&wd',      '&read',     'read&array', 'readonl&y', 
+  \ 'retur&n',  '&set', 
+  \ 's&hift',   's&hopt',   's&ource',   'susp&end',  '&test',
+  \ 'ti&mes',   't&rap',    'true',      't&ype',     'ty&peset',   '&ulimit',
+  \ 'umas&k',   'un&alias', 'u&nset',    '&wait',
+  \ ]
 
 let	s:BashShopt = [
 	\	'autocd',        'cdable_vars',      'cdspell',       'checkhash',
-	\	'checkjobs',     'checkwinsize',     'cmdhist',
+	\	'checkjobs',     'checkwinsize',     'cmdhist',       'compat31', 
 	\	'dirspell',      'dotglob',          'execfail',      'expand_aliases',
 	\	'extdebug',      'extglob',          'extquote',      'failglob',
 	\	'force_fignore', 'globstar',         'gnu_errfmt',    'histappend',    'histreedit',
@@ -972,6 +954,16 @@ let	s:BashShopt = [
 	\	'promptvars',    'restricted_shell', 'shift_verbose', 'sourcepath',
 	\	'xpg_echo',
 	\	]
+
+"------------------------------------------------------------------------------
+"  Build the list for the Bash help tab completion
+"------------------------------------------------------------------------------
+let s:BASH_Builtins     = s:BashBuiltins[:]
+let index	= 0
+while index < len( s:BASH_Builtins )
+	let s:BASH_Builtins[index]	= substitute( s:BASH_Builtins[index], '&', '', '' )
+	let index = index + 1
+endwhile
 
 "------------------------------------------------------------------------------
 "  BASH_EnvirMenus: generate the  menu entries for environmnent variables  {{{1
@@ -1559,6 +1551,15 @@ endfunction		" ---------- end of function  BASH_help  ----------
 "  Run : Syntax Check, check if local options does exist    {{{1
 "------------------------------------------------------------------------------
 "
+function! s:Find_option ( list, option )
+	for item in a:list
+		if item == a:option
+			return 0
+		endif
+	endfor
+	return -1
+endfunction    " ----------  end of function s:Find_option  ----------
+"
 function! BASH_SyntaxCheckOptions( options )
 	let startpos=0
 	while startpos < strlen( a:options )
@@ -1569,7 +1570,7 @@ function! BASH_SyntaxCheckOptions( options )
 		" remove trailing whitespaces
 		let optionname  =  substitute( optionname, '\s\+$', "", "" )
 		" check name
-		let found				=  match     ( s:BASH_ShoptAllowed, optionname.':' )
+		let found				=    s:Find_option   ( s:BashShopt, optionname )
 		if found < 0
 			redraw
 			echohl WarningMsg | echo ' no such shopt name :  "'.optionname.'"  ' | echohl None
@@ -1665,8 +1666,7 @@ function! BASH_Debugger ()
 		" debugger is ' bash --debugger ...'
 		"
 		if s:BASH_Debugger == "term"
-"			let command	= "!xterm ".s:BASH_XtermDefaults.' -e '.s:BASH_BASH.' --debugger ./'.Sou.l:arguments.' &'
-			let command	= "!xterm ".s:BASH_XtermDefaults.' -e bashdb ./'.Sou.l:arguments.' &'
+			let command	= "!xterm ".s:BASH_XtermDefaults.' -e bashdb '.Sou.l:arguments.' &'
 			silent exe command
 		endif
 		"
@@ -1679,11 +1679,11 @@ function! BASH_Debugger ()
 				echohl None
 				return
 			else
-				silent exe '!ddd ./'.Sou.l:arguments.' &'
+				silent exe '!ddd --debugger bashdb '.Sou.l:arguments.' &'
 			endif
 		endif
 	else
-		silent exe '!'.s:BASH_BASH.' --debugger ./'.Sou.l:arguments
+		silent exe '!'.s:BASH_BASH.' --debugger '.Sou.l:arguments
 	endif
 endfunction		" ---------- end of function  BASH_Debugger  ----------
 "
@@ -1768,12 +1768,10 @@ let s:BASH_OutputBufferNumber = -1
 "
 function! BASH_Run ( mode )
 	silent exe ':cclose'
-	"
-	let l:currentdir			= getcwd()
+"
 	let	l:arguments				= exists("b:BASH_CmdLineArgs") ? " ".b:BASH_CmdLineArgs : ""
 	let	l:currentbuffer   = bufname("%")
-	let l:fullname				= l:currentdir."/".l:currentbuffer
-	let l:fullname				= escape( l:fullname, s:escfilename )
+	let l:fullname				= escape( l:currentbuffer, s:escfilename )
 	"
 	silent exe ":update"
 	"
@@ -1834,7 +1832,6 @@ function! BASH_Run ( mode )
 	if s:BASH_OutputGvim == "buffer"
 
 		let	l:currentbuffernr = bufnr("%")
-		let l:currentdir      = getcwd()
 
 		if l:currentbuffer ==  bufname("%")
 			"

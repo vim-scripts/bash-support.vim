@@ -1,4 +1,15 @@
 =======================================================================================
+  RELEASE NOTES FOR VERSION 2.13
+=======================================================================================
++ New menu item 'array element'.
++ New hotkeys \sa, \sas.
++ New submenu 'Snippets'.
++ Hotkeys for the POSIX character classes.
++ Hardcopy (run menu) can print any buffer.
++ Bugfix: 'Run->save + run script' (\rr, <C-F9>) : visual mode broken. 
++ Minor improvements.
+
+=======================================================================================
   RELEASE NOTES FOR VERSION 2.12
 =======================================================================================
 + Hotkeys are shown in the menus.

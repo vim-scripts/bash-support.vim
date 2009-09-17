@@ -1,7 +1,7 @@
-*bashsupport.txt*                Bash Support                     July 2 2009
+*bashsupport.txt*                Bash Support               September 16 2009
 
 bash Support                                      *bash-support* *bashsupport*
-                             Plugin version 2.13
+                             Plugin version 2.14
                         for Vim version 7.0 and above
                        Fritz Mehner  <mehner@fh-swf.de>
 
@@ -387,18 +387,18 @@ options' typing for instance
 
 after the prompt. The options entered this way are buffer related.  The global
 options set in '.vimrc' and the buffer related options are checked.  Only the
-shopts options for Bash (GNU Bash-3.2, manual: 2006 September 27) are
-recognized:
+shopts options for Bash (GNU Bash-4.0) are recognized:
 
-   cdable_vars        cdspell         checkhash    checkwinsize
-   cmdhist            dotglob         execfail     expand_aliases
-   extdebug           extglob         extquote     failglob
-   force_fignore      gnu_errfmt      histappend   histreedit
-   histverify         hostcomplete    huponexit    interactive_comments
-   lithist            login_shell     mailwarn     no_empty_cmd_completion
-   nocaseglob         nullglob        progcomp     promptvars
-   restricted_shell   shift_verbose   sourcepath   xpg_echo
-
+  autocd                   cdable_vars   cdspell           checkhash
+  checkjobs                checkwinsize  cmdhist           compat31
+  dirspell                 dotglob       execfail          expand_aliases
+  extdebug                 extglob       extquote          failglob
+  force_fignore            globstar      gnu_errfmt        histappend
+  histreedit               histverify    hostcomplete      huponexit
+  interactive_comments     lithist       login_shell       mailwarn
+  no_empty_cmd_completion  nocaseglob    nocasematch       nullglob
+  progcomp                 promptvars    restricted_shell  shift_verbose sourcepath
+  xpg_echo
 
 1.7.3 Command line arguments                        *bashsupport-cmdline-args*
 ----------------------------
@@ -547,7 +547,7 @@ The methods are "vim", "buffer" and "xterm".
 Item 'help (Bash builtins)'
 ---------------------------
 Look up Bash help for the word under the cursor. If there is no word under the
-cursor you will be asked for the name of a builtin.
+cursor you will be asked for the name of a builtin. The tab expansion is active.
 
 Item 'manual (utilities)'
 -------------------------
@@ -587,6 +587,7 @@ following character(s) will only be recognized for a short time.
   \hb     Displays the Bash manual        (n, i)
   \hh     Displays help for the builtin   (n, i)
           under the cursor (Bash help).
+          The tab expansion is active.
   \hm     displays the manual for the     (n, i)
           Bash command under the cursor
           The tab expansion is active.
