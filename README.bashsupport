@@ -1,4 +1,4 @@
-README for bash-support.vim (Version 2.14) / September 16 2009
+README for bash-support.vim (Version 3.0) / November 26 2009
 
   *  INSTALLATION
   *  RELEASE NOTES 
@@ -8,32 +8,46 @@ README for bash-support.vim (Version 2.14) / September 16 2009
 Bash Support implements a bash-IDE for Vim/gVim. It is written to considerably
 speed up writing code in a consistent style.  This is done by inserting
 complete statements, comments, idioms, and code snippets.  Syntax checking,
-running a script, starting a debugger  can be done with a keystroke.  There
-are many additional hints and options which can improve speed and comfort when
+running a script, starting a debugger  can be done with a keystroke.  There are
+many additional hints and options which can improve speed and comfort when
 writing shell scripts. 
  
 =======================================================================================
   INSTALLATION
 =======================================================================================
 
-The subdirectories in the zip archive  bash-support.zip  mirror the directory structure 
-which is needed below the local installation directory $HOME/.vim/ .
+The subdirectories in the zip archive  bash-support.zip  mirror the directory
+structure which is needed below the local installation directory $HOME/.vim/ .
 
 (1) Copy the zip archive  bash-support.zip to $HOME/.vim and run
 
       unzip bash-support.zip
 
-    If you have already an older version of bash-support and you have modified the
-    template files you may want to save your templates first or copy the files from the 
-    archive by hand.
+    If you have already an older version of bash-support and you have modified
+    the template files you may want to save your templates first or copy the
+    files from the archive by hand.
 
-(2) Set at least some personal details into .vimrc by overriding some defaults.
-    Here the minimal personalization (my settings as an example, of course):
+(2) Loading of plugin files must be enabled. If not use
+      :filetype plugin on
+    This is the minimal content of the file '$HOME/.vimrc'. Create one if there
+    is none. 
 
-      let g:BASH_AuthorName   = 'Dr.-Ing. Fritz Mehner'     
-      let g:BASH_AuthorRef    = 'Mn'                         
-      let g:BASH_Email        = 'mehner@fh-swf.de'            
-      let g:BASH_Company      = 'FH Südwestfalen, Iserlohn'    
+(3) Set at least some personal details into bash-support/templates/Templates by
+    overriding the defaults.  Here the minimal personalization (my settings as
+    an example, of course):
+
+      |AUTHOR|    = Dr. Fritz Mehner 
+      |AUTHORREF| = fgm
+      |EMAIL|     = mehner@fh-swf.de
+      |COMPANY|   = FH Südwestfalen, Iserlohn
+      |COPYRIGHT| = Copyright (c) |YEAR|, |AUTHOR|
+
+    Please read the documentation to fully understand the template system.
+
+(4) Consider additional settings in the file '$HOME/.vimrc'.
+    The files customization.vimrc and customization.gvimrc are replacements or
+    extensions for your .vimrc and .gvimrc ( _vimrc and _gvimrc under Windows).
+    You may want to use parts of them. The files are documented. 
 
 There are a lot of features and options which can be used and influenced:
 
@@ -41,6 +55,7 @@ There are a lot of features and options which can be used and influenced:
   *  using and managing personal code snippets
   *  bash dictionary for keyword completion
   *  removing the root menu
+  *  using additional plugins
 
 Restart gVim/Vim generate the help tags 
 
@@ -59,13 +74,12 @@ and look at the bashsupport help with
 
 
 =======================================================================================
-  RELEASE NOTES FOR VERSION 2.14
+  RELEASE NOTES FOR VERSION 3.0
 =======================================================================================
-+ Debugging: ddd always called with bashdb(1).
-+ More complete adaption to Bash 4.0: options, builtins, environment variables.
-+ Bugfix: running and starting the debugger causes error if working directory is not
-  the directory of the current file.
-+ Minor improvements.
++ Completely new template system. User can change templates on the fly.
++ Additional mapping Ctrl-j : jump behind parenthesis or strings in the current line.
++ A few Posix character classes have better shortcuts.
++ Bugfix: insert mode for Posix character classes.
 
 =======================================================================================
   OLDER RELEASE NOTES : see file 'ChangeLog'
@@ -123,8 +137,7 @@ bash-support/doc/*                    Hotkey reference card (PDF), changelog.
     pointer is back from the menu entry).
 
 (4) Use Emulate3Buttons "on" (X11) even for a 3-button mouse. Pressing left and
-    right button simultaneously without moving your fingers is faster then 
+    right button simultaneously without moving your fingers is faster then
     moving a finger to the middle button (often a wheel).
-
 
 =======================================================================================

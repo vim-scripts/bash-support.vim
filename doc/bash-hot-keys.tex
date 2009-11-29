@@ -6,17 +6,17 @@
 %%                
 %%       Author:  Dr.-Ing. Fritz Mehner
 %%        Email:  mehner@fh-swf.de
-%%    Copyright:  Copyright (C)  2003-2008  Dr.-Ing. Fritz Mehner  (mehner@fh-swf.de)
+%%    Copyright:  Copyright (C)  2003-2009  Dr.-Ing. Fritz Mehner  (mehner@fh-swf.de)
 %%      Version:  see PluginVersion (below)
-%%     Revision:  $Id: bash-hot-keys.tex,v 1.19 2009/09/17 13:39:06 mehner Exp $
+%%     Revision:  $Id: bash-hot-keys.tex,v 1.22 2009/11/26 17:24:47 mehner Exp $
 %%      Created:  09.06.2003
 %%                
 %%        Notes:  
 %%                
 %%=====================================================================================
 
-\newcommand{\PluginVersion}{2.14}
-\newcommand{\ReleaseDate}{ September 2009}
+\newcommand{\PluginVersion}{3.0}
+\newcommand{\ReleaseDate}{November 2009}
 
 \documentclass[oneside,12pt,a4paper,DIV18]{scrartcl}
 \usepackage[english]{babel}
@@ -27,6 +27,7 @@
 \setlength\parindent{0pt}
 \usepackage{fancyhdr}
 \usepackage{lastpage}
+\usepackage{setspace}
 
 %%----------------------------------------------------------------------
 %%  luximono : Type1-font
@@ -100,8 +101,8 @@ All mappings also work for gVim.}\\
 \hline \verb'\ckw' & keyword \verb'WARNING'           \hfill (n, i) \\
 \hline \verb'\ckn' & keyword: new keyword             \hfill (n, i) \\
 \hline \verb'\cc'  & toggle comment                   \hfill (n, i, v) \\
-\hline \verb'\cd'  & date                             \hfill (n, i) \\
-\hline \verb'\ct'  & date \& time                     \hfill (n, i) \\
+\hline \verb'\cd'  & date                             \hfill (n, i, v) \\
+\hline \verb'\ct'  & date \& time                     \hfill (n, i, v) \\
 \hline \verb'\ce'  & \verb'echo "<line>"'             \hfill (n, i) \\
 \hline \verb'\cr'  & remove \verb'echo'               \hfill (n, i) \\
 \hline \verb'\cv'  & vim modeline                     \hfill (n, i) \\
@@ -118,8 +119,8 @@ All mappings also work for gVim.}\\
 \hline \verb'\st'  & \verb'until do done'               \hfill (n, i, v)\\
 \hline \verb'\sw'  & \verb'while do done'               \hfill (n, i, v)\\
 \hline \verb'\sfu' & \verb'function'                    \hfill (n, i, v)\\
-\hline \verb'\se'  & \verb'echo -e "\n"'                \hfill (n, i, v)\\
-\hline \verb'\sp'  & \verb'printf  "\n"'                \hfill (n, i, v)\\
+\hline \verb'\se'  & \verb'echo -e ""'                  \hfill (n, i, v)\\
+\hline \verb'\sp'  & \verb'printf  "%s"'                \hfill (n, i, v)\\
 \hline \verb'\sa'  & array element\ \ \ \verb'${.[.]}'  \hfill (n, i, v)\\
 \hline \verb'\sas' & array elements \ \verb'${.[@]}'    \hfill (n, i, v)\\
 \hline
@@ -136,9 +137,9 @@ All mappings also work for gVim.}\\
 %%  table, right part
 %%======================================================================
 %%~~~~~ TABULAR : begin ~~~~~~~~~~
-\begin{tabular}[]{l}
-   \\ [14.3ex]								%% offset
-\end{tabular} \\ 
+%\begin{tabular}[]{l}
+%   \\ [4.3ex]								%% offset
+%\end{tabular} \\ 
 %%~~~~~ TABULAR :  end  ~~~~~~~~~~
 %%~~~~~ TABULAR : begin ~~~~~~~~~~
 \begin{tabular}[]{|p{11mm}|p{59mm}|}
@@ -147,26 +148,30 @@ All mappings also work for gVim.}\\
 %%----------------------------------------------------------------------
 \hline
 \multicolumn{2}{|r|}{\textsl{\textbf{P}OSIX Character Classes}}\\
-\hline \verb'\pa' &  \verb'[:alnum:] '         \hfill (n, i)   \\
-\hline \verb'\ph' &  \verb'[:alpha:] '         \hfill (n, i)   \\
-\hline \verb'\pi' &  \verb'[:ascii:] '         \hfill (n, i)   \\
-\hline \verb'\pb' &  \verb'[:blank:] '         \hfill (n, i)   \\
-\hline \verb'\pc' &  \verb'[:cntrl:] '         \hfill (n, i)   \\
-\hline \verb'\pd' &  \verb'[:digit:] '         \hfill (n, i)   \\
-\hline \verb'\pg' &  \verb'[:graph:] '         \hfill (n, i)   \\
-\hline \verb'\pl' &  \verb'[:lower:] '         \hfill (n, i)   \\
-\hline \verb'\pp' &  \verb'[:print:] '         \hfill (n, i)   \\
-\hline \verb'\pn' &  \verb'[:punct:] '         \hfill (n, i)   \\
-\hline \verb'\ps' &  \verb'[:space:] '         \hfill (n, i)   \\
-\hline \verb'\pu' &  \verb'[:upper:] '         \hfill (n, i)   \\
-\hline \verb'\pw' &  \verb'[:word:]  '         \hfill (n, i)   \\
-\hline \verb'\px' &  \verb'[:xdigit:]'         \hfill (n, i)   \\
+\hline \verb'\pan' &  \verb'[:alnum:] '         \hfill (n, i)   \\
+\hline \verb'\pal' &  \verb'[:alpha:] '         \hfill (n, i)   \\
+\hline \verb'\pas' &  \verb'[:ascii:] '         \hfill (n, i)   \\
+\hline \verb'\pb'  &  \verb'[:blank:] '         \hfill (n, i)   \\
+\hline \verb'\pc'  &  \verb'[:cntrl:] '         \hfill (n, i)   \\
+\hline \verb'\pd'  &  \verb'[:digit:] '         \hfill (n, i)   \\
+\hline \verb'\pg'  &  \verb'[:graph:] '         \hfill (n, i)   \\
+\hline \verb'\pl'  &  \verb'[:lower:] '         \hfill (n, i)   \\
+\hline \verb'\ppr' &  \verb'[:print:] '         \hfill (n, i)   \\
+\hline \verb'\ppu' &  \verb'[:punct:] '         \hfill (n, i)   \\
+\hline \verb'\ps'  &  \verb'[:space:] '         \hfill (n, i)   \\
+\hline \verb'\pu'  &  \verb'[:upper:] '         \hfill (n, i)   \\
+\hline \verb'\pw'  &  \verb'[:word:]  '         \hfill (n, i)   \\
+\hline \verb'\px'  &  \verb'[:xdigit:]'         \hfill (n, i)   \\
 \hline
 \hline
 \multicolumn{2}{|r|}{\textsl{S\textbf{n}ippets}} \\
 \hline \verb'\nr'  & read code snippet          \hfill (n)\\
 \hline \verb'\nw'  & write code snippet         \hfill (n, v)\\
 \hline \verb'\ne'  & edit code snippet          \hfill (n)\\
+%
+\hline \verb'\ntl' & edit local templates      \hfill (n)   \\
+\hline \verb'\ntg' & edit global templates     \hfill (n)   \\
+\hline \verb'\ntr' & reread the templates      \hfill (n)   \\
 \hline
 \hline
 \multicolumn{2}{|r|}{\textsl{\textbf{R}un}} \\
@@ -193,8 +198,28 @@ All mappings also work for gVim.}\\
 \hline \verb'\lbs'  & load    menus\hfill \scriptsize{(n \& GUI only)}\\
 \hline \verb'\ubs'  & unload  menus\hfill \scriptsize{(n \& GUI only)}\\
 \hline 
-\end{tabular} \\ [5.0ex]
+\end{tabular}\\%
 %%~~~~~ TABULAR :  end  ~~~~~~~~~~
+\vspace{3mm}%
+%
+\begin{minipage}[b]{70mm}%
+\setlength{\fboxsep}{.25mm}%
+%%----------------------------------------------------------------------
+%%  Additional Mappings
+%%----------------------------------------------------------------------
+\begin{spacing}{1.2}%
+\begin{tabular}[]{|p{11mm}|p{55mm}|}%
+\hline
+\multicolumn{2}{|r|}{\textsl{Additional Mappings}}\\
+\hline
+\hline \textbf{typing}& \textbf{expansion}\\
+\hline \verb"''"  		& single quotes around a WORD    \hfill (n)\\
+\hline \verb'""'  		& double quotes around a WORD    \hfill (n)\\
+\hline
+\end{tabular}
+\end{spacing}
+%%~~~~~ TABULAR :  end  ~~~~~~~~~~
+\end{minipage}%
 \vfill
 \begin{flushleft}
 \hspace{5mm}$^+$ \footnotesize{Linux/U**x only}

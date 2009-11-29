@@ -1,7 +1,7 @@
-*bashsupport.txt*                Bash Support               September 16 2009
+*bashsupport.txt*                Bash Support               November 28 2009
 
 bash Support                                      *bash-support* *bashsupport*
-                             Plugin version 2.14
+                             Plugin version 3.0
                         for Vim version 7.0 and above
                        Fritz Mehner  <mehner@fh-swf.de>
 
@@ -24,6 +24,7 @@ writing shell scripts. This plugin can be used for Bash version 4.0.
  1.2.1    Normal mode, insert mode               |bashsupport-stat-norm-ins|
  1.2.2    Visual mode                            |bashsupport-stat-visual|
  1.2.3    Code Snippets                          |bashsupport-stat-snippets|
+ 1.2.4    Code Templates                         |bashsupport-templates-menu|
  1.3     Menu 'set'                              |bashsupport-set|
  1.4     Menu 'shopt'                            |bashsupport-shopt|
  1.5     Menu 'Regex'                            |bashsupport-regex|
@@ -44,9 +45,17 @@ writing shell scripts. This plugin can be used for Bash version 4.0.
  4.2     Global variables                        |bashsupport-custom-variables|
  4.3     The root menu                           |bashsupport-custom-root|
  4.4     System-wide installation                |bashsupport-system-wide|
- 5.     Template files and tags                  |bashsupport-tempfiles|
- 5.1     Template files                          |bashsupport-tempfiles|
- 5.2     Tags                                    |bashsupport-tags|
+ 5.      Template files and tags                 |bashsupport-templates|
+ 5.1      Template files                         |bashsupport-templates-files|
+ 5.2      Macros                                 |bashsupport-templates-macros|
+ 5.2.1   Formats for date and time               |bashsupport-templates-date|
+ 5.3      Templates                              |bashsupport-templates-names|
+ 5.3.1    Template names                         |bashsupport-templates-names|
+ 5.3.2    Template definition                    |bashsupport-templates-definition|
+ 5.3.3    Template expansion                     |bashsupport-templates-expansion|
+ 5.3.4    The macros <+text+> etc.               |bashsupport-templates-jump|
+ 5.3.5    Command Ctrl-j                         |bashsupport-Ctrl-j|
+ 5.4     Switching between template sets         |bashsupport-templates-sets|
  6.     Bash dictionary                          |bashsupport-dictionary|
  7.     Additional Mappings                      |bashsupport-ad-mappings|
  8.     Windows particularities                  |bashsupport-windows|
@@ -187,44 +196,75 @@ Usually not meant for the final documentation.
 An empty statement will be inserted and properly indented. The entry 'if'
 will insert an if-statement:
 
- if
- then
+ if | ; then
  fi
 
 The statements will be indented.
 
-The for-, if-, if-else-, select-, until- and while-statement can be changed
-so that the 'do' or 'then' stands on the first line:
-
- if  ; then
- fi
-
-This is achieved by setting the global variable g:BASH_DoOnNewLine in '.vimrc':
-
-  let g:BASH_DoOnNewLine   = 'yes'
-
-The default value is 'no'.
-
-
 1.2.2  VISUAL MODE                                   *bashsupport-stat-visual*
 ------------------
-The highlighted area (...) will be surrounded by a statement, parentheses,
-quotes or an echo with quotes:
+The highlighted area
 
-  for in do ... done
-  if then ... fi
-  if then ... else fi
-  select  in do ... done
-  until do ... done
-  while do ... done
-  function NAME () { ... }
+xxxxx
+xxxxx
+
+can be surrounded by one of the following statements ( '|'
+marks the cursor position after insertion):
+
+
+
+
+  +--------------------------+---------------------------------------+
+  |                          |                                       |
+  |  for | in ; do           |  for (( CNTR=0; CNTR<0; CNTR++ )); do |
+  |    xxxxx                 |    xxxxx                              |
+  |    xxxxx                 |    xxxxx                              |
+  |  done                    |  done                                 |
+  |                          |                                       |
+  +--------------------------+---------------------------------------+
+  |                          |                                       |
+  |  if | ; then             |  if | ; then                          |
+  |    xxxxx                 |    xxxxx                              |
+  |    xxxxx                 |    xxxxx                              |
+  |  fi                      |  else                                 |
+  |                          |                                       |
+  |                          |  fi                                   |
+  |                          |                                       |
+  +--------------------------+---------------------------------------+
+  |                          |                                       |
+  |  select | in ; do        |  until | ; do                         |
+  |    xxxxx                 |    xxxxx                              |
+  |    xxxxx                 |    xxxxx                              |
+  |  done                    |  done                                 |
+  |                          |                                       |
+  +--------------------------+---------------------------------------+
+  |                          |                                       |
+  |  while | ; do            |                                       |
+  |    xxxxx                 |                                       |
+  |    xxxxx                 |                                       |
+  |  done                    |                                       |
+  |                          |                                       |
+  +--------------------------+---------------------------------------+
+  |                                                                  |
+  |  fname ()                                                        |
+  |  {                                                               |
+  |    xxxxx                                                         |
+  |    xxxxx                                                         |
+  |  }  # ----------  end of function fname  ----------              |
+  |                                                                  |
+  +------------------------------------------------------------------+
+
+The whole statement will be indented after insertion.
+
+The highlighted area (...) will be surrounded by the following statements,
+parentheses, quotes or an echo with quotes:
 
   ${...}
   $(...)
   $((...))
   $[[...]]
 
-  echo -e "...\n"
+  echo -e "..."
 
   ${...[@]}
   ${...[*]}
@@ -272,6 +312,34 @@ variable in your ~/.vimrc :
 
 The default value is 'gui'. 
 
+1.2.4  Code Templates                             *bashsupport-templates-menu*
+---------------------
+Nearly all menu entries insert code snippets or comments. The nontrivial of
+these stuff is taken from template files and can be changed by the user to
+meet his requirements (see|bashsupport-templates|on how to use the template
+system).
+
+The menu item 'edit local templates' opens the main template file in a local
+plugin installation. This is usually the file
+'~/.vim/bash-support/templates/Templates'.  There may be dependent files
+loaded from the main file.  Now change whatever file you want, save it, and
+click on the menu item 'reread templates' to read in the file(s) and to
+rebuild the internal representation of the templates.
+
+The menu item 'edit global templates' opens the main template file in a
+system-wide plugin installation (see |bashsupport-system-wide|). This is
+usually the file '$VIM./vimfiles/bash-support/templates/Templates'.
+
+Template browser
+----------------
+Under a GUI a file requester will be put up. Without GUI the filename will be
+read from the command line. You can change this behavior by setting a global
+variable in your ~/.vimrc :
+
+ let g:BASH_GuiTemplateBrowser = 'explorer'
+
+The default value is 'gui'. 'explorer' will start the file explorer
+(see help|:Explore|). To use the commandline asign 'commandline'.
 
 ------------------------------------------------------------------------------
 1.3  MENU 'set'                                              *bashsupport-set*
@@ -608,8 +676,8 @@ following character(s) will only be recognized for a short time.
   \ckw    keyword comment WARNING         (n, i)
   \ckn    keyword comment New_Keyword     (n, i)
   \cc     toggle comment                  (n, i, v)
-  \cd     date                            (n, i)
-  \ct     date & time                     (n, i)
+  \cd     date                            (n, i, v)
+  \ct     date & time                     (n, i, v)
   \ce     echo "..."                      (n, i)
   \cr     remove echo "..."               (n, i)
   \cv     vim modeline                    (n, i)
@@ -633,18 +701,22 @@ following character(s) will only be recognized for a short time.
   \nw     write code snippet              (n, v)
   \ne     edit code snippet               (n)
 
+  \ntl    edit local templates            (n)
+  \ntg    edit global templates           (n)
+  \ntr    reread the templates            (n)
+
   -- POSIX Character Classes -----------------------------
 
-  \pa     [:alnum:]                       (n, i)
-  \ph     [:alpha:]                       (n, i)
-  \pi     [:ascii:]                       (n, i)
+  \pan    [:alnum:]                       (n, i)
+  \pal    [:alpha:]                       (n, i)
+  \pas    [:ascii:]                       (n, i)
   \pb     [:blank:]                       (n, i)
   \pc     [:cntrl:]                       (n, i)
   \pd     [:digit:]                       (n, i)
   \pg     [:graph:]                       (n, i)
   \pl     [:lower:]                       (n, i)
-  \pp     [:print:]                       (n, i)
-  \pn     [:punct:]                       (n, i)
+  \ppr    [:print:]                       (n, i)
+  \ppu    [:punct:]                       (n, i)
   \ps     [:space:]                       (n, i)
   \pu     [:upper:]                       (n, i)
   \pw     [:word:]                        (n, i)
@@ -752,84 +824,68 @@ bash-support/doc/*                    Hotkey reference card (PDF), changelog.
 Several global variables are checked by the script to customize it:
 
 ---------------------------------------------------------------------------------------
-global variable                default value                     tag
-                                                               (see |bashsupport-tags|)
+global variable                default value
 ---------------------------------------------------------------------------------------
-g:BASH_AuthorName              ""                               *|AUTHOR|*
-g:BASH_AuthorRef               ""                               *|AUTHORREF|*
-g:BASH_Company                 ""                               *|COMPANY|*
-g:BASH_CopyrightHolder         ""                               *|COPYRIGHTHOLDER|*
-g:BASH_Email                   ""                               *|EMAIL|*
-g:BASH_Project                 ""                               *|PROJECT|*
-
-g:BASH_Template_Directory      $HOME."/.vim/bash-support/templates/"
-g:BASH_Template_File           "bash-file-header"
-g:BASH_Template_Frame          "bash-frame"
-g:BASH_Template_Function       "bash-function-description"
+g:BASH_GlobalTemplateFile      root_dir.'bash-support/templates/Templates'
+g:BASH_LocalTemplateFile       $HOME.'/.vim/bash-support/templates/Templates'
+g:BASH_TemplateOverwrittenMsg  'yes'
+g:BASH_Ctrl_j                  'on'
 
 g:BASH_CodeSnippets            $HOME.'/.vim/bash-support/codesnippets'     (Linux/U**X)
                                $VIM.'\vimfiles\bash-support/codesnippets/' (Windows)
-g:BASH_LoadMenus               "yes"
+g:BASH_LoadMenus               'yes'
 g:BASH_Dictionary_File         $HOME."/.vim/bash-support/wordlists/bash.list"
 g:BASH_Root                    'B&ash.'
+g:BASH_MenuHeader              'yes'
+g:BASH_GuiSnippetBrowser       'gui'
+g:BASH_GuiTemplateBrowser      'gui'
 
-g:BASH_DoOnNewLine             'no'
 g:BASH_OutputGvim              'vim'   (Linux/U**X)
                                'xterm' (Windows)
-g:BASH_XtermDefaults           "-fa courier -fs 12 -geometry 80x24"
+g:BASH_XtermDefaults           '-fa courier -fs 12 -geometry 80x24'
+g:BASH_Debugger                'term'
 g:BASH_LineEndCommColDefault   49
-g:BASH_SyntaxCheckOptionsGlob  ""
-g:BASH_Printheader             "%<%f%h%m%<  %=%{strftime('%x %X')}     Page %N"
-g:BASH_Debugger                "term"
+g:BASH_SyntaxCheckOptionsGlob  ''
+g:BASH_Printheader             '%<%f%h%m%<  %=%{strftime('%x %X')}     Page %N'
 g:BASH_BASH                    $SHELL         (Linux/U**X)
                                'win-bash.exe' (Windows)
 g:BASH_Man                     'man'          (Linux/U**X)
                                'man.exe'      (Windows)
 g:BASH_MapLeader               '\'
-g:BASH_GuiSnippetBrowser       'gui'
 
 --------------------------------------------------------------------------------
 
  1. group: Defines the text which will be inserted for the tags when a template
            is read in (see |bashsupport-tempfiles|).
  
-           g:BASH_AuthorName      : author name
-           g:BASH_AuthorRef       : author reference (e.g. acronym)
-           g:BASH_Email           : email address
-           g:BASH_Company         : name of the company / institution
-           g:BASH_Project         : project
-           g:BASH_CopyrightHolder : the copyright holder
+           g:BASH_GlobalTemplateFile     : sets the global template file  (see|bashsupport-templates|)
+           g:BASH_LocalTemplateFile      : sets the local template file  (see|bashsupport-templates|)
+           g:BASH_TemplateOverwrittenMsg : message if a template is overwritten
+           g:BASH_Ctrl_j                 : hotkey Ctrl-j  'on'/'off' (see|bashsupport-ad-mappings|)
  
- 2. group: Sets the template directory and the names of the template files (see below).
+ 2. group: g:BASH_CodeSnippets           : The name of the code snippet directory
+                                           (see |bashsupport-stat-snippets|).
+           g:BASH_LoadMenus              : Load menus and mappings ("yes", "no") at start up.
+           g:BASH_Dictionary_File        : Path and file name of the bash word list used for
+                                           dictionary completion (see |bashsupport-dictionary|).
+           g:BASH_Root                   : The name of the root menu entry of this plugin
+                                           (see |bashsupport-custom-root|).
+           g:BASH_MenuHeader             : Switch submenu titles on/off.
+           g:BASH_GuiSnippetBrowser      : code snippet browser: 'gui', 'commandline'
+           g:BASH_GuiTemplateBrowser     : code template browser: 'gui', 'explorer', 'commandline' 
  
- 3. group: g:BASH_CodeSnippets    : The name of the code snippet directory
-                                    (see |bashsupport-stat-snippets|).
-           g:BASH_LoadMenus       : Load menus and mappings ("yes", "no") at start up.
-           g:BASH_Dictionary_File : Path and file name of the bash word list used for
-                                    dictionary completion (see |bashsupport-dictionary|).
-           g:BASH_Root            : The name of the root menu entry of this plugin
-                                    (see |bashsupport-custom-root|).
- 
- 4. group: g:BASH_OutputGvim             : Target for a script output
+ 3. group: g:BASH_OutputGvim             : Target for a script output
                                            (see |bashsupport-output|).
            g:BASH_XtermDefaults          : The xterm defaults (see |bashsupport-xterm|).
+           g:BASH_Debugger               : the debugger called by F9 (term, ddd).
            g:BASH_LineEndCommColDefault  : default starting column for line end comments
            g:BASH_SyntaxCheckOptionsGlob : shopt options used with syntax checking
            g:BASH_Printheader            : hardcopy header format
-           g:BASH_Debugger               : the debugger called by F9 (term, ddd).
            g:BASH_BASH                   : the shell used
            g:BASH_Man                    : the interface to the on-line manuals
-           g:BASH_DoOnNewLine            : see |bashsupport-stat-norm-ins|
            g:BASH_MapLeader              : the map leader for hotkeys (see|bashsupport-usage-vim|)
-           g:BASH_GuiSnippetBrowser      : code snippet browser: 'gui', 'commandline'
 
 To override the defaults add appropriate assignments in '.vimrc'.
-Here are my settings as an example:
-
-  let g:BASH_AuthorName   = "Dr.-Ing. Fritz Mehner"
-  let g:BASH_AuthorRef    = "Mn"
-  let g:BASH_Email        = "mehner@fh-swf.de"
-  let g:BASH_Company      = "FH S�dwestfalen, Iserlohn"
 
 This plugin sets the global variable is_bash:
   let is_bash             = 1
@@ -872,7 +928,7 @@ As *** SUPERUSER *** :
 (1) Find the Vim installation directory.
 The Vim ex command ':echo $VIM' gives '/usr/local/share/vim' or something like
 that. Beyond this directory you will find the Vim installation,  e.g. in
-'/usr/local/share/vim/vim71' if Vim version 7.1 has been installed.
+'/usr/local/share/vim/vim72' if Vim version 7.2 has been installed.
 
 (2) Create a new subdirectory 'vimfiles', e.g. '/usr/local/share/vim/vimfiles'.
 
@@ -896,81 +952,387 @@ link to the global directory.
 
 
 ==============================================================================
-5.  TEMPLATE FILES AND TAGS                            *bashsupport-tempfiles*
+5.  TEMPLATE FILES AND TAGS                           *bashsupport-tempplates*
 ==============================================================================
 
 ------------------------------------------------------------------------------
-5.1  TEMPLATE FILES
+5.1  TEMPLATE FILES                              *bashsupport-templates-files*
 ------------------------------------------------------------------------------
 
-Three menu entries generate block comments:
+Nearly all menu entries insert code snippets or comments. A part of this stuff
+is taken from template files and can be changed by the user to meet his
+requirements.
 
-    bash -> Comments -> Frame Comment
-    bash -> Comments -> Function Description
-    bash -> Comments -> File Header
+The master template file is '$HOME/.vim/bash-support/templates/Templates' for
+a user installation and  '$VIM/vimfiles/bash-support/templates/Templates' for
+a system-wide installation (see|bashsupport-system-wide|).
 
-The comments which will be inserted by these menu entries are read from
-template files:
+The master template file starts with a macro section followed by templates for
+single menu items or better by including other template files grouping the
+templates according to the menu structure of this plugin. The master file
+could look like this:
+
+  §
+  § =============================================================
+  § ========== USER MACROS ======================================
+  § =============================================================
+  §
+ *|AUTHOR|*    = Dr. Fritz Mehner
+ *|AUTHORREF|* = mn
+ *|EMAIL|*     = mehner@fh-swf.de
+ *|COMPANY|*   = FH Südwestfalen, Iserlohn
+ *|COPYRIGHT|* = Copyright (c)*|YEAR|,|AUTHOR|*
+  §
+  § =============================================================
+  § ========== FILE INCLUDES ====================================
+  § =============================================================
+  §
+  § -- none --
+  §
+  §
+  §%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  == comment.end-of-line-comment == append ==
+  # <CURSOR>
+  §%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  ... lot of other templates ...
+
+Lines starting with a paragraph sign are comments. The section starting
+with *|AUTHOR|* assigns values to predefined tags
+(see|bashsupport-templates-macros|) to personalize some templates. Other
+predefined tags with given default values can be used (e.g. *|YEAR|* ).
+
+User defined tags are possible. They have the following syntax:
+
+ *|macroname|* = replacement
+
+A macroname starts with a letter (uppercase or lowercase) followed by zero or
+more letters, digits or underscores.
 
 ------------------------------------------------------------------------------
-MENU ENTRY              FILE                          GLOBAL VARIABLE
-------------------------------------------------------------------------------
-Frame Comment           bash-frame                    g:BASH_Template_Frame
-Function Description    bash-function-description     g:BASH_Template_Function
-File Header             bash-file-header              g:BASH_Template_File
+5.2  MACROS                                     *bashsupport-templates-macros*
 ------------------------------------------------------------------------------
 
-The template files can be written or changed by the user to fulfill special
-requirements (layout for a project or work group already exists, file headers /
-blocks have to be prepared for a documentation tool, ... ).  They can hold not
-only comments but a complete file skeleton if this is necessary.  So you may
-want to lay out your own templates.
+The following macro names are predefined. The first group is used to
+personalize templates.
 
-------------------------------------------------------------------------------
-5.2  TAGS                                                   *bashsupport-tags*
-------------------------------------------------------------------------------
-The comments in these files do not have to be personalized but they can be.
-The text can contain the following tags which are replaced by the appropriate
-information when the file is read in:
+ ----------------------------------------------------------------------------
+ PREDEFINED MACROS  DEFAULT VALUE
+ ----------------------------------------------------------------------------
+*|AUTHOR|*          ""
+*|AUTHORREF|*       ""
+*|EMAIL|*           ""
+*|COMPANY|*         ""
+*|PROJECT|*         ""
+*|COPYRIGHTHOLDER|* ""
+*|STYLE|*           ""
+*|includefile|*     ""
 
-*|AUTHOR|*
-*|AUTHORREF|*
-*|COMPANY|*
-*|COPYRIGHTHOLDER|*
-*|EMAIL|*
-*|PROJECT|*
-
+*|BASENAME|*        filename without path and suffix
 *|DATE|*            the preferred date representation for the current locale
                     without the time
-*|DATETIME|*        date and time
 *|FILENAME|*        filename without path
+*|PATH|*            path without filename
+*|SUFFIX|*          filename suffix
 *|TIME|*            the preferred time representation for the current locale
                     without the date and the time zone or name or abbreviation
 *|YEAR|*            the year as a decimal number including the century
 
-*|CURSOR|*          the cursor position after insertion of a template
+*|includefile|* can  be used to include an additional template file. A file
+will be included only once. Commenting and uncommenting include macros is a
+simple way to switch between several sets of templates. Overwriting existing
+macros and templates is possible.
 
-Each tag can occur more than once. The tag |CURSOR| may appear only once.
-The tag |CURSOR| will be the cursor position after the block is read in.
-There is no need to use any of these tags, some or all can be missing.
+ ----------------------------------------------------------------------------
+ PREDEFINED TAGS
+ ----------------------------------------------------------------------------
+ <CURSOR>           The cursor position after insertion of a template
+ <+text+>,<-text->, Jump targets in templates. Jump with Ctrl-j.
+ {+text+},{-text-}  See |bashsupport-templates-jump|.
 
-The template files can actually be links pointing to existing templates.
+ <SPLIT>            The split point when inserting in visual mode
+                    (see|bashsupport-templates-definition|)
 
+A dependent template file can start with its own macro section. There is no
+need to have all user defined macros in the master file.
+When the first template definition is found (see below) macro definitions are
+no longer recognized.
+
+------------------------------------------------------------------------------
+5.2.1   USER DEFINED FORMATS FOR DATE AND TIME    *bashsupport-templates-date*
+------------------------------------------------------------------------------
 The format for *|DATE|* ,*|TIME|* , and*|YEAR|* can be set by the user. The
 defaults are
     *|DATE|*        '%x'
-    *|TIME|*        '%X %Z'
+    *|TIME|*        '%X'
     *|YEAR|*        '%Y'
 See the manual page of the C function strftime() for the format.  The accepted
 format depends on your system, thus this is not portable!  The maximum length
 of the result is 80 characters.
 
 User defined formats can be set using the following global variables in
-'~/.vimrc' ,  e.g.
-    let g:BASH_FormatDate       = '%D'
-    let g:BASH_FormatTime       = '%H:%M'
-    let g:BASH_FormatYear       = 'year %Y'
+~/.vimrc ,  e.g.
+    let g:BASH_FormatDate            = '%D'
+    let g:BASH_FormatTime            = '%H:%M'
+    let g:BASH_FormatYear            = 'year %Y'
 
+------------------------------------------------------------------------------
+5.3  TEMPLATES                                   *bashsupport-templates-names*
+------------------------------------------------------------------------------
+
+5.3.1  Template names
+
+The template behind a menu entry is identified by a given name. The first part
+of the name identifies the menu, the second part identifies the item. The
+modes are also hard coded (see|bashsupport-templates-definition|for the use of
+<SPLIT>).
+
+  TEMPLATE NAME                                MODES
+ ---------------------------------------------------------------------
+
+ comment.end-of-line-comment                   normal, insert, visual
+ comment.frame                                 normal, insert
+ comment.function                              normal, insert
+ comment.file-description                      normal, insert
+ comment.keyword-bug                           normal, insert
+ comment.keyword-keyword                       normal, insert
+ comment.keyword-todo                          normal, insert
+ comment.keyword-tricky                        normal, insert
+ comment.keyword-warning                       normal, insert
+ comment.keyword-workaround                    normal, insert
+
+ statements.case                               normal, insert
+ statements.elif                               normal, insert
+ statements.for-in                             normal, insert, visual
+ statements.for                                normal, insert, visual
+ statements.if                                 normal, insert, visual
+ statements.if-else                            normal, insert, visual
+ statements.select                             normal, insert, visual
+ statements.until                              normal, insert, visual
+ statements.while                              normal, insert, visual
+ statements.function                           normal, insert, visual
+ statements.echo                               normal, insert, visual
+ statements.printf                             normal, insert, visual
+
+ paramsub.substitution                         normal, insert, visual
+ paramsub.use-default-value                    normal, insert
+ paramsub.assign-default-value                 normal, insert
+ paramsub.display-error                        normal, insert
+ paramsub.use-alternate-value                  normal, insert
+ paramsub.substring-expansion                  normal, insert
+ paramsub.names-matching-prefix                normal, insert
+ paramsub.indirect-parameter-expansion         normal, insert
+ paramsub.parameter-length                     normal, insert
+ paramsub.remove-matching-prefix-pattern       normal, insert
+ paramsub.remove-all-matching-prefix-pattern   normal, insert
+ paramsub.remove-matching-suffix-pattern       normal, insert
+ paramsub.remove-all-matching-suffix-pattern   normal, insert
+ paramsub.pattern-substitution                 normal, insert
+ paramsub.pattern-substitution-all             normal, insert
+ paramsub.pattern-substitution-begin           normal, insert
+ paramsub.pattern-substitution-end             normal, insert
+ paramsub.first-lower-to-upper                 normal, insert
+ paramsub.all-lower-to-upper                   normal, insert
+ paramsub.first-upper-to-lower                 normal, insert
+ paramsub.all-upper-to-lower                   normal, insert
+
+
+5.3.2  Template definition                  *bashsupport-templates-definition*
+
+A template definition starts with a template head line with the following
+syntax:
+
+  == templatename == [ position == ]
+
+The templatename is one of the above template identifiers. The position
+attribute is optional. Possible attribute values are:
+
+  above     insert the template before the current line
+  append    append the template to the current line
+  below     insert the template below the current line (default)
+  insert    insert the template at the cursor position
+  start     insert the template before the first line of the buffer
+
+An example:
+
+  == comment.frame ==
+  #---------------------------------------------------------------------------
+  #  <CURSOR>
+  #---------------------------------------------------------------------------
+
+The definition of a template ends at the next head line or at the end of the
+file.
+
+Templates for the visual mode can use <SPLIT>. The text before <SPLIT> will
+than be inserted above the marked area, the text after <SPLIT> will be
+inserted behind the marked area. An example:
+
+  == statements.if-else ==
+  if <CURSOR> ; then
+  <SPLIT>else
+  fi
+
+If applied to the marked block
+
+  xxxxxxxxxxx
+  xxxxxxxxxxx
+
+this template yields
+
+  if  ; then
+    xxxxxxxxxxx
+    xxxxxxxxxxx
+  else
+  fi
+
+The templates with a visual mode are shown in the table under
+|bashsupport-templates-names|.
+
+5.3.3  Template expansion                    *bashsupport-templates-expansion*
+
+There are additional ways to control the expansion of a template.
+
+USER INPUT
+----------
+If the usage of a yet undefined user macro starts with a question mark the
+user will be asked for the replacement first, e.g. with the following template
+
+  == statements.function ==
+ *|?FUNCTION_NAME|* ()
+  {
+  <CURSOR><SPLIT>
+  } # ----------  end of function*|FUNCTION_NAME|* ----------
+
+The user can specify the function name which then will be applied twice. If
+the macro was already in use the old value will be suggested as default.
+
+MACRO MANIPULATION
+------------------
+
+A macro expansion can be controlled by the following attributes
+
+  :l    change macro text to lowercase
+  :u    change macro text to uppercase
+  :c    capitalize macro text
+  :L    legalize name
+
+Legalization means:
+ - replace all whitespaces by underscores
+ - replace all non-word characters by underscores
+ - replace '+' and '-' by underscore
+
+The keyword comment template is an example for the use of ':u' :
+
+  == comment.keyword-keyword == append ==
+   # :*|?KEYWORD:u|* :*|DATE|* *|TIME|* :*|AUTHORREF|* : <CURSOR>
+
+The user specified keyword will be used in uppercase.
+
+5.3.4  The macros <+text+> etc.                   *bashsupport-templates-jump*
+
+There are four macro types which can be used as jump targets in templates:
+
+ <+text+>   Can be jumped to by hitting Ctrl-j.
+ {+text+}   Same as <+text+>. Used in cases where indentation gives unwanted
+            results with the first one.
+ 
+ <-text->   Same as the two above. Will be removed if the template is used
+ {-text-}   in visual mode.
+
+The text inside the brackets is userdefined and can be empty. The text
+can be composed from letters (uppercase and lowercase), digits, underscores
+and blanks. After the insertion of an template these jump targets will be
+highlighted. 
+
+5.3.5  Command Ctrl-j                                     *bashsupport-Ctrl-j*
+
+Use the command Ctrl-j to jump to the next target. The target will be removed
+and the mode will switched to insertion. Ctrl-j works in normal and in insert
+mode.
+
+The template for an if-else-statement can be written as follows:
+
+ == statements.if-else ==
+ if <CURSOR> ; then
+ <SPLIT><-IF PART->
+ else
+   <+ELSE PART+>
+ fi
+
+The cursor will be set as shown. When the condition is specified a Ctrl-j let
+you jump to the target <-IF PART-> and deletes it.  When the block is written a
+Ctrl-j leads you to the else-part.  The target <+ELSE PART+> disappears and you
+can type on.
+
+
+How to switch the mapping for Ctrl-j off
+----------------------------------------
+The original meaning of Ctrl-j is 'move [n] lines downward' (see |CTRL-j|).
+If you are accustomed to use the default and don't like these jump targets you
+can switch them off.  Put the following line in the file .vimrc :
+
+  let g:BASH_Ctrl_j   = 'off'
+
+The default value of g:BASH_Ctrl_j is 'on'. You do not have to change the
+template files. All jump targets will be removed before a template will be
+inserted. 
+
+==============================================================================
+5.4  SWITCHING BETWEEN TEMPLATE SETS              *bashsupport-templates-sets*
+==============================================================================
+
+This plugin comes with two sets of templates. These are suggestions. You may
+want to have additional sets for different projects or occasionally want to
+use doxygen style comments.  To facilitate switching use the macro*|STYLE|*
+(|bashsupport-templates-files|) to define a unique name and the
+IF-ENDIF-construct to choose a particular set of files for example:
+
+   ...
+
+ *|STYLE|*    = my_style
+  §
+  § =============================================================
+  § ========== FILE INCLUDES ====================================
+  § =============================================================
+  §
+  == IF *|STYLE|* IS generic  ==
+  §
+ *|includefile|* = bash.comments.template
+  == ENDIF ==
+  §
+  == IF *|STYLE|* IS my_style  ==
+ *|includefile|* = my_comments.template
+  == ENDIF ==
+  §
+ *|includefile|* = bash.statements.template
+ *|includefile|* = bash.paramsub.template
+  §
+
+   ...
+
+The syntax is as follows:
+
+  == IF macro_name IS macro_value  ==
+   
+  == ENDIF ==
+
+IF, IS, and ENDIF are keywords.
+
+HINT. Use these constructs to avoid overwriting your templates when updating
+bashsupport. Copy and rename the set of files you want to change and surround the
+includes with an appropriate IF-construct:
+
+ *|STYLE|*    = MY_BASH
+  $
+   ...
+  $
+  == IF *|STYLE|* IS MY_BASH  ==
+ *|includefile|* = my_comments.template
+ *|includefile|* = my_statements.template
+  == ENDIF ==
+
+Keep a copy of the main template file 'Templates' because this file will be
+overwritten if you do not update manually.
 
 ==============================================================================
 6.  BASH DICTIONARY                                   *bashsupport-dictionary*
@@ -996,17 +1358,33 @@ You can use Vim's dictionary feature CTRL-X, CTRL-K (and CTRL-P, CTRL-N).
 7.  ADDITIONAL MAPPINGS                              *bashsupport-ad-mappings*
 ==============================================================================
 
-There are a few additional filetype specific key mappings defined in
-'~/.vim/ftplugin/sh.vim',
+Ctrl-j
+------
+Ctrl-j can be used to jump behind closing brackets, parenthesis, braces,  or
+string terminators ('"`).  This feature is limited to the current line. Ctrl-j
+does not jump behind the last character in a line.
 
-Put single quotes around a Word (non-whitespaces). This masks the normal mode
-command '' (jump to the position before the latest jump):
+How to switch the mapping for Ctrl-j off
+----------------------------------------
+The original meaning of Ctrl-j is 'move [n] lines downward' (see |CTRL-j|).
+If you are accustomed to use the deafult and don't like these jump targets you
+can switch them off.  Put the following line in the file .vimrc :
 
- nnoremap   <buffer>   ''   ciW''<Esc>P
+  let g:BASH_Ctrl_j   = 'off'
 
-Put double quotes around a Word (non-whitespaces):
+The default value of g:BASH_Ctrl_j is 'on'. 
 
- nnoremap   <buffer>   ""   ciW""<Esc>P
+Quote WORDS in normal mode
+--------------------------
+Put single or double quotes around a WORD (non-whitespaces) using '' or "".
+In normal mode the WORD 
+
+ ${infiles}
+
+will be quoted as "${infiles}" using "" if the cursor is anywhere inside this
+WORD.
+The command '' masks the normal mode command '' (jump to the position before
+the latest jump).
 
 ==============================================================================
 8.  WINDOWS PARTICULARITIES                              *bashsupport-windows*
