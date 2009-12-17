@@ -1,4 +1,4 @@
-README for bash-support.vim (Version 3.0) / November 26 2009
+README for bash-support.vim (Version 3.0.1) / December 17 2009
 
   *  INSTALLATION
   *  RELEASE NOTES 
@@ -74,12 +74,11 @@ and look at the bashsupport help with
 
 
 =======================================================================================
-  RELEASE NOTES FOR VERSION 3.0
+  RELEASE NOTES FOR VERSION 3.0.1
 =======================================================================================
-+ Completely new template system. User can change templates on the fly.
-+ Additional mapping Ctrl-j : jump behind parenthesis or strings in the current line.
-+ A few Posix character classes have better shortcuts.
-+ Bugfix: insert mode for Posix character classes.
+- New global variable g:BASH_Errorformat: adapt the error format used to parse
+  runtime messages to your locale setting.
+- Bugfix (Windows only): missing internal variable prevents proper initialization.
 
 =======================================================================================
   OLDER RELEASE NOTES : see file 'ChangeLog'

@@ -1,7 +1,7 @@
-*bashsupport.txt*                Bash Support               November 28 2009
+*bashsupport.txt*                Bash Support               December 10 2009
 
 bash Support                                      *bash-support* *bashsupport*
-                             Plugin version 3.0
+                            Plugin version 3.0.1
                         for Vim version 7.0 and above
                        Fritz Mehner  <mehner@fh-swf.de>
 
@@ -32,11 +32,12 @@ writing shell scripts. This plugin can be used for Bash version 4.0.
  1.7     Menu 'Run'                              |bashsupport-run|
  1.7.1    Save and run                           |bashsupport-run-script|
  1.7.2    Save and check syntax                  |bashsupport-syntax-check|
- 1.7.3    Command line arguments                 |bashsupport-cmdline-args|
- 1.7.4    Start debugger                         |bashsupport-debugger|
- 1.7.5    Hardcopy                               |bashsupport-hardcopy|
- 1.7.6    Xterm size                             |bashsupport-xterm|
- 1.7.7    Output redirection                     |bashsupport-output|
+ 1.7.3    Error format                           |bashsupport-errorformat|
+ 1.7.4    Command line arguments                 |bashsupport-cmdline-args|
+ 1.7.5    Start debugger                         |bashsupport-debugger|
+ 1.7.6    Hardcopy                               |bashsupport-hardcopy|
+ 1.7.7    Xterm size                             |bashsupport-xterm|
+ 1.7.8    Output redirection                     |bashsupport-output|
  1.8     Menu 'Help'                             |bashsupport-help|
  2.     Usage without GUI                        |bashsupport-usage-vim|
  3.     Hot keys                                 |bashsupport-hotkeys|
@@ -468,7 +469,19 @@ shopts options for Bash (GNU Bash-4.0) are recognized:
   progcomp                 promptvars    restricted_shell  shift_verbose sourcepath
   xpg_echo
 
-1.7.3 Command line arguments                        *bashsupport-cmdline-args*
+1.7.3 Error format                                   *bashsupport-errorformat*
+------------------
+The format used to parse runtime errors is '%f:\ line\ %l:\ %m'.  This format
+is appropriate if the shell's locale is set to 'C' or 'POSIX'.  In other cases
+warnings and error messages will be translated and the parsing does not work.
+If this is the case add a line like
+
+ let g:BASH_Errorformat    = '%f:\ Zeile\ %l:\ %m'
+
+to '~/.vimrc' to redefine the error format. Replace 'line' by the translation
+of this word in the current language. The above example works for German.
+
+1.7.4 Command line arguments                        *bashsupport-cmdline-args*
 ----------------------------
 
 The entry 'com. line arg.' calls an input dialog which asks for command line
@@ -483,7 +496,7 @@ If the buffer gets a new name with "save as" the arguments will now belong to
 the buffer with the new name.
 
 
-1.7.4 START DEBUGGER                                    *bashsupport-debugger*
+1.7.5 START DEBUGGER                                    *bashsupport-debugger*
 --------------------
 
 Start the debugger 'bashdb' or the frontend 'ddd' from the menu entry
@@ -513,7 +526,7 @@ In all cases the command line arguments from the argument setting
 (|bashsupport-cmdline-args|) are passed to the debugger.
 
 
-1.7.5 Hardcopy                                          *bashsupport-hardcopy*
+1.7.6 Hardcopy                                          *bashsupport-hardcopy*
 --------------
 
 Generates a PostScript file from the whole buffer or from a marked region.
@@ -537,13 +550,13 @@ or by setting a global variable in the file '.vimrc', e.g. :
 See :h printheader and :h strftime()  for more details.
 
 
-1.7.6 Xterm size                                           *bashsupport-xterm*
+1.7.7 Xterm size                                           *bashsupport-xterm*
 ----------------
 
 The size of the xterm (see below) can be changes for the current session.  The
 size has to be specified as COLUMNS LINES (e.g. 96 32 ).
 
-1.7.7 Output redirection                                  *bashsupport-output*
+1.7.8 Output redirection                                  *bashsupport-output*
 ------------------------
 
 The last menu entry 'output: ... ' has 3 states:
@@ -852,6 +865,7 @@ g:BASH_BASH                    $SHELL         (Linux/U**X)
 g:BASH_Man                     'man'          (Linux/U**X)
                                'man.exe'      (Windows)
 g:BASH_MapLeader               '\'
+g:BASH_Errorformat             '%f:\ line\ %l:\ %m'
 
 --------------------------------------------------------------------------------
 
@@ -884,6 +898,7 @@ g:BASH_MapLeader               '\'
            g:BASH_BASH                   : the shell used
            g:BASH_Man                    : the interface to the on-line manuals
            g:BASH_MapLeader              : the map leader for hotkeys (see|bashsupport-usage-vim|)
+           g:BASH_Errorformat            : errorforamat used to parse runtime errors
 
 To override the defaults add appropriate assignments in '.vimrc'.
 

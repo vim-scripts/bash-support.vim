@@ -29,7 +29,7 @@
 "                  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 "                  PURPOSE.
 "                  See the GNU General Public License version 2 for more details.
-"       Revision:  $Id: bash-support.vim,v 1.56 2009/11/29 16:26:04 mehner Exp $
+"       Revision:  $Id: bash-support.vim,v 1.58 2009/12/11 19:47:00 mehner Exp $
 "
 "------------------------------------------------------------------------------
 "
@@ -38,7 +38,7 @@
 if exists("g:BASH_Version") || &cp
  finish
 endif
-let g:BASH_Version= "3.0"  						" version number of this script; do not change
+let g:BASH_Version= "3.0.1"  						" version number of this script; do not change
 "
 if v:version < 700
   echohl WarningMsg | echo 'plugin bash-support.vim needs Vim version >= 7'| echohl None
@@ -76,6 +76,7 @@ let	s:MSWIN =		has("win16") || has("win32") || has("win64") || has("win95")
 if	s:MSWIN
 	let s:escfilename       = ''
   let s:plugin_dir  		  = $VIM.'\vimfiles\'
+	let s:BASH_root_dir			= $VIM.'\vimfiles'
 	let s:BASH_CodeSnippets	= s:plugin_dir.'bash-support/codesnippets/'
 	let s:BASH_OutputGvim   = 'xterm'
 	let s:BASH_BASH					= 'win-bash.exe'
@@ -136,6 +137,7 @@ let s:BASH_GuiTemplateBrowser      = 'gui'										" gui / explorer / commandli
 let s:BASH_Printheader             = "%<%f%h%m%<  %=%{strftime('%x %X')}     Page %N"
 let s:BASH_Wrapper                 = s:plugin_dir.'bash-support/scripts/wrapper.sh'
 "
+let s:BASH_Errorformat    			= '%f:\ line\ %l:\ %m'
 let s:BASH_FormatDate						= '%x'
 let s:BASH_FormatTime						= '%X %Z'
 let s:BASH_FormatYear						= '%Y'
@@ -149,12 +151,12 @@ let s:BASH_TemplateJumpTarget2  = '<-'.s:BASH_TJT.'->\|{-'.s:BASH_TJT.'-}'
 "  Some variables for internal use only
 "------------------------------------------------------------------------------
 let s:BASH_Active         = -1                    " state variable controlling the Bash-menus
-let s:BASH_Errorformat    = '%f:\ line\ %l:\ %m'
 let s:BASH_SetCounter     = 0                     "
 let s:BASH_Set_Txt        = "SetOptionNumber_"
 let s:BASH_Shopt_Txt      = "ShoptOptionNumber_"
 "
 call BASH_CheckGlobal('BASH_BASH                  ')
+call BASH_CheckGlobal('BASH_Errorformat           ')
 call BASH_CheckGlobal('BASH_CodeSnippets          ')
 call BASH_CheckGlobal('BASH_Ctrl_j                ')
 call BASH_CheckGlobal('BASH_Debugger              ')

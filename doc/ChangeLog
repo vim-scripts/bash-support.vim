@@ -1,4 +1,12 @@
 =======================================================================================
+  RELEASE NOTES FOR VERSION 3.0
+=======================================================================================
++ Completely new template system. User can change templates on the fly.
++ Additional mapping Ctrl-j : jump behind parenthesis or strings in the current line.
++ A few Posix character classes have better shortcuts.
++ Bugfix: insert mode for Posix character classes.
+
+=======================================================================================
   RELEASE NOTES FOR VERSION 2.14
 =======================================================================================
 + Debugging: ddd always called with bashdb(1).
