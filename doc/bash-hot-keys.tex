@@ -6,17 +6,17 @@
 %%                
 %%       Author:  Dr.-Ing. Fritz Mehner
 %%        Email:  mehner@fh-swf.de
-%%    Copyright:  Copyright (C)  2003-2009  Dr.-Ing. Fritz Mehner  (mehner@fh-swf.de)
+%%    Copyright:  Copyright (C)  2003-2010  Dr.-Ing. Fritz Mehner  (mehner@fh-swf.de)
 %%      Version:  see PluginVersion (below)
-%%     Revision:  $Id: bash-hot-keys.tex,v 1.22 2009/11/26 17:24:47 mehner Exp $
+%%     Revision:  $Id: bash-hot-keys.tex,v 1.24 2010/01/06 18:00:10 mehner Exp $
 %%      Created:  09.06.2003
 %%                
 %%        Notes:  
 %%                
 %%=====================================================================================
 
-\newcommand{\PluginVersion}{3.0}
-\newcommand{\ReleaseDate}{November 2009}
+\newcommand{\PluginVersion}{3.1}
+\newcommand{\ReleaseDate}{January 2010}
 
 \documentclass[oneside,12pt,a4paper,DIV18]{scrartcl}
 \usepackage[english]{babel}
@@ -65,10 +65,10 @@
 %%======================================================================
 \begin{center}
 \textbf{\textsc{\small{Vim-Plugin}}}\\
-\textbf{\large{bash-support.vim}}\\
+\textbf{\huge{bash-support.vim}}\\
 \textbf{\textsc{\small{Version \PluginVersion}}}\\
 \vspace{5mm}%
-\textbf{\textsc{\huge{Hot keys}}}\\ 
+\textbf{\textsc{\LARGE{Hot keys}}}\\ 
 \vspace{5mm}%
 \footnotesize{Key mappings for Vim without GUI.}\\
 \vspace{1mm}%
@@ -88,29 +88,29 @@ All mappings also work for gVim.}\\
 %%~~~~~ TABULAR : begin ~~~~~~~~~~
 \begin{tabular}[]{|p{11mm}|p{59mm}|}
 \hline
-\multicolumn{2}{|r|}{\textsl{\textbf{C}omments}} \\
-\hline \verb'\cl'  & end-of-line comment              \hfill (n, i, v) \\
-\hline \verb'\cj'  & adjust end-of-line comments      \hfill (n, i, v) \\
-\hline \verb'\cs'  & set end-of-line comment column   \hfill (n) \\
-\hline \verb'\cfr' & frame comment                    \hfill (n, i) \\
-\hline \verb'\cfu' & function description             \hfill (n, i) \\
-\hline \verb'\ch'  & file header                      \hfill (n, i) \\
-\hline \verb'\ckb' & keyword \verb'BUG    '           \hfill (n, i) \\
-\hline \verb'\ckt' & keyword \verb'TODO   '           \hfill (n, i) \\
-\hline \verb'\ckr' & keyword \verb'TRICKY '           \hfill (n, i) \\
-\hline \verb'\ckw' & keyword \verb'WARNING'           \hfill (n, i) \\
-\hline \verb'\ckn' & keyword: new keyword             \hfill (n, i) \\
-\hline \verb'\cc'  & toggle comment                   \hfill (n, i, v) \\
-\hline \verb'\cd'  & date                             \hfill (n, i, v) \\
-\hline \verb'\ct'  & date \& time                     \hfill (n, i, v) \\
-\hline \verb'\ce'  & \verb'echo "<line>"'             \hfill (n, i) \\
-\hline \verb'\cr'  & remove \verb'echo'               \hfill (n, i) \\
-\hline \verb'\cv'  & vim modeline                     \hfill (n, i) \\
+\multicolumn{2}{|r|}{\textsl{\textbf{C}omments}}\\
+\hline \verb'\cl'  & end-of-line comment              \hfill (n, i, v)\\
+\hline \verb'\cj'  & adjust end-of-line comments      \hfill (n, i, v)\\
+\hline \verb'\cs'  & set end-of-line comment column   \hfill (n)\\
+\hline \verb'\cfr' & frame comment                    \hfill (n, i)\\
+\hline \verb'\cfu' & function description             \hfill (n, i)\\
+\hline \verb'\ch'  & file header                      \hfill (n, i)\\
+\hline \verb'\ckb' & keyword \verb'BUG    '           \hfill (n, i)\\
+\hline \verb'\ckt' & keyword \verb'TODO   '           \hfill (n, i)\\
+\hline \verb'\ckr' & keyword \verb'TRICKY '           \hfill (n, i)\\
+\hline \verb'\ckw' & keyword \verb'WARNING'           \hfill (n, i)\\
+\hline \verb'\ckn' & keyword: new keyword             \hfill (n, i)\\
+\hline \verb'\cc'  & toggle comment                   \hfill (n, i, v)\\
+\hline \verb'\cd'  & date                             \hfill (n, i, v)\\
+\hline \verb'\ct'  & date \& time                     \hfill (n, i, v)\\
+\hline \verb'\ce'  & \verb'echo "<line>"'             \hfill (n, i)\\
+\hline \verb'\cr'  & remove \verb'echo'               \hfill (n, i)\\
+\hline \verb'\cv'  & vim modeline                     \hfill (n, i)\\
 \hline 
 \hline
-\multicolumn{2}{|r|}{\textsl{\textbf{S}tatements}} \\
-\hline \verb'\sc'  & \verb'case in ... esac'            \hfill (n, i) \\
-\hline \verb'\sl'  & \verb'elif then'                   \hfill (n, i) \\
+\multicolumn{2}{|r|}{\textsl{\textbf{S}tatements}}\\
+\hline \verb'\sc'  & \verb'case in ... esac'            \hfill (n, i)\\
+\hline \verb'\sl'  & \verb'elif then'                   \hfill (n, i)\\
 \hline \verb'\sf'  & \verb'for in do done'              \hfill (n, i, v)\\
 \hline \verb'\sfo' & \verb'for ((...)) do done'         \hfill (n, i, v)\\
 \hline \verb'\si'  & \verb'if then fi'                  \hfill (n, i, v)\\
@@ -124,11 +124,12 @@ All mappings also work for gVim.}\\
 \hline \verb'\sa'  & array element\ \ \ \verb'${.[.]}'  \hfill (n, i, v)\\
 \hline \verb'\sas' & array elements \ \verb'${.[@]}'    \hfill (n, i, v)\\
 \hline
-\end{tabular} \\
+\end{tabular}\\
 %%~~~~~ TABULAR :  end  ~~~~~~~~~~
 \begin{flushleft}
 {\small
-{\normalsize (i)} insert mode, {\normalsize (n)} normal mode, {\normalsize (v)} visual mode
+{\normalsize (i)} insert mode, {\normalsize (n)} normal mode, {\normalsize (v)} visual mode\\
+$^+$ \footnotesize{Linux/U**x only}
 }%
 \end{flushleft}
 
@@ -137,61 +138,57 @@ All mappings also work for gVim.}\\
 %%  table, right part
 %%======================================================================
 %%~~~~~ TABULAR : begin ~~~~~~~~~~
-%\begin{tabular}[]{l}
-%   \\ [4.3ex]								%% offset
-%\end{tabular} \\ 
-%%~~~~~ TABULAR :  end  ~~~~~~~~~~
-%%~~~~~ TABULAR : begin ~~~~~~~~~~
 \begin{tabular}[]{|p{11mm}|p{59mm}|}
 %%----------------------------------------------------------------------
 %%  menu Posix character classes
 %%----------------------------------------------------------------------
 \hline
 \multicolumn{2}{|r|}{\textsl{\textbf{P}OSIX Character Classes}}\\
-\hline \verb'\pan' &  \verb'[:alnum:] '         \hfill (n, i)   \\
-\hline \verb'\pal' &  \verb'[:alpha:] '         \hfill (n, i)   \\
-\hline \verb'\pas' &  \verb'[:ascii:] '         \hfill (n, i)   \\
-\hline \verb'\pb'  &  \verb'[:blank:] '         \hfill (n, i)   \\
-\hline \verb'\pc'  &  \verb'[:cntrl:] '         \hfill (n, i)   \\
-\hline \verb'\pd'  &  \verb'[:digit:] '         \hfill (n, i)   \\
-\hline \verb'\pg'  &  \verb'[:graph:] '         \hfill (n, i)   \\
-\hline \verb'\pl'  &  \verb'[:lower:] '         \hfill (n, i)   \\
-\hline \verb'\ppr' &  \verb'[:print:] '         \hfill (n, i)   \\
-\hline \verb'\ppu' &  \verb'[:punct:] '         \hfill (n, i)   \\
-\hline \verb'\ps'  &  \verb'[:space:] '         \hfill (n, i)   \\
-\hline \verb'\pu'  &  \verb'[:upper:] '         \hfill (n, i)   \\
-\hline \verb'\pw'  &  \verb'[:word:]  '         \hfill (n, i)   \\
-\hline \verb'\px'  &  \verb'[:xdigit:]'         \hfill (n, i)   \\
+\hline \verb'\pan' &  \verb'[:alnum:] '         \hfill (n, i)\\
+\hline \verb'\pal' &  \verb'[:alpha:] '         \hfill (n, i)\\
+\hline \verb'\pas' &  \verb'[:ascii:] '         \hfill (n, i)\\
+\hline \verb'\pb'  &  \verb'[:blank:] '         \hfill (n, i)\\
+\hline \verb'\pc'  &  \verb'[:cntrl:] '         \hfill (n, i)\\
+\hline \verb'\pd'  &  \verb'[:digit:] '         \hfill (n, i)\\
+\hline \verb'\pg'  &  \verb'[:graph:] '         \hfill (n, i)\\
+\hline \verb'\pl'  &  \verb'[:lower:] '         \hfill (n, i)\\
+\hline \verb'\ppr' &  \verb'[:print:] '         \hfill (n, i)\\
+\hline \verb'\ppu' &  \verb'[:punct:] '         \hfill (n, i)\\
+\hline \verb'\ps'  &  \verb'[:space:] '         \hfill (n, i)\\
+\hline \verb'\pu'  &  \verb'[:upper:] '         \hfill (n, i)\\
+\hline \verb'\pw'  &  \verb'[:word:]  '         \hfill (n, i)\\
+\hline \verb'\px'  &  \verb'[:xdigit:]'         \hfill (n, i)\\
 \hline
 \hline
-\multicolumn{2}{|r|}{\textsl{S\textbf{n}ippets}} \\
+\multicolumn{2}{|r|}{\textsl{S\textbf{n}ippets}}\\
 \hline \verb'\nr'  & read code snippet          \hfill (n)\\
 \hline \verb'\nw'  & write code snippet         \hfill (n, v)\\
 \hline \verb'\ne'  & edit code snippet          \hfill (n)\\
 %
-\hline \verb'\ntl' & edit local templates      \hfill (n)   \\
-\hline \verb'\ntg' & edit global templates     \hfill (n)   \\
-\hline \verb'\ntr' & reread the templates      \hfill (n)   \\
+\hline \verb'\ntl' & edit local templates      \hfill (n)\\
+\hline \verb'\ntg' & edit global templates     \hfill (n)\\
+\hline \verb'\ntr' & reread the templates      \hfill (n)\\
+\hline \verb'\nts' & switch template style     \hfill (n)\\
 \hline
 \hline
-\multicolumn{2}{|r|}{\textsl{\textbf{R}un}} \\
-\hline \verb'\rr'  & update file, run script    		\hfill (n, i, v$^+$)\\
-\hline \verb'\ra'  & set command line arguments 		\hfill (n, i)\\
+\multicolumn{2}{|r|}{\textsl{\textbf{R}un}}\\
+\hline \verb'\rr'  & update file, run script        \hfill (n, i, v$^+$)\\
+\hline \verb'\ra'  & set command line arguments     \hfill (n, i)\\
 \hline \verb'\rc'  & update file, check syntax$^+$  \hfill (n, i)\\
 \hline \verb'\rco' & syntax check options$^+$       \hfill (n, i)\\
 \hline \verb'\rd'  & start debugger$^+$             \hfill (n, i)\\
 \hline \verb'\re'  & make script executable$^+$     \hfill (n, i)\\
-\hline \verb'\rh'  & hardcopy buffer            		\hfill (n, i, v)\\
-\hline \verb'\rs'  & settings and hotkeys       		\hfill (n, i)\\
+\hline \verb'\rh'  & hardcopy buffer                \hfill (n, i, v)\\
+\hline \verb'\rs'  & settings and hotkeys           \hfill (n, i)\\
 \hline \verb'\rt'  & set xterm size$^+$             \hfill (n, i, GUI only)\\
-\hline \verb'\ro'  & change output destination  		\hfill (n, i)\\
+\hline \verb'\ro'  & change output destination      \hfill (n, i)\\
 \hline
 \hline 
-\multicolumn{2}{|r|}{\textsl{\textbf{H}elp}} \\
-\hline \verb'\hb'  & Bash manual                     \hfill (n, i) \\
-\hline \verb'\hh'  & help (Bash builtins)            \hfill (n, i) \\
-\hline \verb'\hm'  & manual (command line utilities) \hfill (n, i) \\
-\hline \verb'\hp'  & Bash-support plugin             \hfill (n, i) \\
+\multicolumn{2}{|r|}{\textsl{\textbf{H}elp}}\\
+\hline \verb'\hb'  & Bash manual                     \hfill (n, i)\\
+\hline \verb'\hh'  & help (Bash builtins)            \hfill (n, i)\\
+\hline \verb'\hm'  & manual (command line utilities) \hfill (n, i)\\
+\hline \verb'\hp'  & Bash-support plugin             \hfill (n, i)\\
 \hline 
 \hline
 \multicolumn{2}{|r|}{\textsl{Menu(s)}}\\
@@ -200,7 +197,7 @@ All mappings also work for gVim.}\\
 \hline 
 \end{tabular}\\%
 %%~~~~~ TABULAR :  end  ~~~~~~~~~~
-\vspace{3mm}%
+\vspace{1mm}%
 %
 \begin{minipage}[b]{70mm}%
 \setlength{\fboxsep}{.25mm}%
@@ -213,16 +210,13 @@ All mappings also work for gVim.}\\
 \multicolumn{2}{|r|}{\textsl{Additional Mappings}}\\
 \hline
 \hline \textbf{typing}& \textbf{expansion}\\
-\hline \verb"''"  		& single quotes around a WORD    \hfill (n)\\
-\hline \verb'""'  		& double quotes around a WORD    \hfill (n)\\
+\hline \verb"''"      & single quotes around a WORD    \hfill (n)\\
+\hline \verb'""'      & double quotes around a WORD    \hfill (n)\\
 \hline
 \end{tabular}
 \end{spacing}
 %%~~~~~ TABULAR :  end  ~~~~~~~~~~
 \end{minipage}%
-\vfill
-\begin{flushleft}
-\hspace{5mm}$^+$ \footnotesize{Linux/U**x only}
-\end{flushleft}
+%
 \end{center}
 \end{document}

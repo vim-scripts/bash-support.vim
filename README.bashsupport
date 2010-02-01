@@ -1,4 +1,4 @@
-README for bash-support.vim (Version 3.0.1) / December 17 2009
+README for bash-support.vim (Version 3.1) / January 31 2010
 
   *  INSTALLATION
   *  RELEASE NOTES 
@@ -24,8 +24,10 @@ structure which is needed below the local installation directory $HOME/.vim/ .
       unzip bash-support.zip
 
     If you have already an older version of bash-support and you have modified
-    the template files you may want to save your templates first or copy the
-    files from the archive by hand.
+    the template files you may want to save your templates first and suppress
+    overwriting them with
+
+      unzip bash-support.zip  -x *Templates *.template
 
 (2) Loading of plugin files must be enabled. If not use
       :filetype plugin on
@@ -72,13 +74,16 @@ and look at the bashsupport help with
              | +-------------------------------------------+ |
              +-----------------------------------------------+
 
-
 =======================================================================================
-  RELEASE NOTES FOR VERSION 3.0.1
+  RELEASE NOTES FOR VERSION 3.1
 =======================================================================================
-- New global variable g:BASH_Errorformat: adapt the error format used to parse
-  runtime messages to your locale setting.
-- Bugfix (Windows only): missing internal variable prevents proper initialization.
+- The plugin now handles different template styles without editing and
+  reloading the main template file.
+- New hotkey and ex-command to switch template styles.
+- New global List/Dictionnary g:BASH_AlsoBash: add filename pattern (and
+  styles) for files not named *.sh .
+- Minor improvements.
+- Bugfixes: missing redraws in some cases. 
 
 =======================================================================================
   OLDER RELEASE NOTES : see file 'ChangeLog'
@@ -108,15 +113,15 @@ bash-support/wordlists/*            Additional word lists (dictionaries).
                           bash-support.vim will work without them.
                           -------------------------------------------------------------
 
-bash-support/rc/costumization.bashrc  Additional settings I use in .bashrc: 
+bash-support/rc/customization.bashrc  Additional settings I use in .bashrc: 
                                       set the prompt P2, P3, P4 (for debugging).
 
-bash-support/rc/costumization.vimrc   Additional settings I use in .vimrc: incremental 
+bash-support/rc/customization.vimrc   Additional settings I use in .vimrc: incremental 
                                       search, tabstop, hot keys, font, use of dictionaries, 
                                       ...  The file is commented. Append it to your .vimrc
                                       if you like.
 
-bash-support/rc/costumization.gvimrc  Additional settings I use in .gvimrc: hot keys, 
+bash-support/rc/customization.gvimrc  Additional settings I use in .gvimrc: hot keys, 
                                       mouse settings, ...  The file is commented. 
                                       Append it to your .gvimrc if you like.
 

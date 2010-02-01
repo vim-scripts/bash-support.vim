@@ -1,4 +1,11 @@
 =======================================================================================
+  RELEASE NOTES FOR VERSION 3.0.1
+=======================================================================================
+- New global variable g:BASH_Errorformat: adapt the error format used to parse
+  runtime messages to your locale setting.
+- Bugfix (Windows only): missing internal variable prevents proper initialization.
+
+=======================================================================================
   RELEASE NOTES FOR VERSION 3.0
 =======================================================================================
 + Completely new template system. User can change templates on the fly.

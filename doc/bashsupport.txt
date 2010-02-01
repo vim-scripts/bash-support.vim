@@ -1,7 +1,7 @@
-*bashsupport.txt*                Bash Support               December 10 2009
+*bashsupport.txt*                Bash Support                 January 31 2009
 
 bash Support                                      *bash-support* *bashsupport*
-                            Plugin version 3.0.1
+                             Plugin version 3.1
                         for Vim version 7.0 and above
                        Fritz Mehner  <mehner@fh-swf.de>
 
@@ -57,6 +57,7 @@ writing shell scripts. This plugin can be used for Bash version 4.0.
  5.3.4    The macros <+text+> etc.               |bashsupport-templates-jump|
  5.3.5    Command Ctrl-j                         |bashsupport-Ctrl-j|
  5.4     Switching between template sets         |bashsupport-templates-sets|
+ 5.5     Additional filenames with filetype 'sh' |bashsupport-also-bash|
  6.     Bash dictionary                          |bashsupport-dictionary|
  7.     Additional Mappings                      |bashsupport-ad-mappings|
  8.     Windows particularities                  |bashsupport-windows|
@@ -471,15 +472,16 @@ shopts options for Bash (GNU Bash-4.0) are recognized:
 
 1.7.3 Error format                                   *bashsupport-errorformat*
 ------------------
-The format used to parse runtime errors is '%f:\ line\ %l:\ %m'.  This format
-is appropriate if the shell's locale is set to 'C' or 'POSIX'.  In other cases
-warnings and error messages will be translated and the parsing does not work.
-If this is the case add a line like
+The format used to parse runtime errors is '%f:\ %s\ %l:\ %m'.  This format is
+appropriate for most locales including 'C' and 'POSIX'. The '%s' part looks for
+the English word  'line' or its one word translation in another language (e.g.
+'Zeile' in German). If this does not work parsing fails and no errors will be
+reported.  In this case add a line like
 
- let g:BASH_Errorformat    = '%f:\ Zeile\ %l:\ %m'
+ let g:BASH_Errorformat    = '%f:\ xyz\ %l:\ %m'
 
-to '~/.vimrc' to redefine the error format. Replace 'line' by the translation
-of this word in the current language. The above example works for German.
+to '~/.vimrc' to redefine the error format. Replace '%s' by the translation
+of this word in the current language.
 
 1.7.4 Command line arguments                        *bashsupport-cmdline-args*
 ----------------------------
@@ -710,6 +712,8 @@ following character(s) will only be recognized for a short time.
   \se     echo -e "..."                   (n, i, v)
   \sp     printf "..."                    (n, i, v)
 
+  -- Snippets - ------------------------------------------
+
   \nr     read code snippet               (n)
   \nw     write code snippet              (n, v)
   \ne     edit code snippet               (n)
@@ -717,6 +721,7 @@ following character(s) will only be recognized for a short time.
   \ntl    edit local templates            (n)
   \ntg    edit global templates           (n)
   \ntr    reread the templates            (n)
+  \nts    switch template style           (n)
 
   -- POSIX Character Classes -----------------------------
 
@@ -866,6 +871,7 @@ g:BASH_Man                     'man'          (Linux/U**X)
                                'man.exe'      (Windows)
 g:BASH_MapLeader               '\'
 g:BASH_Errorformat             '%f:\ line\ %l:\ %m'
+g:BASH_AlsoBash                ''
 
 --------------------------------------------------------------------------------
 
@@ -899,6 +905,8 @@ g:BASH_Errorformat             '%f:\ line\ %l:\ %m'
            g:BASH_Man                    : the interface to the on-line manuals
            g:BASH_MapLeader              : the map leader for hotkeys (see|bashsupport-usage-vim|)
            g:BASH_Errorformat            : errorforamat used to parse runtime errors
+           g:BASH_AlsoBash               : add filename pattern to be considered as Bash file, 
+                                           e.g. '*.SlackBuild  rc.*' (separate with whitespaces)
 
 To override the defaults add appropriate assignments in '.vimrc'.
 
@@ -1284,7 +1292,7 @@ How to switch the mapping for Ctrl-j off
 ----------------------------------------
 The original meaning of Ctrl-j is 'move [n] lines downward' (see |CTRL-j|).
 If you are accustomed to use the default and don't like these jump targets you
-can switch them off.  Put the following line in the file .vimrc :
+can switch them off.  Put the following line in the file '.vimrc' :
 
   let g:BASH_Ctrl_j   = 'off'
 
@@ -1296,11 +1304,16 @@ inserted.
 5.4  SWITCHING BETWEEN TEMPLATE SETS              *bashsupport-templates-sets*
 ==============================================================================
 
-This plugin comes with two sets of templates. These are suggestions. You may
-want to have additional sets for different projects or occasionally want to
-use doxygen style comments.  To facilitate switching use the macro*|STYLE|*
-(|bashsupport-templates-files|) to define a unique name and the
-IF-ENDIF-construct to choose a particular set of files for example:
+This plugin comes with a set of templates. These templates are suggestions.
+If one set is enough just edit these files to meet your needs if necessary.
+That's all.
+
+If you want to have additional sets for different projects use following
+method.
+To facilitate switching use the macro*|STYLE|* (|bashsupport-templates-files|)
+to define a unique name and the IF-ENDIF-construct to choose a particular set
+usually in the main templates file '~/.vim/bash-support/templates/Templates', 
+for example:
 
    ...
 
@@ -1322,7 +1335,6 @@ IF-ENDIF-construct to choose a particular set of files for example:
  *|includefile|* = bash.statements.template
  *|includefile|* = bash.paramsub.template
   §
-
    ...
 
 The syntax is as follows:
@@ -1331,23 +1343,46 @@ The syntax is as follows:
    
   == ENDIF ==
 
-IF, IS, and ENDIF are keywords.
+IF, IS, and ENDIF are keywords.  All files will be read in. Use differnt
+filenames.
+Use the macro*|STYLE|* to define the style which shall be used when opening a
+new file. 
+The number of styles is not limited. There should be at least one complete set
+of templates of course. 
 
-HINT. Use these constructs to avoid overwriting your templates when updating
-bashsupport. Copy and rename the set of files you want to change and surround the
-includes with an appropriate IF-construct:
+-------------------------------
+Switching between template sets
+-------------------------------
 
- *|STYLE|*    = MY_BASH
-  $
-   ...
-  $
-  == IF *|STYLE|* IS MY_BASH  ==
- *|includefile|* = my_comments.template
- *|includefile|* = my_statements.template
-  == ENDIF ==
+If there is more than one style switching can be done with the hotkey \nts or
+with the Ex command ':BashStyle '. Use tab expansion to choose one of the
+existing styles.
 
-Keep a copy of the main template file 'Templates' because this file will be
-overwritten if you do not update manually.
+==============================================================================
+5.5  ADDITIONAL FILENAMES WITH FILETYPE 'sh'           *bashsupport-also-bash*
+==============================================================================
+
+The standard extension for shell script files used by this plugin is ".sh".
+If you want to have other filenames recognized and treated as shell files
+set the global variable  g:BASH_AlsoBash in your '.vimrc' :
+ 
+ let g:BASH_AlsoBash = [ '*.sh', '*.SlackBuild' , 'rc.*' ]
+
+This is a Vim List. Please quote the entries and separate them with commas.
+Start the list with the default extension '*.sh'.
+
+You can relate each pattern with an existing style (|bashsupport-templates-sets|)
+using a Vim Dictionary  instead:
+
+ let g:BASH_AlsoBash = { '*.sh' : 'default' , '*.SlackBuild' : 'style1' , 'rc.*' : 'sytle2' }
+
+The entries are pairs of the form 'PATTERN' : 'STYLE' . The pairs are
+separated by commas. Please note that a Dictionary is enclosed in curly
+braces. Start the list with the default pair '*.sh' : 'default' (the name of
+the default style is 'default'). The given style will be set automatically
+when switching to a buffer or opening a new buffer with the attached filename
+pattern and supersedes the macro *|STYLE|* .
+
 
 ==============================================================================
 6.  BASH DICTIONARY                                   *bashsupport-dictionary*

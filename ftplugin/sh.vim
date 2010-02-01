@@ -3,7 +3,7 @@
 "   Language :  bash
 "     Plugin :  bash-support.vim
 " Maintainer :  Fritz Mehner <mehner@fh-swf.de>
-"   Revision :  $Id: sh.vim,v 1.29 2009/11/26 09:18:05 mehner Exp $
+"   Revision :  $Id: sh.vim,v 1.34 2010/01/28 21:15:49 mehner Exp $
 "
 " -----------------------------------------------------------------
 "
@@ -14,13 +14,18 @@ if exists("b:did_BASH_ftplugin")
 endif
 let b:did_BASH_ftplugin = 1
 "
+"------------------------------------------------------------------------------
+"  Avoid a wrong syntax highlighting for $(..) and $((..))
+"------------------------------------------------------------------------------
+let b:is_bash           = 1
+"
 " ---------- Do we have a mapleader other than '\' ? ------------
 "
 if exists("g:BASH_MapLeader")
-	let maplocalleader	= g:BASH_MapLeader
+  let maplocalleader  = g:BASH_MapLeader
 endif    
 "
-let	s:MSWIN =		has("win16") || has("win32") || has("win64") || has("win95")
+let s:MSWIN =   has("win16") || has("win32") || has("win64") || has("win95")
 "
 " ---------- BASH dictionary -----------------------------------
 "
@@ -28,10 +33,12 @@ let	s:MSWIN =		has("win16") || has("win32") || has("win64") || has("win95")
 " using Vim's dictionary feature |i_CTRL-X_CTRL-K|.
 " 
 if exists("g:BASH_Dictionary_File")
-	let	save=&dictionary
+  let save=&dictionary
   silent! exe 'setlocal dictionary='.g:BASH_Dictionary_File
   silent! exe 'setlocal dictionary+='.save
 endif    
+"
+command! -nargs=1 -complete=customlist,BASH_StyleList   BashStyle   call BASH_Style (<f-args>)
 "
 " ---------- hot keys ------------------------------------------
 "
@@ -40,26 +47,26 @@ endif
 " Shift-F9   command line arguments
 "
 if has("gui_running")
-	"
-	 map  <buffer>  <silent>  <S-F1>        :call BASH_HelpBASHsupport()<CR>
-	imap  <buffer>  <silent>  <S-F1>   <C-C>:call BASH_HelpBASHsupport()<CR>
-	"
-	 map  <buffer>  <silent>  <A-F9>        :call BASH_SyntaxCheck()<CR><CR>
-	imap  <buffer>  <silent>  <A-F9>   <C-C>:call BASH_SyntaxCheck()<CR><CR>
-	"
-	 map  <buffer>  <silent>  <C-F9>        :call BASH_Run("n")<CR>
-	imap  <buffer>  <silent>  <C-F9>   <C-C>:call BASH_Run("n")<CR>
-	if !s:MSWIN
-		vmap  <buffer>  <silent>  <C-F9>   <C-C>:call BASH_Run("v")<CR>
-	endif
-	"
-	map   <buffer>  <silent>  <S-F9>        :call BASH_CmdLineArguments()<CR>
-	imap  <buffer>  <silent>  <S-F9>   <C-C>:call BASH_CmdLineArguments()<CR>
+  "
+   map  <buffer>  <silent>  <S-F1>        :call BASH_HelpBASHsupport()<CR>
+  imap  <buffer>  <silent>  <S-F1>   <C-C>:call BASH_HelpBASHsupport()<CR>
+  "
+   map  <buffer>  <silent>  <A-F9>        :call BASH_SyntaxCheck()<CR>
+  imap  <buffer>  <silent>  <A-F9>   <C-C>:call BASH_SyntaxCheck()<CR>
+  "
+   map  <buffer>  <silent>  <C-F9>        :call BASH_Run("n")<CR>
+  imap  <buffer>  <silent>  <C-F9>   <C-C>:call BASH_Run("n")<CR>
+  if !s:MSWIN
+    vmap  <buffer>  <silent>  <C-F9>   <C-C>:call BASH_Run("v")<CR>
+  endif
+  "
+  map   <buffer>  <silent>  <S-F9>        :call BASH_CmdLineArguments()<CR>
+  imap  <buffer>  <silent>  <S-F9>   <C-C>:call BASH_CmdLineArguments()<CR>
 endif
 "
 if !s:MSWIN
-	 map  <buffer>  <silent>    <F9>        :call BASH_Debugger()<CR>:redraw!<CR>
-	imap  <buffer>  <silent>    <F9>   <C-C>:call BASH_Debugger()<CR>:redraw!<CR>
+   map  <buffer>  <silent>    <F9>        :call BASH_Debugger()<CR>:redraw!<CR>
+  imap  <buffer>  <silent>    <F9>   <C-C>:call BASH_Debugger()<CR>:redraw!<CR>
 endif
 "
 "
@@ -99,7 +106,7 @@ inoremap  <buffer>  <silent>  <LocalLeader>ch      <Esc>:call BASH_InsertTemplat
 
  noremap    <buffer>  <silent>  <LocalLeader>cc         :call BASH_CommentToggle()<CR>j
 inoremap    <buffer>  <silent>  <LocalLeader>cc    <Esc>:call BASH_CommentToggle()<CR>j
-vnoremap    <buffer>  <silent>  <LocalLeader>cc    <Esc>:'<,'>call BASH_CommentToggle()<CR>j
+vnoremap    <buffer>  <silent>  <LocalLeader>cc    <Esc>:call BASH_CommentToggleRange()<CR>j
 
  noremap  <buffer>  <silent>  <LocalLeader>cd           :call BASH_InsertDateAndTime('d')<CR>
 inoremap  <buffer>  <silent>  <LocalLeader>cd      <Esc>:call BASH_InsertDateAndTime('d')<CR>a
@@ -224,6 +231,7 @@ vnoremap  <buffer>  <silent>  <LocalLeader>nw    <C-C>:call BASH_CodeSnippets("w
  noremap  <buffer>  <silent>  <LocalLeader>ntl        :call BASH_EditTemplates("local")<CR>
  noremap  <buffer>  <silent>  <LocalLeader>ntg        :call BASH_EditTemplates("global")<CR>
  noremap  <buffer>  <silent>  <LocalLeader>ntr        :call BASH_RereadTemplates()<CR>
+ noremap  <buffer>            <LocalLeader>nts   <Esc>:BashStyle<Space>
 "
 " ---------- run menu ----------------------------------------------------
 "
@@ -238,21 +246,21 @@ imap  <buffer>  <silent>  <LocalLeader>rr      <Esc>:call BASH_Run("n")<CR>
 imap  <buffer>  <silent>  <LocalLeader>ra      <Esc>:call BASH_CmdLineArguments()<CR>
 
 if !s:MSWIN
-	 map  <buffer>  <silent>  <LocalLeader>rc           :call BASH_SyntaxCheck()<CR>
-	imap  <buffer>  <silent>  <LocalLeader>rc      <Esc>:call BASH_SyntaxCheck()<CR>
+   map  <buffer>  <silent>  <LocalLeader>rc           :call BASH_SyntaxCheck()<CR>
+  imap  <buffer>  <silent>  <LocalLeader>rc      <Esc>:call BASH_SyntaxCheck()<CR>
 
-	 map  <buffer>  <silent>  <LocalLeader>rco          :call BASH_SyntaxCheckOptionsLocal()<CR>
-	imap  <buffer>  <silent>  <LocalLeader>rco     <Esc>:call BASH_SyntaxCheckOptionsLocal()<CR>
+   map  <buffer>  <silent>  <LocalLeader>rco          :call BASH_SyntaxCheckOptionsLocal()<CR>
+  imap  <buffer>  <silent>  <LocalLeader>rco     <Esc>:call BASH_SyntaxCheckOptionsLocal()<CR>
 
-	 map  <buffer>  <silent>  <LocalLeader>rd           :call BASH_Debugger()<CR>:redraw!<CR>
-	imap  <buffer>  <silent>  <LocalLeader>rd      <Esc>:call BASH_Debugger()<CR>:redraw!<CR>
+   map  <buffer>  <silent>  <LocalLeader>rd           :call BASH_Debugger()<CR>:redraw!<CR>
+  imap  <buffer>  <silent>  <LocalLeader>rd      <Esc>:call BASH_Debugger()<CR>:redraw!<CR>
 
-	vmap  <buffer>  <silent>  <LocalLeader>rr      <Esc>:call BASH_Run("v")<CR>
+  vmap  <buffer>  <silent>  <LocalLeader>rr      <Esc>:call BASH_Run("v")<CR>
 
-	if has("gui_running")
-		 map  <buffer>  <silent>  <LocalLeader>rt           :call BASH_XtermSize()<CR>
-		imap  <buffer>  <silent>  <LocalLeader>rt      <Esc>:call BASH_XtermSize()<CR>
-	endif
+  if has("gui_running")
+     map  <buffer>  <silent>  <LocalLeader>rt           :call BASH_XtermSize()<CR>
+    imap  <buffer>  <silent>  <LocalLeader>rt      <Esc>:call BASH_XtermSize()<CR>
+  endif
 endif
 
  map  <buffer>  <silent>  <LocalLeader>rh           :call BASH_Hardcopy("n")<CR>
@@ -263,11 +271,11 @@ vmap  <buffer>  <silent>  <LocalLeader>rh      <Esc>:call BASH_Hardcopy("v")<CR>
 imap  <buffer>  <silent>  <LocalLeader>rs      <Esc>:call BASH_Settings()<CR>
 
 if s:MSWIN
-	 map  <buffer>  <silent>  <LocalLeader>ro           :call BASH_Toggle_Gvim_Xterm_MS()<CR>
-	imap  <buffer>  <silent>  <LocalLeader>ro      <Esc>:call BASH_Toggle_Gvim_Xterm_MS()<CR>
+   map  <buffer>  <silent>  <LocalLeader>ro           :call BASH_Toggle_Gvim_Xterm_MS()<CR>
+  imap  <buffer>  <silent>  <LocalLeader>ro      <Esc>:call BASH_Toggle_Gvim_Xterm_MS()<CR>
 else
-	 map  <buffer>  <silent>  <LocalLeader>ro           :call BASH_Toggle_Gvim_Xterm()<CR>
-	imap  <buffer>  <silent>  <LocalLeader>ro      <Esc>:call BASH_Toggle_Gvim_Xterm()<CR>
+   map  <buffer>  <silent>  <LocalLeader>ro           :call BASH_Toggle_Gvim_Xterm()<CR>
+  imap  <buffer>  <silent>  <LocalLeader>ro      <Esc>:call BASH_Toggle_Gvim_Xterm()<CR>
 endif
 
 "-------------------------------------------------------------------------------
@@ -277,11 +285,11 @@ endif
 " additional mapping : double quotes around a Word (non-whitespaces)
 " additional mapping : parentheses around a word (word characters)
 "-------------------------------------------------------------------------------
-nnoremap		<buffer>	 ''		ciW''<Esc>P
-nnoremap		<buffer>	 ""		ciW""<Esc>P
-"nnoremap		<buffer>	 {{ 	ciw{}<Esc>PF{
+nnoremap    <buffer>   ''   ciW''<Esc>P
+nnoremap    <buffer>   ""   ciW""<Esc>P
+"nnoremap   <buffer>   {{   ciw{}<Esc>PF{
 "
 if !exists("g:BASH_Ctrl_j") || ( exists("g:BASH_Ctrl_j") && g:BASH_Ctrl_j != 'off' )
-	nmap    <buffer>  <silent>  <C-j>   i<C-R>=BASH_JumpCtrlJ()<CR>
-	imap    <buffer>  <silent>  <C-j>    <C-R>=BASH_JumpCtrlJ()<CR>
+  nmap    <buffer>  <silent>  <C-j>   i<C-R>=BASH_JumpCtrlJ()<CR>
+  imap    <buffer>  <silent>  <C-j>    <C-R>=BASH_JumpCtrlJ()<CR>
 endif

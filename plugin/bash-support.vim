@@ -1,4 +1,4 @@
-"#########################################################################################
+"#################################################################################
 "
 "       Filename:  bash-support.vim
 "
@@ -19,7 +19,7 @@
 "
 "        Version:  see variable  g:BASH_Version  below
 "        Created:  26.02.2001
-"        License:  Copyright (c) 2001-2009, Fritz Mehner
+"        License:  Copyright (c) 2001-2010, Fritz Mehner
 "                  This program is free software; you can redistribute it and/or
 "                  modify it under the terms of the GNU General Public License as
 "                  published by the Free Software Foundation, version 2 of the
@@ -29,7 +29,7 @@
 "                  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 "                  PURPOSE.
 "                  See the GNU General Public License version 2 for more details.
-"       Revision:  $Id: bash-support.vim,v 1.58 2009/12/11 19:47:00 mehner Exp $
+"       Revision:  $Id: bash-support.vim,v 1.67 2010/01/31 18:22:37 mehner Exp $
 "
 "------------------------------------------------------------------------------
 "
@@ -38,13 +38,13 @@
 if exists("g:BASH_Version") || &cp
  finish
 endif
-let g:BASH_Version= "3.0.1"  						" version number of this script; do not change
+let g:BASH_Version= "3.1"  						" version number of this script; do not change
 "
 if v:version < 700
   echohl WarningMsg | echo 'plugin bash-support.vim needs Vim version >= 7'| echohl None
 endif
 "
-"#########################################################################################
+"#################################################################################
 "
 "  Global variables (with default values) which can be overridden.
 "
@@ -130,14 +130,14 @@ let s:BASH_TemplateOverwrittenMsg= 'yes'
 let s:BASH_MenuHeader              = 'yes'
 let s:BASH_Root                    = 'B&ash.'         " the name of the root menu of this plugin
 let s:BASH_SyntaxCheckOptionsGlob  = ''
-""
+"
 let s:BASH_XtermDefaults           = '-fa courier -fs 12 -geometry 80x24'
 let s:BASH_GuiSnippetBrowser       = 'gui'										" gui / commandline
 let s:BASH_GuiTemplateBrowser      = 'gui'										" gui / explorer / commandline
 let s:BASH_Printheader             = "%<%f%h%m%<  %=%{strftime('%x %X')}     Page %N"
 let s:BASH_Wrapper                 = s:plugin_dir.'bash-support/scripts/wrapper.sh'
 "
-let s:BASH_Errorformat    			= '%f:\ line\ %l:\ %m'
+let s:BASH_Errorformat    			= '%f:\ %s\ %l:\ %m'
 let s:BASH_FormatDate						= '%x'
 let s:BASH_FormatTime						= '%X %Z'
 let s:BASH_FormatYear						= '%Y'
@@ -210,7 +210,6 @@ let s:BASH_ExpansionCounter     = {}
 let s:BASH_TJT									= '[ 0-9a-zA-Z_]*'
 let s:BASH_TemplateJumpTarget1  = '<+'.s:BASH_TJT.'+>\|{+'.s:BASH_TJT.'+}'
 let s:BASH_TemplateJumpTarget2  = '<-'.s:BASH_TJT.'->\|{-'.s:BASH_TJT.'-}'
-let s:BASH_Template             = {}
 let s:BASH_Macro                = {'|AUTHOR|'         : 'first name surname',
 											\						 '|AUTHORREF|'      : '',
 											\						 '|EMAIL|'          : '',
@@ -224,6 +223,9 @@ let	s:BASH_MacroFlag						= {	':l' : 'lowercase'			,
 											\							':c' : 'capitalize'		,
 											\							':L' : 'legalize name'	,
 											\						}
+let s:BASH_ActualStyle					= 'default'
+let s:BASH_ActualStyleLast			= s:BASH_ActualStyle
+let s:BASH_Template             = { 'default' : {} }
 
 let s:MsgInsNotAvail	= "insertion not available for a fold"
 "
@@ -268,9 +270,9 @@ function!	BASH_InitMenu ()
 	exe "imenu <silent>  ".s:BASH_Root.'&Comments.file\ &header<Tab>\\ch                       <Esc>:call BASH_InsertTemplate("comment.file-description")<CR>'
 
 	exe "amenu ".s:BASH_Root.'&Comments.-Sep1-                    :'
-	exe " menu <silent>  ".s:BASH_Root."&Comments.toggle\\ &comment<Tab>\\\\cc              :call BASH_CommentToggle()<CR>j"
-	exe "imenu <silent>  ".s:BASH_Root."&Comments.toggle\\ &comment<Tab>\\\\cc         <Esc>:call BASH_CommentToggle()<CR>j"
-	exe "vmenu <silent>  ".s:BASH_Root."&Comments.toggle\\ &comment<Tab>\\\\cc    <Esc>:'<,'>call BASH_CommentToggle()<CR>j"
+	exe " menu <silent>  ".s:BASH_Root."&Comments.toggle\\ &comment<Tab>\\\\cc        :call BASH_CommentToggle()<CR>j"
+	exe "imenu <silent>  ".s:BASH_Root."&Comments.toggle\\ &comment<Tab>\\\\cc   <Esc>:call BASH_CommentToggle()<CR>j"
+	exe "vmenu <silent>  ".s:BASH_Root."&Comments.toggle\\ &comment<Tab>\\\\cc   <Esc>:call BASH_CommentToggleRange()<CR>j"
 	exe "amenu ".s:BASH_Root.'&Comments.-SEP2-                    :'
 
 	exe " menu ".s:BASH_Root.'&Comments.&date<Tab>\\cd                       :call BASH_InsertDateAndTime("d")<CR>'
@@ -448,11 +450,13 @@ function!	BASH_InitMenu ()
 	endif
   "
   exe "amenu  <silent>  ".s:BASH_Root.'S&nippets.edit\ &local\ templates<Tab>\\ntl          :call BASH_EditTemplates("local")<CR>'
-  exe "amenu  <silent>  ".s:BASH_Root.'S&nippets.edit\ &global\ templates<Tab>\\ntg         :call BASH_EditTemplates("global")<CR>'
-  exe "amenu  <silent>  ".s:BASH_Root.'S&nippets.reread\ &templates<Tab>\\ntr               :call BASH_RereadTemplates()<CR>'
   exe "imenu  <silent>  ".s:BASH_Root.'S&nippets.edit\ &local\ templates<Tab>\\ntl     <C-C>:call BASH_EditTemplates("local")<CR>'
+  exe "amenu  <silent>  ".s:BASH_Root.'S&nippets.edit\ &global\ templates<Tab>\\ntg         :call BASH_EditTemplates("global")<CR>'
   exe "imenu  <silent>  ".s:BASH_Root.'S&nippets.edit\ &global\ templates<Tab>\\ntg    <C-C>:call BASH_EditTemplates("global")<CR>'
+  exe "amenu  <silent>  ".s:BASH_Root.'S&nippets.reread\ &templates<Tab>\\ntr               :call BASH_RereadTemplates()<CR>'
   exe "imenu  <silent>  ".s:BASH_Root.'S&nippets.reread\ &templates <Tab>\\ntr         <C-C>:call BASH_RereadTemplates()<CR>'
+  exe "amenu            ".s:BASH_Root.'S&nippets.switch\ template\ st&yle<Tab>\\nts         :BashStyle<Space>'
+  exe "imenu            ".s:BASH_Root.'S&nippets.switch\ template\ st&yle<Tab>\\nts    <C-C>:BashStyle<Space>'
 	"
 	"-------------------------------------------------------------------------------
 	"----- menu Tests   {{{2
@@ -1097,7 +1101,8 @@ endfunction    " ----------  end of function BASH_ShoptMenus  ----------
 "  rebuild commands and the menu from the (changed) template file
 "------------------------------------------------------------------------------
 function! BASH_RereadTemplates ()
-    let s:BASH_Template     = {}
+		let s:style							= 'default'
+    let s:BASH_Template     = { 'default' : {} }
     let s:BASH_FileVisited  = []
     call BASH_ReadTemplates(s:BASH_GlobalTemplateFile)
     echomsg "templates rebuilt from '".s:BASH_GlobalTemplateFile."'"
@@ -1160,6 +1165,7 @@ endfunction    " ----------  end of function BASH_EditTemplates  ----------
 "  read the template file(s), build the macro and the template dictionary
 "
 "------------------------------------------------------------------------------
+let	s:style			= 'default'
 function! BASH_ReadTemplates ( templatefile )
 
   if !filereadable( a:templatefile )
@@ -1182,28 +1188,33 @@ function! BASH_ReadTemplates ( templatefile )
 		" if not a comment :
     if line !~ s:BASH_MacroCommentRegex
       "
-			" IF
+			"-------------------------------------------------------------------------------
+			" IF |STYLE| IS ...
+			"-------------------------------------------------------------------------------
       "
       let string  = matchlist( line, s:BASH_TemplateIf )
       if !empty(string) 
-				if s:BASH_Macro['|STYLE|'] != string[1]
-					let	skipline	= 1
+				if !has_key( s:BASH_Template, string[1] )
+					" new s:style
+					let	s:style	= string[1]
+					let	s:BASH_Template[s:style]	= {}
+					continue
 				endif
 			endif
 			"
+			"-------------------------------------------------------------------------------
 			" ENDIF
+			"-------------------------------------------------------------------------------
       "
       let string  = matchlist( line, s:BASH_TemplateEndif )
       if !empty(string)
-				let	skipline	= 0
-				continue
-			endif
-			"
-      if skipline == 1
+				let	s:style	= 'default'
 				continue
 			endif
       "
+			"-------------------------------------------------------------------------------
       " macros and file includes
+			"-------------------------------------------------------------------------------
       "
       let string  = matchlist( line, s:BASH_MacroLineRegex )
       if !empty(string) && skipmacros == 0
@@ -1227,12 +1238,13 @@ function! BASH_ReadTemplates ( templatefile )
       let name  = matchstr( line, s:BASH_TemplateLineRegex )
       "
       if name != ''
+				" start with a new template
         let part  = split( name, '\s*==\s*')
         let item  = part[0]
-        if has_key( s:BASH_Template, item ) && s:BASH_TemplateOverwrittenMsg == 'yes'
-          echomsg "existing Bash Support template '".item."' overwritten"
+        if has_key( s:BASH_Template[s:style], item ) && s:BASH_TemplateOverwrittenMsg == 'yes'
+          echomsg "style '".s:style."' / existing Bash Support template '".item."' overwritten"
         endif
-        let s:BASH_Template[item] = ''
+        let s:BASH_Template[s:style][item] = ''
 				let skipmacros	= 1
         "
         let s:BASH_Attribute[item] = 'below'
@@ -1240,14 +1252,50 @@ function! BASH_ReadTemplates ( templatefile )
           let s:BASH_Attribute[item] = part[1]
         endif
       else
+				" add to a template 
         if item != ''
-          let s:BASH_Template[item] = s:BASH_Template[item].line."\n"
+          let s:BASH_Template[s:style][item] .= line."\n"
         endif
       endif
     endif
-  endfor
-
+  endfor " ----- readfile -----
+	let s:BASH_ActualStyle	= 'default'
+	if s:BASH_Macro['|STYLE|'] != ''
+		let s:BASH_ActualStyle	= s:BASH_Macro['|STYLE|']
+	endif
+	let s:BASH_ActualStyleLast	= s:BASH_ActualStyle
 endfunction    " ----------  end of function BASH_ReadTemplates  ----------
+
+"------------------------------------------------------------------------------
+" BASH_Style{{{1
+" ex-command BashStyle : callback function
+"------------------------------------------------------------------------------
+function! BASH_Style ( style )
+	let lstyle  = substitute( a:style, '^\s\+', "", "" )	" remove leading whitespaces
+	let lstyle  = substitute( lstyle, '\s\+$', "", "" )		" remove trailing whitespaces
+	if has_key( s:BASH_Template, lstyle )
+		if len( s:BASH_Template[lstyle] ) == 0
+			echomsg "style '".lstyle."' : no templates defined"
+			return
+		endif
+		let s:BASH_ActualStyleLast	= s:BASH_ActualStyle
+		let s:BASH_ActualStyle	= lstyle
+		if len( s:BASH_ActualStyle ) > 1 && s:BASH_ActualStyle != s:BASH_ActualStyleLast
+			echomsg "template style is '".lstyle."'"
+		endif
+	else
+		echomsg "style '".lstyle."' does not exist"
+	endif
+endfunction    " ----------  end of function BASH_Style  ----------
+
+"------------------------------------------------------------------------------
+" BASH_StyleList     {{{1
+" ex-command BashStyle
+"------------------------------------------------------------------------------
+function!	BASH_StyleList ( ArgLead, CmdLine, CursorPos )
+	" show all types / types beginning with a:ArgLead
+	return filter( copy(keys(s:BASH_Template)), 'v:val =~ "\\<'.a:ArgLead.'\\w*"' )
+endfunction    " ----------  end of function BASH_StyleList  ----------
 
 "------------------------------------------------------------------------------
 " BASH_OpenFold     {{{1
@@ -1276,8 +1324,10 @@ endfunction    " ----------  end of function BASH_OpenFold  ----------
 "------------------------------------------------------------------------------
 function! BASH_InsertTemplate ( key, ... )
 
-	if !has_key( s:BASH_Template, a:key )
-		echomsg "template '".a:key."' not found. Please check your template file in '".s:BASH_GlobalTemplateDir."'"
+	if !has_key( s:BASH_Template[s:BASH_ActualStyle], a:key ) &&
+	\  !has_key( s:BASH_Template['default'], a:key )
+		echomsg "style '".a:key."' / template '".a:key
+	\        ."' not found. Please check your template file in '".s:BASH_GlobalTemplateDir."'"
 		return
 	endif
 
@@ -1669,14 +1719,42 @@ endfunction		" ---------- end of function  BASH_MultiLineEndComments  ----------
 "  Comments : toggle comments    {{{1
 "------------------------------------------------------------------------------
 function! BASH_CommentToggle ()
-  if match( getline("."), '^\s*#' ) != -1
+  if match( getline("."), '^#' ) == 0
 		" remove comment sign, keep leading whitespaces
-		exe ":s/^\\(\\s*\\)#/\\1/"
+		exe ":s/^#//"
 	else
 		" add comment leader
 		exe ":s/^/#/"
 	endif
 endfunction    " ----------  end of function BASH_CommentToggle  ----------
+"
+"------------------------------------------------------------------------------
+"  Comments : toggle comments (range)   {{{1
+"------------------------------------------------------------------------------
+function! BASH_CommentToggleRange ()
+	let	comment=1									" 
+	let pos0	= line("'<")
+	let pos1	= line("'>")
+	for line in getline( pos0, pos1 )
+		if match( line, '^#') == -1					" no comment 
+			let comment = 0
+		endif
+	endfor
+
+	let	linenumber	= pos0
+	if comment == 0
+		while linenumber <= pos1
+			call setline( linenumber, '#'.getline(linenumber) )
+			let linenumber=linenumber+1
+		endwhile
+	else
+		while linenumber <= pos1
+			call setline( linenumber, substitute( getline(linenumber), '^#', '', '' ) )
+			let linenumber=linenumber+1
+		endwhile
+	endif
+
+endfunction    " ----------  end of function BASH_CommentToggleRange  ----------
 "
 "------------------------------------------------------------------------------
 "  Comments : Substitute tags    {{{1
@@ -1875,13 +1953,13 @@ function! BASH_SyntaxCheckOptions( options )
 	let startpos=0
 	while startpos < strlen( a:options )
 		" match option switch ' -O ' or ' +O '
-		let startpos		=  matchend  ( a:options, '\s*[+-]O\s\+', startpos )
+		let startpos		= matchend ( a:options, '\s*[+-]O\s\+', startpos )
 		" match option name
-		let optionname	=  matchstr  ( a:options, '\h\w*\s*', startpos )
+		let optionname	= matchstr ( a:options, '\h\w*\s*', startpos )
 		" remove trailing whitespaces
-		let optionname  =  substitute( optionname, '\s\+$', "", "" )
+		let optionname  = substitute ( optionname, '\s\+$', "", "" )
 		" check name
-		let found				=    s:Find_option   ( s:BashShopt, optionname )
+		let found				= s:Find_option ( s:BashShopt, optionname )
 		if found < 0
 			redraw
 			echohl WarningMsg | echo ' no such shopt name :  "'.optionname.'"  ' | echohl None
@@ -1942,15 +2020,15 @@ function! BASH_SyntaxCheck ()
 	" ignore any lines that didn't match one of the patterns
 	"
 	exe	':setlocal errorformat='.s:BASH_Errorformat
-	exe ":make -n ".options." -- ./% "
+	silent exe ":make -n ".options." -- ./% "
 	exe	":botright cwindow"
 	exe	':setlocal errorformat='
 	exe ":setlocal makeprg=".makeprg_saved
 	"
 	" message in case of success
 	"
+	redraw!
 	if l:currentbuffer ==  bufname("%")
-		redraw
 		echohl Search | echo l:currentbuffer." : Syntax is OK" | echohl None
 		nohlsearch						" delete unwanted highlighting (Vim bug?)
 	endif
@@ -2007,20 +2085,20 @@ function! BASH_Toggle_Gvim_Xterm ()
 	if has("gui_running")
 		if s:BASH_OutputGvim == "vim"
 			exe "aunmenu  <silent>  ".s:BASH_Root.'&Run.&output:\ VIM->buffer->xterm'
-			exe " menu    <silent>  ".s:BASH_Root.'&Run.&output:\ BUFFER->xterm->vim                   :call BASH_Toggle_Gvim_Xterm()<CR>'
-			exe "imenu    <silent>  ".s:BASH_Root.'&Run.&output:\ BUFFER->xterm->vim              <C-C>:call BASH_Toggle_Gvim_Xterm()<CR>'
+			exe " menu    <silent>  ".s:BASH_Root.'&Run.&output:\ BUFFER->xterm->vim          :call BASH_Toggle_Gvim_Xterm()<CR>'
+			exe "imenu    <silent>  ".s:BASH_Root.'&Run.&output:\ BUFFER->xterm->vim     <C-C>:call BASH_Toggle_Gvim_Xterm()<CR>'
 			let	s:BASH_OutputGvim	= "buffer"
 		else
 			if s:BASH_OutputGvim == "buffer"
 				exe "aunmenu  <silent>  ".s:BASH_Root.'&Run.&output:\ BUFFER->xterm->vim'
-				exe " menu    <silent>  ".s:BASH_Root.'&Run.&output:\ XTERM->vim->buffer                 :call BASH_Toggle_Gvim_Xterm()<CR>'
-				exe "imenu    <silent>  ".s:BASH_Root.'&Run.&output:\ XTERM->vim->buffer            <C-C>:call BASH_Toggle_Gvim_Xterm()<CR>'
+				exe " menu    <silent>  ".s:BASH_Root.'&Run.&output:\ XTERM->vim->buffer        :call BASH_Toggle_Gvim_Xterm()<CR>'
+				exe "imenu    <silent>  ".s:BASH_Root.'&Run.&output:\ XTERM->vim->buffer   <C-C>:call BASH_Toggle_Gvim_Xterm()<CR>'
 				let	s:BASH_OutputGvim	= "xterm"
 			else
 				" ---------- output : xterm -> gvim
 				exe "aunmenu  <silent>  ".s:BASH_Root.'&Run.&output:\ XTERM->vim->buffer'
-				exe " menu    <silent>  ".s:BASH_Root.'&Run.&output:\ VIM->buffer->xterm                 :call BASH_Toggle_Gvim_Xterm()<CR>'
-				exe "imenu    <silent>  ".s:BASH_Root.'&Run.&output:\ VIM->buffer->xterm            <C-C>:call BASH_Toggle_Gvim_Xterm()<CR>'
+				exe " menu    <silent>  ".s:BASH_Root.'&Run.&output:\ VIM->buffer->xterm        :call BASH_Toggle_Gvim_Xterm()<CR>'
+				exe "imenu    <silent>  ".s:BASH_Root.'&Run.&output:\ VIM->buffer->xterm   <C-C>:call BASH_Toggle_Gvim_Xterm()<CR>'
 				let	s:BASH_OutputGvim	= "vim"
 			endif
 		endif
@@ -2042,13 +2120,13 @@ function! BASH_Toggle_Gvim_Xterm_MS ()
 	if has("gui_running")
 		if s:BASH_OutputGvim == "buffer"
 			exe "aunmenu  <silent>  ".s:BASH_Root.'&Run.&output:\ BUFFER->term'
-			exe " menu    <silent>  ".s:BASH_Root.'&Run.&output:\ TERM->buffer                 :call BASH_Toggle_Gvim_Xterm_MS()<CR>'
-			exe "imenu    <silent>  ".s:BASH_Root.'&Run.&output:\ TERM->buffer            <C-C>:call BASH_Toggle_Gvim_Xterm_MS()<CR>'
+			exe " menu    <silent>  ".s:BASH_Root.'&Run.&output:\ TERM->buffer         :call BASH_Toggle_Gvim_Xterm_MS()<CR>'
+			exe "imenu    <silent>  ".s:BASH_Root.'&Run.&output:\ TERM->buffer    <C-C>:call BASH_Toggle_Gvim_Xterm_MS()<CR>'
 			let	s:BASH_OutputGvim	= "xterm"
 		else
 			exe "aunmenu  <silent>  ".s:BASH_Root.'&Run.&output:\ TERM->buffer'
-			exe " menu    <silent>  ".s:BASH_Root.'&Run.&output:\ BUFFER->term                 :call BASH_Toggle_Gvim_Xterm_MS()<CR>'
-			exe "imenu    <silent>  ".s:BASH_Root.'&Run.&output:\ BUFFER->term            <C-C>:call BASH_Toggle_Gvim_Xterm_MS()<CR>'
+			exe " menu    <silent>  ".s:BASH_Root.'&Run.&output:\ BUFFER->term         :call BASH_Toggle_Gvim_Xterm_MS()<CR>'
+			exe "imenu    <silent>  ".s:BASH_Root.'&Run.&output:\ BUFFER->term    <C-C>:call BASH_Toggle_Gvim_Xterm_MS()<CR>'
 			let	s:BASH_OutputGvim	= "buffer"
 		endif
 	endif
@@ -2060,7 +2138,7 @@ endfunction    " ----------  end of function BASH_Toggle_Gvim_Xterm_MS ---------
 function! BASH_MakeScriptExecutable ()
 	let	filename	= fnameescape( expand("%:p") )
 	silent exe "!chmod u+x ".filename
-	redraw
+	redraw!
 	if v:shell_error
 		echohl WarningMsg
 	  echo 'Could not make "'.filename.'" executable !'
@@ -2083,7 +2161,8 @@ function! BASH_Run ( mode )
 "
 	let	l:arguments				= exists("b:BASH_CmdLineArgs") ? " ".b:BASH_CmdLineArgs : ""
 	let	l:currentbuffer   = bufname("%")
-	let l:fullname				= fnameescape( expand("%:p"))
+	let l:fullname				= expand("%:p")
+	let l:fullnameesc			= fnameescape( l:fullname )
 	"
 	silent exe ":update"
 	"
@@ -2113,7 +2192,10 @@ function! BASH_Run ( mode )
 		exe	':setlocal errorformat='.s:BASH_Errorformat
 		"
 		if a:mode=="n"
-			exe ":make "l:fullname.l:arguments
+			exe ":make "l:fullnameesc.l:arguments
+		endif
+		if &term == 'xterm'
+			redraw!
 		endif
 		"
 		exe ":setlocal makeprg=".makeprg_saved
@@ -2168,7 +2250,11 @@ function! BASH_Run ( mode )
 			"
 			setlocal	modifiable
 			if a:mode=="n"
-				silent exe ":%!".s:BASH_BASH." ".l:fullname.l:arguments
+				if	s:MSWIN
+					silent exe ":%!".s:BASH_BASH.' "'.l:fullname.'" '.l:arguments
+				else
+					silent exe ":%!".s:BASH_BASH." ".l:fullnameesc.l:arguments
+				endif
 			endif
 			"
 			if a:mode=="v"
@@ -2195,15 +2281,15 @@ function! BASH_Run ( mode )
 	if s:BASH_OutputGvim == 'xterm'
 		"
 		if	s:MSWIN
-			exe ':!'.s:BASH_BASH.' '.l:fullname.l:arguments
+			exe ':!'.s:BASH_BASH.' "'.l:fullname.'" '.l:arguments
 		else
 			if a:mode=='n'
-				silent exe '!xterm -title '.l:fullname.' '.s:BASH_XtermDefaults
-							\			.' -e '.s:BASH_Wrapper.' '.l:fullname.l:arguments.' &'
+				silent exe '!xterm -title '.l:fullnameesc.' '.s:BASH_XtermDefaults
+							\			.' -e '.s:BASH_Wrapper.' '.l:fullnameesc.l:arguments.' &'
 			endif
 			"
 			if a:mode=="v"
-				let titlestring	= l:fullname.'\ lines\ \ '.line("'<").'\ -\ '.line("'>")
+				let titlestring	= l:fullnameesc.'\ lines\ \ '.line("'<").'\ -\ '.line("'>")
 				silent exe ':!xterm -title '.titlestring.' '.s:BASH_XtermDefaults
 							\			.' -e '.s:BASH_Wrapper.' '.tmpfile.l:arguments.' &'
 			endif
@@ -2211,10 +2297,9 @@ function! BASH_Run ( mode )
 		"
 	endif
 	"
-	if a:mode=='v'
-		call delete(tmpfile)
+	if !has("gui_running") &&  v:progname != 'vim'
+		redraw!
 	endif
-	"
 endfunction    " ----------  end of function BASH_Run  ----------
 "
 "------------------------------------------------------------------------------
@@ -2435,6 +2520,7 @@ function! BASH_Settings ()
   let txt = txt.'          copyright holder :  "'.s:BASH_Macro['|COPYRIGHTHOLDER|']."\"\n"
 	let txt = txt.'    code snippet directory :  "'.s:BASH_CodeSnippets."\"\n"
 	" ----- template files  ------------------------
+	let txt = txt.'            template style :  "'.s:BASH_ActualStyle."\"\n"
 	if s:installation == 'system'
 		let txt = txt.'global template directory :  "'.s:BASH_GlobalTemplateDir."\"\n"
 		if filereadable( s:BASH_LocalTemplateFile )
@@ -2447,6 +2533,7 @@ function! BASH_Settings ()
 	if exists("b:BASH_SyntaxCheckOptionsLocal")
 		let txt = txt." buf. syntax check options :  ".b:BASH_SyntaxCheckOptionsLocal."\"en"
 	endif
+	" ----- dictionaries ------------------------
 	if g:BASH_Dictionary_File != ""
 		let ausgabe= &dictionary
 		let ausgabe= substitute( ausgabe, ",", ",\n                            + ", "g" )
@@ -2530,7 +2617,11 @@ endfunction    " ----------  end of function BASH_JumpCtrlJ  ----------
 "------------------------------------------------------------------------------
 function! BASH_ExpandUserMacros ( key )
 
-  let template 								= s:BASH_Template[ a:key ]
+	if has_key( s:BASH_Template[s:BASH_ActualStyle], a:key )
+		let template 								= s:BASH_Template[s:BASH_ActualStyle][ a:key ]
+	else
+		let template 								= s:BASH_Template['default'][ a:key ]
+	endif
 	let	s:BASH_ExpansionCounter	= {}										" reset the expansion counter
 
   "------------------------------------------------------------------------------
@@ -2794,17 +2885,40 @@ if has("autocmd")
 	"
 	" Bash-script : insert header, write file, make it executable
 	"
-	autocmd BufNewFile  *.sh   call BASH_InsertTemplate("comment.file-description") 	|	:w!
-	"
-	exe 'autocmd BufRead *.sh 	call BASH_HighlightJumpTargets()'
-	"
+	if !exists( 'g:BASH_AlsoBash' )
+		"
+		autocmd BufNewFile,BufRead           *.sh set filetype=sh
+		" style is taken from s:BASH_Style
+		autocmd BufNewFile                   *.sh call BASH_InsertTemplate("comment.file-description") 	|	:w!
+		autocmd BufRead                      *.sh call BASH_HighlightJumpTargets()
+		"
+	else
+		" 
+		" g:BASH_AlsoBash is a list of filename patterns
+		"
+		if type( g:BASH_AlsoBash ) == 3
+			for pattern in g:BASH_AlsoBash
+				exe "autocmd BufNewFile,BufRead          ".pattern." set filetype=sh"
+				" style is taken from s:BASH_Style
+				exe "autocmd BufNewFile                  ".pattern." call BASH_InsertTemplate('comment.file-description') 	|	:w!"
+				exe 'autocmd BufRead                     ".pattern." call BASH_HighlightJumpTargets()'
+			endfor
+		endif
+		"
+		" g:BASH_AlsoBash is a dictionary ( "file pattern" : "template style" )
+		"
+		if type( g:BASH_AlsoBash ) == 4
+			for [ pattern, stl ] in items( g:BASH_AlsoBash )
+				exe "autocmd BufNewFile,BufRead          ".pattern." set filetype=sh"
+				" style is defined by the file extensions
+				exe "autocmd BufNewFile,BufRead,BufEnter ".pattern." call BASH_Style( '".stl."' )"
+				exe "autocmd BufNewFile                  ".pattern." call BASH_InsertTemplate('comment.file-description') 	|	:w!"
+				exe 'autocmd BufRead                     ".pattern." call BASH_HighlightJumpTargets()'
+			endfor
+		endif
+		"
+	endif
 endif " has("autocmd")
-"
-"------------------------------------------------------------------------------
-"  Avoid a wrong syntax highlighting for $(..) and $((..))
-"------------------------------------------------------------------------------
-"
-let is_bash	            = 1
 "
 "------------------------------------------------------------------------------
 "  READ THE TEMPLATE FILES
