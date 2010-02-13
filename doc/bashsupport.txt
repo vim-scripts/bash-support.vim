@@ -1,7 +1,7 @@
-*bashsupport.txt*                Bash Support                 January 31 2009
+*bashsupport.txt*                Bash Support                February 13 2009
 
 bash Support                                      *bash-support* *bashsupport*
-                             Plugin version 3.1
+                            Plugin version 3.1.1
                         for Vim version 7.0 and above
                        Fritz Mehner  <mehner@fh-swf.de>
 
@@ -46,6 +46,7 @@ writing shell scripts. This plugin can be used for Bash version 4.0.
  4.2     Global variables                        |bashsupport-custom-variables|
  4.3     The root menu                           |bashsupport-custom-root|
  4.4     System-wide installation                |bashsupport-system-wide|
+ 4.5     Non-standard installation               |bashsupport-non-standard|
  5.      Template files and tags                 |bashsupport-templates|
  5.1      Template files                         |bashsupport-templates-files|
  5.2      Macros                                 |bashsupport-templates-macros|
@@ -973,6 +974,18 @@ You may want to copy the snippets coming with this plugin (in
 $VIM/vimfiles/bash-support/codesnippets) into the new directory or to set a
 link to the global directory.
 
+------------------------------------------------------------------------------
+4.5  Non-standard installation                      *bashsupport-non-standard*
+------------------------------------------------------------------------------
+
+The place to install this plugin package is the directory "$HOME/.vim".  For
+convenience the directory tree "$HOME/.vim/bash-support/..." can be moved to
+another place. In this case the new base directory has to be specified in
+"$HOME/.vimrc", e.g.
+
+ let g:BASH_Support_Root_Dir  = "/home/lastname/xyz"
+
+Please note that there is no trailing slash.
 
 ==============================================================================
 5.  TEMPLATE FILES AND TAGS                           *bashsupport-tempplates*

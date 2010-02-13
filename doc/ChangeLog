@@ -1,4 +1,15 @@
 =======================================================================================
+  RELEASE NOTES FOR VERSION 3.1
+=======================================================================================
+- The plugin now handles different template styles without editing and
+  reloading the main template file.
+- New hotkey and ex-command to switch template styles.
+- New global List/Dictionnary g:BASH_AlsoBash: add filename pattern (and
+  styles) for files not named *.sh .
+- Minor improvements.
+- Bugfixes: missing redraws in some cases. 
+
+=======================================================================================
   RELEASE NOTES FOR VERSION 3.0.1
 =======================================================================================
 - New global variable g:BASH_Errorformat: adapt the error format used to parse

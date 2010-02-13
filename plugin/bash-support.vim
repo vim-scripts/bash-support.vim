@@ -29,7 +29,7 @@
 "                  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 "                  PURPOSE.
 "                  See the GNU General Public License version 2 for more details.
-"       Revision:  $Id: bash-support.vim,v 1.67 2010/01/31 18:22:37 mehner Exp $
+"       Revision:  $Id: bash-support.vim,v 1.69 2010/02/13 17:31:20 mehner Exp $
 "
 "------------------------------------------------------------------------------
 "
@@ -38,7 +38,7 @@
 if exists("g:BASH_Version") || &cp
  finish
 endif
-let g:BASH_Version= "3.1"  						" version number of this script; do not change
+let g:BASH_Version= "3.1.1"  						" version number of this script; do not change
 "
 if v:version < 700
   echohl WarningMsg | echo 'plugin bash-support.vim needs Vim version >= 7'| echohl None
@@ -105,7 +105,7 @@ else
   endif
 	"
 	let s:escfilename       = ' \%#[]'
-	let s:BASH_CodeSnippets = $HOME.'/.vim/bash-support/codesnippets/'
+	let s:BASH_CodeSnippets = s:plugin_dir.'bash-support/codesnippets/'
 	let s:BASH_OutputGvim   = 'vim'
 	let s:BASH_BASH					= $SHELL
 	let s:BASH_Man          = 'man'
@@ -1733,25 +1733,17 @@ endfunction    " ----------  end of function BASH_CommentToggle  ----------
 "------------------------------------------------------------------------------
 function! BASH_CommentToggleRange ()
 	let	comment=1									" 
-	let pos0	= line("'<")
-	let pos1	= line("'>")
-	for line in getline( pos0, pos1 )
+	for line in getline( line("'<"), line("'>") )
 		if match( line, '^#') == -1					" no comment 
 			let comment = 0
+			break
 		endif
 	endfor
 
-	let	linenumber	= pos0
 	if comment == 0
-		while linenumber <= pos1
-			call setline( linenumber, '#'.getline(linenumber) )
-			let linenumber=linenumber+1
-		endwhile
+			:'<,'>call setline( '.', '#'.getline('.') )
 	else
-		while linenumber <= pos1
-			call setline( linenumber, substitute( getline(linenumber), '^#', '', '' ) )
-			let linenumber=linenumber+1
-		endwhile
+			:'<,'>call setline( '.', substitute( getline('.'), '^#', '', '' ) )
 	endif
 
 endfunction    " ----------  end of function BASH_CommentToggleRange  ----------

@@ -1,4 +1,4 @@
-README for bash-support.vim (Version 3.1) / January 31 2010
+README for bash-support.vim (Version 3.1.1) / February 13 2010
 
   *  INSTALLATION
   *  RELEASE NOTES 
@@ -75,15 +75,10 @@ and look at the bashsupport help with
              +-----------------------------------------------+
 
 =======================================================================================
-  RELEASE NOTES FOR VERSION 3.1
+  RELEASE NOTES FOR VERSION 3.1.1
 =======================================================================================
-- The plugin now handles different template styles without editing and
-  reloading the main template file.
-- New hotkey and ex-command to switch template styles.
-- New global List/Dictionnary g:BASH_AlsoBash: add filename pattern (and
-  styles) for files not named *.sh .
-- Minor improvements.
-- Bugfixes: missing redraws in some cases. 
+- Bugfixes: code snippets will not be found if plugin not installed beyond '$HOME/.vim'.
+- Bugfixes: undocumented global variable used in above non-standard installation.
 
 =======================================================================================
   OLDER RELEASE NOTES : see file 'ChangeLog'
