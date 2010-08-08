@@ -1,4 +1,4 @@
-README for bash-support.vim (Version 3.1.1) / February 13 2010
+README for bash-support.vim (Version 3.2) / August 08 2010
 
   *  INSTALLATION
   *  RELEASE NOTES 
@@ -75,10 +75,12 @@ and look at the bashsupport help with
              +-----------------------------------------------+
 
 =======================================================================================
-  RELEASE NOTES FOR VERSION 3.1.1
+  RELEASE NOTES FOR VERSION 3.2
 =======================================================================================
-- Bugfixes: code snippets will not be found if plugin not installed beyond '$HOME/.vim'.
-- Bugfixes: undocumented global variable used in above non-standard installation.
+- New hotkey and menu entry for [[ =~ ]]
+- New for Bash 4.1: shopt 'compat40', variables '$BASHOPTS', '$BASH_XTRACEFD'.
+- Bugfixes: local installation looks like a system-wide installation in seldom cases.
+- Bugfixes: typo in 4 menu entries.
 
 =======================================================================================
   OLDER RELEASE NOTES : see file 'ChangeLog'

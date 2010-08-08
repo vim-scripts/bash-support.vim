@@ -29,7 +29,7 @@
 "                  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 "                  PURPOSE.
 "                  See the GNU General Public License version 2 for more details.
-"       Revision:  $Id: bash-support.vim,v 1.69 2010/02/13 17:31:20 mehner Exp $
+"       Revision:  $Id: bash-support.vim,v 1.74 2010/08/08 11:20:24 mehner Exp $
 "
 "------------------------------------------------------------------------------
 "
@@ -38,7 +38,7 @@
 if exists("g:BASH_Version") || &cp
  finish
 endif
-let g:BASH_Version= "3.1.1"  						" version number of this script; do not change
+let g:BASH_Version= "3.2"  						" version number of this script; do not change
 "
 if v:version < 700
   echohl WarningMsg | echo 'plugin bash-support.vim needs Vim version >= 7'| echohl None
@@ -87,7 +87,7 @@ else
 	" user / system wide installation
 	"
 	let s:installation	= 'local'
-	if match( expand("<sfile>"), $VIM ) >= 0
+	if match( expand("<sfile>"), $VIM ) == 0
 		" system wide installation
 		let s:plugin_dir  = $VIM.'/vimfiles/'
 		let s:installation	= 'system'
@@ -581,10 +581,10 @@ function!	BASH_InitMenu ()
 	exe " noremenu <silent> ".s:BASH_Root.'&ParamSub.match\ beginning;\ del\.\ &longest\ part<Tab>${\ ##\ }  :call BASH_InsertTemplate("paramsub.remove-all-matching-suffix-pattern")<CR>'
 	exe " noremenu <silent> ".s:BASH_Root.'&ParamSub.match\ end;\ delete\ s&hortest\ part<Tab>${\ %\ }       :call BASH_InsertTemplate("paramsub.remove-matching-suffix-pattern")<CR>'
 	exe " noremenu <silent> ".s:BASH_Root.'&ParamSub.match\ end;\ delete\ l&ongest\ part<Tab>${\ %%\ }       :call BASH_InsertTemplate("paramsub.remove-all-matching-suffix-pattern")<CR>'
-	exe " noremenu <silent> ".s:BASH_Root.'&ParamSub.substite,\ match\ &first<Tab>${\ /\ /\ }                 :call BASH_InsertTemplate("paramsub.pattern-substitution")<CR>'
-	exe " noremenu <silent> ".s:BASH_Root.'&ParamSub.substite,\ match\ &all<Tab>${\ //\ /\ }                  :call BASH_InsertTemplate("paramsub.pattern-substitution-all")<CR>'
-	exe " noremenu <silent> ".s:BASH_Root.'&ParamSub.substite,\ match\ &begin<Tab>${\ /#\ /\ }                :call BASH_InsertTemplate("paramsub.pattern-substitution-begin")<CR>'
-	exe " noremenu <silent> ".s:BASH_Root.'&ParamSub.substite,\ match\ &end<Tab>${\ /%\ /\ }                  :call BASH_InsertTemplate("paramsub.pattern-substitution-end")<CR>'
+	exe " noremenu <silent> ".s:BASH_Root.'&ParamSub.substitute,\ match\ &first<Tab>${\ /\ /\ }                 :call BASH_InsertTemplate("paramsub.pattern-substitution")<CR>'
+	exe " noremenu <silent> ".s:BASH_Root.'&ParamSub.substitute,\ match\ &all<Tab>${\ //\ /\ }                  :call BASH_InsertTemplate("paramsub.pattern-substitution-all")<CR>'
+	exe " noremenu <silent> ".s:BASH_Root.'&ParamSub.substitute,\ match\ &begin<Tab>${\ /#\ /\ }                :call BASH_InsertTemplate("paramsub.pattern-substitution-begin")<CR>'
+	exe " noremenu <silent> ".s:BASH_Root.'&ParamSub.substitute,\ match\ &end<Tab>${\ /%\ /\ }                  :call BASH_InsertTemplate("paramsub.pattern-substitution-end")<CR>'
 	exe " noremenu <silent> ".s:BASH_Root.'&ParamSub.&lowercase\ to\ uppercase<Tab>${\ ^\ }                   :call BASH_InsertTemplate("paramsub.first-lower-to-upper")<CR>'
 	exe " noremenu <silent> ".s:BASH_Root.'&ParamSub.each\ l&owercase\ to\ uppercase<Tab>${\ ^^\ }            :call BASH_InsertTemplate("paramsub.all-lower-to-upper")<CR>'
 	exe " noremenu <silent> ".s:BASH_Root.'&ParamSub.&uppercase\ to\ lowercase<Tab>${\ ,\ }                   :call BASH_InsertTemplate("paramsub.first-upper-to-lower")<CR>'
@@ -606,10 +606,10 @@ function!	BASH_InitMenu ()
 	exe "inoremenu <silent> ".s:BASH_Root.'&ParamSub.match\ beginning;\ del\.\ &longest\ part<Tab>${\ ##\ }  <C-C>:call BASH_InsertTemplate("paramsub.remove-all-matching-suffix-pattern")<CR>'
 	exe "inoremenu <silent> ".s:BASH_Root.'&ParamSub.match\ end;\ delete\ s&hortest\ part<Tab>${\ %\ }       <C-C>:call BASH_InsertTemplate("paramsub.remove-matching-suffix-pattern")<CR>'
 	exe "inoremenu <silent> ".s:BASH_Root.'&ParamSub.match\ end;\ delete\ l&ongest\ part<Tab>${\ %%\ }       <C-C>:call BASH_InsertTemplate("paramsub.remove-all-matching-suffix-pattern")<CR>'
-	exe "inoremenu <silent> ".s:BASH_Root.'&ParamSub.substite,\ match\ &first<Tab>${\ /\ /\ }                 <C-C>:call BASH_InsertTemplate("paramsub.pattern-substitution")<CR>'
-	exe "inoremenu <silent> ".s:BASH_Root.'&ParamSub.substite,\ match\ &all<Tab>${\ //\ /\ }                  <C-C>:call BASH_InsertTemplate("paramsub.pattern-substitution-all")<CR>'
-	exe "inoremenu <silent> ".s:BASH_Root.'&ParamSub.substite,\ match\ &begin<Tab>${\ /#\ /\ }                <C-C>:call BASH_InsertTemplate("paramsub.pattern-substitution-begin")<CR>'
-	exe "inoremenu <silent> ".s:BASH_Root.'&ParamSub.substite,\ match\ &end<Tab>${\ /%\ /\ }                  <C-C>:call BASH_InsertTemplate("paramsub.pattern-substitution-end")<CR>'
+	exe "inoremenu <silent> ".s:BASH_Root.'&ParamSub.substitute,\ match\ &first<Tab>${\ /\ /\ }                 <C-C>:call BASH_InsertTemplate("paramsub.pattern-substitution")<CR>'
+	exe "inoremenu <silent> ".s:BASH_Root.'&ParamSub.substitute,\ match\ &all<Tab>${\ //\ /\ }                  <C-C>:call BASH_InsertTemplate("paramsub.pattern-substitution-all")<CR>'
+	exe "inoremenu <silent> ".s:BASH_Root.'&ParamSub.substitute,\ match\ &begin<Tab>${\ /#\ /\ }                <C-C>:call BASH_InsertTemplate("paramsub.pattern-substitution-begin")<CR>'
+	exe "inoremenu <silent> ".s:BASH_Root.'&ParamSub.substitute,\ match\ &end<Tab>${\ /%\ /\ }                  <C-C>:call BASH_InsertTemplate("paramsub.pattern-substitution-end")<CR>'
 	exe "inoremenu <silent> ".s:BASH_Root.'&ParamSub.&lowercase\ to\ uppercase<Tab>${\ ^\ }                   <C-C>:call BASH_InsertTemplate("paramsub.first-lower-to-upper")<CR>'
 	exe "inoremenu <silent> ".s:BASH_Root.'&ParamSub.each\ l&owercase\ to\ uppercase<Tab>${\ ^^\ }            <C-C>:call BASH_InsertTemplate("paramsub.all-lower-to-upper")<CR>'
 	exe "inoremenu <silent> ".s:BASH_Root.'&ParamSub.&uppercase\ to\ lowercase<Tab>${\ ,\ }                   <C-C>:call BASH_InsertTemplate("paramsub.first-upper-to-lower")<CR>'
@@ -642,15 +642,15 @@ function!	BASH_InitMenu ()
 	"----- menu Environment Variables   {{{2
 	"-------------------------------------------------------------------------------
 	"
-	call BASH_EnvirMenus ( s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ BASH_VERSION', s:BashEnvironmentVariables[0:14] )
+	call BASH_EnvirMenus ( s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ BASH_VERSION', s:BashEnvironmentVariables[0:16] )
 	"
-	call BASH_EnvirMenus ( s:BASH_Root.'E&nviron.&CDPATH\ \.\.\.\ FUNCNAME', s:BashEnvironmentVariables[15:30] )
+	call BASH_EnvirMenus ( s:BASH_Root.'E&nviron.&CDPATH\ \.\.\.\ FUNCNAME', s:BashEnvironmentVariables[17:32] )
 	"
-	call BASH_EnvirMenus ( s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG', s:BashEnvironmentVariables[31:47] )
+	call BASH_EnvirMenus ( s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG', s:BashEnvironmentVariables[33:49] )
 	"
-	call BASH_EnvirMenus ( s:BASH_Root.'E&nviron.&LC_ALL\ \.\.\.\ OSTYPE', s:BashEnvironmentVariables[48:63] )
+	call BASH_EnvirMenus ( s:BASH_Root.'E&nviron.&LC_ALL\ \.\.\.\ OSTYPE', s:BashEnvironmentVariables[50:65] )
 	"
-	call BASH_EnvirMenus ( s:BASH_Root.'E&nviron.&PATH\ \.\.\.\ UID', s:BashEnvironmentVariables[64:84] )
+	call BASH_EnvirMenus ( s:BASH_Root.'E&nviron.&PATH\ \.\.\.\ UID', s:BashEnvironmentVariables[66:86] )
 	"
 	"-------------------------------------------------------------------------------
 	"----- menu Builtins  a-l   {{{2
@@ -719,13 +719,16 @@ function!	BASH_InitMenu ()
 	"-------------------------------------------------------------------------------
 	"----- menu shopt   {{{2
 	"-------------------------------------------------------------------------------
-	call	BASH_ShoptMenus ( s:BASH_Root.'sh&opt.shopt\ \ &a-g', s:BashShopt[0:18] )
-	call	BASH_ShoptMenus ( s:BASH_Root.'sh&opt.shopt\ \ &h-x', s:BashShopt[19:37] )
+	call	BASH_ShoptMenus ( s:BASH_Root.'sh&opt.shopt\ \ &a-g', s:BashShopt[0:20] )
+	call	BASH_ShoptMenus ( s:BASH_Root.'sh&opt.shopt\ \ &h-x', s:BashShopt[21:39] )
 	"
 	"------------------------------------------------------------------------------
 	"----- menu Regex    {{{2
 	"------------------------------------------------------------------------------
 	"
+	exe "anoremenu ".s:BASH_Root.'Rege&x.match\ \ \ [[\ =~\ ]]<Tab>\\xm              a[[  =~  ]]<Left><Left><Left><Left><Left><Left><Left>'
+	exe "inoremenu ".s:BASH_Root.'Rege&x.match\ \ \ [[\ =~\ ]]<Tab>\\xm               [[  =~  ]]<Left><Left><Left><Left><Left><Left><Left>'
+	exe "amenu     ".s:BASH_Root.'Rege&x.-Sep01-      :'
 	"
 	exe "anoremenu ".s:BASH_Root.'Rege&x.zero\ or\ more\ \ \ &*(\ \|\ )              a*(\|)<Left><Left>'
 	exe "anoremenu ".s:BASH_Root.'Rege&x.one\ or\ more\ \ \ \ &+(\ \|\ )             a+(\|)<Left><Left>'
@@ -1001,9 +1004,9 @@ endfunction    " ----------  end of function BASH_InitMenuHeader  ----------
 
 let	s:BashEnvironmentVariables	= [
 	\	'&BASH',        'BASH&PID',               'BASH_&ALIASES',
-	\	'BASH_ARG&C',   'BASH_ARG&V',             'BASH_C&MDS',        'BASH_C&OMMAND',
-	\	'BASH_&ENV',    'BASH_E&XECUTION_STRING', 'BASH_&LINENO',     'BASH_&REMATCH',
-	\	'BASH_&SOURCE', 'BASH_S&UBSHELL',         'BASH_VERS&INFO',   'BASH_VERSIO&N',
+	\	'BASH_ARG&C',   'BASH_ARG&V',             'BASH_C&MDS',       'BASH_C&OMMAND',
+	\	'BASH_&ENV',    'BASH_E&XECUTION_STRING', 'BASH_&LINENO',     'BASH&OPTS',      'BASH_&REMATCH',
+	\	'BASH_&SOURCE', 'BASH_S&UBSHELL',         'BASH_VERS&INFO',   'BASH_VERSIO&N',  'BASH_XTRACEFD',
 	\	'&CDPATH',      'C&OLUMNS',               'CO&MPREPLY',       'COM&P_CWORD',
 	\	'COMP_&KEY',    'COMP_&LINE',             'COMP_POI&NT',      'COMP_&TYPE',
 	\	'COMP_WORD&BREAKS', 'COMP_&WORDS',
@@ -1041,7 +1044,7 @@ let s:BashBuiltins  = [
 
 let	s:BashShopt = [
 	\	'autocd',        'cdable_vars',      'cdspell',       'checkhash',
-	\	'checkjobs',     'checkwinsize',     'cmdhist',       'compat31', 
+	\	'checkjobs',     'checkwinsize',     'cmdhist',       'compat31',       'compat32',       'compat40', 
 	\	'dirspell',      'dotglob',          'execfail',      'expand_aliases',
 	\	'extdebug',      'extglob',          'extquote',      'failglob',
 	\	'force_fignore', 'globstar',         'gnu_errfmt',    'histappend',    'histreedit',
@@ -1658,14 +1661,11 @@ function! BASH_LineEndComment ()
 	" ----- trim whitespaces -----
 	exe "s/\s\*$//"
 	let linelength= virtcol("$") - 1
+	let	diff	= 1
 	if linelength < b:BASH_LineEndCommentColumn
 		let diff	= b:BASH_LineEndCommentColumn -1 -linelength
-		exe "normal	".diff."A "
 	endif
-	" append at least one blank
-	if linelength >= b:BASH_LineEndCommentColumn
-		exe "normal A "
-	endif
+	exe "normal	".diff."A "
 	exe "normal A# "
 endfunction		" ---------- end of function  BASH_LineEndComment  ----------
 "
@@ -1679,25 +1679,13 @@ function! BASH_MultiLineEndComments ()
 	"
 	let pos0	= line("'<")
 	let pos1	= line("'>")
-	" ----- trim whitespaces -----
-	exe "'<,'>s/\s\*$//"
-	" ----- find the longest line -----
-	let	maxlength		= 0
-	let	linenumber	= pos0
-	normal '<
-	while linenumber <= pos1
-		if  getline(".") !~ "^\\s*$"  && maxlength<virtcol("$")
-			let maxlength= virtcol("$")
-		endif
-		let linenumber=linenumber+1
-		normal j
-	endwhile
 	"
-	if maxlength < b:BASH_LineEndCommentColumn
-	  let maxlength = b:BASH_LineEndCommentColumn
-	else
-	  let maxlength = maxlength+1		" at least 1 blank
-	endif
+	" ----- trim whitespaces -----
+  exe pos0.','.pos1.'s/\s*$//'
+	"
+	" ----- find the longest line -----
+	let maxlength	= max( map( range(pos0, pos1), "virtcol([v:val, '$'])" ) )
+	let	maxlength	= max( [b:BASH_LineEndCommentColumn, maxlength+1] )
 	"
 	" ----- fill lines with blanks -----
 	let	linenumber	= pos0

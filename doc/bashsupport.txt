@@ -1,7 +1,7 @@
-*bashsupport.txt*                Bash Support                February 13 2009
+*bashsupport.txt*                Bash Support                 August 08 2010
 
 bash Support                                      *bash-support* *bashsupport*
-                            Plugin version 3.1.1
+                             Plugin version 3.2
                         for Vim version 7.0 and above
                        Fritz Mehner  <mehner@fh-swf.de>
 
@@ -713,7 +713,7 @@ following character(s) will only be recognized for a short time.
   \se     echo -e "..."                   (n, i, v)
   \sp     printf "..."                    (n, i, v)
 
-  -- Snippets - ------------------------------------------
+  -- Snippets --------------------------------------------
 
   \nr     read code snippet               (n)
   \nw     write code snippet              (n, v)
@@ -723,6 +723,10 @@ following character(s) will only be recognized for a short time.
   \ntg    edit global templates           (n)
   \ntr    reread the templates            (n)
   \nts    switch template style           (n)
+
+  -- Regular Expression ----------------------------------
+
+  \xm     [[  =~  ]]                      (n, i)
 
   -- POSIX Character Classes -----------------------------
 

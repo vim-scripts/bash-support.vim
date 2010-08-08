@@ -3,7 +3,7 @@
 "   Language :  bash
 "     Plugin :  bash-support.vim
 " Maintainer :  Fritz Mehner <mehner@fh-swf.de>
-"   Revision :  $Id: sh.vim,v 1.34 2010/01/28 21:15:49 mehner Exp $
+"   Revision :  $Id: sh.vim,v 1.35 2010/04/10 18:42:26 mehner Exp $
 "
 " -----------------------------------------------------------------
 "
@@ -190,6 +190,9 @@ vnoremap  <buffer>  <silent>  <LocalLeader>sas     s${[@]}<Left><Left><Left><Esc
   " ----------------------------------------------------------------------------
   " POSIX character classes
   " ----------------------------------------------------------------------------
+  "
+nnoremap  <buffer>  <silent>  <LocalLeader>xm   a[[  =~  ]]<Left><Left><Left><Left><Left><Left><Left>
+inoremap  <buffer>  <silent>  <LocalLeader>xm    [[  =~  ]]<Left><Left><Left><Left><Left><Left><Left>
   "
 nnoremap  <buffer>  <silent>  <LocalLeader>pan   a[:alnum:]<Esc>
 nnoremap  <buffer>  <silent>  <LocalLeader>pal    a[:alpha:]<Esc>

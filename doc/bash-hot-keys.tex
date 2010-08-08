@@ -8,15 +8,15 @@
 %%        Email:  mehner@fh-swf.de
 %%    Copyright:  Copyright (C)  2003-2010  Dr.-Ing. Fritz Mehner  (mehner@fh-swf.de)
 %%      Version:  see PluginVersion (below)
-%%     Revision:  $Id: bash-hot-keys.tex,v 1.24 2010/01/06 18:00:10 mehner Exp $
+%%     Revision:  $Id: bash-hot-keys.tex,v 1.25 2010/04/10 18:43:42 mehner Exp $
 %%      Created:  09.06.2003
 %%                
 %%        Notes:  
 %%                
 %%=====================================================================================
 
-\newcommand{\PluginVersion}{3.1}
-\newcommand{\ReleaseDate}{January 2010}
+\newcommand{\PluginVersion}{3.2}
+\newcommand{\ReleaseDate}{April 2010}
 
 \documentclass[oneside,12pt,a4paper,DIV18]{scrartcl}
 \usepackage[english]{babel}
@@ -143,6 +143,10 @@ $^+$ \footnotesize{Linux/U**x only}
 %%  menu Posix character classes
 %%----------------------------------------------------------------------
 \hline
+\multicolumn{2}{|r|}{\textsl{Regular E\textbf{x}pressions}}\\
+\hline \verb'\xm' & match: \verb'[[ =~ ]] '         \hfill (n, i)\\
+\hline
+\hline
 \multicolumn{2}{|r|}{\textsl{\textbf{P}OSIX Character Classes}}\\
 \hline \verb'\pan' &  \verb'[:alnum:] '         \hfill (n, i)\\
 \hline \verb'\pal' &  \verb'[:alpha:] '         \hfill (n, i)\\
@@ -197,14 +201,14 @@ $^+$ \footnotesize{Linux/U**x only}
 \hline 
 \end{tabular}\\%
 %%~~~~~ TABULAR :  end  ~~~~~~~~~~
-\vspace{1mm}%
+%\vspace{1mm}%
 %
 \begin{minipage}[b]{70mm}%
 \setlength{\fboxsep}{.25mm}%
 %%----------------------------------------------------------------------
 %%  Additional Mappings
 %%----------------------------------------------------------------------
-\begin{spacing}{1.2}%
+\begin{spacing}{1.1}%
 \begin{tabular}[]{|p{11mm}|p{55mm}|}%
 \hline
 \multicolumn{2}{|r|}{\textsl{Additional Mappings}}\\

@@ -21,7 +21,7 @@ for <CURSOR> in ; do
 <SPLIT>done
 §%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 == statements.for ==
-for (( CNTR=0; CNTR<<CURSOR>0; CNTR++ )); do
+for (( CNTR=0; CNTR<<CURSOR>0; CNTR+=1 )); do
 <SPLIT>done
 §%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 == statements.if ==

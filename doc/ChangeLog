@@ -1,4 +1,10 @@
 =======================================================================================
+  RELEASE NOTES FOR VERSION 3.1.1
+=======================================================================================
+- Bugfixes: code snippets will not be found if plugin not installed beyond '$HOME/.vim'.
+- Bugfixes: undocumented global variable used in above non-standard installation.
+
+=======================================================================================
   RELEASE NOTES FOR VERSION 3.1
 =======================================================================================
 - The plugin now handles different template styles without editing and
