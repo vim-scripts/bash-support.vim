@@ -29,7 +29,7 @@
 "                  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 "                  PURPOSE.
 "                  See the GNU General Public License version 2 for more details.
-"       Revision:  $Id: bash-support.vim,v 1.74 2010/08/08 11:20:24 mehner Exp $
+"       Revision:  $Id: bash-support.vim,v 1.77 2010/10/23 18:32:26 mehner Exp $
 "
 "------------------------------------------------------------------------------
 "
@@ -38,7 +38,7 @@
 if exists("g:BASH_Version") || &cp
  finish
 endif
-let g:BASH_Version= "3.2"  						" version number of this script; do not change
+let g:BASH_Version= "3.3"  						" version number of this script; do not change
 "
 if v:version < 700
   echohl WarningMsg | echo 'plugin bash-support.vim needs Vim version >= 7'| echohl None
@@ -348,7 +348,7 @@ function!	BASH_InitMenu ()
 	"-------------------------------------------------------------------------------
 
 	exe "anoremenu ".s:BASH_Root.'&Statements.&case<Tab>\\sc	     				:call BASH_InsertTemplate("statements.case")<CR>'
-	exe "anoremenu ".s:BASH_Root.'&Statements.e&lif<Tab>\\sl							:call BASH_InsertTemplate("statements.elif")<CR>'
+	exe "anoremenu ".s:BASH_Root.'&Statements.e&lif<Tab>\\sei							:call BASH_InsertTemplate("statements.elif")<CR>'
 	exe "anoremenu ".s:BASH_Root.'&Statements.&for\ in<Tab>\\sf						:call BASH_InsertTemplate("statements.for-in")<CR>'
 	exe "anoremenu ".s:BASH_Root.'&Statements.&for\ ((\.\.\.))<Tab>\\sfo	:call BASH_InsertTemplate("statements.for")<CR>'
 	exe "anoremenu ".s:BASH_Root.'&Statements.&if<Tab>\\si								:call BASH_InsertTemplate("statements.if")<CR>'
@@ -358,7 +358,7 @@ function!	BASH_InitMenu ()
 	exe "anoremenu ".s:BASH_Root.'&Statements.&while<Tab>\\sw							:call BASH_InsertTemplate("statements.while")<CR>'
 
 	exe "inoremenu ".s:BASH_Root.'&Statements.&case<Tab>\\sc	     				<Esc>:call BASH_InsertTemplate("statements.case")<CR>'
-	exe "inoremenu ".s:BASH_Root.'&Statements.e&lif<Tab>\\sl							<Esc>:call BASH_InsertTemplate("statements.elif")<CR>'
+	exe "inoremenu ".s:BASH_Root.'&Statements.e&lif<Tab>\\sei							<Esc>:call BASH_InsertTemplate("statements.elif")<CR>'
 	exe "inoremenu ".s:BASH_Root.'&Statements.&for\ in<Tab>\\sf						<Esc>:call BASH_InsertTemplate("statements.for-in")<CR>'
 	exe "inoremenu ".s:BASH_Root.'&Statements.&for\ ((\.\.\.))<Tab>\\sfo	<Esc>:call BASH_InsertTemplate("statements.for")<CR>'
 	exe "inoremenu ".s:BASH_Root.'&Statements.&if<Tab>\\si								<Esc>:call BASH_InsertTemplate("statements.if")<CR>'
@@ -418,25 +418,25 @@ function!	BASH_InitMenu ()
 	exe "vnoremenu ".s:BASH_Root.'&Statements.ech&o\ \ -e\ ""<Tab>\\se 	<Esc>:call BASH_InsertTemplate("statements.echo", "v")<CR>'
 	"
 	exe "amenu  ".s:BASH_Root.'&Statements.-SEP5-                                 :'
-	exe "anoremenu ".s:BASH_Root.'&Statements.&array\ elem\.\ \\sa<Tab>${\.[\.]}      	a${[]}<Left><Left><Left>'
-	exe "inoremenu ".s:BASH_Root.'&Statements.&array\ elem\.\ \\sa<Tab>${\.[\.]}      	 ${[]}<Left><Left><Left>'
-	exe "vnoremenu ".s:BASH_Root.'&Statements.&array\ elem\.\ \\sa<Tab>${\.[\.]}      	s${[]}<Left><Left><Esc>P'
-
-	exe "anoremenu ".s:BASH_Root.'&Statements.&array\ elem\.s\ \\sas<Tab>${\.[@]}      	a${[@]}<Left><Left><Left><Left>'
-	exe "inoremenu ".s:BASH_Root.'&Statements.&array\ elem\.s\ \\sas<Tab>${\.[@]}      	 ${[@]}<Left><Left><Left><Left>'
-	exe "vnoremenu ".s:BASH_Root.'&Statements.&array\ elem\.s\ \\sas<Tab>${\.[@]}      	s${[@]}<Left><Left><Left><Esc>P'
-
-	exe "anoremenu ".s:BASH_Root.'&Statements.arra&y\ (1\ word)<Tab>${\.[*]}			a${[*]}<Left><Left><Left><Left>'
-	exe "inoremenu ".s:BASH_Root.'&Statements.arra&y\ (1\ word)<Tab>${\.[*]}			 ${[*]}<Left><Left><Left><Left>'
-	exe "vnoremenu ".s:BASH_Root.'&Statements.arra&y\ (1\ word)<Tab>${\.[*]}			s${[*]}<Left><Left><Left><Esc>P'
-
-	exe "anoremenu ".s:BASH_Root.'&Statements.no\.\ of\ ele&m\.s<Tab>${#\.[@]}		a${#[@]}<Left><Left><Left><Left>'
-	exe "inoremenu ".s:BASH_Root.'&Statements.no\.\ of\ ele&m\.s<Tab>${#\.[@]}		 ${#[@]}<Left><Left><Left><Left>'
-	exe "vnoremenu ".s:BASH_Root.'&Statements.no\.\ of\ ele&m\.s<Tab>${#\.[@]}		s${#[@]}<Left><Left><Left><Esc>P'
-
-	exe "anoremenu ".s:BASH_Root.'&Statements.list\ of\ in&dices<tab>${!\.[*]}   	a${![*]}<Left><Left><Left><Left>'
-	exe "inoremenu ".s:BASH_Root.'&Statements.list\ of\ in&dices<tab>${!\.[*]}   	 ${![*]}<Left><Left><Left><Left>'
-	exe "vnoremenu ".s:BASH_Root.'&Statements.list\ of\ in&dices<tab>${!\.[*]}   	s${![*]}<Left><Left><Left><Esc>P'
+	exe "anoremenu ".s:BASH_Root.'&Statements.&array\ elem\.\ \ \ ${\.[\.]}<tab>\\sa\       a${[]}<Left><Left><Left>'
+	exe "inoremenu ".s:BASH_Root.'&Statements.&array\ elem\.\ \ \ ${\.[\.]}<tab>\\sa\        ${[]}<Left><Left><Left>'
+	exe "vnoremenu ".s:BASH_Root.'&Statements.&array\ elem\.\ \ \ ${\.[\.]}<tab>\\sa\       s${[]}<Left><Left><Esc>P'
+                                                                                   
+	exe "anoremenu ".s:BASH_Root.'&Statements.&arr\.\ elem\.s\ (all)\ \ \ ${\.[@]}<tab>\\saa     	a${[@]}<Left><Left><Left><Left>'
+	exe "inoremenu ".s:BASH_Root.'&Statements.&arr\.\ elem\.s\ (all)\ \ \ ${\.[@]}<tab>\\saa     	 ${[@]}<Left><Left><Left><Left>'
+	exe "vnoremenu ".s:BASH_Root.'&Statements.&arr\.\ elem\.s\ (all)\ \ \ ${\.[@]}<tab>\\saa     	s${[@]}<Left><Left><Left><Esc>P'
+                                                                                   
+	exe "anoremenu ".s:BASH_Root.'&Statements.arr\.\ elem\.s\ (&1\ word)\ \ \ ${\.[*]}<tab>\\sa1 		a${[*]}<Left><Left><Left><Left>'
+	exe "inoremenu ".s:BASH_Root.'&Statements.arr\.\ elem\.s\ (&1\ word)\ \ \ ${\.[*]}<tab>\\sa1 		 ${[*]}<Left><Left><Left><Left>'
+	exe "vnoremenu ".s:BASH_Root.'&Statements.arr\.\ elem\.s\ (&1\ word)\ \ \ ${\.[*]}<tab>\\sa1 		s${[*]}<Left><Left><Left><Esc>P'
+                                                                                   
+	exe "anoremenu ".s:BASH_Root.'&Statements.no\.\ of\ ele&m\.s\ \ \ ${#\.[@]}<tab>\\san		a${#[@]}<Left><Left><Left><Left>'
+	exe "inoremenu ".s:BASH_Root.'&Statements.no\.\ of\ ele&m\.s\ \ \ ${#\.[@]}<tab>\\san		 ${#[@]}<Left><Left><Left><Left>'
+	exe "vnoremenu ".s:BASH_Root.'&Statements.no\.\ of\ ele&m\.s\ \ \ ${#\.[@]}<tab>\\san		s${#[@]}<Left><Left><Left><Esc>P'
+                                                                                   
+	exe "anoremenu ".s:BASH_Root.'&Statements.list\ of\ in&dices\ \ \ ${!\.[*]}<tab>\\sai   a${![*]}<Left><Left><Left><Left>'
+	exe "inoremenu ".s:BASH_Root.'&Statements.list\ of\ in&dices\ \ \ ${!\.[*]}<tab>\\sai    ${![*]}<Left><Left><Left><Left>'
+	exe "vnoremenu ".s:BASH_Root.'&Statements.list\ of\ in&dices\ \ \ ${!\.[*]}<tab>\\sai   s${![*]}<Left><Left><Left><Esc>P'
 	"
 	if s:BASH_CodeSnippets != ""
 		exe " menu  <silent> ".s:BASH_Root.'S&nippets.read\ code\ snippet<Tab>\\nr        :call BASH_CodeSnippets("r")<CR>'
@@ -525,20 +525,22 @@ function!	BASH_InitMenu ()
 	"
 	"---------- submenu string comparison ------------------------------------------------------------
 	"
-	exe "	noremenu ".s:BASH_Root.'&Tests.string\ &comparison.length\ of\ string\ is\ &zero<Tab>-z									  	  a[ -z  ]<Left><Left>'
-	exe "	noremenu ".s:BASH_Root.'&Tests.string\ &comparison.length\ of\ string\ is\ &non-zero<Tab>-n									  a[ -n  ]<Left><Left>'
-	exe "	noremenu ".s:BASH_Root.'&Tests.string\ &comparison.strings\ are\ &equal<Tab>==															 a[  ==  ]<Esc>bhi'
-	exe "	noremenu ".s:BASH_Root.'&Tests.string\ &comparison.strings\ are\ n&ot\ equal<Tab>!=													 a[  !=  ]<Esc>bhi'
-	exe "	noremenu ".s:BASH_Root.'&Tests.string\ &comparison.string1\ sorts\ &before\ string2\ lexicograph\.<Tab><		  a[  <  ]<Esc>bhi'
-	exe "	noremenu ".s:BASH_Root.'&Tests.string\ &comparison.string1\ sorts\ &after\ string2\ lexicograph\.<Tab>>			  a[  >  ]<Esc>bhi'
-	exe "	noremenu ".s:BASH_Root.'&Tests.string\ &comparison.string\ matches\ &regexp<Tab>=~												 a[[  =~  ]]<Esc>2bhi'
+	exe "	noremenu ".s:BASH_Root.'&Tests.string\ &comparison.length\ of\ string\ is\ &zero<Tab>-z									  a[ -z  ]<Left><Left>'
+	exe "	noremenu ".s:BASH_Root.'&Tests.string\ &comparison.length\ of\ string\ is\ &non-zero<Tab>-n								a[ -n  ]<Left><Left>'
+	exe "	noremenu ".s:BASH_Root.'&Tests.string\ &comparison.strings\ are\ &equal\ (1)<Tab>=															a[  =  ]<Esc>bhi'
+	exe "	noremenu ".s:BASH_Root.'&Tests.string\ &comparison.strings\ are\ e&qual\ (2)<Tab>==														a[  ==  ]<Esc>bhi'
+	exe "	noremenu ".s:BASH_Root.'&Tests.string\ &comparison.strings\ are\ n&ot\ equal<Tab>!=												a[  !=  ]<Esc>bhi'
+	exe "	noremenu ".s:BASH_Root.'&Tests.string\ &comparison.string1\ sorts\ &before\ string2\ lexicograph\.<Tab><	a[  <  ]<Esc>bhi'
+	exe "	noremenu ".s:BASH_Root.'&Tests.string\ &comparison.string1\ sorts\ &after\ string2\ lexicograph\.<Tab>>		a[  >  ]<Esc>bhi'
+	exe "	noremenu ".s:BASH_Root.'&Tests.string\ &comparison.string\ matches\ &regexp<Tab>=~												a[[  =~  ]]<Esc>2bhi'
 	"
-	exe "inoremenu ".s:BASH_Root.'&Tests.string\ &comparison.length\ of\ string\ is\ &zero<Tab>-z											  [ -z  ]<Left><Left>'
-	exe "inoremenu ".s:BASH_Root.'&Tests.string\ &comparison.length\ of\ string\ is\ &non-zero<Tab>-n									  [ -n  ]<Left><Left>'
-	exe "inoremenu ".s:BASH_Root.'&Tests.string\ &comparison.strings\ are\ &equal<Tab>==															 [  ==  ]<Esc>bhi'
-	exe "inoremenu ".s:BASH_Root.'&Tests.string\ &comparison.strings\ are\ n&ot\ equal<Tab>!=													 [  !=  ]<Esc>bhi'
-	exe "inoremenu ".s:BASH_Root.'&Tests.string\ &comparison.string1\ sorts\ &before\ string2\ lexicograph\.<Tab><		  [  <  ]<Esc>bhi'
-	exe "inoremenu ".s:BASH_Root.'&Tests.string\ &comparison.string1\ sorts\ &after\ string2\ lexicograph\.<Tab>>			  [  >  ]<Esc>bhi'
+	exe "inoremenu ".s:BASH_Root.'&Tests.string\ &comparison.length\ of\ string\ is\ &zero<Tab>-z										 [ -z  ]<Left><Left>'
+	exe "inoremenu ".s:BASH_Root.'&Tests.string\ &comparison.length\ of\ string\ is\ &non-zero<Tab>-n								 [ -n  ]<Left><Left>'
+	exe "inoremenu ".s:BASH_Root.'&Tests.string\ &comparison.strings\ are\ &equal\ (1)<Tab>=															 [  =  ]<Esc>bhi'
+	exe "inoremenu ".s:BASH_Root.'&Tests.string\ &comparison.strings\ are\ e&qual\ (2)<Tab>==														 [  ==  ]<Esc>bhi'
+	exe "inoremenu ".s:BASH_Root.'&Tests.string\ &comparison.strings\ are\ n&ot\ equal<Tab>!=												 [  !=  ]<Esc>bhi'
+	exe "inoremenu ".s:BASH_Root.'&Tests.string\ &comparison.string1\ sorts\ &before\ string2\ lexicograph\.<Tab><	 [  <  ]<Esc>bhi'
+	exe "inoremenu ".s:BASH_Root.'&Tests.string\ &comparison.string1\ sorts\ &after\ string2\ lexicograph\.<Tab>>		 [  >  ]<Esc>bhi'
 	exe "inoremenu ".s:BASH_Root.'&Tests.string\ &comparison.string\ matches\ &regexp<Tab>=~												 [[  =~  ]]<Esc>2bhi'
 	"
 	exe "	noremenu ".s:BASH_Root.'&Tests.file\ exists\ and\ is\ &owned\ by\ the\ effective\ UID<Tab>-O							 a[ -O  ]<Left><Left>'
@@ -930,8 +932,8 @@ function!	BASH_InitMenu ()
 		exe " menu  <silent>  ".s:BASH_Root.'&Help.&manual\ (utilities)<Tab>\\hm             :call BASH_help("m")<CR>'
 		exe "imenu  <silent>  ".s:BASH_Root.'&Help.&manual\ (utilities)<Tab>\\hm        <C-C>:call BASH_help("m")<CR>'
 		"
-		exe " menu  <silent>  ".s:BASH_Root.'&Help.bash-&support<Tab>\\hp            :call BASH_HelpBASHsupport()<CR>'
-		exe "imenu  <silent>  ".s:BASH_Root.'&Help.bash-&support<Tab>\\hp       <C-C>:call BASH_HelpBASHsupport()<CR>'
+		exe " menu  <silent>  ".s:BASH_Root.'&Help.bash-&support<Tab>\\hbs           :call BASH_HelpBASHsupport()<CR>'
+		exe "imenu  <silent>  ".s:BASH_Root.'&Help.bash-&support<Tab>\\hbs      <C-C>:call BASH_HelpBASHsupport()<CR>'
 	endif
 	"
 endfunction		" ---------- end of function  BASH_InitMenu  ----------
@@ -1907,10 +1909,15 @@ function! BASH_help( type )
 	endif
 	"
 	"-------------------------------------------------------------------------------
-	" open the bash maual
+	" open the bash manual
 	"-------------------------------------------------------------------------------
 	if a:type == 'b'
 		silent exe ":%!man 1 bash"
+		if item != ''
+				" assign to the search pattern register "" :
+				let @/=item
+				echo "use n/N to serach for '".item."'"
+		endif
 	endif
 
 	setlocal nomodifiable

@@ -1,7 +1,7 @@
-*bashsupport.txt*                Bash Support                 August 08 2010
+*bashsupport.txt*                Bash Support                 October 23 2010
 
 bash Support                                      *bash-support* *bashsupport*
-                             Plugin version 3.2
+                             Plugin version 3.3
                         for Vim version 7.0 and above
                        Fritz Mehner  <mehner@fh-swf.de>
 
@@ -675,7 +675,7 @@ following character(s) will only be recognized for a short time.
   \hm     displays the manual for the     (n, i)
           Bash command under the cursor
           The tab expansion is active.
-  \hp     Displays the Vim help page for  (n, i)
+  \hbs    Displays the Vim help page for  (n, i)
           this plugin.
 
   -- Comments -------------------------------------------
@@ -701,7 +701,7 @@ following character(s) will only be recognized for a short time.
   -- Statements ------------------------------------------
 
   \sc     case in ... esac                (n, i)
-  \sl     elif then                       (n, i)
+  \sei    elif then                       (n, i)
   \sf     for in do done                  (n, i, v)
   \sfo    for ((...)) do done             (n, i, v)
   \si     if then fi                      (n, i, v)
@@ -712,6 +712,11 @@ following character(s) will only be recognized for a short time.
   \sfu    function                        (n, i, v)
   \se     echo -e "..."                   (n, i, v)
   \sp     printf "..."                    (n, i, v)
+  \sa     array element ${.[.]}           (n, i, v)
+  \saa    array elements ${.[@]}          (n, i, v)
+  \sa1    array elements, 1 word ${.[*]}  (n, i, v)
+  \san    no. of array elements ${#.[@]}  (n, i, v)
+  \sai    list of arr. indices ${!.[*]}   (n, i, v)
 
   -- Snippets --------------------------------------------
 

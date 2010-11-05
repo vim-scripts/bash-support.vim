@@ -1,4 +1,12 @@
 =======================================================================================
+  RELEASE NOTES FOR VERSION 3.2
+=======================================================================================
+- New hotkey and menu entry for [[ =~ ]]
+- New for Bash 4.1: shopt 'compat40', variables '$BASHOPTS', '$BASH_XTRACEFD'.
+- Bugfixes: local installation looks like a system-wide installation in seldom cases.
+- Bugfixes: typo in 4 menu entries.
+
+=======================================================================================
   RELEASE NOTES FOR VERSION 3.1.1
 =======================================================================================
 - Bugfixes: code snippets will not be found if plugin not installed beyond '$HOME/.vim'.

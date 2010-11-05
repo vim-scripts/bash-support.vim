@@ -3,7 +3,7 @@
 "   Language :  bash
 "     Plugin :  bash-support.vim
 " Maintainer :  Fritz Mehner <mehner@fh-swf.de>
-"   Revision :  $Id: sh.vim,v 1.35 2010/04/10 18:42:26 mehner Exp $
+"   Revision :  $Id: sh.vim,v 1.37 2010/10/23 18:29:34 mehner Exp $
 "
 " -----------------------------------------------------------------
 "
@@ -81,8 +81,8 @@ inoremap  <buffer>  <silent>  <LocalLeader>hh       <Esc>:call BASH_help('h')<CR
  noremap  <buffer>  <silent>  <LocalLeader>hm            :call BASH_help('m')<CR>
 inoremap  <buffer>  <silent>  <LocalLeader>hm       <Esc>:call BASH_help('m')<CR>
 "
- noremap  <buffer>  <silent>  <LocalLeader>hp           :call BASH_HelpBASHsupport()<CR>
-inoremap  <buffer>  <silent>  <LocalLeader>hp      <Esc>:call BASH_HelpBASHsupport()<CR>
+ noremap  <buffer>  <silent>  <LocalLeader>hbs          :call BASH_HelpBASHsupport()<CR>
+inoremap  <buffer>  <silent>  <LocalLeader>hbs     <Esc>:call BASH_HelpBASHsupport()<CR>
 "
 " ---------- comment menu ----------------------------------------------------
 "
@@ -140,7 +140,7 @@ inoremap  <buffer>  <silent>  <LocalLeader>cv      <C-C>:call BASH_CommentVimMod
 " ---------- statement menu ----------------------------------------------------
 "
  noremap  <buffer>  <silent>  <LocalLeader>sc           :call BASH_InsertTemplate("statements.case")<CR>
- noremap  <buffer>  <silent>  <LocalLeader>sl           :call BASH_InsertTemplate("statements.elif")<CR>
+ noremap  <buffer>  <silent>  <LocalLeader>sei          :call BASH_InsertTemplate("statements.elif")<CR>
  noremap  <buffer>  <silent>  <LocalLeader>sf           :call BASH_InsertTemplate("statements.for-in")<CR>
  noremap  <buffer>  <silent>  <LocalLeader>sfo          :call BASH_InsertTemplate("statements.for")<CR>
  noremap  <buffer>  <silent>  <LocalLeader>si           :call BASH_InsertTemplate("statements.if")<CR>
@@ -150,7 +150,7 @@ inoremap  <buffer>  <silent>  <LocalLeader>cv      <C-C>:call BASH_CommentVimMod
  noremap  <buffer>  <silent>  <LocalLeader>sw           :call BASH_InsertTemplate("statements.while")<CR>
 
 inoremap  <buffer>  <silent>  <LocalLeader>sc      <Esc>:call BASH_InsertTemplate("statements.case")<CR>
-inoremap  <buffer>  <silent>  <LocalLeader>sl      <Esc>:call BASH_InsertTemplate("statements.elif")<CR>
+inoremap  <buffer>  <silent>  <LocalLeader>sei     <Esc>:call BASH_InsertTemplate("statements.elif")<CR>
 inoremap  <buffer>  <silent>  <LocalLeader>sf      <Esc>:call BASH_InsertTemplate("statements.for-in")<CR>
 inoremap  <buffer>  <silent>  <LocalLeader>sfo     <Esc>:call BASH_InsertTemplate("statements.for")<CR>
 inoremap  <buffer>  <silent>  <LocalLeader>si      <Esc>:call BASH_InsertTemplate("statements.if")<CR>
@@ -183,9 +183,21 @@ vnoremap  <buffer>  <silent>  <LocalLeader>se      <Esc>:call BASH_InsertTemplat
 inoremap  <buffer>  <silent>  <LocalLeader>sa       ${[]}<Left><Left><Left>
 vnoremap  <buffer>  <silent>  <LocalLeader>sa      s${[]}<Left><Left><Esc>P
 
- noremap  <buffer>  <silent>  <LocalLeader>sas     a${[@]}<Left><Left><Left><Left>
-inoremap  <buffer>  <silent>  <LocalLeader>sas      ${[@]}<Left><Left><Left><Left>
-vnoremap  <buffer>  <silent>  <LocalLeader>sas     s${[@]}<Left><Left><Left><Esc>P
+ noremap  <buffer>  <silent>  <LocalLeader>saa     a${[@]}<Left><Left><Left><Left>
+inoremap  <buffer>  <silent>  <LocalLeader>saa      ${[@]}<Left><Left><Left><Left>
+vnoremap  <buffer>  <silent>  <LocalLeader>saa     s${[@]}<Left><Left><Left><Esc>P
+
+ noremap  <buffer>  <silent>  <LocalLeader>sa1     a${[*]}<Left><Left><Left><Left>
+inoremap  <buffer>  <silent>  <LocalLeader>sa1      ${[*]}<Left><Left><Left><Left>
+vnoremap  <buffer>  <silent>  <LocalLeader>sa1     s${[*]}<Left><Left><Left><Esc>P
+
+ noremap  <buffer>  <silent>  <LocalLeader>san     a${#[@]}<Left><Left><Left><Left>
+inoremap  <buffer>  <silent>  <LocalLeader>san      ${#[@]}<Left><Left><Left><Left>
+vnoremap  <buffer>  <silent>  <LocalLeader>san     s${#[@]}<Left><Left><Left><Esc>P
+
+ noremap  <buffer>  <silent>  <LocalLeader>sai     a${![*]}<Left><Left><Left><Left>
+inoremap  <buffer>  <silent>  <LocalLeader>sai      ${![*]}<Left><Left><Left><Left>
+vnoremap  <buffer>  <silent>  <LocalLeader>sai     s${![*]}<Left><Left><Left><Esc>P
   "
   " ----------------------------------------------------------------------------
   " POSIX character classes
@@ -239,8 +251,8 @@ vnoremap  <buffer>  <silent>  <LocalLeader>nw    <C-C>:call BASH_CodeSnippets("w
 " ---------- run menu ----------------------------------------------------
 "
 if !s:MSWIN
-   map  <buffer>  <silent>  <LocalLeader>re           :call BASH_MakeScriptExecutable()<CR>
-  imap  <buffer>  <silent>  <LocalLeader>re      <Esc>:call BASH_MakeScriptExecutable()<CR>
+   map  <buffer> <silent> <LocalLeader>re           :call BASH_MakeScriptExecutable()<CR>
+  imap  <buffer> <silent> <LocalLeader>re      <Esc>:call BASH_MakeScriptExecutable()<CR>
 endif
 
  map  <buffer>  <silent>  <LocalLeader>rr           :call BASH_Run("n")<CR>
@@ -286,11 +298,9 @@ endif
 "                      masks the normal mode command '' (jump to the position
 "                      before the latest jump)
 " additional mapping : double quotes around a Word (non-whitespaces)
-" additional mapping : parentheses around a word (word characters)
 "-------------------------------------------------------------------------------
 nnoremap    <buffer>   ''   ciW''<Esc>P
 nnoremap    <buffer>   ""   ciW""<Esc>P
-"nnoremap   <buffer>   {{   ciw{}<Esc>PF{
 "
 if !exists("g:BASH_Ctrl_j") || ( exists("g:BASH_Ctrl_j") && g:BASH_Ctrl_j != 'off' )
   nmap    <buffer>  <silent>  <C-j>   i<C-R>=BASH_JumpCtrlJ()<CR>

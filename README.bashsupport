@@ -1,4 +1,4 @@
-README for bash-support.vim (Version 3.2) / August 08 2010
+README for bash-support.vim (Version 3.3) / October 23 2010
 
   *  INSTALLATION
   *  RELEASE NOTES 
@@ -75,12 +75,12 @@ and look at the bashsupport help with
              +-----------------------------------------------+
 
 =======================================================================================
-  RELEASE NOTES FOR VERSION 3.2
+  RELEASE NOTES FOR VERSION 3.3
 =======================================================================================
-- New hotkey and menu entry for [[ =~ ]]
-- New for Bash 4.1: shopt 'compat40', variables '$BASHOPTS', '$BASH_XTRACEFD'.
-- Bugfixes: local installation looks like a system-wide installation in seldom cases.
-- Bugfixes: typo in 4 menu entries.
+- 3 hotkeys renamed: \sl -> \sei (elif), \sas -> \saa ( ${.[@]} ) , \hp -> \hbs.
+- 3 new hotkeys: \sa1 ( ${.[*]} ), \san ( ${#.[@]} ), \sai ( ${!.[@]} ).
+- 1 new menu entry (Tests)
+- Minor improvements.
 
 =======================================================================================
   OLDER RELEASE NOTES : see file 'ChangeLog'
