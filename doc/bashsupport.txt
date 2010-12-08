@@ -1,7 +1,7 @@
-*bashsupport.txt*                Bash Support                 October 23 2010
+*bashsupport.txt*                Bash Support               December 05 2010
 
 bash Support                                      *bash-support* *bashsupport*
-                             Plugin version 3.3
+                             Plugin version 3.4
                         for Vim version 7.0 and above
                        Fritz Mehner  <mehner@fh-swf.de>
 
@@ -729,6 +729,11 @@ following character(s) will only be recognized for a short time.
   \ntr    reread the templates            (n)
   \nts    switch template style           (n)
 
+  -- Test ------------------------------------------------
+
+  \t      unary operator, 1 arg.: \verb'[ -  ]'  (n, i)
+  \t2     binary operator, 2 arg: \verb'[  -  ]' (n, i)
+
   -- Regular Expression ----------------------------------
 
   \xm     [[  =~  ]]                      (n, i)
@@ -876,7 +881,7 @@ g:BASH_LineEndCommColDefault   49
 g:BASH_SyntaxCheckOptionsGlob  ''
 g:BASH_Printheader             '%<%f%h%m%<  %=%{strftime('%x %X')}     Page %N'
 g:BASH_BASH                    $SHELL         (Linux/U**X)
-                               'win-bash.exe' (Windows)
+                               'bash.exe'     (Windows)
 g:BASH_Man                     'man'          (Linux/U**X)
                                'man.exe'      (Windows)
 g:BASH_MapLeader               '\'
@@ -961,7 +966,7 @@ As *** SUPERUSER *** :
 (1) Find the Vim installation directory.
 The Vim ex command ':echo $VIM' gives '/usr/local/share/vim' or something like
 that. Beyond this directory you will find the Vim installation,  e.g. in
-'/usr/local/share/vim/vim72' if Vim version 7.2 has been installed.
+'/usr/local/share/vim/vim73' if Vim version 7.3 has been installed.
 
 (2) Create a new subdirectory 'vimfiles', e.g. '/usr/local/share/vim/vimfiles'.
 
@@ -992,7 +997,7 @@ convenience the directory tree "$HOME/.vim/bash-support/..." can be moved to
 another place. In this case the new base directory has to be specified in
 "$HOME/.vimrc", e.g.
 
- let g:BASH_Support_Root_Dir  = "/home/lastname/xyz"
+ let g:BASH_Support_Root_Dir  = "/home/username/xyz"
 
 Please note that there is no trailing slash.
 
@@ -1462,29 +1467,45 @@ the latest jump).
 8.  WINDOWS PARTICULARITIES                              *bashsupport-windows*
 ==============================================================================
 
-The plugin should go into the directory structure below the local
-installation directory $HOME/.vim/ for LINUX/UNIX and $VIM/vimfiles/ for
-Windows. The values of the two variables can be found from inside Vim:
+For a user installation the plugin should go into the directory structure below 
+  $HOME/vimfiles/
+for a system installation below
+  $VIM/vimfiles/
+
+The values of the two variables can be found from inside Vim:
    :echo $VIM
 or
    :echo $HOME
 
-Configuration files:
+The configuration files for a user are
 
-  LINUX/UNIX :   $HOME/.vimrc  and  $HOME/.gvimrc
-  Windows    :   $VIM/_vimrc   and  $VIM/_gvimrc
+  $HOME/_vimrc   and  $HOME/_gvimrc
+
+for the system
+
+  $VIM/_vimrc   and  $VIM/_gvimrc
 
 A Bash shell is not a part of a Windows system and has to be installed in
-addition. This plugin assumes that the shell port win-bash.exe
-(http://win-bash.sourceforge.net/) and the command line utilities you want to
-use can be reached via your path variable.
-This shell can be changed to xyz-shell.exe by setting the following line into
-the file _vimrc:
+addition. This plugin assumes that the shell port bash.exe
+(http://www.cygwin.com) is present and the that command line utilities you
+want to use can be reached via your path variable.  This shell can be changed
+to xyz-shell.exe by setting the following line into the file _vimrc:
 
   let g:BASH_BASH    = 'xyz-shell.exe'
 
 The run-menu and the corresponding hotkeys are restricted. Please see 
 the document 'bash-hot-keys.pdf' for this restrictions.
+
+The file format is switches to 'unix' on entering a buffer of type 'sh'.
+The filetype can be changed by setting a global variable in file _vimrc:
+
+  let g:BASH_FileFormat	= 'something_else'
+
+CYGWIN
+------
+Executing scripts with DOS style pathnames causes the error "MS-DOS style path
+detected". To turn these messages off add the CYGWIN environment variable
+CYGWIN with the value "nodosfilewarning".
 
 ==============================================================================
 9.  Release Notes                                  *bashsupport-release-notes*

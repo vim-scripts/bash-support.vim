@@ -8,17 +8,17 @@
 %%        Email:  mehner@fh-swf.de
 %%    Copyright:  Copyright (C)  2003-2010  Dr.-Ing. Fritz Mehner  (mehner@fh-swf.de)
 %%      Version:  see PluginVersion (below)
-%%     Revision:  $Id: bash-hot-keys.tex,v 1.27 2010/10/23 18:29:34 mehner Exp $
+%%     Revision:  $Id: bash-hot-keys.tex,v 1.30 2010/12/04 12:34:44 mehner Exp $
 %%      Created:  09.06.2003
 %%                
 %%        Notes:  
 %%                
 %%=====================================================================================
 
-\newcommand{\PluginVersion}{3.3}
-\newcommand{\ReleaseDate}{October 2010}
+\newcommand{\PluginVersion}{3.4}
+\newcommand{\ReleaseDate}{December 2010}
 
-\documentclass[oneside,12pt,a4paper,DIV18]{scrartcl}
+\documentclass[oneside,11pt,a4paper,DIV18]{scrartcl}
 \usepackage[english]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -41,7 +41,7 @@
 \pagestyle{fancyplain}
 \fancyhf{}
 \fancyfoot[L]{\small \ReleaseDate}
-\fancyhead[C]{\scriptsize }
+\fancyfoot[C]{\small bash-support.vim}
 \fancyfoot[R]{\small \textbf{Page \thepage{} / \pageref{LastPage}}}
 \renewcommand{\headrulewidth}{0.0pt}
 
@@ -66,20 +66,16 @@
 %%======================================================================
 \begin{center}
 \textbf{\textsc{\small{Vim-Plugin}}}\\
-\textbf{\huge{bash-support.vim}}\\
+\textbf{\LARGE{bash-support.vim}}\\
 \textbf{\textsc{\small{Version \PluginVersion}}}\\
 \vspace{3mm}%
-\textbf{\textsc{\LARGE{Hot keys}}}\\ 
+\textbf{\textsc{\huge{Hot keys}}}\\ 
 \vspace{3mm}%
-\footnotesize{Key mappings for Vim without GUI.}\\
-\vspace{1mm}%
-\footnotesize{
-All mappings are only defined for buffers\\
-with filetype \texttt{sh} (exceptions: \verb'\lbs',  \verb'\ubs').\\
-All mappings also work for gVim.}\\ 
-\vspace{1mm}%
+\footnotesize{Key mappings for Vim and gVim.}\\
+%\vspace{1mm}%
 \footnotesize{Plugin: http://vim.sourceforge.net}\\
 \footnotesize{Fritz Mehner (mehner@fh-swf.de)}\\
+{\normalsize (i)} insert mode, {\normalsize (n)} normal mode, {\normalsize (v)} visual mode\\
 %\footnotesize{\ReleaseDate}\\
 \vspace{3.5mm}
 \small
@@ -110,32 +106,44 @@ All mappings also work for gVim.}\\
 \hline 
 \hline
 \multicolumn{2}{|r|}{\textsl{\textbf{S}tatements}}\\
-\hline \verb'\sc'  & \verb'case in ... esac'            \hfill (n, i)\\
-\hline \verb'\sei' & \verb'elif then'                   \hfill (n, i)\\
-\hline \verb'\sf'  & \verb'for in do done'              \hfill (n, i, v)\\
-\hline \verb'\sfo' & \verb'for ((...)) do done'         \hfill (n, i, v)\\
-\hline \verb'\si'  & \verb'if then fi'                  \hfill (n, i, v)\\
-\hline \verb'\sie' & \verb'if then else fi'             \hfill (n, i, v)\\
-\hline \verb'\ss'  & \verb'select in do done'           \hfill (n, i, v)\\
-\hline \verb'\st'  & \verb'until do done'               \hfill (n, i, v)\\
-\hline \verb'\sw'  & \verb'while do done'               \hfill (n, i, v)\\
-\hline \verb'\sfu' & \verb'function'                    \hfill (n, i, v)\\
-\hline \verb'\se'  & \verb'echo -e ""'                  \hfill (n, i, v)\\
-\hline \verb'\sp'  & \verb'printf  "%s"'                \hfill (n, i, v)\\
-\hline \verb'\sa'  & array element\ \ \ \verb'${.[.]}'  \hfill (n, i, v)\\
+\hline \verb'\sc'  & \verb'case in ... esac'               \hfill (n, i)\\
+\hline \verb'\sei' & \verb'elif then'                      \hfill (n, i)\\
+\hline \verb'\sf'  & \verb'for in do done'                 \hfill (n, i, v)\\
+\hline \verb'\sfo' & \verb'for ((...)) do done'            \hfill (n, i, v)\\
+\hline \verb'\si'  & \verb'if then fi'                     \hfill (n, i, v)\\
+\hline \verb'\sie' & \verb'if then else fi'                \hfill (n, i, v)\\
+\hline \verb'\ss'  & \verb'select in do done'              \hfill (n, i, v)\\
+\hline \verb'\st'  & \verb'until do done'                  \hfill (n, i, v)\\
+\hline \verb'\sw'  & \verb'while do done'                  \hfill (n, i, v)\\
+\hline \verb'\sfu' & \verb'function'                       \hfill (n, i, v)\\
+\hline \verb'\se'  & \verb'echo -e ""'                     \hfill (n, i, v)\\
+\hline \verb'\sp'  & \verb'printf  "%s"'                   \hfill (n, i, v)\\
+\hline \verb'\sa'  & array element\ \ \ \verb'${.[.]}'     \hfill (n, i, v)\\
 \hline \verb'\saa' & arr. elem.s (all) \ \verb'${.[@]}'    \hfill (n, i, v)\\
-\hline \verb'\sa1' & arr. elem.s (1 word) \ \verb'${.[*]}'    \hfill (n, i, v)\\
-\hline \verb'\san' & no. of arr. elem.s \ \verb'${.[@]}'    \hfill (n, i, v)\\
-\hline \verb'\sai' & list of indices \ \verb'${.[*]}'    \hfill (n, i, v)\\
+\hline \verb'\sa1' & arr. elem.s (1 word) \ \verb'${.[*]}' \hfill (n, i, v)\\
+\hline \verb'\san' & no. of arr. elem.s \ \verb'${.[@]}'   \hfill (n, i, v)\\
+\hline \verb'\sai' & list of indices \ \verb'${.[*]}'      \hfill (n, i, v)\\
+\hline
+%%----------------------------------------------------------------------
+%%  test
+%%----------------------------------------------------------------------
+\hline
+\multicolumn{2}{|r|}{\textsl{\textbf{T}est}}\\
+\hline \verb'\t'   &  unary operator, 1 arg.: \verb'[ -  ]'         \hfill (n, i)\\
+\hline \verb'\t2'  &  binary operator, 2 arg.: \verb'[  -  ]'        \hfill (n, i)\\
 \hline
 \end{tabular}\\
 %%~~~~~ TABULAR :  end  ~~~~~~~~~~
-\begin{flushleft}
-{\small
-{\normalsize (i)} insert mode, {\normalsize (n)} normal mode, {\normalsize (v)} visual mode\\
-$^+$ \footnotesize{Linux/U**x only}
+%
+\begin{minipage}[b]{75mm}%
+\scriptsize{%
+\vspace{10mm}
+\hrulefill\\
+$^1$ {systemwide installation only}\\
+$^2$ {Linux/U**x only}
 }%
-\end{flushleft}
+\end{minipage}\\
+%
 
 \newpage 
 %%======================================================================
@@ -144,28 +152,31 @@ $^+$ \footnotesize{Linux/U**x only}
 %%~~~~~ TABULAR : begin ~~~~~~~~~~
 \begin{tabular}[]{|p{11mm}|p{59mm}|}
 %%----------------------------------------------------------------------
-%%  menu Posix character classes
+%%  menu Regular Expression
 %%----------------------------------------------------------------------
 \hline
 \multicolumn{2}{|r|}{\textsl{Regular E\textbf{x}pressions}}\\
 \hline \verb'\xm' & match: \verb'[[ =~ ]] '         \hfill (n, i)\\
 \hline
+%%----------------------------------------------------------------------
+%%  menu Posix character classes
+%%----------------------------------------------------------------------
 \hline
 \multicolumn{2}{|r|}{\textsl{\textbf{P}OSIX Character Classes}}\\
-\hline \verb'\pan' &  \verb'[:alnum:] '         \hfill (n, i)\\
-\hline \verb'\pal' &  \verb'[:alpha:] '         \hfill (n, i)\\
-\hline \verb'\pas' &  \verb'[:ascii:] '         \hfill (n, i)\\
-\hline \verb'\pb'  &  \verb'[:blank:] '         \hfill (n, i)\\
-\hline \verb'\pc'  &  \verb'[:cntrl:] '         \hfill (n, i)\\
-\hline \verb'\pd'  &  \verb'[:digit:] '         \hfill (n, i)\\
-\hline \verb'\pg'  &  \verb'[:graph:] '         \hfill (n, i)\\
-\hline \verb'\pl'  &  \verb'[:lower:] '         \hfill (n, i)\\
-\hline \verb'\ppr' &  \verb'[:print:] '         \hfill (n, i)\\
-\hline \verb'\ppu' &  \verb'[:punct:] '         \hfill (n, i)\\
-\hline \verb'\ps'  &  \verb'[:space:] '         \hfill (n, i)\\
-\hline \verb'\pu'  &  \verb'[:upper:] '         \hfill (n, i)\\
-\hline \verb'\pw'  &  \verb'[:word:]  '         \hfill (n, i)\\
-\hline \verb'\px'  &  \verb'[:xdigit:]'         \hfill (n, i)\\
+\hline \verb'\pan' &  \verb'[:alnum:]'         \hfill (n, i)\\
+\hline \verb'\pal' &  \verb'[:alpha:]'         \hfill (n, i)\\
+\hline \verb'\pas' &  \verb'[:ascii:]'         \hfill (n, i)\\
+\hline \verb'\pb'  &  \verb'[:blank:]'         \hfill (n, i)\\
+\hline \verb'\pc'  &  \verb'[:cntrl:]'         \hfill (n, i)\\
+\hline \verb'\pd'  &  \verb'[:digit:]'         \hfill (n, i)\\
+\hline \verb'\pg'  &  \verb'[:graph:]'         \hfill (n, i)\\
+\hline \verb'\pl'  &  \verb'[:lower:]'         \hfill (n, i)\\
+\hline \verb'\ppr' &  \verb'[:print:]'         \hfill (n, i)\\
+\hline \verb'\ppu' &  \verb'[:punct:]'         \hfill (n, i)\\
+\hline \verb'\ps'  &  \verb'[:space:]'         \hfill (n, i)\\
+\hline \verb'\pu'  &  \verb'[:upper:]'         \hfill (n, i)\\
+\hline \verb'\pw'  &  \verb'[:word:]'          \hfill (n, i)\\
+\hline \verb'\px'  &  \verb'[:xdigit:]'        \hfill (n, i)\\
 \hline
 \hline
 \multicolumn{2}{|r|}{\textsl{S\textbf{n}ippets}}\\
@@ -174,21 +185,21 @@ $^+$ \footnotesize{Linux/U**x only}
 \hline \verb'\ne'  & edit code snippet          \hfill (n)\\
 %
 \hline \verb'\ntl' & edit local templates      \hfill (n)\\
-\hline \verb'\ntg' & edit global templates     \hfill (n)\\
+\hline \verb'\ntg' & edit global templates $^1$\hfill (n)\\
 \hline \verb'\ntr' & reread the templates      \hfill (n)\\
 \hline \verb'\nts' & switch template style     \hfill (n)\\
 \hline
 \hline
 \multicolumn{2}{|r|}{\textsl{\textbf{R}un}}\\
-\hline \verb'\rr'  & update file, run script        \hfill (n, i, v$^+$)\\
+\hline \verb'\rr'  & update file, run script        \hfill (n, i, v$^2$)\\
 \hline \verb'\ra'  & set command line arguments     \hfill (n, i)\\
-\hline \verb'\rc'  & update file, check syntax$^+$  \hfill (n, i)\\
-\hline \verb'\rco' & syntax check options$^+$       \hfill (n, i)\\
-\hline \verb'\rd'  & start debugger$^+$             \hfill (n, i)\\
-\hline \verb'\re'  & make script executable$^+$     \hfill (n, i)\\
+\hline \verb'\rc'  & update file, check syntax      \hfill (n, i)\\
+\hline \verb'\rco' & syntax check options           \hfill (n, i)\\
+\hline \verb'\rd'  & start debugger$^2$             \hfill (n, i)\\
+\hline \verb'\re'  & make script executable$^2$     \hfill (n, i)\\
 \hline \verb'\rh'  & hardcopy buffer                \hfill (n, i, v)\\
 \hline \verb'\rs'  & settings and hotkeys           \hfill (n, i)\\
-\hline \verb'\rt'  & set xterm size$^+$             \hfill (n, i, GUI only)\\
+\hline \verb'\rt'  & set xterm size$^2$             \hfill (n, i, GUI only)\\
 \hline \verb'\ro'  & change output destination      \hfill (n, i)\\
 \hline
 \hline 

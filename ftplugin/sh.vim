@@ -3,7 +3,7 @@
 "   Language :  bash
 "     Plugin :  bash-support.vim
 " Maintainer :  Fritz Mehner <mehner@fh-swf.de>
-"   Revision :  $Id: sh.vim,v 1.37 2010/10/23 18:29:34 mehner Exp $
+"   Revision :  $Id: sh.vim,v 1.39 2010/12/04 12:34:44 mehner Exp $
 "
 " -----------------------------------------------------------------
 "
@@ -86,9 +86,9 @@ inoremap  <buffer>  <silent>  <LocalLeader>hbs     <Esc>:call BASH_HelpBASHsuppo
 "
 " ---------- comment menu ----------------------------------------------------
 "
- noremap  <buffer>  <silent>  <LocalLeader>cl           :call BASH_LineEndComment()<CR>A
-inoremap  <buffer>  <silent>  <LocalLeader>cl      <Esc>:call BASH_LineEndComment()<CR>A
-vnoremap  <buffer>  <silent>  <LocalLeader>cl      <Esc>:call BASH_MultiLineEndComments()<CR>A
+ noremap  <buffer>  <silent>  <LocalLeader>cl           :call BASH_LineEndComment()<CR>
+inoremap  <buffer>  <silent>  <LocalLeader>cl      <Esc>:call BASH_LineEndComment()<CR>
+vnoremap  <buffer>  <silent>  <LocalLeader>cl      <Esc>:call BASH_MultiLineEndComments()<CR>a
 
  noremap  <buffer>  <silent>  <LocalLeader>cj           :call BASH_AdjustLineEndComm("a")<CR>
 inoremap  <buffer>  <silent>  <LocalLeader>cj      <Esc>:call BASH_AdjustLineEndComm("a")<CR>
@@ -248,24 +248,30 @@ vnoremap  <buffer>  <silent>  <LocalLeader>nw    <C-C>:call BASH_CodeSnippets("w
  noremap  <buffer>  <silent>  <LocalLeader>ntr        :call BASH_RereadTemplates()<CR>
  noremap  <buffer>            <LocalLeader>nts   <Esc>:BashStyle<Space>
 "
+" ---------- test  ----------------------------------------------------
+"
+nnoremap  <buffer>  <silent>  <LocalLeader>t    a[ -  ]<Left><Left><Left>
+inoremap  <buffer>  <silent>  <LocalLeader>t     [ -  ]<Left><Left><Left>
+"
+nnoremap  <buffer>  <silent>  <LocalLeader>t2   a[  -  ]<Left><Left><Left><Left><Left>
+inoremap  <buffer>  <silent>  <LocalLeader>t2    [  -  ]<Left><Left><Left><Left><Left>
+"
 " ---------- run menu ----------------------------------------------------
 "
-if !s:MSWIN
-   map  <buffer> <silent> <LocalLeader>re           :call BASH_MakeScriptExecutable()<CR>
-  imap  <buffer> <silent> <LocalLeader>re      <Esc>:call BASH_MakeScriptExecutable()<CR>
-endif
-
  map  <buffer>  <silent>  <LocalLeader>rr           :call BASH_Run("n")<CR>
 imap  <buffer>  <silent>  <LocalLeader>rr      <Esc>:call BASH_Run("n")<CR>
  map  <buffer>  <silent>  <LocalLeader>ra           :call BASH_CmdLineArguments()<CR>
 imap  <buffer>  <silent>  <LocalLeader>ra      <Esc>:call BASH_CmdLineArguments()<CR>
 
-if !s:MSWIN
-   map  <buffer>  <silent>  <LocalLeader>rc           :call BASH_SyntaxCheck()<CR>
-  imap  <buffer>  <silent>  <LocalLeader>rc      <Esc>:call BASH_SyntaxCheck()<CR>
+ map  <buffer>  <silent>  <LocalLeader>rc           :call BASH_SyntaxCheck()<CR>
+imap  <buffer>  <silent>  <LocalLeader>rc      <Esc>:call BASH_SyntaxCheck()<CR>
 
-   map  <buffer>  <silent>  <LocalLeader>rco          :call BASH_SyntaxCheckOptionsLocal()<CR>
-  imap  <buffer>  <silent>  <LocalLeader>rco     <Esc>:call BASH_SyntaxCheckOptionsLocal()<CR>
+ map  <buffer>  <silent>  <LocalLeader>rco          :call BASH_SyntaxCheckOptionsLocal()<CR>
+imap  <buffer>  <silent>  <LocalLeader>rco     <Esc>:call BASH_SyntaxCheckOptionsLocal()<CR>
+
+if !s:MSWIN
+   map  <buffer> <silent> <LocalLeader>re           :call BASH_MakeScriptExecutable()<CR>
+  imap  <buffer> <silent> <LocalLeader>re      <Esc>:call BASH_MakeScriptExecutable()<CR>
 
    map  <buffer>  <silent>  <LocalLeader>rd           :call BASH_Debugger()<CR>:redraw!<CR>
   imap  <buffer>  <silent>  <LocalLeader>rd      <Esc>:call BASH_Debugger()<CR>:redraw!<CR>
