@@ -1,4 +1,4 @@
-README for bash-support.vim (Version 3.4) / December 04 2010
+README for bash-support.vim (Version 3.5) / February 25 2011
 
   *  INSTALLATION
   *  RELEASE NOTES 
@@ -130,12 +130,10 @@ and look at the bashsupport help with
              +-----------------------------------------------+
 
 =======================================================================================
-  RELEASE NOTES FOR VERSION 3.4
+  RELEASE NOTES FOR VERSION 3.5
 =======================================================================================
-- 2 new hotkeys: \t, \t2 (empty tests)
-- Windows: user and system installation.
-- Syntax check under Windows.
-- Several minor bugsfixed.
+- Bugfix: detection of a systemwide installation can fail.
+- Minor improvements.
 
 =======================================================================================
   OLDER RELEASE NOTES : see file 'ChangeLog'

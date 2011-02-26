@@ -29,7 +29,7 @@
 "                  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 "                  PURPOSE.
 "                  See the GNU General Public License version 2 for more details.
-"       Revision:  $Id: bash-support.vim,v 1.81 2010/12/05 11:10:47 mehner Exp $
+"       Revision:  $Id: bash-support.vim,v 1.87 2011/02/26 14:21:02 mehner Exp $
 "
 "------------------------------------------------------------------------------
 "
@@ -38,7 +38,7 @@
 if exists("g:BASH_Version") || &cp
  finish
 endif
-let g:BASH_Version= "3.4"  						" version number of this script; do not change
+let g:BASH_Version= "3.5"  						" version number of this script; do not change
 "
 if v:version < 700
   echohl WarningMsg | echo 'plugin bash-support.vim needs Vim version >= 7'| echohl None
@@ -51,54 +51,54 @@ endif
 "
 let	s:MSWIN =		has("win16") || has("win32") || has("win64") || has("win95")
 "
-let s:installation				= 'local'
-let s:vimfiles						= $VIM
-let	s:sourced_script_file	= expand("<sfile>")
-let s:BASH_GlobalTemplateFile= ''
-let s:BASH_GlobalTemplateDir = ''
+let s:installation						= 'local'
+let s:vimfiles								= $VIM
+let	s:sourced_script_file			= expand("<sfile>")
+let s:BASH_GlobalTemplateFile	= ''
+let s:BASH_GlobalTemplateDir	= ''
 "
 if	s:MSWIN
   " ==========  MS Windows  ======================================================
 	"
 	if match( s:sourced_script_file, escape( s:vimfiles, ' \' ) ) == 0
 		" system wide installation
-		let s:installation							= 'system'
-		let s:plugin_dir								= $VIM.'/vimfiles/'
-		let s:BASH_GlobalTemplateFile   = s:plugin_dir.'bash-support/templates/Templates'
-		let s:BASH_GlobalTemplateDir    = fnamemodify( s:BASH_GlobalTemplateFile, ":p:h" ).'/'
+		let s:installation						= 'system'
+		let s:plugin_dir							= $VIM.'/vimfiles/'
+		let s:BASH_GlobalTemplateDir	= s:plugin_dir.'bash-support/templates'
+		let s:BASH_GlobalTemplateFile = s:BASH_GlobalTemplateDir.'/Templates'
 	else
 		" user installation assumed
-		let s:plugin_dir  							= $HOME.'/vimfiles/'
+		let s:plugin_dir  						= $HOME.'/vimfiles/'
 	endif
 	"
-	let s:BASH_LocalTemplateFile      = $HOME.'/vimfiles/bash-support/templates/Templates'
-	let s:BASH_LocalTemplateDir       = fnamemodify( s:BASH_LocalTemplateFile, ":p:h" ).'/'
-	let s:BASH_CodeSnippets 					= $HOME.'/vimfiles/bash-support/codesnippets/'
-	let s:BASH_BASH										= 'bash.exe'
-	let s:BASH_Man        						= 'man.exe'
-	let s:BASH_OutputGvim							= 'xterm'
-	let s:escfilename     						= ''
+	let s:BASH_LocalTemplateFile    = $HOME.'/vimfiles/bash-support/templates/Templates'
+	let s:BASH_LocalTemplateDir     = fnamemodify( s:BASH_LocalTemplateFile, ":p:h" ).'/'
+	let s:BASH_CodeSnippets 				= $HOME.'/vimfiles/bash-support/codesnippets/'
+	let s:BASH_BASH									= 'bash.exe'
+	let s:BASH_Man        					= 'man.exe'
+	let s:BASH_OutputGvim						= 'xterm'
+	let s:escfilename     					= ''
 else
   " ==========  Linux/Unix  ======================================================
 	"
-	if match( expand("<sfile>"), $VIM ) == 0
-		" system wide installation
-		let s:installation	= 'system'
-		let s:plugin_dir  	= $VIM.'/vimfiles/'
-		let s:BASH_GlobalTemplateFile	= s:plugin_dir.'bash-support/templates/Templates'
-		let s:BASH_GlobalTemplateDir	= fnamemodify( s:BASH_GlobalTemplateFile, ":p:h" ).'/'
-	else
+	if match( s:sourced_script_file, expand("$HOME") ) == 0
 		" user installation assumed
-		let s:plugin_dir  	= $HOME.'/.vim/'
+		let s:plugin_dir  						= $HOME.'/.vim/'
+	else
+		" system wide installation
+		let s:installation						= 'system'
+		let s:plugin_dir  						= $VIM.'/vimfiles/'
+		let s:BASH_GlobalTemplateDir	= s:plugin_dir.'bash-support/templates'
+		let s:BASH_GlobalTemplateFile	= s:BASH_GlobalTemplateDir.'/Templates'
 	end
 	"
 	let s:BASH_LocalTemplateFile		= $HOME.'/.vim/bash-support/templates/Templates'
 	let s:BASH_LocalTemplateDir			= fnamemodify( s:BASH_LocalTemplateFile, ":p:h" ).'/'
 	let s:BASH_CodeSnippets  				= $HOME.'/.vim/bash-support/codesnippets/'
-	let s:BASH_BASH				= $SHELL
-	let s:BASH_Man        = 'man'
-	let s:BASH_OutputGvim	= 'vim'
-	let s:escfilename     = ' \%#[]'
+	let s:BASH_BASH									= $SHELL
+	let s:BASH_Man        					= 'man'
+	let s:BASH_OutputGvim						= 'vim'
+	let s:escfilename     					= ' \%#[]'
   " ==============================================================================
 endif
 "
@@ -113,19 +113,19 @@ endif
 "
 "  Modul global variables    {{{1
 "
-let s:BASH_MenuHeader							 = 'yes'
-let s:BASH_Root										 = 'B&ash.'
-let s:BASH_Debugger                = 'term'
-let s:BASH_LineEndCommColDefault   = 49
-let s:BASH_LoadMenus               = 'yes'
-let s:BASH_TemplateOverwrittenMsg= 'yes'
-let s:BASH_SyntaxCheckOptionsGlob  = ''
+let s:BASH_MenuHeader							= 'yes'
+let s:BASH_Root										= 'B&ash.'
+let s:BASH_Debugger               = 'term'
+let s:BASH_LineEndCommColDefault  = 49
+let s:BASH_LoadMenus              = 'yes'
+let s:BASH_TemplateOverwrittenMsg	= 'yes'
+let s:BASH_SyntaxCheckOptionsGlob = ''
 "
-let s:BASH_XtermDefaults           = '-fa courier -fs 12 -geometry 80x24'
-let s:BASH_GuiSnippetBrowser       = 'gui'										" gui / commandline
-let s:BASH_GuiTemplateBrowser      = 'gui'										" gui / explorer / commandline
-let s:BASH_Printheader             = "%<%f%h%m%<  %=%{strftime('%x %X')}     Page %N"
-let s:BASH_Wrapper                 = s:plugin_dir.'bash-support/scripts/wrapper.sh'
+let s:BASH_XtermDefaults          = '-fa courier -fs 12 -geometry 80x24'
+let s:BASH_GuiSnippetBrowser      = 'gui'										" gui / commandline
+let s:BASH_GuiTemplateBrowser     = 'gui'										" gui / explorer / commandline
+let s:BASH_Printheader            = "%<%f%h%m%<  %=%{strftime('%x %X')}     Page %N"
+let s:BASH_Wrapper                = s:plugin_dir.'bash-support/scripts/wrapper.sh'
 "
 let s:BASH_Errorformat    			= '%f:\ %s\ %l:\ %m'
 let s:BASH_FormatDate						= '%x'
@@ -175,6 +175,11 @@ call BASH_CheckGlobal('BASH_Printheader           ')
 call BASH_CheckGlobal('BASH_SyntaxCheckOptionsGlob')
 call BASH_CheckGlobal('BASH_TemplateOverwrittenMsg')
 call BASH_CheckGlobal('BASH_XtermDefaults         ')
+call BASH_CheckGlobal('BASH_GlobalTemplateFile    ')
+
+if exists('g:BASH_GlobalTemplateFile') && g:BASH_GlobalTemplateFile != ''
+	let s:BASH_GlobalTemplateDir	= fnamemodify( s:BASH_GlobalTemplateFile, ":h" )
+endif
 "
 " set default geometry if not specified
 "
@@ -449,11 +454,11 @@ function!	BASH_InitMenu ()
 		exe "amenu  <silent> ".s:BASH_Root.'S&nippets.-SEP6-                    		  :'
 	endif
   "
-  exe "amenu  <silent>  ".s:BASH_Root.'S&nippets.edit\ &local\ templates<Tab>\\ntl          :call BASH_EditTemplates("local")<CR>'
-  exe "imenu  <silent>  ".s:BASH_Root.'S&nippets.edit\ &local\ templates<Tab>\\ntl     <C-C>:call BASH_EditTemplates("local")<CR>'
+  exe "amenu  <silent>  ".s:BASH_Root.'S&nippets.edit\ &local\ templates<Tab>\\ntl          :call BASH_BrowseTemplateFiles("Local")<CR>'
+  exe "imenu  <silent>  ".s:BASH_Root.'S&nippets.edit\ &local\ templates<Tab>\\ntl     <C-C>:call BASH_BrowseTemplateFiles("Local")<CR>'
 	if s:installation == 'system'
-		exe "amenu  <silent>  ".s:BASH_Root.'S&nippets.edit\ &global\ templates<Tab>\\ntg         :call BASH_EditTemplates("global")<CR>'
-		exe "imenu  <silent>  ".s:BASH_Root.'S&nippets.edit\ &global\ templates<Tab>\\ntg    <C-C>:call BASH_EditTemplates("global")<CR>'
+		exe "amenu  <silent>  ".s:BASH_Root.'S&nippets.edit\ &global\ templates<Tab>\\ntg         :call BASH_BrowseTemplateFiles("Global")<CR>'
+		exe "imenu  <silent>  ".s:BASH_Root.'S&nippets.edit\ &global\ templates<Tab>\\ntg    <C-C>:call BASH_BrowseTemplateFiles("Global")<CR>'
 	endif
   exe "amenu  <silent>  ".s:BASH_Root.'S&nippets.reread\ &templates<Tab>\\ntr               :call BASH_RereadTemplates("yes")<CR>'
   exe "imenu  <silent>  ".s:BASH_Root.'S&nippets.reread\ &templates <Tab>\\ntr         <C-C>:call BASH_RereadTemplates("yes")<CR>'
@@ -1116,7 +1121,7 @@ function! BASH_RereadTemplates ( msg )
 			if filereadable( s:BASH_GlobalTemplateFile )
 				call BASH_ReadTemplates( s:BASH_GlobalTemplateFile )
 			else
-				echomsg "Global template '.s:BASH_GlobalTemplateFile.' file not readable."
+				echomsg "Global template file '".s:BASH_GlobalTemplateFile."' not readable."
 				return
 			endif
 			let	messsage	= "Templates read from '".s:BASH_GlobalTemplateFile."'"
@@ -1132,7 +1137,7 @@ function! BASH_RereadTemplates ( msg )
 				call BASH_ReadTemplates( s:BASH_LocalTemplateFile )
 				let	messsage	= "Templates read from '".s:BASH_LocalTemplateFile."'"
 			else
-				echomsg "Local template '".s:BASH_LocalTemplateFile."' file not readable." 
+				echomsg "Local template file '".s:BASH_LocalTemplateFile."' not readable." 
 				return
 			endif
 			"
@@ -1146,48 +1151,27 @@ endfunction    " ----------  end of function BASH_RereadTemplates  ----------
 "  BASH_BrowseTemplateFiles     {{{1
 "------------------------------------------------------------------------------
 function! BASH_BrowseTemplateFiles ( type )
-	if filereadable( eval( 's:BASH_'.a:type.'TemplateFile' ) )
+	let	templatefile	= eval( 's:BASH_'.a:type.'TemplateFile' )
+	let	templatedir		= eval('s:BASH_'.a:type.'TemplateDir')
+	if isdirectory( templatedir )
 		if has("browse") && s:BASH_GuiTemplateBrowser == 'gui'
-			let	l:templatefile	= browse(0,"edit a template file", eval('s:BASH_'.a:type.'TemplateDir'), "" )
+			let	l:templatefile	= browse(0,"edit a template file", templatedir, "" )
 		else
 				let	l:templatefile	= ''
 			if s:BASH_GuiTemplateBrowser == 'explorer'
-				exe ':Explore '.eval('s:BASH_'.a:type.'TemplateDir')
+				exe ':Explore '.templatedir
 			endif
 			if s:BASH_GuiTemplateBrowser == 'commandline'
-				let	l:templatefile	= input("edit a template file", eval('s:BASH_'.a:type.'TemplateDir'), "file" )
+				let	l:templatefile	= input("edit a template file", templatedir, "file" )
 			endif
 		endif
 		if l:templatefile != ""
 			:execute "update! | split | edit ".l:templatefile
 		endif
 	else
-		echomsg a:type."template file does not exist or is not readable."
+		echomsg "Template directory '".templatedir."' does not exist."
 	endif
 endfunction    " ----------  end of function BASH_BrowseTemplateFiles  ----------
-
-"------------------------------------------------------------------------------
-"  BASH_EditTemplates     {{{1
-"------------------------------------------------------------------------------
-function! BASH_EditTemplates ( type )
-	"
-	if a:type == 'global'
-		if s:installation == 'system'
-			call BASH_BrowseTemplateFiles('Global')
-		else
-			echomsg "Bash-Support is user installed: no global template file"
-		endif
-	endif
-	"
-	if a:type == 'local'
-		if s:installation == 'system'
-			call BASH_BrowseTemplateFiles('Local')
-		else
-			call BASH_BrowseTemplateFiles('Global')
-		endif
-	endif
-	"
-endfunction    " ----------  end of function BASH_EditTemplates  ----------
 "
 "------------------------------------------------------------------------------
 "  BASH_ReadTemplates     {{{1
@@ -2572,6 +2556,7 @@ function! BASH_Settings ()
 	let txt = txt.'    code snippet directory :  "'.s:BASH_CodeSnippets."\"\n"
 	" ----- template files  ------------------------
 	let txt = txt.'            template style :  "'.s:BASH_ActualStyle."\"\n"
+	let txt = txt.'       plugin installation :  "'.s:installation."\"\n"
 	if s:installation == 'system'
 		let txt = txt.'global template directory :  "'.s:BASH_GlobalTemplateDir."\"\n"
 		if filereadable( s:BASH_LocalTemplateFile )

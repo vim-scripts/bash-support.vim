@@ -1,7 +1,7 @@
-*bashsupport.txt*                Bash Support               December 05 2010
+*bashsupport.txt*                Bash Support                January 25 2011
 
 bash Support                                      *bash-support* *bashsupport*
-                             Plugin version 3.4
+                             Plugin version 3.5
                         for Vim version 7.0 and above
                        Fritz Mehner  <mehner@fh-swf.de>
 
@@ -62,7 +62,8 @@ writing shell scripts. This plugin can be used for Bash version 4.0.
  6.     Bash dictionary                          |bashsupport-dictionary|
  7.     Additional Mappings                      |bashsupport-ad-mappings|
  8.     Windows particularities                  |bashsupport-windows|
- 9.     Release Notes                            |bashsupport-release-notes|
+ 9.     TROUBLESHOOTING                          |bashsupport-troubleshooting|
+10.     Release Notes                            |bashsupport-release-notes|
 
         How to add this help file to Vim's help  |add-local-help|
 
@@ -85,7 +86,7 @@ In NORMAL MODE the menu entry
  'Line End Comm.'
 will append a comment to the current line.
 
-In VISUAL MODE this entry will append aligned comments to all marked lines.
+In VISUAL MODE, this item will append aligned comments to all marked lines.
 Marking the 4 lines
 
  x11=11;
@@ -317,10 +318,9 @@ The default value is 'gui'.
 
 1.2.4  Code Templates                             *bashsupport-templates-menu*
 ---------------------
-Nearly all menu entries insert code snippets or comments. The nontrivial of
-these stuff is taken from template files and can be changed by the user to
-meet his requirements (see|bashsupport-templates|on how to use the template
-system).
+Nearly all menu entries insert code snippets or comments. All of these are
+contained within template files and can be changed by the user to meet their
+requirements (see|bashsupport-templates|on how to use the template system).
 
 The menu item 'edit local templates' opens the main template file in a local
 plugin installation. This is usually the file
@@ -988,6 +988,15 @@ You may want to copy the snippets coming with this plugin (in
 $VIM/vimfiles/bash-support/codesnippets) into the new directory or to set a
 link to the global directory.
 
+SPECIAL CASES. Some Linux distributions use non-standard names for Vim
+directories. SUSE has a directory '/usr/share/vim/site' to put plugins in.
+These directories will not be found automatically.  After installing the
+plugin below '/usr/share/vim/site' the use of the templates will be enabled by
+the following line in '~/.vimrc':
+
+  let g:BASH_GlobalTemplateFile = '/usr/share/vim/site/bash-support/templates/Templates'
+
+
 ------------------------------------------------------------------------------
 4.5  Non-standard installation                      *bashsupport-non-standard*
 ------------------------------------------------------------------------------
@@ -1009,8 +1018,8 @@ Please note that there is no trailing slash.
 5.1  TEMPLATE FILES                              *bashsupport-templates-files*
 ------------------------------------------------------------------------------
 
-Nearly all menu entries insert code snippets or comments. A part of this stuff
-is taken from template files and can be changed by the user to meet his
+Nearly all menu entries insert code snippets or comments. All of these are
+contained within template files and can be changed by the user to meet their
 requirements.
 
 The master template file is '$HOME/.vim/bash-support/templates/Templates' for
@@ -1499,7 +1508,7 @@ the document 'bash-hot-keys.pdf' for this restrictions.
 The file format is switches to 'unix' on entering a buffer of type 'sh'.
 The filetype can be changed by setting a global variable in file _vimrc:
 
-  let g:BASH_FileFormat	= 'something_else'
+  let g:BASH_FileFormat = 'something_else'
 
 CYGWIN
 ------
@@ -1508,7 +1517,34 @@ detected". To turn these messages off add the CYGWIN environment variable
 CYGWIN with the value "nodosfilewarning".
 
 ==============================================================================
-9.  Release Notes                                  *bashsupport-release-notes*
+9.  TROUBLESHOOTING                             *bashsupport-troubleshooting*
+==============================================================================
+
+* I do not see any new main menu item.
+  - Was the archive extracted into the right directory?
+
+* How can I see what was loaded?
+  - Use ':scriptnames' from the Vim command line.
+
+* No main menu item.
+  - Loading of plugin files must be enabled. If not use
+      :filetype plugin on
+    This is the minimal content of the file '$HOME/.vimrc'. Create one if there
+    is none, or better use customization.vimrc.
+
+* Most key mappings do not work.
+  - They are defined in a filetype plugin in '$HOME/.vim/ftplugin/'. Use
+    ':filetype' to check if filetype plugins are enabled. If not, add the line
+      filetype plugin on
+    to the file '~/.vimrc'.
+
+* Some hotkeys do not work.
+  - The hotkeys might be in use by your graphical desktop environment.  Under
+    KDE Ctrl-F9 is the hotkey which let you switch to the 9. desktop.  The key
+    settings can usually be redefined.
+
+==============================================================================
+10.  Release Notes                                  *bashsupport-release-notes*
 ==============================================================================
 
 See file 'README.bashsupport'.
