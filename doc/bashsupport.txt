@@ -1,7 +1,7 @@
-*bashsupport.txt*                Bash Support                January 25 2011
+*bashsupport.txt*                Bash Support                   June 26 2011
 
 bash Support                                      *bash-support* *bashsupport*
-                             Plugin version 3.5
+                             Plugin version 3.6
                         for Vim version 7.0 and above
                        Fritz Mehner  <mehner@fh-swf.de>
 
@@ -715,6 +715,7 @@ following character(s) will only be recognized for a short time.
   \sa     array element ${.[.]}           (n, i, v)
   \saa    array elements ${.[@]}          (n, i, v)
   \sa1    array elements, 1 word ${.[*]}  (n, i, v)
+  \ssa    subarray ${.[@]::}              (n, i, v)
   \san    no. of array elements ${#.[@]}  (n, i, v)
   \sai    list of arr. indices ${!.[*]}   (n, i, v)
 
@@ -938,16 +939,7 @@ The variable g:BASH_Root, if set (in '.vimrc' or in '.gvimrc'), gives the name
 of the single gVim root menu entry in which the Bash submenus will be put.
 The default is
                   'B&ash.'
-Note the terminating dot. A single root menu entry is appropriate if the
-screen is limited or several plugins are in use.
-
-If g:BASH_Root is set to "", this single root menu entry will not appear.  Put
-the following line in '.vimrc'
-
-  let g:BASH_Root = ""
-
-Now all submenus are put into the gVim root menu. Nice for a
-Bash-only-programmer and Bash courses.
+Note the terminating dot. 
 
 If you want to set the plugin root menu into another menu, e.g. 'Plugin',
 this is done by the following line in '.vimrc'
@@ -977,6 +969,14 @@ Copy the archive 'bash-support.zip' to this new directory and unpack it:
 (4) Generate the help tags:
   :helptags $VIM/vimfiles/doc
 
+SPECIAL CASES. Some Linux distributions use non-standard names for Vim
+directories. SUSE has a directory '/usr/share/vim/site' to put plugins in.
+These directories will not be found automatically.  After installing the
+plugin below '/usr/share/vim/site' the use of the templates will be enabled by
+the following line in '~/.vimrc':
+
+  let g:BASH_GlobalTemplateFile = '/usr/share/vim/site/bash-support/templates/Templates'
+
 
 As *** USER *** :
 
@@ -988,14 +988,26 @@ You may want to copy the snippets coming with this plugin (in
 $VIM/vimfiles/bash-support/codesnippets) into the new directory or to set a
 link to the global directory.
 
-SPECIAL CASES. Some Linux distributions use non-standard names for Vim
-directories. SUSE has a directory '/usr/share/vim/site' to put plugins in.
-These directories will not be found automatically.  After installing the
-plugin below '/usr/share/vim/site' the use of the templates will be enabled by
-the following line in '~/.vimrc':
+Create your private template directory:
 
-  let g:BASH_GlobalTemplateFile = '/usr/share/vim/site/bash-support/templates/Templates'
+  mkdir --parents  ~/.vim/bash-support/templates
 
+Create a private template file 'Templates' (compulsory) in this directory to
+overwrite some macros, e.g.
+
+ *|AUTHOR|*    = your name
+ *|AUTHORREF|* = ...
+ *|EMAIL|*     = ...
+ *|COMPANY|*   = ...
+ *|COPYRIGHT|* = ...
+
+You can also have local templates which overwrite the global ones. To suppress
+the messages in this case set a global variable in '~/.vimrc' (Windows:
+'~\_vimrc') :
+
+  let g:BASH_TemplateOverwrittenMsg= 'no'
+
+The default is 'yes'.
 
 ------------------------------------------------------------------------------
 4.5  Non-standard installation                      *bashsupport-non-standard*

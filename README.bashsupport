@@ -1,4 +1,4 @@
-README for bash-support.vim (Version 3.5) / February 25 2011
+README for bash-support.vim (Version 3.6) / June 01 2011
 
   *  INSTALLATION
   *  RELEASE NOTES 
@@ -55,7 +55,12 @@ structure which is needed below the local installation directory $HOME/.vim/
 
     (Read more about the template system in the plugin documentation)
 
-(1.4) Consider additional settings in the file '$HOME/.vimrc'.  The files
+(1.4) Make the plugin help accessable by typing the following command on the
+    Vim command line:
+
+    :helptags $HOME/.vim/doc/
+  
+(1.5) Consider additional settings in the file '$HOME/.vimrc'.  The files
     customization.vimrc and customization.gvimrc are replacements or extensions
     for your .vimrc and .gvimrc.  You may want to use parts of them. The files
     are documented. 
@@ -75,9 +80,9 @@ $HOME/vimfiles/ (find the value of $HOME with ":echo $HOME" from inside Vim).
 
       unzip bash-support.zip
 
-		If you have already an older version of bash-support and you have modified
-		the template files you may want to save your templates first and suppress
-		overwriting them with
+    If you have already an older version of bash-support and you have modified
+    the template files you may want to save your templates first and suppress
+    overwriting them with
 
       unzip bash-support.zip  -x *Templates *.template
 
@@ -85,9 +90,9 @@ $HOME/vimfiles/ (find the value of $HOME with ":echo $HOME" from inside Vim).
 
       :filetype plugin on
 
-		This is the minimal content of the file '$HOME/_vimrc'. Create one if there
-		is none or use the files in $HOME/vimfiles/bash-support/rc as a starting
-		point.
+    This is the minimal content of the file '$HOME/_vimrc'. Create one if there
+    is none or use the files in $HOME/vimfiles/bash-support/rc as a starting
+    point.
 
 (2.3) Set at least some personal details in the file 
     '$HOME/vimfiles/bash-support/templates/Templates' 
@@ -101,7 +106,12 @@ $HOME/vimfiles/ (find the value of $HOME with ":echo $HOME" from inside Vim).
 
     (Read more about the template system in the plugin documentation)
 
-(2.4) Consider additional settings in the file '$HOME/_vimrc'.  The files
+(2.4) Make the plugin help accessable by typing the following command on the
+    Vim command line:
+
+    :helptags $HOME\vimfiles\doc\
+  
+(2.5) Consider additional settings in the file '$HOME/_vimrc'.  The files
     customization.vimrc and customization.gvimrc are replacements or extensions
     for your _vimrc and _gvimrc. You may want to use parts of them.  The files
     are documented. 
@@ -114,11 +124,7 @@ There are a lot of features and options which can be used and influenced:
   *  removing the root menu
   *  using additional plugins
 
-Restart gVim/Vim generate the help tags 
-
-  :helptags ~/.vim/doc
-
-and look at the bashsupport help with
+Look at the bashsupport help with
 
   :help bashsupport 
 
@@ -130,8 +136,9 @@ and look at the bashsupport help with
              +-----------------------------------------------+
 
 =======================================================================================
-  RELEASE NOTES FOR VERSION 3.5
+  RELEASE NOTES FOR VERSION 3.6
 =======================================================================================
+- New hotkey \ssa and menu entry for the selection of a subarray.
 - Bugfix: detection of a systemwide installation can fail.
 - Minor improvements.
 

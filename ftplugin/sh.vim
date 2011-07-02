@@ -3,7 +3,7 @@
 "   Language :  bash
 "     Plugin :  bash-support.vim
 " Maintainer :  Fritz Mehner <mehner@fh-swf.de>
-"   Revision :  $Id: sh.vim,v 1.39 2010/12/04 12:34:44 mehner Exp $
+"   Revision :  $Id: sh.vim,v 1.40 2011/04/22 11:27:28 mehner Exp $
 "
 " -----------------------------------------------------------------
 "
@@ -190,6 +190,10 @@ vnoremap  <buffer>  <silent>  <LocalLeader>saa     s${[@]}<Left><Left><Left><Esc
  noremap  <buffer>  <silent>  <LocalLeader>sa1     a${[*]}<Left><Left><Left><Left>
 inoremap  <buffer>  <silent>  <LocalLeader>sa1      ${[*]}<Left><Left><Left><Left>
 vnoremap  <buffer>  <silent>  <LocalLeader>sa1     s${[*]}<Left><Left><Left><Esc>P
+
+ noremap  <buffer>  <silent>  <LocalLeader>ssa     a${[@]::}<Left><Left><Left><Left><Left><Left>
+inoremap  <buffer>  <silent>  <LocalLeader>ssa      ${[@]::}<Left><Left><Left><Left><Left><Left>
+vnoremap  <buffer>  <silent>  <LocalLeader>ssa     s${[@]::}<Left><Left><Left><Left><Left><Esc>P
 
  noremap  <buffer>  <silent>  <LocalLeader>san     a${#[@]}<Left><Left><Left><Left>
 inoremap  <buffer>  <silent>  <LocalLeader>san      ${#[@]}<Left><Left><Left><Left>

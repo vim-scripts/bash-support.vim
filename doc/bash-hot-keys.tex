@@ -8,15 +8,15 @@
 %%        Email:  mehner@fh-swf.de
 %%    Copyright:  Copyright (C)  2003-2010  Dr.-Ing. Fritz Mehner  (mehner@fh-swf.de)
 %%      Version:  see PluginVersion (below)
-%%     Revision:  $Id: bash-hot-keys.tex,v 1.30 2010/12/04 12:34:44 mehner Exp $
+%%     Revision:  $Id: bash-hot-keys.tex,v 1.32 2011/07/02 17:46:07 mehner Exp $
 %%      Created:  09.06.2003
 %%                
 %%        Notes:  
 %%                
 %%=====================================================================================
 
-\newcommand{\PluginVersion}{3.4}
-\newcommand{\ReleaseDate}{December 2010}
+\newcommand{\PluginVersion}{3.6}
+\newcommand{\ReleaseDate}{July 2011}
 
 \documentclass[oneside,11pt,a4paper,DIV18]{scrartcl}
 \usepackage[english]{babel}
@@ -121,6 +121,7 @@
 \hline \verb'\sa'  & array element\ \ \ \verb'${.[.]}'     \hfill (n, i, v)\\
 \hline \verb'\saa' & arr. elem.s (all) \ \verb'${.[@]}'    \hfill (n, i, v)\\
 \hline \verb'\sa1' & arr. elem.s (1 word) \ \verb'${.[*]}' \hfill (n, i, v)\\
+\hline \verb'\ssa' & subarray \ \verb'${.[@]::}'           \hfill (n, i, v)\\
 \hline \verb'\san' & no. of arr. elem.s \ \verb'${.[@]}'   \hfill (n, i, v)\\
 \hline \verb'\sai' & list of indices \ \verb'${.[*]}'      \hfill (n, i, v)\\
 \hline

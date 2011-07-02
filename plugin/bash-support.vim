@@ -19,7 +19,7 @@
 "
 "        Version:  see variable  g:BASH_Version  below
 "        Created:  26.02.2001
-"        License:  Copyright (c) 2001-2010, Fritz Mehner
+"        License:  Copyright (c) 2001-2011, Fritz Mehner
 "                  This program is free software; you can redistribute it and/or
 "                  modify it under the terms of the GNU General Public License as
 "                  published by the Free Software Foundation, version 2 of the
@@ -29,7 +29,7 @@
 "                  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 "                  PURPOSE.
 "                  See the GNU General Public License version 2 for more details.
-"       Revision:  $Id: bash-support.vim,v 1.87 2011/02/26 14:21:02 mehner Exp $
+"       Revision:  $Id: bash-support.vim,v 1.91 2011/05/29 09:44:19 mehner Exp $
 "
 "------------------------------------------------------------------------------
 "
@@ -38,7 +38,7 @@
 if exists("g:BASH_Version") || &cp
  finish
 endif
-let g:BASH_Version= "3.5"  						" version number of this script; do not change
+let g:BASH_Version= "3.6"  						" version number of this script; do not change
 "
 if v:version < 700
   echohl WarningMsg | echo 'plugin bash-support.vim needs Vim version >= 7'| echohl None
@@ -172,6 +172,7 @@ call BASH_CheckGlobal('BASH_Man                   ')
 call BASH_CheckGlobal('BASH_MenuHeader            ')
 call BASH_CheckGlobal('BASH_OutputGvim            ')
 call BASH_CheckGlobal('BASH_Printheader           ')
+call BASH_CheckGlobal('BASH_Root                  ')
 call BASH_CheckGlobal('BASH_SyntaxCheckOptionsGlob')
 call BASH_CheckGlobal('BASH_TemplateOverwrittenMsg')
 call BASH_CheckGlobal('BASH_XtermDefaults         ')
@@ -299,8 +300,10 @@ function!	BASH_InitMenu ()
 	"----- Submenu : BASH-Comments : Keywords  ----------------------------------------------------------
 	"
 	if s:BASH_MenuHeader == "yes"
-		exe "amenu ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:.Comments-1<Tab>Bash   <Nop>'
-		exe "amenu ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:.-Sep1-                :'
+	exe "amenu ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:.Comments-1<Tab>Bash   :call BASH_MenuTitle()<CR>'
+	exe "amenu ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:.-Sep1-                :'
+	exe "amenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).Comments-2<Tab>Bash  :call BASH_MenuTitle()<CR>'
+	exe "amenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).-Sep1-               :'
 	endif
 	"
 	exe " menu <silent> ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:.&BUG<Tab>\\ckb                $:call BASH_InsertTemplate("comment.keyword-bug")       <CR>'
@@ -319,32 +322,27 @@ function!	BASH_InitMenu ()
 	"
 	"----- Submenu : BASH-Comments : Tags  ----------------------------------------------------------
 	"
-	if s:BASH_MenuHeader == "yes"
-		exe "amenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).Comments-2<Tab>Bash  <Nop>'
-		exe "amenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).-Sep1-               :'
-	endif
-	"
-	exe "amenu  ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&AUTHOR                :call BASH_InsertMacroValue("AUTHOR")<CR>'
-	exe "amenu  ".s:BASH_Root.'&Comments.ta&gs\ (plugin).AUTHOR&REF             :call BASH_InsertMacroValue("AUTHORREF")<CR>'
-	exe "amenu  ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&COMPANY               :call BASH_InsertMacroValue("EMAIL")<CR>'
-	exe "amenu  ".s:BASH_Root.'&Comments.ta&gs\ (plugin).C&OPYRIGHTHOLDER       :call BASH_InsertMacroValue("COMPANY")<CR>'
-	exe "amenu  ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&EMAIL                 :call BASH_InsertMacroValue("PROJECT")<CR>'
-	exe "amenu  ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&PROJECT               :call BASH_InsertMacroValue("COPYRIGHTHOLDER")<CR>'
+	exe "amenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&AUTHOR                :call BASH_InsertMacroValue("AUTHOR")<CR>'
+	exe "amenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).AUTHOR&REF             :call BASH_InsertMacroValue("AUTHORREF")<CR>'
+	exe "amenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&COMPANY               :call BASH_InsertMacroValue("EMAIL")<CR>'
+	exe "amenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).C&OPYRIGHTHOLDER       :call BASH_InsertMacroValue("COMPANY")<CR>'
+	exe "amenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&EMAIL                 :call BASH_InsertMacroValue("PROJECT")<CR>'
+	exe "amenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&PROJECT               :call BASH_InsertMacroValue("COPYRIGHTHOLDER")<CR>'
 
-	exe "imenu  ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&AUTHOR           <Esc>:call BASH_InsertMacroValue("AUTHOR")<CR>a'
-	exe "imenu  ".s:BASH_Root.'&Comments.ta&gs\ (plugin).AUTHOR&REF        <Esc>:call BASH_InsertMacroValue("AUTHORREF")<CR>a'
-	exe "imenu  ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&COMPANY          <Esc>:call BASH_InsertMacroValue("EMAIL")<CR>a'
-	exe "imenu  ".s:BASH_Root.'&Comments.ta&gs\ (plugin).C&OPYRIGHTHOLDER  <Esc>:call BASH_InsertMacroValue("COMPANY")<CR>a'
-	exe "imenu  ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&EMAIL            <Esc>:call BASH_InsertMacroValue("PROJECT")<CR>a'
-	exe "imenu  ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&PROJECT          <Esc>:call BASH_InsertMacroValue("COPYRIGHTHOLDER")<CR>a'
+	exe "imenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&AUTHOR           <Esc>:call BASH_InsertMacroValue("AUTHOR")<CR>a'
+	exe "imenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).AUTHOR&REF        <Esc>:call BASH_InsertMacroValue("AUTHORREF")<CR>a'
+	exe "imenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&COMPANY          <Esc>:call BASH_InsertMacroValue("EMAIL")<CR>a'
+	exe "imenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).C&OPYRIGHTHOLDER  <Esc>:call BASH_InsertMacroValue("COMPANY")<CR>a'
+	exe "imenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&EMAIL            <Esc>:call BASH_InsertMacroValue("PROJECT")<CR>a'
+	exe "imenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&PROJECT          <Esc>:call BASH_InsertMacroValue("COPYRIGHTHOLDER")<CR>a'
 
-	exe "vmenu  ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&AUTHOR          s<Esc>:call BASH_InsertMacroValue("AUTHOR")<CR>a'
-	exe "vmenu  ".s:BASH_Root.'&Comments.ta&gs\ (plugin).AUTHOR&REF       s<Esc>:call BASH_InsertMacroValue("AUTHORREF")<CR>a'
-	exe "vmenu  ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&COMPANY         s<Esc>:call BASH_InsertMacroValue("EMAIL")<CR>a'
-	exe "vmenu  ".s:BASH_Root.'&Comments.ta&gs\ (plugin).C&OPYRIGHTHOLDER s<Esc>:call BASH_InsertMacroValue("COMPANY")<CR>a'
-	exe "vmenu  ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&EMAIL           s<Esc>:call BASH_InsertMacroValue("PROJECT")<CR>a'
-	exe "vmenu  ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&PROJECT         s<Esc>:call BASH_InsertMacroValue("COPYRIGHTHOLDER")<CR>a'
-	"
+	exe "vmenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&AUTHOR          s<Esc>:call BASH_InsertMacroValue("AUTHOR")<CR>a'
+	exe "vmenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).AUTHOR&REF       s<Esc>:call BASH_InsertMacroValue("AUTHORREF")<CR>a'
+	exe "vmenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&COMPANY         s<Esc>:call BASH_InsertMacroValue("EMAIL")<CR>a'
+	exe "vmenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).C&OPYRIGHTHOLDER s<Esc>:call BASH_InsertMacroValue("COMPANY")<CR>a'
+	exe "vmenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&EMAIL           s<Esc>:call BASH_InsertMacroValue("PROJECT")<CR>a'
+	exe "vmenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&PROJECT         s<Esc>:call BASH_InsertMacroValue("COPYRIGHTHOLDER")<CR>a'
+
 	exe " menu ".s:BASH_Root.'&Comments.&vim\ modeline<Tab>\\cv               :call BASH_CommentVimModeline()<CR>'
 	exe "imenu ".s:BASH_Root.'&Comments.&vim\ modeline<Tab>\\cv          <Esc>:call BASH_CommentVimModeline()<CR>'
 	"
@@ -434,6 +432,10 @@ function!	BASH_InitMenu ()
 	exe "anoremenu ".s:BASH_Root.'&Statements.arr\.\ elem\.s\ (&1\ word)\ \ \ ${\.[*]}<tab>\\sa1 		a${[*]}<Left><Left><Left><Left>'
 	exe "inoremenu ".s:BASH_Root.'&Statements.arr\.\ elem\.s\ (&1\ word)\ \ \ ${\.[*]}<tab>\\sa1 		 ${[*]}<Left><Left><Left><Left>'
 	exe "vnoremenu ".s:BASH_Root.'&Statements.arr\.\ elem\.s\ (&1\ word)\ \ \ ${\.[*]}<tab>\\sa1 		s${[*]}<Left><Left><Left><Esc>P'
+                                                                                   
+	exe "anoremenu ".s:BASH_Root.'&Statements.&subarray\ \ \ ${\.[@]::}<tab>\\ssa     	a${[@]::}<Left><Left><Left><Left><Left><Left>'
+	exe "inoremenu ".s:BASH_Root.'&Statements.&subarray\ \ \ ${\.[@]::}<tab>\\ssa     	 ${[@]::}<Left><Left><Left><Left><Left><Left>'
+	exe "vnoremenu ".s:BASH_Root.'&Statements.&subarray\ \ \ ${\.[@]::}<tab>\\ssa     	s${[@]::}<Left><Left><Left><Left><Left><Esc>P'
                                                                                    
 	exe "anoremenu ".s:BASH_Root.'&Statements.no\.\ of\ ele&m\.s\ \ \ ${#\.[@]}<tab>\\san		a${#[@]}<Left><Left><Left><Left>'
 	exe "inoremenu ".s:BASH_Root.'&Statements.no\.\ of\ ele&m\.s\ \ \ ${#\.[@]}<tab>\\san		 ${#[@]}<Left><Left><Left><Left>'
@@ -926,20 +928,17 @@ function!	BASH_InitMenu ()
 	"----- menu help     {{{2
 	"===============================================================================================
 	"
-	if s:BASH_Root != ""
-		"
-		exe " menu  <silent>  ".s:BASH_Root.'&Help.&Bash\ manual<Tab>\\hb                    :call BASH_help("b")<CR>'
-		exe "imenu  <silent>  ".s:BASH_Root.'&Help.&Bash\ manual<Tab>\\hb               <C-C>:call BASH_help("b")<CR>'
-		"
-		exe " menu  <silent>  ".s:BASH_Root.'&Help.&help\ (Bash\ builtins)<Tab>\\hh          :call BASH_help("h")<CR>'
-		exe "imenu  <silent>  ".s:BASH_Root.'&Help.&help\ (Bash\ builtins)<Tab>\\hh     <C-C>:call BASH_help("h")<CR>'
-		"
-		exe " menu  <silent>  ".s:BASH_Root.'&Help.&manual\ (utilities)<Tab>\\hm             :call BASH_help("m")<CR>'
-		exe "imenu  <silent>  ".s:BASH_Root.'&Help.&manual\ (utilities)<Tab>\\hm        <C-C>:call BASH_help("m")<CR>'
-		"
-		exe " menu  <silent>  ".s:BASH_Root.'&Help.bash-&support<Tab>\\hbs           :call BASH_HelpBASHsupport()<CR>'
-		exe "imenu  <silent>  ".s:BASH_Root.'&Help.bash-&support<Tab>\\hbs      <C-C>:call BASH_HelpBASHsupport()<CR>'
-	endif
+	exe " menu  <silent>  ".s:BASH_Root.'&Help.&Bash\ manual<Tab>\\hb                    :call BASH_help("b")<CR>'
+	exe "imenu  <silent>  ".s:BASH_Root.'&Help.&Bash\ manual<Tab>\\hb               <C-C>:call BASH_help("b")<CR>'
+	"
+	exe " menu  <silent>  ".s:BASH_Root.'&Help.&help\ (Bash\ builtins)<Tab>\\hh          :call BASH_help("h")<CR>'
+	exe "imenu  <silent>  ".s:BASH_Root.'&Help.&help\ (Bash\ builtins)<Tab>\\hh     <C-C>:call BASH_help("h")<CR>'
+	"
+	exe " menu  <silent>  ".s:BASH_Root.'&Help.&manual\ (utilities)<Tab>\\hm             :call BASH_help("m")<CR>'
+	exe "imenu  <silent>  ".s:BASH_Root.'&Help.&manual\ (utilities)<Tab>\\hm        <C-C>:call BASH_help("m")<CR>'
+	"
+	exe " menu  <silent>  ".s:BASH_Root.'&Help.bash-&support<Tab>\\hbs           :call BASH_HelpBASHsupport()<CR>'
+	exe "imenu  <silent>  ".s:BASH_Root.'&Help.bash-&support<Tab>\\hbs      <C-C>:call BASH_HelpBASHsupport()<CR>'
 	"
 endfunction		" ---------- end of function  BASH_InitMenu  ----------
 
@@ -947,69 +946,71 @@ endfunction		" ---------- end of function  BASH_InitMenu  ----------
 "  BASH Menu Header Initialization      {{{1
 "------------------------------------------------------------------------------
 function! BASH_InitMenuHeader ()
-	if s:BASH_Root != ""
-		exe "amenu   ".s:BASH_Root.'Bash          <Nop>'
-		exe "amenu   ".s:BASH_Root.'-Sep0-        :'
-	endif
-	exe "amenu ".s:BASH_Root.'&Comments.Comments<Tab>Bash   <Nop>'
+	exe "amenu ".s:BASH_Root.'Bash          :call BASH_MenuTitle()<CR>'
+	exe "amenu ".s:BASH_Root.'-Sep0-        :'
+	exe "amenu ".s:BASH_Root.'&Comments.Comments<Tab>Bash   :call BASH_MenuTitle()<CR>'
 	exe "amenu ".s:BASH_Root.'&Comments.-Sep0-              :'
-	exe "amenu ".s:BASH_Root.'&Statements.Statements<Tab>Bash  <Nop>'
+	exe "amenu ".s:BASH_Root.'&Statements.Statements<Tab>Bash  :call BASH_MenuTitle()<CR>'
 	exe "amenu ".s:BASH_Root.'&Statements.-Sep0-               :'
-	exe "amenu ".s:BASH_Root.'&Snippets.Snippets<Tab>Bash  <Nop>'
-	exe "amenu ".s:BASH_Root.'&Snippets.-Sep0-               :'
-	exe "amenu ".s:BASH_Root.'&Tests.Tests<Tab>Bash   <Nop>'
-	exe "amenu ".s:BASH_Root.'&Tests.-Sep0-             :'
-	exe "amenu ".s:BASH_Root.'&Tests.&arithmetic\ tests.Tests-1<Tab>Bash   <Nop>'
-	exe "amenu ".s:BASH_Root.'&Tests.&arithmetic\ tests.-Sep0-          :'
-	exe "amenu ".s:BASH_Root.'&Tests.file\ exists\ and\ has\ &permission.Tests-2<Tab>Bash      <Nop>'
-	exe "amenu ".s:BASH_Root.'&Tests.file\ exists\ and\ has\ &permission.-Sep0-         :'
-	exe "amenu ".s:BASH_Root.'&Tests.file\ exists\ and\ has\ t&ype.Tests-3<Tab>Bash               <Nop>'
-	exe "amenu ".s:BASH_Root.'&Tests.file\ exists\ and\ has\ t&ype.-Sep0-                         :'
-	exe "amenu ".s:BASH_Root.'&Tests.string\ &comparison.Tests-4<Tab>Bash               <Nop>'
-	exe "amenu ".s:BASH_Root.'&Tests.string\ &comparison.-Sep0-                         :'
-	exe "amenu ".s:BASH_Root.'&ParamSub.ParamSub<Tab>Bash <Nop>'
-	exe "amenu ".s:BASH_Root.'&ParamSub.-Sep0-           :'
-	exe "amenu ".s:BASH_Root.'Spec&Vars.SpecVars<Tab>Bash <Nop>'
-	exe "amenu ".s:BASH_Root.'Spec&Vars.-Sep0-          :'
-	exe "amenu ".s:BASH_Root.'E&nviron.Environ<Tab>Bash <Nop>'
-	exe "amenu ".s:BASH_Root.'E&nviron.-Sep0-        :'
-	exe "amenu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ BASH_VERSION.Environ-1<Tab>Bash <Nop>'
-	exe "amenu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ BASH_VERSION.-Sep0-         :'
-	exe "amenu ".s:BASH_Root.'E&nviron.&CDPATH\ \.\.\.\ FUNCNAME.Environ-2<Tab>Bash <Nop>'
-	exe "amenu ".s:BASH_Root.'E&nviron.&CDPATH\ \.\.\.\ FUNCNAME.-Sep0-           :'
-	exe "amenu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.Environ-3<Tab>Bash <Nop>'
-	exe "amenu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.-Sep0-           :'
-	exe "amenu ".s:BASH_Root.'E&nviron.&LC_ALL\ \.\.\.\ OSTYPE.Environ-4<Tab>Bash <Nop>'
-	exe "amenu ".s:BASH_Root.'E&nviron.&LC_ALL\ \.\.\.\ OSTYPE.-Sep0-         :'
-	exe "amenu ".s:BASH_Root.'E&nviron.&PATH\ \.\.\.\ UID.Environ-5<Tab>Bash  <Nop>'
-	exe "amenu ".s:BASH_Root.'E&nviron.&PATH\ \.\.\.\ UID.-Sep0-              :'
-	exe "amenu ".s:BASH_Root.'&Builtins.Builtins<Tab>Bash  <Nop>'
-	exe "amenu ".s:BASH_Root.'&Builtins.-Sep0-       	:'
-	exe "amenu ".s:BASH_Root.'&Builtins.Builtins\ \ &a-f.Builtins\ 1<Tab>Bash  <Nop>'
-	exe "amenu ".s:BASH_Root.'&Builtins.Builtins\ \ &a-f.-Sep0-         :'
-	exe "amenu ".s:BASH_Root.'&Builtins.Builtins\ \ &g-r.Builtins\ 2<Tab>Bash  <Nop>'
-	exe "amenu ".s:BASH_Root.'&Builtins.Builtins\ \ &g-r.-Sep0-         :'
-	exe "amenu ".s:BASH_Root.'&Builtins.Builtins\ \ &s-w.Builtins\ 3<Tab>Bash <Nop>'
-	exe "amenu ".s:BASH_Root.'&Builtins.Builtins\ \ &s-w.-Sep0-         :'
-	exe "amenu ".s:BASH_Root.'s&et.set<Tab>Bash   <Nop>'
-	exe "amenu ".s:BASH_Root.'s&et.-Sep0-       	:'
-	exe "amenu ".s:BASH_Root.'sh&opt.shopt<Tab>Bash   <Nop>'
-	exe "amenu ".s:BASH_Root.'sh&opt.-Sep0-    				    :'
-	exe "amenu ".s:BASH_Root.'sh&opt.shopt\ \ &a-g.shopt\ 1<Tab>Bash   <Nop>'
-	exe "amenu ".s:BASH_Root.'sh&opt.shopt\ \ &a-g.-Sep0-    				    :'
-	exe "amenu ".s:BASH_Root.'sh&opt.shopt\ \ &h-x.shopt\ 2<Tab>Bash   <Nop>'
-	exe "amenu ".s:BASH_Root.'sh&opt.shopt\ \ &h-x.-Sep0-    				    :'
-	exe "amenu ".s:BASH_Root.'Rege&x.Regex<Tab>bash   <Nop>'
-	exe "amenu ".s:BASH_Root.'Rege&x.-Sep0-      :'
-	exe "amenu ".s:BASH_Root.'&I/O-Redir.I/O-Redir<Tab>Bash   <Nop>'
-	exe "amenu ".s:BASH_Root.'&I/O-Redir.-Sep0-    				    :'
-	exe "amenu ".s:BASH_Root.'&Run.Run<Tab>Bash  <Nop>'
-	exe "amenu ".s:BASH_Root.'&Run.-Sep0-        :'
-	exe "amenu ".s:BASH_Root.'&Help.Help<Tab>Bash  <Nop>'
+	exe "amenu ".s:BASH_Root.'&Snippets.Snippets<Tab>Bash  :call BASH_MenuTitle()<CR>'
+	exe "amenu ".s:BASH_Root.'&Snippets.-Sep0-             :'
+	exe "amenu ".s:BASH_Root.'&Tests.Tests<Tab>Bash   :call BASH_MenuTitle()<CR>'
+	exe "amenu ".s:BASH_Root.'&Tests.-Sep0-           :'
+	exe "amenu ".s:BASH_Root.'&Tests.&arithmetic\ tests.Tests-1<Tab>Bash   :call BASH_MenuTitle()<CR>'
+	exe "amenu ".s:BASH_Root.'&Tests.&arithmetic\ tests.-Sep0-             :'
+	exe "amenu ".s:BASH_Root.'&Tests.file\ exists\ and\ has\ &permission.Tests-2<Tab>Bash :call BASH_MenuTitle()<CR>'
+	exe "amenu ".s:BASH_Root.'&Tests.file\ exists\ and\ has\ &permission.-Sep0-           :'
+	exe "amenu ".s:BASH_Root.'&Tests.file\ exists\ and\ has\ t&ype.Tests-3<Tab>Bash       :call BASH_MenuTitle()<CR>'
+	exe "amenu ".s:BASH_Root.'&Tests.file\ exists\ and\ has\ t&ype.-Sep0-                 :'
+	exe "amenu ".s:BASH_Root.'&Tests.string\ &comparison.Tests-4<Tab>Bash                 :call BASH_MenuTitle()<CR>'
+	exe "amenu ".s:BASH_Root.'&Tests.string\ &comparison.-Sep0-                           :'
+	exe "amenu ".s:BASH_Root.'&ParamSub.ParamSub<Tab>Bash :call BASH_MenuTitle()<CR>'
+	exe "amenu ".s:BASH_Root.'&ParamSub.-Sep0-            :'
+	exe "amenu ".s:BASH_Root.'Spec&Vars.SpecVars<Tab>Bash :call BASH_MenuTitle()<CR>'
+	exe "amenu ".s:BASH_Root.'Spec&Vars.-Sep0-            :'
+	exe "amenu ".s:BASH_Root.'E&nviron.Environ<Tab>Bash   :call BASH_MenuTitle()<CR>'
+	exe "amenu ".s:BASH_Root.'E&nviron.-Sep0-             :'
+	exe "amenu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ BASH_VERSION.Environ-1<Tab>Bash :call BASH_MenuTitle()<CR>'
+	exe "amenu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ BASH_VERSION.-Sep0-             :'
+	exe "amenu ".s:BASH_Root.'E&nviron.&CDPATH\ \.\.\.\ FUNCNAME.Environ-2<Tab>Bash   :call BASH_MenuTitle()<CR>'
+	exe "amenu ".s:BASH_Root.'E&nviron.&CDPATH\ \.\.\.\ FUNCNAME.-Sep0-               :'
+	exe "amenu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.Environ-3<Tab>Bash   :call BASH_MenuTitle()<CR>'
+	exe "amenu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.-Sep0-               :'
+	exe "amenu ".s:BASH_Root.'E&nviron.&LC_ALL\ \.\.\.\ OSTYPE.Environ-4<Tab>Bash :call BASH_MenuTitle()<CR>'
+	exe "amenu ".s:BASH_Root.'E&nviron.&LC_ALL\ \.\.\.\ OSTYPE.-Sep0-             :'
+	exe "amenu ".s:BASH_Root.'E&nviron.&PATH\ \.\.\.\ UID.Environ-5<Tab>Bash      :call BASH_MenuTitle()<CR>'
+	exe "amenu ".s:BASH_Root.'E&nviron.&PATH\ \.\.\.\ UID.-Sep0-                  :'
+	exe "amenu ".s:BASH_Root.'&Builtins.Builtins<Tab>Bash  :call BASH_MenuTitle()<CR>'
+	exe "amenu ".s:BASH_Root.'&Builtins.-Sep0-             :'
+	exe "amenu ".s:BASH_Root.'&Builtins.Builtins\ \ &a-f.Builtins\ 1<Tab>Bash  :call BASH_MenuTitle()<CR>'
+	exe "amenu ".s:BASH_Root.'&Builtins.Builtins\ \ &a-f.-Sep0-                :'
+	exe "amenu ".s:BASH_Root.'&Builtins.Builtins\ \ &g-r.Builtins\ 2<Tab>Bash  :call BASH_MenuTitle()<CR>'
+	exe "amenu ".s:BASH_Root.'&Builtins.Builtins\ \ &g-r.-Sep0-                :'
+	exe "amenu ".s:BASH_Root.'&Builtins.Builtins\ \ &s-w.Builtins\ 3<Tab>Bash  :call BASH_MenuTitle()<CR>'
+	exe "amenu ".s:BASH_Root.'&Builtins.Builtins\ \ &s-w.-Sep0-                :'
+	exe "amenu ".s:BASH_Root.'s&et.set<Tab>Bash   :call BASH_MenuTitle()<CR>'
+	exe "amenu ".s:BASH_Root.'s&et.-Sep0-         :'
+	exe "amenu ".s:BASH_Root.'sh&opt.shopt<Tab>Bash   :call BASH_MenuTitle()<CR>'
+	exe "amenu ".s:BASH_Root.'sh&opt.-Sep0-           :'
+	exe "amenu ".s:BASH_Root.'sh&opt.shopt\ \ &a-g.shopt\ 1<Tab>Bash :call BASH_MenuTitle()<CR>'
+	exe "amenu ".s:BASH_Root.'sh&opt.shopt\ \ &a-g.-Sep0-            :'
+	exe "amenu ".s:BASH_Root.'sh&opt.shopt\ \ &h-x.shopt\ 2<Tab>Bash :call BASH_MenuTitle()<CR>'
+	exe "amenu ".s:BASH_Root.'sh&opt.shopt\ \ &h-x.-Sep0-            :'
+	exe "amenu ".s:BASH_Root.'Rege&x.Regex<Tab>bash   :call BASH_MenuTitle()<CR>'
+	exe "amenu ".s:BASH_Root.'Rege&x.-Sep0-           :'
+	exe "amenu ".s:BASH_Root.'&I/O-Redir.I/O-Redir<Tab>Bash :call BASH_MenuTitle()<CR>'
+	exe "amenu ".s:BASH_Root.'&I/O-Redir.-Sep0-             :'
+	exe "amenu ".s:BASH_Root.'&Run.Run<Tab>Bash   :call BASH_MenuTitle()<CR>'
+	exe "amenu ".s:BASH_Root.'&Run.-Sep0-         :'
+	exe "amenu ".s:BASH_Root.'&Help.Help<Tab>Bash :call BASH_MenuTitle()<CR>'
 	exe "amenu ".s:BASH_Root.'&Help.-Sep0-        :'
 endfunction    " ----------  end of function BASH_InitMenuHeader  ----------
 
-let	s:BashEnvironmentVariables	= [
+function! BASH_MenuTitle ()
+	echo "This is a menu title."
+endfunction    " ----------  end of function BASH_MenuTitle  ----------
+
+let	s:BashEnvironmentVariables  = [
 	\	'&BASH',        'BASH&PID',               'BASH_&ALIASES',
 	\	'BASH_ARG&C',   'BASH_ARG&V',             'BASH_C&MDS',       'BASH_C&OMMAND',
 	\	'BASH_&ENV',    'BASH_E&XECUTION_STRING', 'BASH_&LINENO',     'BASH&OPTS',      'BASH_&REMATCH',
@@ -2871,24 +2872,7 @@ endfunction    " ----------  end of function BASH_ToolMenu  ----------
 "------------------------------------------------------------------------------
 function! BASH_RemoveGuiMenus ()
 	if s:BASH_MenuVisible == 1
-		if s:BASH_Root == ""
-			aunmenu <silent> Comments
-			aunmenu <silent> Statements
-			aunmenu <silent> Snippets
-			aunmenu <silent> Tests
-			aunmenu <silent> ParamSub
-			aunmenu <silent> SpecVars
-			aunmenu <silent> Environ
-			aunmenu <silent> Builtins
-			aunmenu <silent> set
-			aunmenu <silent> shopt
-			aunmenu <silent> Regex
-			aunmenu <silent> I/O-Redir
-			aunmenu <silent> Run
-			aunmenu <silent> Help
-		else
-			exe "aunmenu <silent> ".s:BASH_Root
-		endif
+		exe "aunmenu <silent> ".s:BASH_Root
 		"
 		aunmenu <silent> &Tools.Unload\ Bash\ Support
 		call BASH_ToolMenu()
