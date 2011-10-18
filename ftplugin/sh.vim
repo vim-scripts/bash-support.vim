@@ -3,7 +3,7 @@
 "   Language :  bash
 "     Plugin :  bash-support.vim
 " Maintainer :  Fritz Mehner <mehner@fh-swf.de>
-"   Revision :  $Id: sh.vim,v 1.40 2011/04/22 11:27:28 mehner Exp $
+"   Revision :  $Id: sh.vim,v 1.43 2011/10/07 18:11:24 mehner Exp $
 "
 " -----------------------------------------------------------------
 "
@@ -86,13 +86,13 @@ inoremap  <buffer>  <silent>  <LocalLeader>hbs     <Esc>:call BASH_HelpBASHsuppo
 "
 " ---------- comment menu ----------------------------------------------------
 "
- noremap  <buffer>  <silent>  <LocalLeader>cl           :call BASH_LineEndComment()<CR>
-inoremap  <buffer>  <silent>  <LocalLeader>cl      <Esc>:call BASH_LineEndComment()<CR>
+ noremap  <buffer>  <silent>  <LocalLeader>cl           :call BASH_EndOfLineComment()<CR>
+inoremap  <buffer>  <silent>  <LocalLeader>cl           :call BASH_EndOfLineComment()<CR>
 vnoremap  <buffer>  <silent>  <LocalLeader>cl      <Esc>:call BASH_MultiLineEndComments()<CR>a
 
- noremap  <buffer>  <silent>  <LocalLeader>cj           :call BASH_AdjustLineEndComm("a")<CR>
-inoremap  <buffer>  <silent>  <LocalLeader>cj      <Esc>:call BASH_AdjustLineEndComm("a")<CR>
-vnoremap  <buffer>  <silent>  <LocalLeader>cj      <Esc>:call BASH_AdjustLineEndComm("v")<CR>
+ noremap  <buffer>  <silent>  <LocalLeader>cj           :call BASH_AdjustLineEndComm()<CR>
+inoremap  <buffer>  <silent>  <LocalLeader>cj      <Esc>:call BASH_AdjustLineEndComm()<CR>
+vnoremap  <buffer>  <silent>  <LocalLeader>cj           :call BASH_AdjustLineEndComm()<CR>
 
  noremap  <buffer>  <silent>  <LocalLeader>cs           :call BASH_GetLineEndCommCol()<CR>
 inoremap  <buffer>  <silent>  <LocalLeader>cs      <Esc>:call BASH_GetLineEndCommCol()<CR>
@@ -106,7 +106,7 @@ inoremap  <buffer>  <silent>  <LocalLeader>ch      <Esc>:call BASH_InsertTemplat
 
  noremap    <buffer>  <silent>  <LocalLeader>cc         :call BASH_CommentToggle()<CR>j
 inoremap    <buffer>  <silent>  <LocalLeader>cc    <Esc>:call BASH_CommentToggle()<CR>j
-vnoremap    <buffer>  <silent>  <LocalLeader>cc    <Esc>:call BASH_CommentToggleRange()<CR>j
+vnoremap    <buffer>  <silent>  <LocalLeader>cc         :call BASH_CommentToggle()<CR>j
 
  noremap  <buffer>  <silent>  <LocalLeader>cd           :call BASH_InsertDateAndTime('d')<CR>
 inoremap  <buffer>  <silent>  <LocalLeader>cd      <Esc>:call BASH_InsertDateAndTime('d')<CR>a
@@ -242,15 +242,24 @@ inoremap  <buffer>  <silent>  <LocalLeader>px    [:xdigit:]
 "
 " ---------- snippet menu ----------------------------------------------------
 "
- noremap  <buffer>  <silent>  <LocalLeader>nr         :call BASH_CodeSnippets("r")<CR>
- noremap  <buffer>  <silent>  <LocalLeader>nw         :call BASH_CodeSnippets("w")<CR>
+nnoremap  <buffer>  <silent>  <LocalLeader>nr         :call BASH_CodeSnippets("r")<CR>
+nnoremap  <buffer>  <silent>  <LocalLeader>nw         :call BASH_CodeSnippets("w")<CR>
 vnoremap  <buffer>  <silent>  <LocalLeader>nw    <C-C>:call BASH_CodeSnippets("wv")<CR>
- noremap  <buffer>  <silent>  <LocalLeader>ne         :call BASH_CodeSnippets("e")<CR>
-  "
- noremap  <buffer>  <silent>  <LocalLeader>ntl        :call BASH_EditTemplates("local")<CR>
- noremap  <buffer>  <silent>  <LocalLeader>ntg        :call BASH_EditTemplates("global")<CR>
- noremap  <buffer>  <silent>  <LocalLeader>ntr        :call BASH_RereadTemplates()<CR>
- noremap  <buffer>            <LocalLeader>nts   <Esc>:BashStyle<Space>
+nnoremap  <buffer>  <silent>  <LocalLeader>ne         :call BASH_CodeSnippets("e")<CR>
+"
+nnoremap  <buffer>  <silent>  <LocalLeader>ntl        :call BASH_BrowseTemplateFiles("Local")<CR>
+nnoremap  <buffer>  <silent>  <LocalLeader>ntg        :call BASH_BrowseTemplateFiles("Global")<CR> 
+nnoremap  <buffer>  <silent>  <LocalLeader>ntr        :call BASH_RereadTemplates()<CR>
+nnoremap  <buffer>            <LocalLeader>nts        :BashStyle<Space>
+"
+ inoremap  <buffer>  <silent>  <LocalLeader>nr    <Esc>:call BASH_CodeSnippets("r")<CR>
+ inoremap  <buffer>  <silent>  <LocalLeader>nw    <Esc>:call BASH_CodeSnippets("w")<CR>
+ inoremap  <buffer>  <silent>  <LocalLeader>ne    <Esc>:call BASH_CodeSnippets("e")<CR>
+"
+ inoremap  <buffer>  <silent>  <LocalLeader>ntl   <Esc>:call BASH_BrowseTemplateFiles("Local")<CR>
+ inoremap  <buffer>  <silent>  <LocalLeader>ntg   <Esc>:call BASH_BrowseTemplateFiles("Global")<CR> 
+ inoremap  <buffer>  <silent>  <LocalLeader>ntr   <Esc>:call BASH_RereadTemplates()<CR>
+ inoremap  <buffer>            <LocalLeader>nts   <Esc>:BashStyle<Space>
 "
 " ---------- test  ----------------------------------------------------
 "

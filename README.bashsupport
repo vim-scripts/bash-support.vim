@@ -1,4 +1,4 @@
-README for bash-support.vim (Version 3.6) / June 01 2011
+README for bash-support.vim (Version 3.7) / October 18 2011
 
   *  INSTALLATION
   *  RELEASE NOTES 
@@ -136,11 +136,15 @@ Look at the bashsupport help with
              +-----------------------------------------------+
 
 =======================================================================================
-  RELEASE NOTES FOR VERSION 3.6
+  RELEASE NOTES FOR VERSION 3.7
 =======================================================================================
-- New hotkey \ssa and menu entry for the selection of a subarray.
-- Bugfix: detection of a systemwide installation can fail.
-- Minor improvements.
+- The three hotkeys \cl, \cj, \cc allow a range, e.g. '3\cl' (see help text and
+	bash-hot-key.pdf).
+- Plugin loads faster: loading the templates is delayed until the first use.
+- Plugin now works with pathogen.vim.
+- Menus will always be generated (for the use with :emenu).
+- Bugfix: no local templates available with a system-wide installation (thanks to Iain Arnell).
+- Several improvements.
 
 =======================================================================================
   OLDER RELEASE NOTES : see file 'ChangeLog'

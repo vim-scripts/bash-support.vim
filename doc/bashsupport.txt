@@ -1,7 +1,7 @@
-*bashsupport.txt*                Bash Support                   June 26 2011
+*bashsupport.txt*                Bash Support                 October 18 2011
 
 bash Support                                      *bash-support* *bashsupport*
-                             Plugin version 3.6
+                             Plugin version 3.7
                         for Vim version 7.0 and above
                        Fritz Mehner  <mehner@fh-swf.de>
 
@@ -664,115 +664,122 @@ card, part of this package).
 Hint: Typing speed matters. The combination of a leader ('\') and the
 following character(s) will only be recognized for a short time.
 
-  Legend:  (i) insert mode, (n) normal mode, (v) visual mode
+Some mappings can be used with range (of lines). In normal mode
+  \cl
+appends a end-of-line comment to the current line,  whereas 
+  4\cl
+appends end-of-line comments to the 4 lines starting with the current line.
+
+Legend:  (i) insert mode, (n) normal mode, (v) visual mode
+         [n] range
 
   -- bash help ------------------------------------------
 
-  \hb     Displays the Bash manual        (n, i)
-  \hh     Displays help for the builtin   (n, i)
-          under the cursor (Bash help).
-          The tab expansion is active.
-  \hm     displays the manual for the     (n, i)
-          Bash command under the cursor
-          The tab expansion is active.
-  \hbs    Displays the Vim help page for  (n, i)
-          this plugin.
+     \hb     Displays the Bash manual        (n, i)
+     \hh     Displays help for the builtin   (n, i)
+             under the cursor (Bash help).
+             The tab expansion is active.
+     \hm     displays the manual for the     (n, i)
+             Bash command under the cursor
+             The tab expansion is active.
+     \hbs    Displays the Vim help page for  (n, i)
+             this plugin.
 
   -- Comments -------------------------------------------
 
-  \cl     line end comment                (n, i, v)
-  \cj     adjust end-of-line comments     (n, i, v)
-  \cs     set end-of-line comment column  (n)
-  \cfr    frame comment                   (n, i)
-  \cfu    function description            (n, i)
-  \ch     file header                     (n, i)
-  \ckb    keyword comment BUG             (n, i)
-  \ckt    keyword comment TODO            (n, i)
-  \ckr    keyword comment TRICKY          (n, i)
-  \ckw    keyword comment WARNING         (n, i)
-  \ckn    keyword comment New_Keyword     (n, i)
-  \cc     toggle comment                  (n, i, v)
-  \cd     date                            (n, i, v)
-  \ct     date & time                     (n, i, v)
-  \ce     echo "..."                      (n, i)
-  \cr     remove echo "..."               (n, i)
-  \cv     vim modeline                    (n, i)
+  [n]\cl     line end comment                (n, i, v)
+  [n]\cj     adjust end-of-line comments     (n, i, v)
+     \cs     set end-of-line comment column  (n)
+     \cfr    frame comment                   (n, i)
+     \cfu    function description            (n, i)
+     \ch     file header                     (n, i)
+     \ckb    keyword comment BUG             (n, i)
+     \ckt    keyword comment TODO            (n, i)
+     \ckr    keyword comment TRICKY          (n, i)
+     \ckw    keyword comment WARNING         (n, i)
+     \ckn    keyword comment New_Keyword     (n, i)
+  [n]\cc     toggle comment                  (n, i, v)
+     \cd     date                            (n, i, v)
+     \ct     date & time                     (n, i, v)
+     \ce     echo "..."                      (n, i)
+     \cr     remove echo "..."               (n, i)
+     \cv     vim modeline                    (n, i)
 
   -- Statements ------------------------------------------
 
-  \sc     case in ... esac                (n, i)
-  \sei    elif then                       (n, i)
-  \sf     for in do done                  (n, i, v)
-  \sfo    for ((...)) do done             (n, i, v)
-  \si     if then fi                      (n, i, v)
-  \sie    if then else fi                 (n, i, v)
-  \ss     select in do done               (n, i, v)
-  \st     until do done                   (n, i, v)
-  \sw     while do done                   (n, i, v)
-  \sfu    function                        (n, i, v)
-  \se     echo -e "..."                   (n, i, v)
-  \sp     printf "..."                    (n, i, v)
-  \sa     array element ${.[.]}           (n, i, v)
-  \saa    array elements ${.[@]}          (n, i, v)
-  \sa1    array elements, 1 word ${.[*]}  (n, i, v)
-  \ssa    subarray ${.[@]::}              (n, i, v)
-  \san    no. of array elements ${#.[@]}  (n, i, v)
-  \sai    list of arr. indices ${!.[*]}   (n, i, v)
+     \sc     case in ... esac                (n, i)
+     \sei    elif then                       (n, i)
+     \sf     for in do done                  (n, i, v)
+     \sfo    for ((...)) do done             (n, i, v)
+     \si     if then fi                      (n, i, v)
+     \sie    if then else fi                 (n, i, v)
+     \ss     select in do done               (n, i, v)
+     \st     until do done                   (n, i, v)
+     \sw     while do done                   (n, i, v)
+     \sfu    function                        (n, i, v)
+     \se     echo -e "..."                   (n, i, v)
+     \sp     printf "..."                    (n, i, v)
+     \sa     array element ${.[.]}           (n, i, v)
+     \saa    array elements ${.[@]}          (n, i, v)
+     \sa1    array elements, 1 word ${.[*]}  (n, i, v)
+     \ssa    subarray ${.[@]::}              (n, i, v)
+     \san    no. of array elements ${#.[@]}  (n, i, v)
+     \sai    list of arr. indices ${!.[*]}   (n, i, v)
 
   -- Snippets --------------------------------------------
 
-  \nr     read code snippet               (n)
-  \nw     write code snippet              (n, v)
-  \ne     edit code snippet               (n)
+     \nr     read code snippet               (n, i)
+     \nw     write code snippet              (n, v, i)
+     \ne     edit code snippet               (n, i)
 
-  \ntl    edit local templates            (n)
-  \ntg    edit global templates           (n)
-  \ntr    reread the templates            (n)
-  \nts    switch template style           (n)
+     \ntl    edit local templates            (n, i)
+     \ntg    edit global templates           (n, i)
+     \ntr    reread the templates            (n, i)
+     \nts    switch template style           (n, i)
 
   -- Test ------------------------------------------------
 
-  \t      unary operator, 1 arg.: \verb'[ -  ]'  (n, i)
-  \t2     binary operator, 2 arg: \verb'[  -  ]' (n, i)
+     \t      unary operator, 1 arg.: \verb'[ -  ]'  (n, i)
+     \t2     binary operator, 2 arg: \verb'[  -  ]' (n, i)
 
   -- Regular Expression ----------------------------------
 
-  \xm     [[  =~  ]]                      (n, i)
+     \xm     [[  =~  ]]                      (n, i)
 
   -- POSIX Character Classes -----------------------------
 
-  \pan    [:alnum:]                       (n, i)
-  \pal    [:alpha:]                       (n, i)
-  \pas    [:ascii:]                       (n, i)
-  \pb     [:blank:]                       (n, i)
-  \pc     [:cntrl:]                       (n, i)
-  \pd     [:digit:]                       (n, i)
-  \pg     [:graph:]                       (n, i)
-  \pl     [:lower:]                       (n, i)
-  \ppr    [:print:]                       (n, i)
-  \ppu    [:punct:]                       (n, i)
-  \ps     [:space:]                       (n, i)
-  \pu     [:upper:]                       (n, i)
-  \pw     [:word:]                        (n, i)
-  \px     [:xdigit:]                      (n, i)
+     \pan    [:alnum:]                       (n, i)
+     \pal    [:alpha:]                       (n, i)
+     \pas    [:ascii:]                       (n, i)
+     \pb     [:blank:]                       (n, i)
+     \pc     [:cntrl:]                       (n, i)
+     \pd     [:digit:]                       (n, i)
+     \pg     [:graph:]                       (n, i)
+     \pl     [:lower:]                       (n, i)
+     \ppr    [:print:]                       (n, i)
+     \ppu    [:punct:]                       (n, i)
+     \ps     [:space:]                       (n, i)
+     \pu     [:upper:]                       (n, i)
+     \pw     [:word:]                        (n, i)
+     \px     [:xdigit:]                      (n, i)
 
   -- Run -------------------------------------------------
 
-  \rr     update file, run script         (n, i)
-  \rc     update file, check syntax       (n, i)
-  \rco    syntax check options            (n, i)
-  \ra     set command line arguments      (n, i)
-  \rd     start debugger                  (n, i)
-  \re     make script executable          (n, i)
-  \rh     hardcopy buffer to FILENAME.ps  (n, i)
-  \rs     settings and hot keys           (n, i)
-  \rt     set xterm size                  (n, i)
-  \ro     change output destination       (n, i)
+     \rr     update file, run script         (n, i)
+     \rc     update file, check syntax       (n, i)
+     \rco    syntax check options            (n, i)
+     \ra     set command line arguments      (n, i)
+     \rd     start debugger                  (n, i)
+     \re     make script executable          (n, i)
+     \rh     hardcopy buffer to FILENAME.ps  (n, i)
+     \rs     settings and hot keys           (n, i)
+     \rt     set xterm size                  (n, i)
+     \ro     change output destination       (n, i)
 
   -- Load / Unload bash Support --------------------------
 
-  \lbs    Load Bash Support               (n, GUI only)
-  \ubs    Unload Bash Support             (n, GUI only)
+     \lbs    Load Bash Support               (n, GUI only)
+     \ubs    Unload Bash Support             (n, GUI only)
 
 
 File 'bash-hot-keys.pdf' contains a reference card for these key mappings.
@@ -862,7 +869,7 @@ global variable                default value
 ---------------------------------------------------------------------------------------
 g:BASH_GlobalTemplateFile      root_dir.'bash-support/templates/Templates'
 g:BASH_LocalTemplateFile       $HOME.'/.vim/bash-support/templates/Templates'
-g:BASH_TemplateOverwrittenMsg  'yes'
+g:BASH_TemplateOverriddenMsg   'no'
 g:BASH_Ctrl_j                  'on'
 
 g:BASH_CodeSnippets            $HOME.'/.vim/bash-support/codesnippets'     (Linux/U**X)
@@ -896,7 +903,7 @@ g:BASH_AlsoBash                ''
  
            g:BASH_GlobalTemplateFile     : sets the global template file  (see|bashsupport-templates|)
            g:BASH_LocalTemplateFile      : sets the local template file  (see|bashsupport-templates|)
-           g:BASH_TemplateOverwrittenMsg : message if a template is overwritten
+           g:BASH_TemplateOverriddenMsg  : message if a template is overridden
            g:BASH_Ctrl_j                 : hotkey Ctrl-j  'on'/'off' (see|bashsupport-ad-mappings|)
  
  2. group: g:BASH_CodeSnippets           : The name of the code snippet directory
@@ -1001,13 +1008,12 @@ overwrite some macros, e.g.
  *|COMPANY|*   = ...
  *|COPYRIGHT|* = ...
 
-You can also have local templates which overwrite the global ones. To suppress
-the messages in this case set a global variable in '~/.vimrc' (Windows:
-'~\_vimrc') :
+You can also have local templates which override the global ones. To see a
+messages in this case set a global variable in '~/.vimrc' (Windows: '~\_vimrc'):
 
-  let g:BASH_TemplateOverwrittenMsg= 'no'
+  let g:BASH_TemplateOverriddenMsg= 'yes'
 
-The default is 'yes'.
+The default is 'no'.
 
 ------------------------------------------------------------------------------
 4.5  Non-standard installation                      *bashsupport-non-standard*

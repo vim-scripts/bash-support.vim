@@ -1,4 +1,11 @@
 =======================================================================================
+  RELEASE NOTES FOR VERSION 3.6
+=======================================================================================
+- New hotkey \ssa and menu entry for the selection of a subarray.
+- Bugfix: detection of a systemwide installation can fail.
+- Minor improvements.
+
+=======================================================================================
   RELEASE NOTES FOR VERSION 3.5
 =======================================================================================
 - Bugfix: detection of a systemwide installation can fail.
