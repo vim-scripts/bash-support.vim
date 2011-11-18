@@ -1,4 +1,4 @@
-README for bash-support.vim (Version 3.7) / October 18 2011
+README for bash-support.vim (Version 3.8) / November 18 2011
 
   *  INSTALLATION
   *  RELEASE NOTES 
@@ -136,15 +136,19 @@ Look at the bashsupport help with
              +-----------------------------------------------+
 
 =======================================================================================
-  RELEASE NOTES FOR VERSION 3.7
+  RELEASE NOTES FOR VERSION 3.8
 =======================================================================================
-- The three hotkeys \cl, \cj, \cc allow a range, e.g. '3\cl' (see help text and
-	bash-hot-key.pdf).
-- Plugin loads faster: loading the templates is delayed until the first use.
-- Plugin now works with pathogen.vim.
-- Menus will always be generated (for the use with :emenu).
-- Bugfix: no local templates available with a system-wide installation (thanks to Iain Arnell).
-- Several improvements.
+- New comment submenu 'script sections'.
+- Two new hotkeys \css, \ckc for commenting.
+- Two new plugin tags: LICENSE,ORGANIZATION
+- Run menu: new item 'Bash cmd. line arg.' (\rba).  
+- I/O-Redir-menu: additional item'>&2'
+- System-wide installation: minimal Template file for a user will automatically
+  be added.
+- Hotkey renamed: \t -> \t1
+- A few code snippets for debugging added.
+- Bugfix: \cl did not work in insert mode.
+- Other minor bugs fixed.
 
 =======================================================================================
   OLDER RELEASE NOTES : see file 'ChangeLog'

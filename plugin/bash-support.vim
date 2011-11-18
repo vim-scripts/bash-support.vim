@@ -29,7 +29,7 @@
 "                  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 "                  PURPOSE.
 "                  See the GNU General Public License version 2 for more details.
-"       Revision:  $Id: bash-support.vim,v 1.101 2011/10/18 11:50:38 mehner Exp $
+"       Revision:  $Id: bash-support.vim,v 1.106 2011/11/18 10:16:45 mehner Exp $
 "
 "------------------------------------------------------------------------------
 "
@@ -38,7 +38,7 @@
 if exists("g:BASH_Version") || &cp
  finish
 endif
-let g:BASH_Version= "3.7"  						" version number of this script; do not change
+let g:BASH_Version= "3.8"  						" version number of this script; do not change
 "
 if v:version < 700
   echohl WarningMsg | echo 'plugin bash-support.vim needs Vim version >= 7'| echohl None
@@ -63,7 +63,7 @@ if	s:MSWIN
 				\		substitute( expand("$HOME"),   '\', '/', 'g' ) ) == 0
 		" USER INSTALLATION ASSUMED
 		let s:installation						= 'local'
-		let s:plugin_dir  						= expand('<sfile>:p:h:h')
+		let s:plugin_dir  						= substitute( expand('<sfile>:p:h:h'), '\', '/', 'g' )
 		let s:BASH_LocalTemplateFile	= s:plugin_dir.'/bash-support/templates/Templates'
 		let s:BASH_LocalTemplateDir		= fnamemodify( s:BASH_LocalTemplateFile, ":p:h" ).'/'
 	else
@@ -76,11 +76,9 @@ if	s:MSWIN
 		let s:BASH_LocalTemplateDir		= fnamemodify( s:BASH_LocalTemplateFile, ":p:h" ).'/'
 	end
 	"
-	let s:BASH_CodeSnippets 				= s:plugin_dir.'/bash-support/codesnippets/'
 	let s:BASH_BASH									= 'bash.exe'
 	let s:BASH_Man        					= 'man.exe'
 	let s:BASH_OutputGvim						= 'xterm'
-	let s:escfilename     					= ''
 else
   " ==========  Linux/Unix  ======================================================
 	"
@@ -100,16 +98,16 @@ else
 		let s:BASH_LocalTemplateDir		= fnamemodify( s:BASH_LocalTemplateFile, ":p:h" ).'/'
 	end
 	"
-	let s:BASH_CodeSnippets  				= s:plugin_dir.'/bash-support/codesnippets/'
 	let s:BASH_BASH									= $SHELL
 	let s:BASH_Man        					= 'man'
 	let s:BASH_OutputGvim						= 'vim'
-	let s:escfilename     					= ' \%#[]'
   " ==============================================================================
 endif
 "
 "
 "------------------------------------------------------------------------------
+"
+	let s:BASH_CodeSnippets  				= s:plugin_dir.'/bash-support/codesnippets/'
 "
 "  g:BASH_Dictionary_File  must be global
 "
@@ -122,6 +120,7 @@ endif
 let s:BASH_MenuHeader							= 'yes'
 let s:BASH_Root										= 'B&ash.'
 let s:BASH_Debugger               = 'term'
+let s:BASH_bashdb                 = 'bashdb'
 let s:BASH_LineEndCommColDefault  = 49
 let s:BASH_LoadMenus              = 'yes'
 let s:BASH_TemplateOverriddenMsg	= 'no'
@@ -166,6 +165,7 @@ call BASH_CheckGlobal('BASH_Errorformat           ')
 call BASH_CheckGlobal('BASH_CodeSnippets          ')
 call BASH_CheckGlobal('BASH_Ctrl_j                ')
 call BASH_CheckGlobal('BASH_Debugger              ')
+call BASH_CheckGlobal('BASH_bashdb                ')
 call BASH_CheckGlobal('BASH_FileFormat            ')
 call BASH_CheckGlobal('BASH_FormatDate            ')
 call BASH_CheckGlobal('BASH_FormatTime            ')
@@ -224,10 +224,12 @@ let s:BASH_TemplateJumpTarget1  = '<+'.s:BASH_TJT.'+>\|{+'.s:BASH_TJT.'+}'
 let s:BASH_TemplateJumpTarget2  = '<-'.s:BASH_TJT.'->\|{-'.s:BASH_TJT.'-}'
 let s:BASH_Macro                = {'|AUTHOR|'         : 'first name surname',
 											\						 '|AUTHORREF|'      : '',
-											\						 '|EMAIL|'          : '',
 											\						 '|COMPANY|'        : '',
-											\						 '|PROJECT|'        : '',
 											\						 '|COPYRIGHTHOLDER|': '',
+											\						 '|EMAIL|'          : '',
+											\						 '|LICENSE|'        : 'GNU General Public License',
+											\						 '|ORGANIZATION|'   : '',
+											\						 '|PROJECT|'        : '',
 											\		 				 '|STYLE|'          : ''
 											\						}
 let	s:BASH_MacroFlag						= {	':l' : 'lowercase'			,
@@ -262,8 +264,8 @@ function!	BASH_InitMenu ()
 	"-------------------------------------------------------------------------------
 	"----- menu Comments   {{{2
 	"-------------------------------------------------------------------------------
-	exe " menu           ".s:BASH_Root.'&Comments.end-of-&line\ comment<Tab>\\cl                    :call BASH_EndOfLineComment()<CR>A'
-	exe "imenu           ".s:BASH_Root.'&Comments.end-of-&line\ comment<Tab>\\cl                    :call BASH_EndOfLineComment()<CR>A'
+	exe " menu           ".s:BASH_Root.'&Comments.end-of-&line\ comment<Tab>\\cl                    :call BASH_EndOfLineComment()<CR>'
+	exe "imenu           ".s:BASH_Root.'&Comments.end-of-&line\ comment<Tab>\\cl               <Esc>:call BASH_EndOfLineComment()<CR>'
 	exe "vmenu <silent>  ".s:BASH_Root.'&Comments.end-of-&line\ comment<Tab>\\cl               <Esc>:call BASH_MultiLineEndComments()<CR>A'
 
 	exe " menu <silent>  ".s:BASH_Root.'&Comments.ad&just\ end-of-line\ com\.<Tab>\\cj              :call BASH_AdjustLineEndComm()<CR>'
@@ -302,28 +304,51 @@ function!	BASH_InitMenu ()
 	"
 	exe "amenu ".s:BASH_Root.'&Comments.-SEP4-                    :'
 	"
+	"----- Submenu : BASH-Comments : Script Sections  ----------------------------------------------------------
+	"
+	if s:BASH_MenuHeader == "yes"
+	exe "amenu ".s:BASH_Root.'&Comments.&script\ sections<Tab>\\css.Comments-1<Tab>Bash   :call BASH_MenuTitle()<CR>'
+	exe "amenu ".s:BASH_Root.'&Comments.&script\ sections<Tab>\\css.-Sep1-                :'
+	endif
+	"
+	exe " menu <silent> ".s:BASH_Root.'&Comments.&script\ sections<Tab>\\css.GLOBALS            :call BASH_InsertTemplate("comment.file-sections-globals"   )<CR>'
+	exe " menu <silent> ".s:BASH_Root.'&Comments.&script\ sections<Tab>\\css.CMD\.LINE          :call BASH_InsertTemplate("comment.file-sections-cmdline"   )<CR>'
+	exe " menu <silent> ".s:BASH_Root.'&Comments.&script\ sections<Tab>\\css.SAN\.CHECKS        :call BASH_InsertTemplate("comment.file-sections-sanchecks" )<CR>'
+	exe " menu <silent> ".s:BASH_Root.'&Comments.&script\ sections<Tab>\\css.FUNCT\.DEF\.       :call BASH_InsertTemplate("comment.file-sections-functdef"  )<CR>'
+	exe " menu <silent> ".s:BASH_Root.'&Comments.&script\ sections<Tab>\\css.TRAPS              :call BASH_InsertTemplate("comment.file-sections-traps"     )<CR>'
+	exe " menu <silent> ".s:BASH_Root.'&Comments.&script\ sections<Tab>\\css.MAIN\ SCRIPT       :call BASH_InsertTemplate("comment.file-sections-mainscript")<CR>'
+	exe " menu <silent> ".s:BASH_Root.'&Comments.&script\ sections<Tab>\\css.STAT+CLEANUP       :call BASH_InsertTemplate("comment.file-sections-statistics")<CR>'
+	"
+	exe "imenu <silent> ".s:BASH_Root.'&Comments.&script\ sections<Tab>\\css.GLOBALS       <C-C>:call BASH_InsertTemplate("comment.file-sections-globals"   )<CR>'
+	exe "imenu <silent> ".s:BASH_Root.'&Comments.&script\ sections<Tab>\\css.CMD\.LINE     <C-C>:call BASH_InsertTemplate("comment.file-sections-cmdline"   )<CR>'
+	exe "imenu <silent> ".s:BASH_Root.'&Comments.&script\ sections<Tab>\\css.SAN\.CHECKS   <C-C>:call BASH_InsertTemplate("comment.file-sections-sanchecks" )<CR>'
+	exe "imenu <silent> ".s:BASH_Root.'&Comments.&script\ sections<Tab>\\css.FUNCT\.DEF\.  <C-C>:call BASH_InsertTemplate("comment.file-sections-functdef"  )<CR>'
+	exe "imenu <silent> ".s:BASH_Root.'&Comments.&script\ sections<Tab>\\css.TRAPS         <C-C>:call BASH_InsertTemplate("comment.file-sections-traps"     )<CR>'
+	exe "imenu <silent> ".s:BASH_Root.'&Comments.&script\ sections<Tab>\\css.MAIN\ SCRIPT  <C-C>:call BASH_InsertTemplate("comment.file-sections-mainscript")<CR>'
+	exe "imenu <silent> ".s:BASH_Root.'&Comments.&script\ sections<Tab>\\css.STAT+CLEANUP  <C-C>:call BASH_InsertTemplate("comment.file-sections-statistics")<CR>'
+	"
 	"----- Submenu : BASH-Comments : Keywords  ----------------------------------------------------------
 	"
 	if s:BASH_MenuHeader == "yes"
-	exe "amenu ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:.Comments-1<Tab>Bash   :call BASH_MenuTitle()<CR>'
-	exe "amenu ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:.-Sep1-                :'
-	exe "amenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).Comments-2<Tab>Bash  :call BASH_MenuTitle()<CR>'
+	exe "amenu ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:<Tab>\\ckc.Comments-2<Tab>Bash :call BASH_MenuTitle()<CR>'
+	exe "amenu ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:<Tab>\\ckc.-Sep1-              :'
+	exe "amenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).Comments-3<Tab>Bash  :call BASH_MenuTitle()<CR>'
 	exe "amenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).-Sep1-               :'
 	endif
 	"
-	exe " menu <silent> ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:.&BUG<Tab>\\ckb                $:call BASH_InsertTemplate("comment.keyword-bug")       <CR>'
-	exe " menu <silent> ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:.&TODO<Tab>\\ckt               $:call BASH_InsertTemplate("comment.keyword-todo")      <CR>'
-	exe " menu <silent> ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:.T&RICKY<Tab>\\ckr             $:call BASH_InsertTemplate("comment.keyword-tricky")    <CR>'
-	exe " menu <silent> ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:.&WARNING<Tab>\\ckw            $:call BASH_InsertTemplate("comment.keyword-warning")   <CR>'
-	exe " menu <silent> ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:.&WORKAROUND<Tab>\\cko         $:call BASH_InsertTemplate("comment.keyword-workaround")<CR>'
-	exe " menu <silent> ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:.&new\ keyword<Tab>\\ckn       $:call BASH_InsertTemplate("comment.keyword-keyword")   <CR>'
+	exe " menu <silent> ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:<Tab>\\ckc.&BUG<Tab>\\ckb                :call BASH_InsertTemplate("comment.keyword-bug")       <CR>'
+	exe " menu <silent> ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:<Tab>\\ckc.&TODO<Tab>\\ckt               :call BASH_InsertTemplate("comment.keyword-todo")      <CR>'
+	exe " menu <silent> ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:<Tab>\\ckc.T&RICKY<Tab>\\ckr             :call BASH_InsertTemplate("comment.keyword-tricky")    <CR>'
+	exe " menu <silent> ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:<Tab>\\ckc.&WARNING<Tab>\\ckw            :call BASH_InsertTemplate("comment.keyword-warning")   <CR>'
+	exe " menu <silent> ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:<Tab>\\ckc.&WORKAROUND<Tab>\\cko         :call BASH_InsertTemplate("comment.keyword-workaround")<CR>'
+	exe " menu <silent> ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:<Tab>\\ckc.&new\ keyword<Tab>\\ckn       :call BASH_InsertTemplate("comment.keyword-keyword")   <CR>'
 	"
-	exe "imenu <silent> ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:.&BUG<Tab>\\ckb           <C-C>$:call BASH_InsertTemplate("comment.keyword-bug")     <CR>'
-	exe "imenu <silent> ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:.&TODO<Tab>\\ckt          <C-C>$:call BASH_InsertTemplate("comment.keyword-todo")    <CR>'
-	exe "imenu <silent> ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:.T&RICKY<Tab>\\ckr        <C-C>$:call BASH_InsertTemplate("comment.keyword-tricky")  <CR>'
-	exe "imenu <silent> ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:.&WARNING<Tab>\\ckw       <C-C>$:call BASH_InsertTemplate("comment.keyword-warning") <CR>'
-	exe "imenu <silent> ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:.&WORKAROUND<Tab>\\cko    <C-C>$:call BASH_InsertTemplate("comment.keyword-workaround") <CR>'
-	exe "imenu <silent> ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:.&new\ keyword<Tab>\\ckn  <C-C>$:call BASH_InsertTemplate("comment.keyword-keyword")        <CR>'
+	exe "imenu <silent> ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:<Tab>\\ckc.&BUG<Tab>\\ckb           <C-C>:call BASH_InsertTemplate("comment.keyword-bug")     <CR>'
+	exe "imenu <silent> ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:<Tab>\\ckc.&TODO<Tab>\\ckt          <C-C>:call BASH_InsertTemplate("comment.keyword-todo")    <CR>'
+	exe "imenu <silent> ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:<Tab>\\ckc.T&RICKY<Tab>\\ckr        <C-C>:call BASH_InsertTemplate("comment.keyword-tricky")  <CR>'
+	exe "imenu <silent> ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:<Tab>\\ckc.&WARNING<Tab>\\ckw       <C-C>:call BASH_InsertTemplate("comment.keyword-warning") <CR>'
+	exe "imenu <silent> ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:<Tab>\\ckc.&WORKAROUND<Tab>\\cko    <C-C>:call BASH_InsertTemplate("comment.keyword-workaround") <CR>'
+	exe "imenu <silent> ".s:BASH_Root.'&Comments.\#\ \:&KEYWORD\:<Tab>\\ckc.&new\ keyword<Tab>\\ckn  <C-C>:call BASH_InsertTemplate("comment.keyword-keyword")        <CR>'
 	"
 	"----- Submenu : BASH-Comments : Tags  ----------------------------------------------------------
 	"
@@ -332,6 +357,8 @@ function!	BASH_InitMenu ()
 	exe "amenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&COMPANY               :call BASH_InsertMacroValue("EMAIL")<CR>'
 	exe "amenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).C&OPYRIGHTHOLDER       :call BASH_InsertMacroValue("COMPANY")<CR>'
 	exe "amenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&EMAIL                 :call BASH_InsertMacroValue("PROJECT")<CR>'
+	exe "amenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&LICENSE               :call BASH_InsertMacroValue("LICENSE")<CR>'
+	exe "amenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&ORGANIZATION          :call BASH_InsertMacroValue("ORGANIZATION")<CR>'
 	exe "amenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&PROJECT               :call BASH_InsertMacroValue("COPYRIGHTHOLDER")<CR>'
 
 	exe "imenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&AUTHOR           <Esc>:call BASH_InsertMacroValue("AUTHOR")<CR>a'
@@ -339,6 +366,8 @@ function!	BASH_InitMenu ()
 	exe "imenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&COMPANY          <Esc>:call BASH_InsertMacroValue("EMAIL")<CR>a'
 	exe "imenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).C&OPYRIGHTHOLDER  <Esc>:call BASH_InsertMacroValue("COMPANY")<CR>a'
 	exe "imenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&EMAIL            <Esc>:call BASH_InsertMacroValue("PROJECT")<CR>a'
+	exe "imenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&LICENSE          <Esc>:call BASH_InsertMacroValue("LICENSE")<CR>'
+	exe "imenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&ORGANIZATION     <Esc>:call BASH_InsertMacroValue("ORGANIZATION")<CR>'
 	exe "imenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&PROJECT          <Esc>:call BASH_InsertMacroValue("COPYRIGHTHOLDER")<CR>a'
 
 	exe "vmenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&AUTHOR          s<Esc>:call BASH_InsertMacroValue("AUTHOR")<CR>a'
@@ -346,6 +375,8 @@ function!	BASH_InitMenu ()
 	exe "vmenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&COMPANY         s<Esc>:call BASH_InsertMacroValue("EMAIL")<CR>a'
 	exe "vmenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).C&OPYRIGHTHOLDER s<Esc>:call BASH_InsertMacroValue("COMPANY")<CR>a'
 	exe "vmenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&EMAIL           s<Esc>:call BASH_InsertMacroValue("PROJECT")<CR>a'
+	exe "vmenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&LICENSE         s<Esc>:call BASH_InsertMacroValue("LICENSE")<CR>'
+	exe "vmenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&ORGANIZATION    s<Esc>:call BASH_InsertMacroValue("ORGANIZATION")<CR>'
 	exe "vmenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&PROJECT         s<Esc>:call BASH_InsertMacroValue("COPYRIGHTHOLDER")<CR>a'
 
 	exe " menu ".s:BASH_Root.'&Comments.&vim\ modeline<Tab>\\cv               :call BASH_CommentVimModeline()<CR>'
@@ -647,11 +678,11 @@ function!	BASH_InitMenu ()
 	exe "inoremenu ".s:BASH_Root.'Spec&Vars.&number\ of\ posit\.\ param\.<tab>${#}								${#}'
 	exe "inoremenu ".s:BASH_Root.'Spec&Vars.&all\ posit\.\ param\.\ (quoted\ spaces)<tab>${*}			${*}'
 	exe "inoremenu ".s:BASH_Root.'Spec&Vars.all\ posit\.\ param\.\ (&unquoted\ spaces)<tab>${@}		${@}'
-	exe "inoremenu ".s:BASH_Root.'Spec&Vars.n&umber\ of\ posit\.\ parameters<tab>${#@}	        	a${#@}'
+	exe "inoremenu ".s:BASH_Root.'Spec&Vars.n&umber\ of\ posit\.\ parameters<tab>${#@}	        	${#@}'
 	exe "inoremenu ".s:BASH_Root.'Spec&Vars.&return\ code\ of\ last\ command<tab>${?}							${?}'
 	exe "inoremenu ".s:BASH_Root.'Spec&Vars.&PID\ of\ this\ shell<tab>${$}												${$}'
 	exe "inoremenu ".s:BASH_Root.'Spec&Vars.&flags\ set<tab>${-}																	${-}'
-	exe "inoremenu ".s:BASH_Root.'Spec&Vars.&last\ argument\ of\ prev\.\ command<tab>${_}					a${_}'
+	exe "inoremenu ".s:BASH_Root.'Spec&Vars.&last\ argument\ of\ prev\.\ command<tab>${_}					${_}'
 	exe "inoremenu ".s:BASH_Root.'Spec&Vars.PID\ of\ last\ &background\ command<tab>${!}					${!}'
 	"
 	"-------------------------------------------------------------------------------
@@ -816,6 +847,7 @@ function!	BASH_InitMenu ()
 	exe "	menu ".s:BASH_Root.'&I/O-Redir.take\ STDIN\ from\ file<Tab><												a<Space><<Space>'
 	exe "	menu ".s:BASH_Root.'&I/O-Redir.direct\ STDOUT\ to\ file<Tab>>												a<Space>><Space>'
 	exe "	menu ".s:BASH_Root.'&I/O-Redir.direct\ STDOUT\ to\ file;\ append<Tab>>>							a<Space>>><Space>'
+	exe "	menu ".s:BASH_Root.'&I/O-Redir.direct\ STDOUT\ to\ STDERR<Tab>>&2				      			a<Space>>&2'
 	"
 	exe "	menu ".s:BASH_Root.'&I/O-Redir.direct\ file\ descr\.\ n\ to\ file<Tab>n>						a<Space>><Space><ESC>2hi'
 	exe "	menu ".s:BASH_Root.'&I/O-Redir.direct\ file\ descr\.\ n\ to\ file;\ append<Tab>n>> 	a<Space>>><Space><ESC>3hi'
@@ -838,6 +870,7 @@ function!	BASH_InitMenu ()
 	exe "imenu ".s:BASH_Root.'&I/O-Redir.direct\ file\ descr\.\ n\ to\ file<Tab>n>						<Space>><Space><ESC>2hi'
 	exe "imenu ".s:BASH_Root.'&I/O-Redir.direct\ file\ descr\.\ n\ to\ file;\ append<Tab>n>> 	<Space>>><Space><ESC>3hi'
 	exe "imenu ".s:BASH_Root.'&I/O-Redir.take\ file\ descr\.\ n\ from\ file<Tab>n< 						<Space><<Space><ESC>2hi'
+	exe "imenu ".s:BASH_Root.'&I/O-Redir.direct\ STDOUT\ to\ STDERR<Tab>>&2				      			<Space>>&2'
 	"
 	exe "imenu ".s:BASH_Root.'&I/O-Redir.duplicate\ STDOUT\ to\ file\ descr\.\ n<Tab>n>&			<Space>>& <Left><Left><Left>'
 	exe "imenu ".s:BASH_Root.'&I/O-Redir.duplicate\ STDIN\ from\ file\ descr\.\ n<Tab>n<&			<Space><& <Left><Left><Left>'
@@ -869,17 +902,20 @@ function!	BASH_InitMenu ()
 	"
 	"   set execution right only for the user ( may be user root ! )
 	"
-	exe " menu <silent> ".s:BASH_Root.'&Run.cmd\.\ line\ &arg\.<Tab>\\ra\ \ <S-F9>            :call BASH_CmdLineArguments()<CR>'
-	exe "imenu <silent> ".s:BASH_Root.'&Run.cmd\.\ line\ &arg\.<Tab>\\ra\ \ <S-F9>       <C-C>:call BASH_CmdLineArguments()<CR>'
+	exe " menu <silent> ".s:BASH_Root.'&Run.script\ cmd\.\ line\ &arg\.<Tab>\\ra\ \ <S-F9>            :call BASH_ScriptCmdLineArguments()<CR>'
+	exe "imenu <silent> ".s:BASH_Root.'&Run.script\ cmd\.\ line\ &arg\.<Tab>\\ra\ \ <S-F9>       <C-C>:call BASH_ScriptCmdLineArguments()<CR>'
+	"
+	exe " menu <silent> ".s:BASH_Root.'&Run.Bash\ cmd\.\ line\ &arg\.<Tab>\\rba                       :call BASH_BashCmdLineArguments()<CR>'
+	exe "imenu <silent> ".s:BASH_Root.'&Run.Bash\ cmd\.\ line\ &arg\.<Tab>\\rba                  <C-C>:call BASH_BashCmdLineArguments()<CR>'
+	"
+	exe " menu <silent> ".s:BASH_Root.'&Run.save\ +\ &check\ syntax<Tab>\\rc\ \ <A-F9>      :call BASH_SyntaxCheck()<CR>'
+	exe "imenu <silent> ".s:BASH_Root.'&Run.save\ +\ &check\ syntax<Tab>\\rc\ \ <A-F9> <C-C>:call BASH_SyntaxCheck()<CR>'
+	exe " menu <silent> ".s:BASH_Root.'&Run.syntax\ check\ o&ptions<Tab>\\rco               :call BASH_SyntaxCheckOptionsLocal()<CR>'
+	exe "imenu <silent> ".s:BASH_Root.'&Run.syntax\ check\ o&ptions<Tab>\\rco          <C-C>:call BASH_SyntaxCheckOptionsLocal()<CR>'
+	"
 	if	!s:MSWIN
 		exe " menu <silent> ".s:BASH_Root.'&Run.start\ &debugger<Tab>\\rd\ \ \ \ <F9>           :call BASH_Debugger()<CR>'
 		exe "imenu <silent> ".s:BASH_Root.'&Run.start\ &debugger<Tab>\\rd\ \ \ \ <F9>      <C-C>:call BASH_Debugger()<CR>'
-	endif
-		exe " menu <silent> ".s:BASH_Root.'&Run.save\ +\ &check\ syntax<Tab>\\rc\ \ <A-F9>      :call BASH_SyntaxCheck()<CR>'
-		exe "imenu <silent> ".s:BASH_Root.'&Run.save\ +\ &check\ syntax<Tab>\\rc\ \ <A-F9> <C-C>:call BASH_SyntaxCheck()<CR>'
-		exe " menu <silent> ".s:BASH_Root.'&Run.syntax\ check\ o&ptions<Tab>\\rco               :call BASH_SyntaxCheckOptionsLocal()<CR>'
-		exe "imenu <silent> ".s:BASH_Root.'&Run.syntax\ check\ o&ptions<Tab>\\rco          <C-C>:call BASH_SyntaxCheckOptionsLocal()<CR>'
-	if	!s:MSWIN
 		exe " menu <silent> ".s:BASH_Root.'&Run.make\ script\ &executable<Tab>\\re              :call BASH_MakeScriptExecutable()<CR>'
 		exe "imenu <silent> ".s:BASH_Root.'&Run.make\ script\ &executable<Tab>\\re         <C-C>:call BASH_MakeScriptExecutable()<CR>'
 	endif
@@ -1116,41 +1152,66 @@ endfunction    " ----------  end of function BASH_ShoptMenus  ----------
 "  BASH_RereadTemplates     {{{1
 "  rebuild commands and the menu from the (changed) template file
 "------------------------------------------------------------------------------
-function! BASH_RereadTemplates ( msg )
-		let s:style							= 'default'
-    let s:BASH_Template     = { 'default' : {} }
-    let s:BASH_FileVisited  = []
-		let	messsage							= ''
-		"
-		if s:installation == 'system'
-			"
-			if filereadable( s:BASH_GlobalTemplateFile )
-				call BASH_ReadTemplates( s:BASH_GlobalTemplateFile )
-			else
-				echomsg "Global template file '".s:BASH_GlobalTemplateFile."' not readable."
-				return
-			endif
-			let	messsage	= "Templates read from '".s:BASH_GlobalTemplateFile."'"
-			"
-			if filereadable( s:BASH_LocalTemplateFile )
-				call BASH_ReadTemplates( s:BASH_LocalTemplateFile )
-				let messsage	= messsage." and '".s:BASH_LocalTemplateFile."'"
-			endif
-			"
+function! BASH_RereadTemplates ( displaymsg )
+	let s:style							= 'default'
+	let s:BASH_Template     = { 'default' : {} }
+	let s:BASH_FileVisited  = []
+	let	messsage							= ''
+	"
+	if s:installation == 'system'
+		"-------------------------------------------------------------------------------
+		" system installation
+		"-------------------------------------------------------------------------------
+		if filereadable( s:BASH_GlobalTemplateFile )
+			call BASH_ReadTemplates( s:BASH_GlobalTemplateFile )
 		else
-			"
-			if filereadable( s:BASH_LocalTemplateFile )
-				call BASH_ReadTemplates( s:BASH_LocalTemplateFile )
-				let	messsage	= "Templates read from '".s:BASH_LocalTemplateFile."'"
-			else
-				echomsg "Local template file '".s:BASH_LocalTemplateFile."' not readable." 
-				return
+			echomsg "Global template file '".s:BASH_GlobalTemplateFile."' not readable."
+			return
+		endif
+		let	messsage	= "Templates read from '".s:BASH_GlobalTemplateFile."'"
+		"
+		if filereadable( s:BASH_LocalTemplateFile )
+			call BASH_ReadTemplates( s:BASH_LocalTemplateFile )
+			let messsage	= messsage." and '".s:BASH_LocalTemplateFile."'"
+			if s:BASH_Macro['|AUTHOR|'] == 'YOUR NAME'
+				echomsg "Please set your personal details in file '".s:BASH_LocalTemplateFile."'."
 			endif
-			"
+		else
+			let template	= [ '|AUTHOR|    = YOUR NAME', 
+						\						'|COPYRIGHT| = Copyright (c) |YEAR|, |AUTHOR|'
+						\		]
+			if finddir( s:BASH_LocalTemplateDir ) == ''
+				" try to create a local template directory
+				if exists("*mkdir")
+					try 
+						call mkdir( s:BASH_LocalTemplateDir, "p" )
+						" write a default local template file
+						call writefile( template, s:BASH_LocalTemplateFile )
+					catch /.*/
+					endtry
+				endif
+			else
+				" write a default local template file
+				call writefile( template, s:BASH_LocalTemplateFile )
+			endif
 		endif
-		if a:msg == 'yes'
-			echomsg messsage.'.'
+		"
+	else
+		"-------------------------------------------------------------------------------
+		" local installation
+		"-------------------------------------------------------------------------------
+		if filereadable( s:BASH_LocalTemplateFile )
+			call BASH_ReadTemplates( s:BASH_LocalTemplateFile )
+			let	messsage	= "Templates read from '".s:BASH_LocalTemplateFile."'"
+		else
+			echomsg "Local template file '".s:BASH_LocalTemplateFile."' not readable." 
+			return
 		endif
+		"
+	endif
+	if a:displaymsg == 'yes'
+		echomsg messsage.'.'
+	endif
 
 endfunction    " ----------  end of function BASH_RereadTemplates  ----------
 "------------------------------------------------------------------------------
@@ -1816,6 +1877,55 @@ function!	BASH_BuiltinComplete ( ArgLead, CmdLine, CursorPos )
 	return	expansions
 endfun
 "
+"-------------------------------------------------------------------------------
+"   Comment : Script Sections             {{{1
+"-------------------------------------------------------------------------------
+let s:ScriptSection	= { 
+	\ "GLOBALS"          : "file-sections-globals"    , 
+	\ "CMD\.LINE"				 : "file-sections-cmdline"    , 
+	\ "SAN\.CHECKS"		   : "file-sections-sanchecks"  , 
+	\ "FUNCT\.DEF\."		 : "file-sections-functdef"   , 
+	\ "TRAPS"        		 : "file-sections-traps"      , 
+	\ "MAIN\ SCRIPT"		 : "file-sections-mainscript" , 
+	\ "STAT+CLEANUP"		 : "file-sections-statistics" , 
+	\ }
+
+function!	BASH_ScriptSectionList ( ArgLead, CmdLine, CursorPos )
+	return filter( copy( sort(keys( s:ScriptSection)) ), 'v:val =~ "\\<'.a:ArgLead.'\\w*"' )
+endfunction    " ----------  end of function BASH_ScriptSectionList  ----------
+
+function! BASH_ScriptSectionListInsert ( arg )
+	if has_key( s:ScriptSection, a:arg )
+		call BASH_InsertTemplate( 'comment.'.s:ScriptSection[a:arg] )
+	else
+		echomsg "entry '".a:arg."' does not exist"
+	endif
+endfunction    " ----------  end of function BASH_ScriptSectionListInsert  ----------
+"
+"-------------------------------------------------------------------------------
+"   Comment : Keyword Comments             {{{1
+"-------------------------------------------------------------------------------
+let s:KeywordComment	= { 
+	\	'BUG'          : 'keyword-bug',
+	\	'TODO'         : 'keyword-todo',
+	\	'TRICKY'       : 'keyword-tricky',
+	\	'WARNING'      : 'keyword-warning',
+	\	'WORKAROUND'   : 'keyword-workaround',
+	\	'new\ keyword' : 'keyword-keyword',
+	\ }
+
+function!	BASH_KeywordCommentList ( ArgLead, CmdLine, CursorPos )
+	return filter( copy( sort(keys( s:KeywordComment)) ), 'v:val =~ "\\<'.a:ArgLead.'\\w*"' )
+endfunction    " ----------  end of function BASH_KeywordCommentList  ----------
+
+function! BASH_KeywordCommentListInsert ( arg )
+	if has_key( s:KeywordComment, a:arg )
+		call BASH_InsertTemplate( 'comment.'.s:KeywordComment[a:arg] )
+	else
+		echomsg "entry '".a:arg."' does not exist"
+	endif
+endfunction    " ----------  end of function BASH_KeywordCommentListInsert  ----------
+"
 "------------------------------------------------------------------------------
 "  BASH_help : lookup word under the cursor or ask    {{{1
 "------------------------------------------------------------------------------
@@ -2070,15 +2180,15 @@ endfunction		" ---------- end of function  BASH_SyntaxCheck  ----------
 "  Run : debugger    {{{1
 "------------------------------------------------------------------------------
 function! BASH_Debugger ()
-	if !executable("bashdb")
+	if !executable(s:BASH_bashdb)
 		echohl Search
-		echo   ' bashdb  is not executable or not installed! '
+		echo   s:BASH_bashdb' is not executable or not installed! '
 		echohl None
 		return
 	endif
 	"
 	silent exe	":update"
-	let	l:arguments	= exists("b:BASH_CmdLineArgs") ? " ".b:BASH_CmdLineArgs : ""
+	let	l:arguments	= exists("b:BASH_ScriptCmdLineArgs") ? " ".b:BASH_ScriptCmdLineArgs : ""
 	let	Sou					= fnameescape( expand("%:p") )
 	"
 	"
@@ -2087,7 +2197,7 @@ function! BASH_Debugger ()
 		" debugger is ' bashdb'
 		"
 		if s:BASH_Debugger == "term"
-			let dbcommand	= "!xterm ".s:BASH_XtermDefaults.' -e bashdb -- '.Sou.l:arguments.' &'
+			let dbcommand	= "!xterm ".s:BASH_XtermDefaults.' -e '.s:BASH_bashdb.' -- '.Sou.l:arguments.' &'
 			silent exe dbcommand
 		endif
 		"
@@ -2100,12 +2210,12 @@ function! BASH_Debugger ()
 				echohl None
 				return
 			else
-				silent exe '!ddd --debugger bashdb '.Sou.l:arguments.' &'
+				silent exe '!ddd --debugger '.s:BASH_bashdb.' '.Sou.l:arguments.' &'
 			endif
 		endif
 	else
 		" no GUI : debugger is ' bashdb'
-		silent exe '!bashdb -- '.Sou.l:arguments
+		silent exe '!'.s:BASH_bashdb.' -- '.Sou.l:arguments
 	endif
 endfunction		" ---------- end of function  BASH_Debugger  ----------
 "
@@ -2182,6 +2292,18 @@ function! BASH_MakeScriptExecutable ()
 endfunction		" ---------- end of function  BASH_MakeScriptExecutable  ----------
 "
 "------------------------------------------------------------------------------
+"  BASH_BashCmdLineArguments : Bash command line arguments       {{{1
+"------------------------------------------------------------------------------
+function! BASH_BashCmdLineArguments ()
+	let	prompt	= 'Bash command line arguments for "'.expand("%").'" : '
+	if exists("b:BASH_BashCmdLineArgs")
+		let	b:BASH_BashCmdLineArgs= BASH_Input( prompt, b:BASH_BashCmdLineArgs )
+	else
+		let	b:BASH_BashCmdLineArgs= BASH_Input( prompt , "" )
+	endif
+endfunction    " ----------  end of function BASH_BashCmdLineArguments ----------
+"
+"------------------------------------------------------------------------------
 "  Run : run    {{{1
 "------------------------------------------------------------------------------
 "
@@ -2191,7 +2313,7 @@ let s:BASH_OutputBufferNumber = -1
 function! BASH_Run ( mode )
 	silent exe ':cclose'
 "
-	let	l:arguments				= exists("b:BASH_CmdLineArgs") ? " ".b:BASH_CmdLineArgs : ""
+	let	l:arguments				= exists("b:BASH_ScriptCmdLineArgs") ? " ".b:BASH_ScriptCmdLineArgs : ""
 	let	l:currentbuffer   = bufname("%")
 	let l:fullname				= expand("%:p")
 	let l:fullnameesc			= fnameescape( l:fullname )
@@ -2202,6 +2324,8 @@ function! BASH_Run ( mode )
 		let tmpfile	= tempname()
 		silent exe ":'<,'>write ".tmpfile
 	endif
+
+	let l:bashCmdLineArgs	= exists("b:BASH_BashCmdLineArgs") ? ' '.b:BASH_BashCmdLineArgs.' ' : ''
 	"
 	"------------------------------------------------------------------------------
 	"  Run : run from the vim command line (Linux only)
@@ -2212,7 +2336,8 @@ function! BASH_Run ( mode )
 		" ----- visual mode ----------
 		"
 		if a:mode=="v"
-			exe ":!".s:BASH_BASH." < ".tmpfile." -s ".l:arguments
+			echomsg  ":!".s:BASH_BASH.l:bashCmdLineArgs." < ".tmpfile." -s ".l:arguments
+			exe ":!".s:BASH_BASH.l:bashCmdLineArgs." < ".tmpfile." -s ".l:arguments
 			call delete(tmpfile)
 			return
 		endif
@@ -2224,7 +2349,7 @@ function! BASH_Run ( mode )
 		exe	':setlocal errorformat='.s:BASH_Errorformat
 		"
 		if a:mode=="n"
-			exe ":make "l:fullnameesc.l:arguments
+			exe ":make ".l:bashCmdLineArgs.l:fullnameesc.l:arguments
 		endif
 		if &term == 'xterm'
 			redraw!
@@ -2280,14 +2405,14 @@ function! BASH_Run ( mode )
 			setlocal	modifiable
 			if a:mode=="n"
 				if	s:MSWIN
-					silent exe ":%!".s:BASH_BASH.' "'.l:fullname.'" '.l:arguments
+					silent exe ":%!".s:BASH_BASH.l:bashCmdLineArgs.' "'.l:fullname.'" '.l:arguments
 				else
-					silent exe ":%!".s:BASH_BASH." ".l:fullnameesc.l:arguments
+					silent exe ":%!".s:BASH_BASH.l:bashCmdLineArgs." ".l:fullnameesc.l:arguments
 				endif
 			endif
 			"
 			if a:mode=="v"
-				silent exe ":%!".s:BASH_BASH." < ".tmpfile." -s ".l:arguments
+				silent exe ":%!".s:BASH_BASH.l:bashCmdLineArgs." < ".tmpfile." -s ".l:arguments
 			endif
 			setlocal	nomodifiable
 			"
@@ -2310,17 +2435,17 @@ function! BASH_Run ( mode )
 	if s:BASH_OutputGvim == 'xterm'
 		"
 		if	s:MSWIN
-			exe ':!'.s:BASH_BASH.' "'.l:fullname.'" '.l:arguments
+			exe ':!'.s:BASH_BASH.l:bashCmdLineArgs.' "'.l:fullname.'" '.l:arguments
 		else
 			if a:mode=='n'
 				silent exe '!xterm -title '.l:fullnameesc.' '.s:BASH_XtermDefaults
-							\			.' -e '.s:BASH_Wrapper.' '.l:fullnameesc.l:arguments.' &'
+							\			.' -e '.s:BASH_Wrapper.' '.l:bashCmdLineArgs.l:fullnameesc.l:arguments.' &'
 			endif
 			"
 			if a:mode=="v"
 				let titlestring	= l:fullnameesc.'\ lines\ \ '.line("'<").'\ -\ '.line("'>")
 				silent exe ':!xterm -title '.titlestring.' '.s:BASH_XtermDefaults
-							\			.' -e '.s:BASH_Wrapper.' '.tmpfile.l:arguments.' &'
+							\			.' -e '.s:BASH_Wrapper.' '.l:bashCmdLineArgs.tmpfile.l:arguments.' &'
 			endif
 		endif
 		"
@@ -2415,7 +2540,7 @@ endfunction		" ---------- end of function  BASH_shopt  ----------
 "------------------------------------------------------------------------------
 "  Run : Command line arguments    {{{1
 "------------------------------------------------------------------------------
-function! BASH_CmdLineArguments ()
+function! BASH_ScriptCmdLineArguments ()
 	let filename = expand("%")
   if empty(filename)
 		redraw
@@ -2423,12 +2548,12 @@ function! BASH_CmdLineArguments ()
 		return
   endif
 	let	prompt	= 'command line arguments for "'.filename.'" : '
-	if exists("b:BASH_CmdLineArgs")
-		let	b:BASH_CmdLineArgs= BASH_Input( prompt, b:BASH_CmdLineArgs , 'file' )
+	if exists("b:BASH_ScriptCmdLineArgs")
+		let	b:BASH_ScriptCmdLineArgs= BASH_Input( prompt, b:BASH_ScriptCmdLineArgs , 'file' )
 	else
-		let	b:BASH_CmdLineArgs= BASH_Input( prompt , "", 'file' )
+		let	b:BASH_ScriptCmdLineArgs= BASH_Input( prompt , "", 'file' )
 	endif
-endfunction		" ---------- end of function  BASH_CmdLineArguments  ----------
+endfunction		" ---------- end of function  BASH_ScriptCmdLineArguments  ----------
 "
 "------------------------------------------------------------------------------
 "  Bash-Idioms : read / edit code snippet    {{{1
@@ -2545,6 +2670,8 @@ function! BASH_Settings ()
   let txt = txt.'                  initials :  "'.s:BASH_Macro['|AUTHORREF|']."\"\n"
   let txt = txt.'                     email :  "'.s:BASH_Macro['|EMAIL|']."\"\n"
   let txt = txt.'                   company :  "'.s:BASH_Macro['|COMPANY|']."\"\n"
+  let txt = txt.'                   licence :  "'.s:BASH_Macro['|LICENSE|']."\"\n"
+  let txt = txt.'              organization :  "'.s:BASH_Macro['|ORGANIZATION|']."\"\n"
   let txt = txt.'                   project :  "'.s:BASH_Macro['|PROJECT|']."\"\n"
   let txt = txt.'          copyright holder :  "'.s:BASH_Macro['|COPYRIGHTHOLDER|']."\"\n"
 	let txt = txt.'    code snippet directory :  "'.s:BASH_CodeSnippets."\"\n"
@@ -2569,10 +2696,17 @@ function! BASH_Settings ()
 		let ausgabe= substitute( ausgabe, ",", ",\n                            + ", "g" )
 		let txt = txt."        dictionary file(s) :  ".ausgabe."\n"
 	endif
+	if exists("b:BASH_BashCmdLineArgs")
+		let ausgabe = b:BASH_BashCmdLineArgs
+	else
+		let ausgabe = ""
+	endif
+	let txt = txt." Bash cmd.line argument(s) :  ".ausgabe."\n"
 	let txt = txt."      current output dest. :  ".s:BASH_OutputGvim."\n"
 	if	!s:MSWIN
 		let txt = txt.'            xterm defaults :  '.s:BASH_XtermDefaults."\n"
 	endif
+	let txt = txt.'                    bashdb :  "'.s:BASH_bashdb."\"\n"
 	let txt = txt."\n"
 	let txt = txt."       Additional hot keys\n\n"
 	let txt = txt."                  Shift-F1 :  help for builtin under the cursor \n"

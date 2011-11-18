@@ -1,7 +1,7 @@
-*bashsupport.txt*                Bash Support                 October 18 2011
+*bashsupport.txt*                Bash Support                November 18 2011
 
 bash Support                                      *bash-support* *bashsupport*
-                             Plugin version 3.7
+                             Plugin version 3.8
                         for Vim version 7.0 and above
                        Fritz Mehner  <mehner@fh-swf.de>
 
@@ -33,11 +33,12 @@ writing shell scripts. This plugin can be used for Bash version 4.0.
  1.7.1    Save and run                           |bashsupport-run-script|
  1.7.2    Save and check syntax                  |bashsupport-syntax-check|
  1.7.3    Error format                           |bashsupport-errorformat|
- 1.7.4    Command line arguments                 |bashsupport-cmdline-args|
+ 1.7.4    Script command line arguments          |bashsupport-cmdline-args|
  1.7.5    Start debugger                         |bashsupport-debugger|
- 1.7.6    Hardcopy                               |bashsupport-hardcopy|
- 1.7.7    Xterm size                             |bashsupport-xterm|
- 1.7.8    Output redirection                     |bashsupport-output|
+ 1.7.6    Bash command line arguments            |bashsupport-bash-cmdline-args|
+ 1.7.7    Hardcopy                               |bashsupport-hardcopy|
+ 1.7.8    Xterm size                             |bashsupport-xterm|
+ 1.7.9    Output redirection                     |bashsupport-output|
  1.8     Menu 'Help'                             |bashsupport-help|
  2.     Usage without GUI                        |bashsupport-usage-vim|
  3.     Hot keys                                 |bashsupport-hotkeys|
@@ -484,14 +485,14 @@ reported.  In this case add a line like
 to '~/.vimrc' to redefine the error format. Replace '%s' by the translation
 of this word in the current language.
 
-1.7.4 Command line arguments                        *bashsupport-cmdline-args*
+1.7.4 Script command line arguments                 *bashsupport-cmdline-args*
 ----------------------------
 
-The entry 'com. line arg.' calls an input dialog which asks for command line
-arguments. These arguments are forwarded to the script which is run by the
-'run' entry. The arguments are kept until you change them.
-For the first and only the first argument file name expansion will work (use
-the Tab-key).
+The menu item 'menu com. line arg.' calls an input dialog which asks for
+command line arguments for the script in the actual buffer. These arguments
+are forwarded to the script which is run by the 'run' entry. The arguments are
+kept until you change them.  For the first and only the first argument file
+name expansion will work (use the Tab-key).
 
 The arguments belong to the current buffer (that is, each buffer can have its
 own arguments).
@@ -528,8 +529,22 @@ The default is 'term'.
 In all cases the command line arguments from the argument setting
 (|bashsupport-cmdline-args|) are passed to the debugger.
 
+1.7.6 Bash command line arguments              *bashsupport-bash-cmdline-args*
+---------------------------------
 
-1.7.6 Hardcopy                                          *bashsupport-hardcopy*
+The menu item 'Bash com. line arg.' calls an input dialog which asks for
+command line options for the the Bash shell running the script in the actual
+buffer (like -x or -v; see the Bash manual for possible options). These
+arguments are forwarded to the invocation of Bash which is run by the 'run'
+entry. The arguments are kept until you change them.  
+
+The arguments belong to the current buffer (that is, each buffer can have its
+own arguments).
+If the buffer gets a new name with "save as" the arguments will now belong to
+the buffer with the new name.
+
+
+1.7.7 Hardcopy                                          *bashsupport-hardcopy*
 --------------
 
 Generates a PostScript file from the whole buffer or from a marked region.
@@ -553,13 +568,13 @@ or by setting a global variable in the file '.vimrc', e.g. :
 See :h printheader and :h strftime()  for more details.
 
 
-1.7.7 Xterm size                                           *bashsupport-xterm*
+1.7.8 Xterm size                                           *bashsupport-xterm*
 ----------------
 
 The size of the xterm (see below) can be changes for the current session.  The
 size has to be specified as COLUMNS LINES (e.g. 96 32 ).
 
-1.7.8 Output redirection                                  *bashsupport-output*
+1.7.9 Output redirection                                  *bashsupport-output*
 ------------------------
 
 The last menu entry 'output: ... ' has 3 states:
@@ -675,71 +690,73 @@ Legend:  (i) insert mode, (n) normal mode, (v) visual mode
 
   -- bash help ------------------------------------------
 
-     \hb     Displays the Bash manual        (n, i)
-     \hh     Displays help for the builtin   (n, i)
+     \hb     Displays the Bash manual         (n, i)
+     \hh     Displays help for the builtin    (n, i)
              under the cursor (Bash help).
              The tab expansion is active.
-     \hm     displays the manual for the     (n, i)
+     \hm     displays the manual for the      (n, i)
              Bash command under the cursor
              The tab expansion is active.
-     \hbs    Displays the Vim help page for  (n, i)
+     \hbs    Displays the Vim help page for   (n, i)
              this plugin.
 
   -- Comments -------------------------------------------
 
-  [n]\cl     line end comment                (n, i, v)
-  [n]\cj     adjust end-of-line comments     (n, i, v)
-     \cs     set end-of-line comment column  (n)
-     \cfr    frame comment                   (n, i)
-     \cfu    function description            (n, i)
-     \ch     file header                     (n, i)
-     \ckb    keyword comment BUG             (n, i)
-     \ckt    keyword comment TODO            (n, i)
-     \ckr    keyword comment TRICKY          (n, i)
-     \ckw    keyword comment WARNING         (n, i)
-     \ckn    keyword comment New_Keyword     (n, i)
-  [n]\cc     toggle comment                  (n, i, v)
-     \cd     date                            (n, i, v)
-     \ct     date & time                     (n, i, v)
-     \ce     echo "..."                      (n, i)
-     \cr     remove echo "..."               (n, i)
-     \cv     vim modeline                    (n, i)
+  [n]\cl     line end comment                 (n, i, v)
+  [n]\cj     adjust end-of-line comments      (n, i, v)
+     \cs     set end-of-line comment column   (n)
+     \cfr    frame comment                    (n, i)
+     \cfu    function description             (n, i)
+     \ch     file header                      (n, i)
+     \ckb    keyword comment BUG              (n, i)
+     \ckt    keyword comment TODO             (n, i)
+     \ckr    keyword comment TRICKY           (n, i)
+     \ckw    keyword comment WARNING          (n, i)
+     \ckn    keyword comment New_Keyword      (n, i)
+  [n]\cc     toggle comment                   (n, i, v)
+     \cd     date                             (n, i, v)
+     \ct     date & time                      (n, i, v)
+     \ce     echo "..."                       (n, i)
+     \cr     remove echo "..."                (n, i)
+     \css    script sections (tab completion) (n, i)
+     \ckc    keyword comments(tab completion) (n, i)
+     \cv     vim modeline                     (n, i)
 
   -- Statements ------------------------------------------
 
-     \sc     case in ... esac                (n, i)
-     \sei    elif then                       (n, i)
-     \sf     for in do done                  (n, i, v)
-     \sfo    for ((...)) do done             (n, i, v)
-     \si     if then fi                      (n, i, v)
-     \sie    if then else fi                 (n, i, v)
-     \ss     select in do done               (n, i, v)
-     \st     until do done                   (n, i, v)
-     \sw     while do done                   (n, i, v)
-     \sfu    function                        (n, i, v)
-     \se     echo -e "..."                   (n, i, v)
-     \sp     printf "..."                    (n, i, v)
-     \sa     array element ${.[.]}           (n, i, v)
-     \saa    array elements ${.[@]}          (n, i, v)
-     \sa1    array elements, 1 word ${.[*]}  (n, i, v)
-     \ssa    subarray ${.[@]::}              (n, i, v)
-     \san    no. of array elements ${#.[@]}  (n, i, v)
-     \sai    list of arr. indices ${!.[*]}   (n, i, v)
+     \sc     case in ... esac                 (n, i)
+     \sei    elif then                        (n, i)
+     \sf     for in do done                   (n, i, v)
+     \sfo    for ((...)) do done              (n, i, v)
+     \si     if then fi                       (n, i, v)
+     \sie    if then else fi                  (n, i, v)
+     \ss     select in do done                (n, i, v)
+     \st     until do done                    (n, i, v)
+     \sw     while do done                    (n, i, v)
+     \sfu    function                         (n, i, v)
+     \se     echo -e "..."                    (n, i, v)
+     \sp     printf "..."                     (n, i, v)
+     \sa     array element ${.[.]}            (n, i, v)
+     \saa    array elements ${.[@]}           (n, i, v)
+     \sa1    array elements, 1 word ${.[*]}   (n, i, v)
+     \ssa    subarray ${.[@]::}               (n, i, v)
+     \san    no. of array elements ${#.[@]}   (n, i, v)
+     \sai    list of arr. indices ${!.[*]}    (n, i, v)
 
   -- Snippets --------------------------------------------
 
-     \nr     read code snippet               (n, i)
-     \nw     write code snippet              (n, v, i)
-     \ne     edit code snippet               (n, i)
+     \nr     read code snippet                (n, i)
+     \nw     write code snippet               (n, v, i)
+     \ne     edit code snippet                (n, i)
 
-     \ntl    edit local templates            (n, i)
-     \ntg    edit global templates           (n, i)
-     \ntr    reread the templates            (n, i)
-     \nts    switch template style           (n, i)
+     \ntl    edit local templates             (n, i)
+     \ntg    edit global templates            (n, i)
+     \ntr    reread the templates             (n, i)
+     \nts    switch template style            (n, i)
 
   -- Test ------------------------------------------------
 
-     \t      unary operator, 1 arg.: \verb'[ -  ]'  (n, i)
+     \t1     unary operator, 1 arg.: \verb'[ -  ]'  (n, i)
      \t2     binary operator, 2 arg: \verb'[  -  ]' (n, i)
 
   -- Regular Expression ----------------------------------
@@ -748,38 +765,39 @@ Legend:  (i) insert mode, (n) normal mode, (v) visual mode
 
   -- POSIX Character Classes -----------------------------
 
-     \pan    [:alnum:]                       (n, i)
-     \pal    [:alpha:]                       (n, i)
-     \pas    [:ascii:]                       (n, i)
-     \pb     [:blank:]                       (n, i)
-     \pc     [:cntrl:]                       (n, i)
-     \pd     [:digit:]                       (n, i)
-     \pg     [:graph:]                       (n, i)
-     \pl     [:lower:]                       (n, i)
-     \ppr    [:print:]                       (n, i)
-     \ppu    [:punct:]                       (n, i)
-     \ps     [:space:]                       (n, i)
-     \pu     [:upper:]                       (n, i)
-     \pw     [:word:]                        (n, i)
-     \px     [:xdigit:]                      (n, i)
+     \pan    [:alnum:]                        (n, i)
+     \pal    [:alpha:]                        (n, i)
+     \pas    [:ascii:]                        (n, i)
+     \pb     [:blank:]                        (n, i)
+     \pc     [:cntrl:]                        (n, i)
+     \pd     [:digit:]                        (n, i)
+     \pg     [:graph:]                        (n, i)
+     \pl     [:lower:]                        (n, i)
+     \ppr    [:print:]                        (n, i)
+     \ppu    [:punct:]                        (n, i)
+     \ps     [:space:]                        (n, i)
+     \pu     [:upper:]                        (n, i)
+     \pw     [:word:]                         (n, i)
+     \px     [:xdigit:]                       (n, i)
 
   -- Run -------------------------------------------------
 
-     \rr     update file, run script         (n, i)
-     \rc     update file, check syntax       (n, i)
-     \rco    syntax check options            (n, i)
-     \ra     set command line arguments      (n, i)
-     \rd     start debugger                  (n, i)
-     \re     make script executable          (n, i)
-     \rh     hardcopy buffer to FILENAME.ps  (n, i)
-     \rs     settings and hot keys           (n, i)
-     \rt     set xterm size                  (n, i)
-     \ro     change output destination       (n, i)
+     \rr     update file, run script          (n, i)
+     \ra     set script cmd. line arguments   (n, i)
+     \rba    set Bash cmd. line arguments     (n, i)
+     \rc     update file, check syntax        (n, i)
+     \rco    syntax check options             (n, i)
+     \rd     start debugger                   (n, i)
+     \re     make script executable           (n, i)
+     \rh     hardcopy buffer to FILENAME.ps   (n, i)
+     \rs     settings and hot keys            (n, i)
+     \rt     set xterm size                   (n, i)
+     \ro     change output destination        (n, i)
 
   -- Load / Unload bash Support --------------------------
 
-     \lbs    Load Bash Support               (n, GUI only)
-     \ubs    Unload Bash Support             (n, GUI only)
+     \lbs    Load Bash Support                (n, GUI only)
+     \ubs    Unload Bash Support              (n, GUI only)
 
 
 File 'bash-hot-keys.pdf' contains a reference card for these key mappings.
@@ -987,26 +1005,16 @@ the following line in '~/.vimrc':
 
 As *** USER *** :
 
-Create your private snippet directory:
+The plugin tries to create a minimal template file 'Templates' (and the
+necessary directory '~/.vim/bash-support/templates') when the first buffer
+with filetype 'sh' will be opened. You should edit this file to personalize
+some templates, e.g.
 
-  mkdir --parents  ~/.vim/bash-support/codesnippets
-
-You may want to copy the snippets coming with this plugin (in
-$VIM/vimfiles/bash-support/codesnippets) into the new directory or to set a
-link to the global directory.
-
-Create your private template directory:
-
-  mkdir --parents  ~/.vim/bash-support/templates
-
-Create a private template file 'Templates' (compulsory) in this directory to
-overwrite some macros, e.g.
-
- *|AUTHOR|*    = your name
- *|AUTHORREF|* = ...
- *|EMAIL|*     = ...
- *|COMPANY|*   = ...
- *|COPYRIGHT|* = ...
+ *|AUTHOR|*       = Your Name
+ *|AUTHORREF|*    = YN
+ *|EMAIL|*        = ...
+ *|ORGANIZATION|* = ...
+ *|COPYRIGHT|*    = ...
 
 You can also have local templates which override the global ones. To see a
 messages in this case set a global variable in '~/.vimrc' (Windows: '~\_vimrc'):
@@ -1014,6 +1022,14 @@ messages in this case set a global variable in '~/.vimrc' (Windows: '~\_vimrc'):
   let g:BASH_TemplateOverriddenMsg= 'yes'
 
 The default is 'no'.
+
+Create your private snippet directory:
+
+  mkdir --parents  ~/.vim/bash-support/codesnippets
+
+You may want to copy the snippets coming with this plugin (in
+$VIM/vimfiles/bash-support/codesnippets) into the new directory or to set a
+link to the global directory.
 
 ------------------------------------------------------------------------------
 4.5  Non-standard installation                      *bashsupport-non-standard*
@@ -1100,6 +1116,8 @@ personalize templates.
 *|AUTHORREF|*       ""
 *|EMAIL|*           ""
 *|COMPANY|*         ""
+*|LICENSE|*         ""
+*|ORGANIZATION|*    ""
 *|PROJECT|*         ""
 *|COPYRIGHTHOLDER|* ""
 *|STYLE|*           ""
@@ -1177,6 +1195,12 @@ modes are also hard coded (see|bashsupport-templates-definition|for the use of
  comment.keyword-tricky                        normal, insert
  comment.keyword-warning                       normal, insert
  comment.keyword-workaround                    normal, insert
+ comment.file-sections-globals                 normal, insert
+ comment.file-sections-cmdline                 normal, insert 
+ comment.file-sections-sanchecks               normal, insert
+ comment.file-sections-functdef                normal, insert
+ comment.file-sections-mainscript              normal, insert
+ comment.file-sections-statistics              normal, insert
 
  statements.case                               normal, insert
  statements.elif                               normal, insert

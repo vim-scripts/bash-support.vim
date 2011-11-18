@@ -3,7 +3,7 @@
 "   Language :  bash
 "     Plugin :  bash-support.vim
 " Maintainer :  Fritz Mehner <mehner@fh-swf.de>
-"   Revision :  $Id: sh.vim,v 1.43 2011/10/07 18:11:24 mehner Exp $
+"   Revision :  $Id: sh.vim,v 1.45 2011/11/02 17:30:12 mehner Exp $
 "
 " -----------------------------------------------------------------
 "
@@ -38,7 +38,9 @@ if exists("g:BASH_Dictionary_File")
   silent! exe 'setlocal dictionary+='.save
 endif    
 "
-command! -nargs=1 -complete=customlist,BASH_StyleList   BashStyle   call BASH_Style (<f-args>)
+command! -nargs=1 -complete=customlist,BASH_StyleList   				BashStyle   		call BASH_Style(<f-args>)
+command! -nargs=1 -complete=customlist,BASH_ScriptSectionList   ScriptSection   call BASH_ScriptSectionListInsert(<f-args>)
+command! -nargs=1 -complete=customlist,BASH_KeywordCommentList  KeywordComment  call BASH_KeywordCommentListInsert(<f-args>)
 "
 " ---------- hot keys ------------------------------------------
 "
@@ -60,13 +62,13 @@ if has("gui_running")
     vmap  <buffer>  <silent>  <C-F9>   <C-C>:call BASH_Run("v")<CR>
   endif
   "
-  map   <buffer>  <silent>  <S-F9>        :call BASH_CmdLineArguments()<CR>
-  imap  <buffer>  <silent>  <S-F9>   <C-C>:call BASH_CmdLineArguments()<CR>
+  map   <buffer>  <silent>  <S-F9>        :call BASH_ScriptCmdLineArguments()<CR>
+  imap  <buffer>  <silent>  <S-F9>   <C-C>:call BASH_ScriptCmdLineArguments()<CR>
 endif
 "
 if !s:MSWIN
-   map  <buffer>  <silent>    <F9>        :call BASH_Debugger()<CR>:redraw!<CR>
-  imap  <buffer>  <silent>    <F9>   <C-C>:call BASH_Debugger()<CR>:redraw!<CR>
+   map  <buffer>  <silent>    <F9>        :call BASH_Debugger()<CR>
+  imap  <buffer>  <silent>    <F9>   <C-C>:call BASH_Debugger()<CR>
 endif
 "
 "
@@ -87,7 +89,7 @@ inoremap  <buffer>  <silent>  <LocalLeader>hbs     <Esc>:call BASH_HelpBASHsuppo
 " ---------- comment menu ----------------------------------------------------
 "
  noremap  <buffer>  <silent>  <LocalLeader>cl           :call BASH_EndOfLineComment()<CR>
-inoremap  <buffer>  <silent>  <LocalLeader>cl           :call BASH_EndOfLineComment()<CR>
+inoremap  <buffer>  <silent>  <LocalLeader>cl      <Esc>:call BASH_EndOfLineComment()<CR>
 vnoremap  <buffer>  <silent>  <LocalLeader>cl      <Esc>:call BASH_MultiLineEndComments()<CR>a
 
  noremap  <buffer>  <silent>  <LocalLeader>cj           :call BASH_AdjustLineEndComm()<CR>
@@ -136,6 +138,11 @@ inoremap  <buffer>  <silent>  <LocalLeader>ce      <C-C>^iecho<Space>"<End>"<Esc
 inoremap  <buffer>  <silent>  <LocalLeader>cr      <C-C>0:s/^\s*echo\s\+\"// \| s/\s*\"\s*$// \| :normal ==<CR>j'
  noremap  <buffer>  <silent>  <LocalLeader>cv           :call BASH_CommentVimModeline()<CR>
 inoremap  <buffer>  <silent>  <LocalLeader>cv      <C-C>:call BASH_CommentVimModeline()<CR>
+"
+ noremap    <buffer>            <LocalLeader>css   <Esc>:ScriptSection<Space>
+inoremap    <buffer>            <LocalLeader>css   <Esc>:ScriptSection<Space>
+ noremap    <buffer>            <LocalLeader>ckc   <Esc>:KeywordComment<Space>
+inoremap    <buffer>            <LocalLeader>ckc   <Esc>:KeywordComment<Space>
 "
 " ---------- statement menu ----------------------------------------------------
 "
@@ -263,8 +270,8 @@ nnoremap  <buffer>            <LocalLeader>nts        :BashStyle<Space>
 "
 " ---------- test  ----------------------------------------------------
 "
-nnoremap  <buffer>  <silent>  <LocalLeader>t    a[ -  ]<Left><Left><Left>
-inoremap  <buffer>  <silent>  <LocalLeader>t     [ -  ]<Left><Left><Left>
+nnoremap  <buffer>  <silent>  <LocalLeader>t1   a[ -  ]<Left><Left><Left>
+inoremap  <buffer>  <silent>  <LocalLeader>t1    [ -  ]<Left><Left><Left>
 "
 nnoremap  <buffer>  <silent>  <LocalLeader>t2   a[  -  ]<Left><Left><Left><Left><Left>
 inoremap  <buffer>  <silent>  <LocalLeader>t2    [  -  ]<Left><Left><Left><Left><Left>
@@ -273,8 +280,10 @@ inoremap  <buffer>  <silent>  <LocalLeader>t2    [  -  ]<Left><Left><Left><Left>
 "
  map  <buffer>  <silent>  <LocalLeader>rr           :call BASH_Run("n")<CR>
 imap  <buffer>  <silent>  <LocalLeader>rr      <Esc>:call BASH_Run("n")<CR>
- map  <buffer>  <silent>  <LocalLeader>ra           :call BASH_CmdLineArguments()<CR>
-imap  <buffer>  <silent>  <LocalLeader>ra      <Esc>:call BASH_CmdLineArguments()<CR>
+ map  <buffer>  <silent>  <LocalLeader>ra           :call BASH_ScriptCmdLineArguments()<CR>
+imap  <buffer>  <silent>  <LocalLeader>ra      <Esc>:call BASH_ScriptCmdLineArguments()<CR>
+ map  <buffer>  <silent>  <LocalLeader>rba          :call BASH_BashCmdLineArguments()<CR>
+imap  <buffer>  <silent>  <LocalLeader>rba     <Esc>:call BASH_BashCmdLineArguments()<CR>
 
  map  <buffer>  <silent>  <LocalLeader>rc           :call BASH_SyntaxCheck()<CR>
 imap  <buffer>  <silent>  <LocalLeader>rc      <Esc>:call BASH_SyntaxCheck()<CR>
@@ -286,8 +295,8 @@ if !s:MSWIN
    map  <buffer> <silent> <LocalLeader>re           :call BASH_MakeScriptExecutable()<CR>
   imap  <buffer> <silent> <LocalLeader>re      <Esc>:call BASH_MakeScriptExecutable()<CR>
 
-   map  <buffer>  <silent>  <LocalLeader>rd           :call BASH_Debugger()<CR>:redraw!<CR>
-  imap  <buffer>  <silent>  <LocalLeader>rd      <Esc>:call BASH_Debugger()<CR>:redraw!<CR>
+   map  <buffer>  <silent>  <LocalLeader>rd           :call BASH_Debugger()<CR>
+  imap  <buffer>  <silent>  <LocalLeader>rd      <Esc>:call BASH_Debugger()<CR>
 
   vmap  <buffer>  <silent>  <LocalLeader>rr      <Esc>:call BASH_Run("v")<CR>
 

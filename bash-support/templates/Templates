@@ -1,13 +1,13 @@
-§
+
 § =============================================================
 § ========== USER MACROS ======================================
 § =============================================================
 §
-|AUTHOR|    = YOUR NAME 
-|AUTHORREF| = 
-|EMAIL|     = 
-|COMPANY|   = 
-|COPYRIGHT| = Copyright (c) |YEAR|, |AUTHOR|
+|AUTHOR|       = YOUR NAME 
+|AUTHORREF|    = 
+|EMAIL|        = 
+|ORGANIZATION| = 
+|COPYRIGHT|    = Copyright (c) |YEAR|, |AUTHOR|
 §
 § =============================================================
 § ========== FILE INCLUDES ====================================

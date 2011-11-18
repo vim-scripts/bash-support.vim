@@ -8,15 +8,15 @@
 %%        Email:  mehner@fh-swf.de
 %%    Copyright:  Copyright (C)  2003-2010  Dr.-Ing. Fritz Mehner  (mehner@fh-swf.de)
 %%      Version:  see PluginVersion (below)
-%%     Revision:  $Id: bash-hot-keys.tex,v 1.35 2011/10/18 09:21:30 mehner Exp $
+%%     Revision:  $Id: bash-hot-keys.tex,v 1.37 2011/11/02 17:34:09 mehner Exp $
 %%      Created:  09.06.2003
 %%                
 %%        Notes:  
 %%                
 %%=====================================================================================
 
-\newcommand{\PluginVersion}{3.7}
-\newcommand{\ReleaseDate}{October 2011}
+\newcommand{\PluginVersion}{3.8}
+\newcommand{\ReleaseDate}{November 2011}
 \newcommand{\Rep}{{\scriptsize{[n]}}}
 
 \documentclass[oneside,11pt,a4paper,DIV18]{scrartcl}
@@ -103,6 +103,8 @@
 \hline     \verb'\ct'  & date \& time                     \hfill (n, i, v)\\
 \hline     \verb'\ce'  & \verb'echo "<line>"'             \hfill (n, i)\\
 \hline     \verb'\cr'  & remove \verb'echo'               \hfill (n, i)\\
+\hline     \verb'\css' & script sections\hspace{11mm}\footnotesize{(tab compl.)}       \hfill \normalsize{(n,i)}\\
+\hline     \verb'\ckc' & keyword comment\hspace{5mm}\footnotesize{(tab compl.)}         \hfill \normalsize{(n,i)}\\
 \hline     \verb'\cv'  & vim modeline                     \hfill (n, i)\\
 \hline 
 \hline
@@ -131,7 +133,7 @@
 %%----------------------------------------------------------------------
 \hline
 \multicolumn{2}{|r|}{\textsl{\textbf{T}est}}\\
-\hline \verb'\t'   &  unary operator, 1 arg.: \verb'[ -  ]'         \hfill (n, i)\\
+\hline \verb'\t1'  &  unary operator, 1 arg.: \verb'[ -  ]'         \hfill (n, i)\\
 \hline \verb'\t2'  &  binary operator, 2 arg.: \verb'[  -  ]'        \hfill (n, i)\\
 \hline
 \end{tabular}\\
@@ -193,16 +195,17 @@ $^2$ {Linux/U**x only}
 \hline
 \hline
 \multicolumn{2}{|r|}{\textsl{\textbf{R}un}}\\
-\hline \verb'\rr'  & update file, run script        \hfill (n, i, v$^2$)\\
-\hline \verb'\ra'  & set command line arguments     \hfill (n, i)\\
-\hline \verb'\rc'  & update file, check syntax      \hfill (n, i)\\
-\hline \verb'\rco' & syntax check options           \hfill (n, i)\\
-\hline \verb'\rd'  & start debugger$^2$             \hfill (n, i)\\
-\hline \verb'\re'  & make script executable$^2$     \hfill (n, i)\\
-\hline \verb'\rh'  & hardcopy buffer                \hfill (n, i, v)\\
-\hline \verb'\rs'  & settings and hotkeys           \hfill (n, i)\\
-\hline \verb'\rt'  & set xterm size$^2$             \hfill (n, i, GUI only)\\
-\hline \verb'\ro'  & change output destination      \hfill (n, i)\\
+\hline \verb'\rr'  & update file, run script           \hfill (n, i, v$^2$)\\
+\hline \verb'\ra'  & set script command line arguments \hfill (n, i)\\
+\hline \verb'\rc'  & update file, check syntax         \hfill (n, i)\\
+\hline \verb'\rco' & syntax check options              \hfill (n, i)\\
+\hline \verb'\rd'  & start debugger$^2$                \hfill (n, i)\\
+\hline \verb'\re'  & make script executable$^2$        \hfill (n, i)\\
+\hline \verb'\rba' & set Bash command line arguments   \hfill (n, i)\\
+\hline \verb'\rh'  & hardcopy buffer                   \hfill (n, i, v)\\
+\hline \verb'\rs'  & settings and hotkeys              \hfill (n, i)\\
+\hline \verb'\rt'  & set xterm size$^2$                \hfill (n, i, GUI only)\\
+\hline \verb'\ro'  & change output destination         \hfill (n, i)\\
 \hline
 \hline 
 \multicolumn{2}{|r|}{\textsl{\textbf{H}elp}}\\
