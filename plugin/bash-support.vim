@@ -29,7 +29,7 @@
 "                  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 "                  PURPOSE.
 "                  See the GNU General Public License version 2 for more details.
-"       Revision:  $Id: bash-support.vim,v 1.106 2011/11/18 10:16:45 mehner Exp $
+"       Revision:  $Id: bash-support.vim,v 1.111 2011/12/24 12:23:49 mehner Exp $
 "
 "------------------------------------------------------------------------------
 "
@@ -38,7 +38,7 @@
 if exists("g:BASH_Version") || &cp
  finish
 endif
-let g:BASH_Version= "3.8"  						" version number of this script; do not change
+let g:BASH_Version= "3.9"  						" version number of this script; do not change
 "
 if v:version < 700
   echohl WarningMsg | echo 'plugin bash-support.vim needs Vim version >= 7'| echohl None
@@ -123,6 +123,7 @@ let s:BASH_Debugger               = 'term'
 let s:BASH_bashdb                 = 'bashdb'
 let s:BASH_LineEndCommColDefault  = 49
 let s:BASH_LoadMenus              = 'yes'
+let s:BASH_CreateMenusDelayed     = 'no'
 let s:BASH_TemplateOverriddenMsg	= 'no'
 let s:BASH_SyntaxCheckOptionsGlob = ''
 "
@@ -174,6 +175,7 @@ call BASH_CheckGlobal('BASH_GuiSnippetBrowser     ')
 call BASH_CheckGlobal('BASH_GuiTemplateBrowser    ')
 call BASH_CheckGlobal('BASH_LineEndCommColDefault ')
 call BASH_CheckGlobal('BASH_LoadMenus             ')
+call BASH_CheckGlobal('BASH_CreateMenusDelayed    ')
 call BASH_CheckGlobal('BASH_Man                   ')
 call BASH_CheckGlobal('BASH_MenuHeader            ')
 call BASH_CheckGlobal('BASH_OutputGvim            ')
@@ -297,10 +299,10 @@ function!	BASH_InitMenu ()
 	"
 	exe "amenu ".s:BASH_Root.'&Comments.-SEP3-                    :'
 	"
-	exe " noremenu ".s:BASH_Root.'&Comments.&echo\ "<line>"<Tab>\\ce	  			 ^iecho<Space>"<End>"<Esc>j'
-	exe "inoremenu ".s:BASH_Root.'&Comments.&echo\ "<line>"<Tab>\\ce	  	<C-C>^iecho<Space>"<End>"<Esc>j'
-	exe " noremenu ".s:BASH_Root.'&Comments.&remove\ echo<Tab>\\cr            0:s/^\s*echo\s\+\"// \| s/\s*\"\s*$// \| :normal ==<CR>j'
-	exe "inoremenu ".s:BASH_Root.'&Comments.&remove\ echo<Tab>\\cr       <C-C>0:s/^\s*echo\s\+\"// \| s/\s*\"\s*$// \| :normal ==<CR>j'
+	exe " noremenu ".s:BASH_Root.'&Comments.&echo\ "<line>"<Tab>\\ce       :call BASH_echo_comment()<CR>j'
+	exe "inoremenu ".s:BASH_Root.'&Comments.&echo\ "<line>"<Tab>\\ce  <C-C>:call BASH_echo_comment()<CR>j'
+	exe " noremenu ".s:BASH_Root.'&Comments.&remove\ echo<Tab>\\cr         :call BASH_remove_echo()<CR>j'
+	exe "inoremenu ".s:BASH_Root.'&Comments.&remove\ echo<Tab>\\cr    <C-C>:call BASH_remove_echo()<CR>j'
 	"
 	exe "amenu ".s:BASH_Root.'&Comments.-SEP4-                    :'
 	"
@@ -353,31 +355,31 @@ function!	BASH_InitMenu ()
 	"----- Submenu : BASH-Comments : Tags  ----------------------------------------------------------
 	"
 	exe "amenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&AUTHOR                :call BASH_InsertMacroValue("AUTHOR")<CR>'
-	exe "amenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).AUTHOR&REF             :call BASH_InsertMacroValue("AUTHORREF")<CR>'
-	exe "amenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&COMPANY               :call BASH_InsertMacroValue("EMAIL")<CR>'
-	exe "amenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).C&OPYRIGHTHOLDER       :call BASH_InsertMacroValue("COMPANY")<CR>'
-	exe "amenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&EMAIL                 :call BASH_InsertMacroValue("PROJECT")<CR>'
+	exe "amenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&AUTHORREF             :call BASH_InsertMacroValue("AUTHORREF")<CR>'
+	exe "amenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&COMPANY               :call BASH_InsertMacroValue("COMPANY")<CR>'
+	exe "amenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&COPYRIGHTHOLDER       :call BASH_InsertMacroValue("COPYRIGHTHOLDER")<CR>'
+	exe "amenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&EMAIL                 :call BASH_InsertMacroValue("EMAIL")<CR>'
 	exe "amenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&LICENSE               :call BASH_InsertMacroValue("LICENSE")<CR>'
 	exe "amenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&ORGANIZATION          :call BASH_InsertMacroValue("ORGANIZATION")<CR>'
-	exe "amenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&PROJECT               :call BASH_InsertMacroValue("COPYRIGHTHOLDER")<CR>'
+	exe "amenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&PROJECT               :call BASH_InsertMacroValue("PROJECT")<CR>'
 
 	exe "imenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&AUTHOR           <Esc>:call BASH_InsertMacroValue("AUTHOR")<CR>a'
-	exe "imenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).AUTHOR&REF        <Esc>:call BASH_InsertMacroValue("AUTHORREF")<CR>a'
-	exe "imenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&COMPANY          <Esc>:call BASH_InsertMacroValue("EMAIL")<CR>a'
-	exe "imenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).C&OPYRIGHTHOLDER  <Esc>:call BASH_InsertMacroValue("COMPANY")<CR>a'
-	exe "imenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&EMAIL            <Esc>:call BASH_InsertMacroValue("PROJECT")<CR>a'
-	exe "imenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&LICENSE          <Esc>:call BASH_InsertMacroValue("LICENSE")<CR>'
-	exe "imenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&ORGANIZATION     <Esc>:call BASH_InsertMacroValue("ORGANIZATION")<CR>'
-	exe "imenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&PROJECT          <Esc>:call BASH_InsertMacroValue("COPYRIGHTHOLDER")<CR>a'
+	exe "imenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&AUTHORREF        <Esc>:call BASH_InsertMacroValue("AUTHORREF")<CR>a'
+	exe "imenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&COMPANY          <Esc>:call BASH_InsertMacroValue("COMPANY")<CR>a'
+	exe "imenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&COPYRIGHTHOLDER  <Esc>:call BASH_InsertMacroValue("COPYRIGHTHOLDER")<CR>a'
+	exe "imenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&EMAIL            <Esc>:call BASH_InsertMacroValue("EMAIL")<CR>a'
+	exe "imenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&LICENSE          <Esc>:call BASH_InsertMacroValue("LICENSE")<CR>a'
+	exe "imenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&ORGANIZATION     <Esc>:call BASH_InsertMacroValue("ORGANIZATION")<CR>a'
+	exe "imenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&PROJECT          <Esc>:call BASH_InsertMacroValue("PROJECT")<CR>a'
 
 	exe "vmenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&AUTHOR          s<Esc>:call BASH_InsertMacroValue("AUTHOR")<CR>a'
-	exe "vmenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).AUTHOR&REF       s<Esc>:call BASH_InsertMacroValue("AUTHORREF")<CR>a'
-	exe "vmenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&COMPANY         s<Esc>:call BASH_InsertMacroValue("EMAIL")<CR>a'
-	exe "vmenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).C&OPYRIGHTHOLDER s<Esc>:call BASH_InsertMacroValue("COMPANY")<CR>a'
-	exe "vmenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&EMAIL           s<Esc>:call BASH_InsertMacroValue("PROJECT")<CR>a'
-	exe "vmenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&LICENSE         s<Esc>:call BASH_InsertMacroValue("LICENSE")<CR>'
-	exe "vmenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&ORGANIZATION    s<Esc>:call BASH_InsertMacroValue("ORGANIZATION")<CR>'
-	exe "vmenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&PROJECT         s<Esc>:call BASH_InsertMacroValue("COPYRIGHTHOLDER")<CR>a'
+	exe "vmenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&AUTHORREF       s<Esc>:call BASH_InsertMacroValue("AUTHORREF")<CR>a'
+	exe "vmenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&COMPANY         s<Esc>:call BASH_InsertMacroValue("COMPANY")<CR>a'
+	exe "vmenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&COPYRIGHTHOLDER s<Esc>:call BASH_InsertMacroValue("COPYRIGHTHOLDER")<CR>a'
+	exe "vmenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&EMAIL           s<Esc>:call BASH_InsertMacroValue("EMAIL")<CR>a'
+	exe "vmenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&LICENSE         s<Esc>:call BASH_InsertMacroValue("LICENSE")<CR>a'
+	exe "vmenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&ORGANIZATION    s<Esc>:call BASH_InsertMacroValue("ORGANIZATION")<CR>a'
+	exe "vmenu ".s:BASH_Root.'&Comments.ta&gs\ (plugin).&PROJECT         s<Esc>:call BASH_InsertMacroValue("PROJECT")<CR>a'
 
 	exe " menu ".s:BASH_Root.'&Comments.&vim\ modeline<Tab>\\cv               :call BASH_CommentVimModeline()<CR>'
 	exe "imenu ".s:BASH_Root.'&Comments.&vim\ modeline<Tab>\\cv          <Esc>:call BASH_CommentVimModeline()<CR>'
@@ -393,7 +395,7 @@ function!	BASH_InitMenu ()
 	exe "anoremenu ".s:BASH_Root.'&Statements.&if<Tab>\\si								:call BASH_InsertTemplate("statements.if")<CR>'
 	exe "anoremenu ".s:BASH_Root.'&Statements.if-&else<Tab>\\sie					:call BASH_InsertTemplate("statements.if-else")<CR>'
 	exe "anoremenu ".s:BASH_Root.'&Statements.&select<Tab>\\ss						:call BASH_InsertTemplate("statements.select")<CR>'
-	exe "anoremenu ".s:BASH_Root.'&Statements.un&til<Tab>\\st							:call BASH_InsertTemplate("statements.until")<CR>'
+	exe "anoremenu ".s:BASH_Root.'&Statements.un&til<Tab>\\su							:call BASH_InsertTemplate("statements.until")<CR>'
 	exe "anoremenu ".s:BASH_Root.'&Statements.&while<Tab>\\sw							:call BASH_InsertTemplate("statements.while")<CR>'
 
 	exe "inoremenu ".s:BASH_Root.'&Statements.&case<Tab>\\sc	     				<Esc>:call BASH_InsertTemplate("statements.case")<CR>'
@@ -403,7 +405,7 @@ function!	BASH_InitMenu ()
 	exe "inoremenu ".s:BASH_Root.'&Statements.&if<Tab>\\si								<Esc>:call BASH_InsertTemplate("statements.if")<CR>'
 	exe "inoremenu ".s:BASH_Root.'&Statements.if-&else<Tab>\\sie					<Esc>:call BASH_InsertTemplate("statements.if-else")<CR>'
 	exe "inoremenu ".s:BASH_Root.'&Statements.&select<Tab>\\ss						<Esc>:call BASH_InsertTemplate("statements.select")<CR>'
-	exe "inoremenu ".s:BASH_Root.'&Statements.un&til<Tab>\\st							<Esc>:call BASH_InsertTemplate("statements.until")<CR>'
+	exe "inoremenu ".s:BASH_Root.'&Statements.un&til<Tab>\\su							<Esc>:call BASH_InsertTemplate("statements.until")<CR>'
 	exe "inoremenu ".s:BASH_Root.'&Statements.&while<Tab>\\sw							<Esc>:call BASH_InsertTemplate("statements.while")<CR>'
 
 	exe "vnoremenu ".s:BASH_Root.'&Statements.&for\ in<Tab>\\sf						<Esc>:call BASH_InsertTemplate("statements.for-in", "v")<CR>'
@@ -411,7 +413,7 @@ function!	BASH_InitMenu ()
 	exe "vnoremenu ".s:BASH_Root.'&Statements.&if<Tab>\\si								<Esc>:call BASH_InsertTemplate("statements.if", "v")<CR>'
 	exe "vnoremenu ".s:BASH_Root.'&Statements.if-&else<Tab>\\sie					<Esc>:call BASH_InsertTemplate("statements.if-else", "v")<CR>'
 	exe "vnoremenu ".s:BASH_Root.'&Statements.&select<Tab>\\ss						<Esc>:call BASH_InsertTemplate("statements.select", "v")<CR>'
-	exe "vnoremenu ".s:BASH_Root.'&Statements.un&til<Tab>\\st							<Esc>:call BASH_InsertTemplate("statements.until", "v")<CR>'
+	exe "vnoremenu ".s:BASH_Root.'&Statements.un&til<Tab>\\su							<Esc>:call BASH_InsertTemplate("statements.until", "v")<CR>'
 	exe "vnoremenu ".s:BASH_Root.'&Statements.&while<Tab>\\sw							<Esc>:call BASH_InsertTemplate("statements.while", "v")<CR>'
 	"
 	exe "anoremenu ".s:BASH_Root.'&Statements.-SEP3-          :'
@@ -1214,6 +1216,7 @@ function! BASH_RereadTemplates ( displaymsg )
 	endif
 
 endfunction    " ----------  end of function BASH_RereadTemplates  ----------
+"
 "------------------------------------------------------------------------------
 "  BASH_BrowseTemplateFiles     {{{1
 "------------------------------------------------------------------------------
@@ -1749,6 +1752,29 @@ function! BASH_EndOfLineComment ( ) range
 		endif
 	endfor
 endfunction		" ---------- end of function  BASH_EndOfLineComment  ----------
+"
+"------------------------------------------------------------------------------
+"  Comments : put statement in an echo    {{{1
+"------------------------------------------------------------------------------
+function! BASH_echo_comment ()
+	let	line	= escape( getline("."), '"' )
+	let	line	= substitute( line, '^\s*', '', '' )
+	call setline( line("."), 'echo "'.line.'"' )
+	silent exe "normal =="
+	return
+endfunction    " ----------  end of function BASH_echo_comment  ----------
+"
+"------------------------------------------------------------------------------
+"  Comments : remove echo from statement  {{{1
+"------------------------------------------------------------------------------
+function! BASH_remove_echo ()
+	let	line	= substitute( getline("."), '\\"', '"', 'g' )
+	let	line	= substitute( line, '^\s*echo\s\+"', '', '' )
+	let	line	= substitute( line, '"$', '', '' )
+	call setline( line("."), line )
+	silent exe "normal =="
+	return
+endfunction    " ----------  end of function BASH_remove_echo  ----------
 "
 "------------------------------------------------------------------------------
 "  Comments : multi line-end comments    {{{1
@@ -2667,13 +2693,13 @@ endfunction   " ---------- end of function  BASH_Hardcopy  ----------
 function! BASH_Settings ()
 	let	txt	=     "     Bash-Support settings\n\n"
   let txt = txt.'               author name :  "'.s:BASH_Macro['|AUTHOR|']."\"\n"
-  let txt = txt.'                  initials :  "'.s:BASH_Macro['|AUTHORREF|']."\"\n"
-  let txt = txt.'                     email :  "'.s:BASH_Macro['|EMAIL|']."\"\n"
+  let txt = txt.'                 authorref :  "'.s:BASH_Macro['|AUTHORREF|']."\"\n"
   let txt = txt.'                   company :  "'.s:BASH_Macro['|COMPANY|']."\"\n"
+  let txt = txt.'          copyright holder :  "'.s:BASH_Macro['|COPYRIGHTHOLDER|']."\"\n"
+  let txt = txt.'                     email :  "'.s:BASH_Macro['|EMAIL|']."\"\n"
   let txt = txt.'                   licence :  "'.s:BASH_Macro['|LICENSE|']."\"\n"
   let txt = txt.'              organization :  "'.s:BASH_Macro['|ORGANIZATION|']."\"\n"
   let txt = txt.'                   project :  "'.s:BASH_Macro['|PROJECT|']."\"\n"
-  let txt = txt.'          copyright holder :  "'.s:BASH_Macro['|COPYRIGHTHOLDER|']."\"\n"
 	let txt = txt.'    code snippet directory :  "'.s:BASH_CodeSnippets."\"\n"
 	" ----- template files  ------------------------
 	let txt = txt.'            template style :  "'.s:BASH_ActualStyle."\"\n"
@@ -2935,9 +2961,9 @@ function! BASH_InsertMacroValue ( key )
 		return
 	endif
 	if col(".") > 1
-		exe 'normal a'.s:BASH_Macro['|'.a:key.'|']
+		exe 'normal! a'.s:BASH_Macro['|'.a:key.'|']
 	else
-		exe 'normal i'.s:BASH_Macro['|'.a:key.'|']
+		exe 'normal! i'.s:BASH_Macro['|'.a:key.'|']
 	endif
 endfunction    " ----------  end of function BASH_InsertMacroValue  ----------
 
@@ -2972,17 +2998,26 @@ function! BASH_DateAndTime ( format )
 endfunction    " ----------  end of function BASH_DateAndTime  ----------
 "
 "------------------------------------------------------------------------------
+"  BASH_CreateMenusDelayed   {{{1
+"------------------------------------------------------------------------------
+let s:BASH_MenusVisible = 'no'								" state : 0 = not visible / 1 = visible
+"
+function! BASH_CreateMenusDelayed ()
+	if s:BASH_CreateMenusDelayed == 'yes' && s:BASH_MenusVisible == 'no'
+		call BASH_CreateGuiMenus()
+	endif
+endfunction    " ----------  end of function BASH_CreateMenusDelayed  ----------
+"
+"------------------------------------------------------------------------------
 "  BASH_CreateGuiMenus    {{{1
 "------------------------------------------------------------------------------
-let s:BASH_MenuVisible = 0								" state : 0 = not visible / 1 = visible
-"
 function! BASH_CreateGuiMenus ()
-	if s:BASH_MenuVisible != 1
+	if s:BASH_MenusVisible == 'no'
 		aunmenu <silent> &Tools.Load\ Bash\ Support
 		amenu   <silent> 40.1000 &Tools.-SEP100- :
 		amenu   <silent> 40.1021 &Tools.Unload\ Bash\ Support <C-C>:call BASH_RemoveGuiMenus()<CR>
 		call BASH_InitMenu()
-		let s:BASH_MenuVisible = 1
+		let s:BASH_MenusVisible = 'yes'
 	endif
 endfunction    " ----------  end of function BASH_CreateGuiMenus  ----------
 
@@ -2998,13 +3033,13 @@ endfunction    " ----------  end of function BASH_ToolMenu  ----------
 "  BASH_RemoveGuiMenus    {{{1
 "------------------------------------------------------------------------------
 function! BASH_RemoveGuiMenus ()
-	if s:BASH_MenuVisible == 1
+	if s:BASH_MenusVisible == 'yes'
 		exe "aunmenu <silent> ".s:BASH_Root
 		"
 		aunmenu <silent> &Tools.Unload\ Bash\ Support
 		call BASH_ToolMenu()
 		"
-		let s:BASH_MenuVisible = 0
+		let s:BASH_MenusVisible = 'no'
 	endif
 endfunction    " ----------  end of function BASH_RemoveGuiMenus  ----------
 "
@@ -3038,7 +3073,7 @@ endfunction    " ----------  end of function BASH_RestoreOption  ----------
 "
 call BASH_ToolMenu()
 "
-if s:BASH_LoadMenus == 'yes'
+if s:BASH_LoadMenus == 'yes' && s:BASH_CreateMenusDelayed == 'no'
 	call BASH_CreateGuiMenus()
 endif
 "
@@ -3058,13 +3093,15 @@ if has("autocmd")
 		exe "autocmd BufNewFile,BufRead           *.sh set fileformat=".s:BASH_FileFormat
 	endif
 	"
+	autocmd BufNewFile,BufRead           *.sh call BASH_CreateMenusDelayed()
+	"
 	" Bash-script : insert header, write file, make it executable
 	"
 	if !exists( 'g:BASH_AlsoBash' )
 		"
 		autocmd BufNewFile,BufRead           *.sh set filetype=sh
 		" style is taken from s:BASH_Style
-		autocmd BufNewFile                   *.sh call BASH_InsertTemplate("comment.file-description") 	|	:w!
+		autocmd BufNewFile                   *.sh call BASH_InsertTemplate("comment.file-description")
 		autocmd BufRead                      *.sh call BASH_HighlightJumpTargets()
 		"
 	else
@@ -3075,7 +3112,7 @@ if has("autocmd")
 			for pattern in g:BASH_AlsoBash
 				exe "autocmd BufNewFile,BufRead          ".pattern." set filetype=sh"
 				" style is taken from s:BASH_Style
-				exe "autocmd BufNewFile                  ".pattern." call BASH_InsertTemplate('comment.file-description') 	|	:w!"
+				exe "autocmd BufNewFile                  ".pattern." call BASH_InsertTemplate('comment.file-description')"
 				exe 'autocmd BufRead                     ".pattern." call BASH_HighlightJumpTargets()'
 			endfor
 		endif
@@ -3087,7 +3124,7 @@ if has("autocmd")
 				exe "autocmd BufNewFile,BufRead          ".pattern." set filetype=sh"
 				" style is defined by the file extensions
 				exe "autocmd BufNewFile,BufRead,BufEnter ".pattern." call BASH_Style( '".stl."' )"
-				exe "autocmd BufNewFile                  ".pattern." call BASH_InsertTemplate('comment.file-description') 	|	:w!"
+				exe "autocmd BufNewFile                  ".pattern." call BASH_InsertTemplate('comment.file-description')"
 				exe 'autocmd BufRead                     ".pattern." call BASH_HighlightJumpTargets()'
 			endfor
 		endif

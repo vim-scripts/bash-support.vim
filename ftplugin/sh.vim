@@ -3,7 +3,7 @@
 "   Language :  bash
 "     Plugin :  bash-support.vim
 " Maintainer :  Fritz Mehner <mehner@fh-swf.de>
-"   Revision :  $Id: sh.vim,v 1.45 2011/11/02 17:30:12 mehner Exp $
+"   Revision :  $Id: sh.vim,v 1.47 2011/12/24 12:23:49 mehner Exp $
 "
 " -----------------------------------------------------------------
 "
@@ -132,10 +132,10 @@ inoremap  <buffer>  <silent>  <LocalLeader>ckw     <C-C>$:call BASH_InsertTempla
 inoremap  <buffer>  <silent>  <LocalLeader>cko     <C-C>$:call BASH_InsertTemplate("comment.keyword-workaround")<CR>
 inoremap  <buffer>  <silent>  <LocalLeader>ckn     <C-C>$:call BASH_InsertTemplate("comment.keyword-keyword")   <CR>
 
- noremap  <buffer>  <silent>  <LocalLeader>ce           ^iecho<Space>"<End>"<Esc>j'
-inoremap  <buffer>  <silent>  <LocalLeader>ce      <C-C>^iecho<Space>"<End>"<Esc>j'
- noremap  <buffer>  <silent>  <LocalLeader>cr           0:s/^\s*echo\s\+\"// \| s/\s*\"\s*$// \| :normal ==<CR>j'
-inoremap  <buffer>  <silent>  <LocalLeader>cr      <C-C>0:s/^\s*echo\s\+\"// \| s/\s*\"\s*$// \| :normal ==<CR>j'
+ noremap  <buffer>  <silent>  <LocalLeader>ce           :call BASH_echo_comment()<CR>j'
+inoremap  <buffer>  <silent>  <LocalLeader>ce      <C-C>:call BASH_echo_comment()<CR>j'
+ noremap  <buffer>  <silent>  <LocalLeader>cr           :call BASH_remove_echo()<CR>j'
+inoremap  <buffer>  <silent>  <LocalLeader>cr      <C-C>:call BASH_remove_echo()<CR>j'
  noremap  <buffer>  <silent>  <LocalLeader>cv           :call BASH_CommentVimModeline()<CR>
 inoremap  <buffer>  <silent>  <LocalLeader>cv      <C-C>:call BASH_CommentVimModeline()<CR>
 "
@@ -153,7 +153,7 @@ inoremap    <buffer>            <LocalLeader>ckc   <Esc>:KeywordComment<Space>
  noremap  <buffer>  <silent>  <LocalLeader>si           :call BASH_InsertTemplate("statements.if")<CR>
  noremap  <buffer>  <silent>  <LocalLeader>sie          :call BASH_InsertTemplate("statements.if-else")<CR>
  noremap  <buffer>  <silent>  <LocalLeader>ss           :call BASH_InsertTemplate("statements.select")<CR>
- noremap  <buffer>  <silent>  <LocalLeader>st           :call BASH_InsertTemplate("statements.until")<CR>
+ noremap  <buffer>  <silent>  <LocalLeader>su           :call BASH_InsertTemplate("statements.until")<CR>
  noremap  <buffer>  <silent>  <LocalLeader>sw           :call BASH_InsertTemplate("statements.while")<CR>
 
 inoremap  <buffer>  <silent>  <LocalLeader>sc      <Esc>:call BASH_InsertTemplate("statements.case")<CR>
@@ -163,7 +163,7 @@ inoremap  <buffer>  <silent>  <LocalLeader>sfo     <Esc>:call BASH_InsertTemplat
 inoremap  <buffer>  <silent>  <LocalLeader>si      <Esc>:call BASH_InsertTemplate("statements.if")<CR>
 inoremap  <buffer>  <silent>  <LocalLeader>sie     <Esc>:call BASH_InsertTemplate("statements.if-else")<CR>
 inoremap  <buffer>  <silent>  <LocalLeader>ss      <Esc>:call BASH_InsertTemplate("statements.select")<CR>
-inoremap  <buffer>  <silent>  <LocalLeader>st      <Esc>:call BASH_InsertTemplate("statements.until")<CR>
+inoremap  <buffer>  <silent>  <LocalLeader>su      <Esc>:call BASH_InsertTemplate("statements.until")<CR>
 inoremap  <buffer>  <silent>  <LocalLeader>sw      <Esc>:call BASH_InsertTemplate("statements.while")<CR>
 
 vnoremap  <buffer>  <silent>  <LocalLeader>sf      <Esc>:call BASH_InsertTemplate("statements.for-in", "v")<CR>
@@ -171,7 +171,7 @@ vnoremap  <buffer>  <silent>  <LocalLeader>sfo     <Esc>:call BASH_InsertTemplat
 vnoremap  <buffer>  <silent>  <LocalLeader>si      <Esc>:call BASH_InsertTemplate("statements.if", "v")<CR>
 vnoremap  <buffer>  <silent>  <LocalLeader>sie     <Esc>:call BASH_InsertTemplate("statements.if-else", "v")<CR>
 vnoremap  <buffer>  <silent>  <LocalLeader>ss      <Esc>:call BASH_InsertTemplate("statements.select", "v")<CR>
-vnoremap  <buffer>  <silent>  <LocalLeader>st      <Esc>:call BASH_InsertTemplate("statements.until", "v")<CR>
+vnoremap  <buffer>  <silent>  <LocalLeader>su      <Esc>:call BASH_InsertTemplate("statements.until", "v")<CR>
 vnoremap  <buffer>  <silent>  <LocalLeader>sw      <Esc>:call BASH_InsertTemplate("statements.while", "v")<CR>
 
  noremap  <buffer>  <silent>  <LocalLeader>sfu          :call BASH_InsertTemplate("statements.function")<CR>

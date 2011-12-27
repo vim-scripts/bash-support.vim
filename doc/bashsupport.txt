@@ -1,7 +1,7 @@
-*bashsupport.txt*                Bash Support                November 18 2011
+*bashsupport.txt*                Bash Support                December 3 2011
 
 bash Support                                      *bash-support* *bashsupport*
-                             Plugin version 3.8
+                             Plugin version 3.9
                         for Vim version 7.0 and above
                        Fritz Mehner  <mehner@fh-swf.de>
 
@@ -731,7 +731,7 @@ Legend:  (i) insert mode, (n) normal mode, (v) visual mode
      \si     if then fi                       (n, i, v)
      \sie    if then else fi                  (n, i, v)
      \ss     select in do done                (n, i, v)
-     \st     until do done                    (n, i, v)
+     \su     until do done                    (n, i, v)
      \sw     while do done                    (n, i, v)
      \sfu    function                         (n, i, v)
      \se     echo -e "..."                    (n, i, v)
@@ -893,6 +893,7 @@ g:BASH_Ctrl_j                  'on'
 g:BASH_CodeSnippets            $HOME.'/.vim/bash-support/codesnippets'     (Linux/U**X)
                                $VIM.'\vimfiles\bash-support/codesnippets/' (Windows)
 g:BASH_LoadMenus               'yes'
+g:BASH_CreateMenusDelayed      'no'
 g:BASH_Dictionary_File         $HOME."/.vim/bash-support/wordlists/bash.list"
 g:BASH_Root                    'B&ash.'
 g:BASH_MenuHeader              'yes'
@@ -927,6 +928,7 @@ g:BASH_AlsoBash                ''
  2. group: g:BASH_CodeSnippets           : The name of the code snippet directory
                                            (see |bashsupport-stat-snippets|).
            g:BASH_LoadMenus              : Load menus and mappings ("yes", "no") at start up.
+           g:BASH_CreateMenusDelayed     : Load menus only with filetype 'sh'
            g:BASH_Dictionary_File        : Path and file name of the bash word list used for
                                            dictionary completion (see |bashsupport-dictionary|).
            g:BASH_Root                   : The name of the root menu entry of this plugin

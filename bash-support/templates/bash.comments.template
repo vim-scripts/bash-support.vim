@@ -19,16 +19,16 @@
 #!/bin/bash - 
 #===============================================================================
 #
-#          FILE:  |FILENAME|
+#          FILE: |FILENAME|
 # 
-#         USAGE:  ./|FILENAME| 
+#         USAGE: ./|FILENAME| 
 # 
-#   DESCRIPTION:  
+#   DESCRIPTION: 
 # 
-#       OPTIONS:  ---
-#  REQUIREMENTS:  ---
-#          BUGS:  ---
-#         NOTES:  ---
+#       OPTIONS: ---
+#  REQUIREMENTS: ---
+#          BUGS: ---
+#         NOTES: ---
 #        AUTHOR: |AUTHOR| (|AUTHORREF|), |EMAIL|
 #  ORGANIZATION: |ORGANIZATION|
 #       CREATED: |DATE| |TIME|

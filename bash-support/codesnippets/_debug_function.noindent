@@ -1,5 +1,6 @@
 
-DEBUG=1    # debugging on (0) / off (1)
+DEBUG=${DEBUG:-0}           # 0 = no debug output, 1 = show debug output,
+                            # or enable debug with:  DEBUG=1 script.sh
 
 #===  FUNCTION  ================================================================
 #          NAME:  _debug

@@ -1,4 +1,19 @@
 =======================================================================================
+  RELEASE NOTES FOR VERSION 3.8
+=======================================================================================
+- New comment submenu 'script sections'.
+- Two new hotkeys \css, \ckc for commenting.
+- Two new plugin tags: LICENSE,ORGANIZATION
+- Run menu: new item 'Bash cmd. line arg.' (\rba).  
+- I/O-Redir-menu: additional item'>&2'
+- System-wide installation: minimal Template file for a user will automatically
+  be added.
+- Hotkey renamed: \t -> \t1
+- A few code snippets for debugging added.
+- Bugfix: \cl did not work in insert mode.
+- Other minor bugs fixed.
+
+=======================================================================================
   RELEASE NOTES FOR VERSION 3.7
 =======================================================================================
 - The three hotkeys \cl, \cj, \cc allow a range, e.g. '3\cl' (see help text and

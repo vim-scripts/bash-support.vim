@@ -1,4 +1,4 @@
-README for bash-support.vim (Version 3.8) / November 18 2011
+README for bash-support.vim (Version 3.9) / December 27 2011
 
   *  INSTALLATION
   *  RELEASE NOTES 
@@ -136,18 +136,11 @@ Look at the bashsupport help with
              +-----------------------------------------------+
 
 =======================================================================================
-  RELEASE NOTES FOR VERSION 3.8
+  RELEASE NOTES FOR VERSION 3.9
 =======================================================================================
-- New comment submenu 'script sections'.
-- Two new hotkeys \css, \ckc for commenting.
-- Two new plugin tags: LICENSE,ORGANIZATION
-- Run menu: new item 'Bash cmd. line arg.' (\rba).  
-- I/O-Redir-menu: additional item'>&2'
-- System-wide installation: minimal Template file for a user will automatically
-  be added.
-- Hotkey renamed: \t -> \t1
-- A few code snippets for debugging added.
-- Bugfix: \cl did not work in insert mode.
+- Hotkey renamed: \st -> \su
+- New global variable allows loading menus only with filetype 'sh'.
+- Comments: echo "<line>" escapes double quotes in original text.
 - Other minor bugs fixed.
 
 =======================================================================================
