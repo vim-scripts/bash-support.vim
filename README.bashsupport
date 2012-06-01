@@ -1,4 +1,4 @@
-README for bash-support.vim (Version 3.9) / December 27 2011
+README for bash-support.vim (Version 3.10) / May 31 2012
 
   *  INSTALLATION
   *  RELEASE NOTES 
@@ -136,11 +136,11 @@ Look at the bashsupport help with
              +-----------------------------------------------+
 
 =======================================================================================
-  RELEASE NOTES FOR VERSION 3.9
+  RELEASE NOTES FOR VERSION 3.10
 =======================================================================================
-- Hotkey renamed: \st -> \su
-- New global variable allows loading menus only with filetype 'sh'.
-- Comments: echo "<line>" escapes double quotes in original text.
+- Resolve $HOME for linked home directories.
+- Wrong insertion for parameter substitution "match beginning; del longest
+  part" (thanks to John Orr).
 - Other minor bugs fixed.
 
 =======================================================================================

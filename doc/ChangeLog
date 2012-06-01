@@ -1,4 +1,12 @@
 =======================================================================================
+  RELEASE NOTES FOR VERSION 3.9
+=======================================================================================
+- Hotkey renamed: \st -> \su
+- New global variable allows loading menus only with filetype 'sh'.
+- Comments: echo "<line>" escapes double quotes in original text.
+- Other minor bugs fixed.
+
+=======================================================================================
   RELEASE NOTES FOR VERSION 3.8
 =======================================================================================
 - New comment submenu 'script sections'.
