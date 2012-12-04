@@ -1,7 +1,7 @@
-*bashsupport.txt*                Bash Support                    May 31 2012
+*bashsupport.txt*                Bash Support                December 01 2012
 
 bash Support                                      *bash-support* *bashsupport*
-                             Plugin version 3.10
+                             Plugin version 3.11
                         for Vim version 7.0 and above
                        Fritz Mehner  <mehner@fh-swf.de>
 
@@ -645,7 +645,8 @@ The methods are "vim", "buffer" and "xterm".
 Item 'help (Bash builtins)'
 ---------------------------
 Look up Bash help for the word under the cursor. If there is no word under the
-cursor you will be asked for the name of a builtin. The tab expansion is active.
+cursor you will be asked for the name of a builtin. The tab expansion can be
+used.
 
 Item 'manual (utilities)'
 -------------------------
@@ -781,7 +782,7 @@ Legend:  (i) insert mode, (n) normal mode, (v) visual mode
 
   -- Run -------------------------------------------------
 
-     \rr     update file, run script          (n, i)
+  [n]\rr     update file, run script          (n, i)
      \ra     set script cmd. line arguments   (n, i)
      \rba    set Bash cmd. line arguments     (n, i)
      \rc     update file, check syntax        (n, i)

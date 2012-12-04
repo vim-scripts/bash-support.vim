@@ -1,4 +1,4 @@
-README for bash-support.vim (Version 3.10) / May 31 2012
+README for bash-support.vim (Version 3.11) / December 01 2012
 
   *  INSTALLATION
   *  RELEASE NOTES 
@@ -136,12 +136,11 @@ Look at the bashsupport help with
              +-----------------------------------------------+
 
 =======================================================================================
-  RELEASE NOTES FOR VERSION 3.10
+  RELEASE NOTES FOR VERSION 3.11
 =======================================================================================
-- Resolve $HOME for linked home directories.
-- Wrong insertion for parameter substitution "match beginning; del longest
-  part" (thanks to John Orr).
-- Other minor bugs fixed.
+- Rendering of manuals (\hm) and Bash help (\hh).
+- Bugfix: \hb, \hm, \hh not working.
+- Minor internal improvements.
 
 =======================================================================================
   OLDER RELEASE NOTES : see file 'ChangeLog'

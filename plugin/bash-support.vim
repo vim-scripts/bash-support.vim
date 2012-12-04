@@ -29,7 +29,7 @@
 "                  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 "                  PURPOSE.
 "                  See the GNU General Public License version 2 for more details.
-"       Revision:  $Id: bash-support.vim,v 1.115 2012/05/31 10:52:34 mehner Exp $
+"       Revision:  $Id: bash-support.vim,v 1.118 2012/12/01 11:03:54 mehner Exp $
 "
 "------------------------------------------------------------------------------
 "
@@ -99,7 +99,7 @@ else
 	end
 	"
 	let s:BASH_BASH									= $SHELL
-	let s:BASH_Man        					= 'man'
+	let s:BASH_Man        					= '/usr/bin/man'
 	let s:BASH_OutputGvim						= 'vim'
   " ==============================================================================
 endif
@@ -268,7 +268,7 @@ function!	BASH_InitMenu ()
 	"-------------------------------------------------------------------------------
 	exe " menu           ".s:BASH_Root.'&Comments.end-of-&line\ comment<Tab>\\cl                    :call BASH_EndOfLineComment()<CR>'
 	exe "imenu           ".s:BASH_Root.'&Comments.end-of-&line\ comment<Tab>\\cl               <Esc>:call BASH_EndOfLineComment()<CR>'
-	exe "vmenu <silent>  ".s:BASH_Root.'&Comments.end-of-&line\ comment<Tab>\\cl               <Esc>:call BASH_MultiLineEndComments()<CR>A'
+ 	exe "vmenu <silent>  ".s:BASH_Root.'&Comments.end-of-&line\ comment<Tab>\\cl               <Esc>:call BASH_MultiLineEndComments()<CR>A'
 
 	exe " menu <silent>  ".s:BASH_Root.'&Comments.ad&just\ end-of-line\ com\.<Tab>\\cj              :call BASH_AdjustLineEndComm()<CR>'
 	exe "imenu <silent>  ".s:BASH_Root.'&Comments.ad&just\ end-of-line\ com\.<Tab>\\cj         <Esc>:call BASH_AdjustLineEndComm()<CR>'
@@ -896,10 +896,10 @@ function!	BASH_InitMenu ()
 	"   ( the one in the current buffer ; other versions may exist elsewhere ! )
 	"
 
-	exe " menu <silent> ".s:BASH_Root.'&Run.save\ +\ &run\ script<Tab>\\rr\ \r<C-F9>            :call BASH_Run("n")<CR>'
-	exe "imenu <silent> ".s:BASH_Root.'&Run.save\ +\ &run\ script<Tab>\\rr\ \r<C-F9>       <C-C>:call BASH_Run("n")<CR>'
+	exe " menu <silent> ".s:BASH_Root.'&Run.save\ +\ &run\ script<Tab>\\rr\ \ <C-F9>            :call BASH_Run("n")<CR>'
+	exe "imenu <silent> ".s:BASH_Root.'&Run.save\ +\ &run\ script<Tab>\\rr\ \ <C-F9>       <C-C>:call BASH_Run("n")<CR>'
 	if	!s:MSWIN
-		exe "vmenu <silent> ".s:BASH_Root.'&Run.save\ +\ &run\ script<Tab>\\rr\ \r<C-F9>       <C-C>:call BASH_Run("v")<CR>'
+		exe "vmenu <silent> ".s:BASH_Root.'&Run.save\ +\ &run\ script<Tab>\\rr\ \ <C-F9>       <C-C>:call BASH_Run("v")<CR>'
 	endif
 	"
 	"   set execution right only for the user ( may be user root ! )
@@ -916,8 +916,8 @@ function!	BASH_InitMenu ()
 	exe "imenu <silent> ".s:BASH_Root.'&Run.syntax\ check\ o&ptions<Tab>\\rco          <C-C>:call BASH_SyntaxCheckOptionsLocal()<CR>'
 	"
 	if	!s:MSWIN
-		exe " menu <silent> ".s:BASH_Root.'&Run.start\ &debugger<Tab>\\rd\ \ \ \ <F9>           :call BASH_Debugger()<CR>'
-		exe "imenu <silent> ".s:BASH_Root.'&Run.start\ &debugger<Tab>\\rd\ \ \ \ <F9>      <C-C>:call BASH_Debugger()<CR>'
+		exe " menu <silent> ".s:BASH_Root.'&Run.start\ &debugger<Tab>\\rd\ \ <F9>           :call BASH_Debugger()<CR>'
+		exe "imenu <silent> ".s:BASH_Root.'&Run.start\ &debugger<Tab>\\rd\ \ <F9>      <C-C>:call BASH_Debugger()<CR>'
 		exe " menu <silent> ".s:BASH_Root.'&Run.make\ script\ &executable<Tab>\\re              :call BASH_MakeScriptExecutable()<CR>'
 		exe "imenu <silent> ".s:BASH_Root.'&Run.make\ script\ &executable<Tab>\\re         <C-C>:call BASH_MakeScriptExecutable()<CR>'
 	endif
@@ -971,14 +971,14 @@ function!	BASH_InitMenu ()
 	"----- menu help     {{{2
 	"===============================================================================================
 	"
-	exe " menu  <silent>  ".s:BASH_Root.'&Help.&Bash\ manual<Tab>\\hb                    :call BASH_help("b")<CR>'
-	exe "imenu  <silent>  ".s:BASH_Root.'&Help.&Bash\ manual<Tab>\\hb               <C-C>:call BASH_help("b")<CR>'
+	exe " menu  <silent>  ".s:BASH_Root.'&Help.&Bash\ manual<Tab>\\hb                    :call BASH_help("bash")<CR>'
+	exe "imenu  <silent>  ".s:BASH_Root.'&Help.&Bash\ manual<Tab>\\hb               <C-C>:call BASH_help("bash")<CR>'
 	"
-	exe " menu  <silent>  ".s:BASH_Root.'&Help.&help\ (Bash\ builtins)<Tab>\\hh          :call BASH_help("h")<CR>'
-	exe "imenu  <silent>  ".s:BASH_Root.'&Help.&help\ (Bash\ builtins)<Tab>\\hh     <C-C>:call BASH_help("h")<CR>'
+	exe " menu  <silent>  ".s:BASH_Root.'&Help.&help\ (Bash\ builtins)<Tab>\\hh          :call BASH_help("help")<CR>'
+	exe "imenu  <silent>  ".s:BASH_Root.'&Help.&help\ (Bash\ builtins)<Tab>\\hh     <C-C>:call BASH_help("help")<CR>'
 	"
-	exe " menu  <silent>  ".s:BASH_Root.'&Help.&manual\ (utilities)<Tab>\\hm             :call BASH_help("m")<CR>'
-	exe "imenu  <silent>  ".s:BASH_Root.'&Help.&manual\ (utilities)<Tab>\\hm        <C-C>:call BASH_help("m")<CR>'
+	exe " menu  <silent>  ".s:BASH_Root.'&Help.&manual\ (utilities)<Tab>\\hm             :call BASH_help("man")<CR>'
+	exe "imenu  <silent>  ".s:BASH_Root.'&Help.&manual\ (utilities)<Tab>\\hm        <C-C>:call BASH_help("man")<CR>'
 	"
 	exe " menu  <silent>  ".s:BASH_Root.'&Help.bash-&support<Tab>\\hbs           :call BASH_HelpBASHsupport()<CR>'
 	exe "imenu  <silent>  ".s:BASH_Root.'&Help.bash-&support<Tab>\\hbs      <C-C>:call BASH_HelpBASHsupport()<CR>'
@@ -1883,7 +1883,7 @@ endfunction    " ----------  end of function  Bash_SubstituteTag  ----------
 "  Comments : vim modeline    {{{1
 "------------------------------------------------------------------------------
 function! BASH_CommentVimModeline ()
-  	put = '# vim: set tabstop='.&tabstop.' shiftwidth='.&shiftwidth.': '
+  	put = '# vim: filetype=sh : tabstop='.&tabstop.' : shiftwidth='.&shiftwidth.' :'
 endfunction    " ----------  end of function BASH_CommentVimModeline  ----------
 "
 "------------------------------------------------------------------------------
@@ -1968,15 +1968,15 @@ function! BASH_help( type )
 	let cuc		= getline(".")[col(".") - 1]		" character under the cursor
 	let	item	= expand("<cword>")							" word under the cursor
 	if empty(item) || match( item, cuc ) == -1
-		if a:type == 'm'
+		if a:type == 'man'
 			let	item=BASH_Input('[tab compl. on] name of command line utility : ', '', 'shellcmd' )
 		endif
-		if a:type == 'h'
+		if a:type == 'help'
 			let	item=BASH_Input('[tab compl. on] name of bash builtin : ', '', 'customlist,BASH_BuiltinComplete' )
 		endif
 	endif
 
-	if empty(item) &&  a:type != 'b'
+	if empty(item) &&  a:type != 'bash'
 		return
 	endif
 	"------------------------------------------------------------------------------
@@ -1998,22 +1998,23 @@ function! BASH_help( type )
 		setlocal buftype=nofile
 		setlocal noswapfile
 		setlocal bufhidden=delete
-		setlocal filetype=sh		" allows repeated use of <S-F1>
 		setlocal syntax=OFF
 	endif
 	setlocal	modifiable
+	setlocal filetype=man
 	"
 	"-------------------------------------------------------------------------------
 	" read Bash help
 	"-------------------------------------------------------------------------------
-	if a:type == 'h'
-		silent exe ":%!help  ".item
+	if a:type == 'help'
+		setlocal wrap
+		silent exe ":%!help -m ".item
 	endif
 	"
 	"-------------------------------------------------------------------------------
 	" open a manual (utilities)
 	"-------------------------------------------------------------------------------
-	if a:type == 'm'
+	if a:type == 'man'
 		"
 		" Is there more than one manual ?
 		"
@@ -2060,7 +2061,6 @@ function! BASH_help( type )
 			endif
 		endif
 
-		set filetype=man
 		silent exe ":%!".s:BASH_Man.' '.catalog.' '.item
 
 		if s:MSWIN
@@ -2072,17 +2072,11 @@ function! BASH_help( type )
 	"-------------------------------------------------------------------------------
 	" open the bash manual
 	"-------------------------------------------------------------------------------
-	if a:type == 'b'
-		silent exe ":%!man 1 bash"
+	if a:type == 'bash'
+		silent exe ":%!".s:BASH_Man.' 1 bash'
 
 		if s:MSWIN
 			call s:bash_RemoveSpecialCharacters()
-		endif
-
-		if !empty(item)
-				" assign to the search pattern register "" :
-				let @/=item
-				echo "use n/N to search for '".item."'"
 		endif
 	endif
 
@@ -2341,7 +2335,8 @@ endfunction    " ----------  end of function BASH_BashCmdLineArguments ---------
 let s:BASH_OutputBufferName   = "Bash-Output"
 let s:BASH_OutputBufferNumber = -1
 "
-function! BASH_Run ( mode )
+function! BASH_Run ( mode ) range
+
 	silent exe ':cclose'
 "
 	let	l:arguments				= exists("b:BASH_ScriptCmdLineArgs") ? " ".b:BASH_ScriptCmdLineArgs : ""
@@ -2351,7 +2346,12 @@ function! BASH_Run ( mode )
 	"
 	silent exe ":update"
 	"
-	if a:mode=="v"
+ 	if a:firstline != a:lastline
+		let tmpfile	= tempname()
+		silent exe ':'.a:firstline.','.a:lastline.'write '.tmpfile
+	endif
+	"
+	if a:mode=="v" 
 		let tmpfile	= tempname()
 		silent exe ":'<,'>write ".tmpfile
 	endif
@@ -2366,8 +2366,7 @@ function! BASH_Run ( mode )
 		"
 		" ----- visual mode ----------
 		"
-		if a:mode=="v"
-			echomsg  ":!".s:BASH_BASH.l:bashCmdLineArgs." < ".tmpfile." -s ".l:arguments
+		if ( a:mode=="v" ) || ( a:firstline != a:lastline )
 			exe ":!".s:BASH_BASH.l:bashCmdLineArgs." < ".tmpfile." -s ".l:arguments
 			call delete(tmpfile)
 			return
@@ -2442,7 +2441,7 @@ function! BASH_Run ( mode )
 				endif
 			endif
 			"
-			if a:mode=="v"
+			if ( a:mode=="v" ) || ( a:firstline != a:lastline )
 				silent exe ":%!".s:BASH_BASH.l:bashCmdLineArgs." < ".tmpfile." -s ".l:arguments
 			endif
 			setlocal	nomodifiable
@@ -2469,11 +2468,15 @@ function! BASH_Run ( mode )
 			exe ':!'.s:BASH_BASH.l:bashCmdLineArgs.' "'.l:fullname.'" '.l:arguments
 		else
 			if a:mode=='n'
-				silent exe '!xterm -title '.l:fullnameesc.' '.s:BASH_XtermDefaults
-							\			.' -e '.s:BASH_Wrapper.' '.l:bashCmdLineArgs.l:fullnameesc.l:arguments.' &'
-			endif
-			"
-			if a:mode=="v"
+				if a:firstline != a:lastline
+					let titlestring	= l:fullnameesc.'\ lines\ \ '.a:firstline.'\ -\ '.a:lastline
+					silent exe ':!xterm -title '.titlestring.' '.s:BASH_XtermDefaults
+								\			.' -e '.s:BASH_Wrapper.' '.l:bashCmdLineArgs.tmpfile.l:arguments.' &'
+				else
+					silent exe '!xterm -title '.l:fullnameesc.' '.s:BASH_XtermDefaults
+								\			.' -e '.s:BASH_Wrapper.' '.l:bashCmdLineArgs.l:fullnameesc.l:arguments.' &'
+				endif
+			elseif a:mode=="v"
 				let titlestring	= l:fullnameesc.'\ lines\ \ '.line("'<").'\ -\ '.line("'>")
 				silent exe ':!xterm -title '.titlestring.' '.s:BASH_XtermDefaults
 							\			.' -e '.s:BASH_Wrapper.' '.l:bashCmdLineArgs.tmpfile.l:arguments.' &'

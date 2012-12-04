@@ -3,7 +3,7 @@
 "   Language :  bash
 "     Plugin :  bash-support.vim
 " Maintainer :  Fritz Mehner <mehner@fh-swf.de>
-"   Revision :  $Id: sh.vim,v 1.47 2011/12/24 12:23:49 mehner Exp $
+"   Revision :  $Id: sh.vim,v 1.48 2012/12/01 10:59:55 mehner Exp $
 "
 " -----------------------------------------------------------------
 "
@@ -74,14 +74,14 @@ endif
 "
 " ---------- help ----------------------------------------------------
 "
- noremap  <buffer>  <silent>  <LocalLeader>hb            :call BASH_help('b')<CR>
-inoremap  <buffer>  <silent>  <LocalLeader>hb       <Esc>:call BASH_help('b')<CR>
+ noremap  <buffer>  <silent>  <LocalLeader>hb            :call BASH_help('bash')<CR>
+inoremap  <buffer>  <silent>  <LocalLeader>hb       <Esc>:call BASH_help('bash')<CR>
 "
- noremap  <buffer>  <silent>  <LocalLeader>hh            :call BASH_help('h')<CR>
-inoremap  <buffer>  <silent>  <LocalLeader>hh       <Esc>:call BASH_help('h')<CR>
+ noremap  <buffer>  <silent>  <LocalLeader>hh            :call BASH_help('help')<CR>
+inoremap  <buffer>  <silent>  <LocalLeader>hh       <Esc>:call BASH_help('help')<CR>
 "
- noremap  <buffer>  <silent>  <LocalLeader>hm            :call BASH_help('m')<CR>
-inoremap  <buffer>  <silent>  <LocalLeader>hm       <Esc>:call BASH_help('m')<CR>
+ noremap  <buffer>  <silent>  <LocalLeader>hm            :call BASH_help('man')<CR>
+inoremap  <buffer>  <silent>  <LocalLeader>hm       <Esc>:call BASH_help('man')<CR>
 "
  noremap  <buffer>  <silent>  <LocalLeader>hbs          :call BASH_HelpBASHsupport()<CR>
 inoremap  <buffer>  <silent>  <LocalLeader>hbs     <Esc>:call BASH_HelpBASHsupport()<CR>
@@ -90,7 +90,7 @@ inoremap  <buffer>  <silent>  <LocalLeader>hbs     <Esc>:call BASH_HelpBASHsuppo
 "
  noremap  <buffer>  <silent>  <LocalLeader>cl           :call BASH_EndOfLineComment()<CR>
 inoremap  <buffer>  <silent>  <LocalLeader>cl      <Esc>:call BASH_EndOfLineComment()<CR>
-vnoremap  <buffer>  <silent>  <LocalLeader>cl      <Esc>:call BASH_MultiLineEndComments()<CR>a
+vnoremap  <buffer>  <silent>  <LocalLeader>cl      <Esc>:call BASH_MultiLineEndComments()<CR>A
 
  noremap  <buffer>  <silent>  <LocalLeader>cj           :call BASH_AdjustLineEndComm()<CR>
 inoremap  <buffer>  <silent>  <LocalLeader>cj      <Esc>:call BASH_AdjustLineEndComm()<CR>

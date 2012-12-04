@@ -1,4 +1,12 @@
 =======================================================================================
+  RELEASE NOTES FOR VERSION 3.10
+=======================================================================================
+- Resolve $HOME for linked home directories.
+- Wrong insertion for parameter substitution "match beginning; del longest
+  part" (thanks to John Orr).
+- Other minor bugs fixed.
+
+=======================================================================================
   RELEASE NOTES FOR VERSION 3.9
 =======================================================================================
 - Hotkey renamed: \st -> \su
