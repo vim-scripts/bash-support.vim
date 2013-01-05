@@ -3,7 +3,7 @@
 "   Language :  bash
 "     Plugin :  bash-support.vim
 " Maintainer :  Fritz Mehner <mehner@fh-swf.de>
-"   Revision :  $Id: sh.vim,v 1.48 2012/12/01 10:59:55 mehner Exp $
+"   Revision :  $Id: sh.vim,v 1.49 2013/01/01 12:57:32 mehner Exp $
 "
 " -----------------------------------------------------------------
 "
@@ -38,9 +38,10 @@ if exists("g:BASH_Dictionary_File")
   silent! exe 'setlocal dictionary+='.save
 endif    
 "
-command! -nargs=1 -complete=customlist,BASH_StyleList   				BashStyle   		call BASH_Style(<f-args>)
-command! -nargs=1 -complete=customlist,BASH_ScriptSectionList   ScriptSection   call BASH_ScriptSectionListInsert(<f-args>)
-command! -nargs=1 -complete=customlist,BASH_KeywordCommentList  KeywordComment  call BASH_KeywordCommentListInsert(<f-args>)
+command! -nargs=* -complete=file                                BashCmdlineArgs     call BASH_ScriptCmdLineArguments(<q-args>)
+command! -nargs=1 -complete=customlist,BASH_KeywordCommentList  BashKeywordComment  call BASH_KeywordCommentListInsert(<f-args>)
+command! -nargs=1 -complete=customlist,BASH_ScriptSectionList   BashScriptSection   call BASH_ScriptSectionListInsert(<f-args>)
+command! -nargs=1 -complete=customlist,BASH_StyleList   				BashStyle   		    call BASH_Style(<f-args>)
 "
 " ---------- hot keys ------------------------------------------
 "
@@ -62,8 +63,8 @@ if has("gui_running")
     vmap  <buffer>  <silent>  <C-F9>   <C-C>:call BASH_Run("v")<CR>
   endif
   "
-  map   <buffer>  <silent>  <S-F9>        :call BASH_ScriptCmdLineArguments()<CR>
-  imap  <buffer>  <silent>  <S-F9>   <C-C>:call BASH_ScriptCmdLineArguments()<CR>
+  map   <buffer>            <S-F9>        :BashCmdlineArgs<Space>
+  imap  <buffer>            <S-F9>   <C-C>:BashCmdlineArgs<Space>
 endif
 "
 if !s:MSWIN
@@ -249,19 +250,21 @@ inoremap  <buffer>  <silent>  <LocalLeader>px    [:xdigit:]
 "
 " ---------- snippet menu ----------------------------------------------------
 "
-nnoremap  <buffer>  <silent>  <LocalLeader>nr         :call BASH_CodeSnippets("r")<CR>
-nnoremap  <buffer>  <silent>  <LocalLeader>nw         :call BASH_CodeSnippets("w")<CR>
-vnoremap  <buffer>  <silent>  <LocalLeader>nw    <C-C>:call BASH_CodeSnippets("wv")<CR>
-nnoremap  <buffer>  <silent>  <LocalLeader>ne         :call BASH_CodeSnippets("e")<CR>
+nnoremap  <buffer>  <silent>  <LocalLeader>nr         :call BASH_CodeSnippets("read")<CR>
+nnoremap  <buffer>  <silent>  <LocalLeader>nv         :call BASH_CodeSnippets("view")<CR>
+nnoremap  <buffer>  <silent>  <LocalLeader>nw         :call BASH_CodeSnippets("write")<CR>
+vnoremap  <buffer>  <silent>  <LocalLeader>nw    <C-C>:call BASH_CodeSnippets("writemarked")<CR>
+nnoremap  <buffer>  <silent>  <LocalLeader>ne         :call BASH_CodeSnippets("edit")<CR>
 "
 nnoremap  <buffer>  <silent>  <LocalLeader>ntl        :call BASH_BrowseTemplateFiles("Local")<CR>
 nnoremap  <buffer>  <silent>  <LocalLeader>ntg        :call BASH_BrowseTemplateFiles("Global")<CR> 
 nnoremap  <buffer>  <silent>  <LocalLeader>ntr        :call BASH_RereadTemplates()<CR>
 nnoremap  <buffer>            <LocalLeader>nts        :BashStyle<Space>
 "
- inoremap  <buffer>  <silent>  <LocalLeader>nr    <Esc>:call BASH_CodeSnippets("r")<CR>
- inoremap  <buffer>  <silent>  <LocalLeader>nw    <Esc>:call BASH_CodeSnippets("w")<CR>
- inoremap  <buffer>  <silent>  <LocalLeader>ne    <Esc>:call BASH_CodeSnippets("e")<CR>
+ inoremap  <buffer>  <silent>  <LocalLeader>nr    <Esc>:call BASH_CodeSnippets("read")<CR>
+ inoremap  <buffer>  <silent>  <LocalLeader>nv    <Esc>:call BASH_CodeSnippets("view")<CR>
+ inoremap  <buffer>  <silent>  <LocalLeader>nw    <Esc>:call BASH_CodeSnippets("write")<CR>
+ inoremap  <buffer>  <silent>  <LocalLeader>ne    <Esc>:call BASH_CodeSnippets("edit")<CR>
 "
  inoremap  <buffer>  <silent>  <LocalLeader>ntl   <Esc>:call BASH_BrowseTemplateFiles("Local")<CR>
  inoremap  <buffer>  <silent>  <LocalLeader>ntg   <Esc>:call BASH_BrowseTemplateFiles("Global")<CR> 
@@ -280,8 +283,8 @@ inoremap  <buffer>  <silent>  <LocalLeader>t2    [  -  ]<Left><Left><Left><Left>
 "
  map  <buffer>  <silent>  <LocalLeader>rr           :call BASH_Run("n")<CR>
 imap  <buffer>  <silent>  <LocalLeader>rr      <Esc>:call BASH_Run("n")<CR>
- map  <buffer>  <silent>  <LocalLeader>ra           :call BASH_ScriptCmdLineArguments()<CR>
-imap  <buffer>  <silent>  <LocalLeader>ra      <Esc>:call BASH_ScriptCmdLineArguments()<CR>
+ map  <buffer>            <LocalLeader>ra           :BashCmdlineArgs<Space>
+imap  <buffer>            <LocalLeader>ra      <Esc>:BashCmdlineArgs<Space>
  map  <buffer>  <silent>  <LocalLeader>rba          :call BASH_BashCmdLineArguments()<CR>
 imap  <buffer>  <silent>  <LocalLeader>rba     <Esc>:call BASH_BashCmdLineArguments()<CR>
 

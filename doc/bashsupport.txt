@@ -1,7 +1,7 @@
-*bashsupport.txt*                Bash Support                December 01 2012
+*bashsupport.txt*                Bash Support                January 02 2013
 
 bash Support                                      *bash-support* *bashsupport*
-                             Plugin version 3.11
+                             Plugin version 3.12
                         for Vim version 7.0 and above
                        Fritz Mehner  <mehner@fh-swf.de>
 
@@ -746,6 +746,7 @@ Legend:  (i) insert mode, (n) normal mode, (v) visual mode
   -- Snippets --------------------------------------------
 
      \nr     read code snippet                (n, i)
+     \nv     view code snippet  (readonly)    (n, i)
      \nw     write code snippet               (n, v, i)
      \ne     edit code snippet                (n, i)
 
@@ -907,6 +908,7 @@ g:BASH_Debugger                'term'
 g:BASH_LineEndCommColDefault   49
 g:BASH_SyntaxCheckOptionsGlob  ''
 g:BASH_Printheader             '%<%f%h%m%<  %=%{strftime('%x %X')}     Page %N'
+g:BASH_InsertFileHeader        'yes'
 g:BASH_BASH                    $SHELL         (Linux/U**X)
                                'bash.exe'     (Windows)
 g:BASH_Man                     'man'          (Linux/U**X)
@@ -944,6 +946,7 @@ g:BASH_AlsoBash                ''
            g:BASH_LineEndCommColDefault  : default starting column for line end comments
            g:BASH_SyntaxCheckOptionsGlob : shopt options used with syntax checking
            g:BASH_Printheader            : hardcopy header format
+           g:BASH_InsertFileHeader       : suppress file description comment for new files
            g:BASH_BASH                   : the shell used
            g:BASH_Man                    : the interface to the on-line manuals
            g:BASH_MapLeader              : the map leader for hotkeys (see|bashsupport-usage-vim|)
