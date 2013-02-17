@@ -19,7 +19,7 @@
 "
 "        Version:  see variable  g:BASH_Version  below
 "        Created:  26.02.2001
-"        License:  Copyright (c) 2001-2012, Fritz Mehner
+"        License:  Copyright (c) 2001-2013, Fritz Mehner
 "                  This program is free software; you can redistribute it and/or
 "                  modify it under the terms of the GNU General Public License as
 "                  published by the Free Software Foundation, version 2 of the
@@ -29,7 +29,7 @@
 "                  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 "                  PURPOSE.
 "                  See the GNU General Public License version 2 for more details.
-"       Revision:  $Id: bash-support.vim,v 1.120 2013/01/05 09:43:06 mehner Exp $
+"       Revision:  $Id: bash-support.vim,v 1.121 2013/02/17 12:15:16 mehner Exp $
 "
 "------------------------------------------------------------------------------
 "
@@ -38,7 +38,7 @@
 if exists("g:BASH_Version") || &cp
  finish
 endif
-let g:BASH_Version= "3.12"  						" version number of this script; do not change
+let g:BASH_Version= "3.12.1"  						" version number of this script; do not change
 "
 if v:version < 700
   echohl WarningMsg | echo 'plugin bash-support.vim needs Vim version >= 7'| echohl None
@@ -599,6 +599,9 @@ function!	BASH_InitMenu ()
 	exe "inoremenu ".s:BASH_Root.'&Tests.string\ &comparison.string1\ sorts\ &after\ string2\ lexicograph\.<Tab>>		 [  >  ]<Esc>bhi'
 	exe "inoremenu ".s:BASH_Root.'&Tests.string\ &comparison.string\ matches\ &regexp<Tab>=~												 [[  =~  ]]<Esc>2bhi'
 	"
+	exe " noremenu ".s:BASH_Root.'&Tests.&variable\ is\ set<Tab>-v							 a[ -v  ]<Left><Left>'
+	exe "inoremenu ".s:BASH_Root.'&Tests.&variable\ is\ set<Tab>-v							  [ -v  ]<Left><Left>'
+	"
 	exe " noremenu ".s:BASH_Root.'&Tests.file\ exists\ and\ is\ &owned\ by\ the\ effective\ UID<Tab>-O							 a[ -O  ]<Left><Left>'
 	exe " noremenu ".s:BASH_Root.'&Tests.file\ exists\ and\ is\ owned\ by\ the\ effective\ &GID<Tab>-G							 a[ -G  ]<Left><Left>'
 	exe " noremenu ".s:BASH_Root.'&Tests.file\ exists\ a&nd\ has\ been\ modified\ since\ it\ was\ last\ read<Tab>-N	 a[ -N  ]<Left><Left>'
@@ -700,21 +703,17 @@ function!	BASH_InitMenu ()
 	"----- menu Environment Variables   {{{2
 	"-------------------------------------------------------------------------------
 	"
-	call BASH_EnvirMenus ( s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ BASH_VERSION', s:BashEnvironmentVariables[0:16] )
-	"
-	call BASH_EnvirMenus ( s:BASH_Root.'E&nviron.&CDPATH\ \.\.\.\ FUNCNAME', s:BashEnvironmentVariables[17:32] )
-	"
-	call BASH_EnvirMenus ( s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG', s:BashEnvironmentVariables[33:49] )
-	"
-	call BASH_EnvirMenus ( s:BASH_Root.'E&nviron.&LC_ALL\ \.\.\.\ OSTYPE', s:BashEnvironmentVariables[50:65] )
-	"
-	call BASH_EnvirMenus ( s:BASH_Root.'E&nviron.&PATH\ \.\.\.\ UID', s:BashEnvironmentVariables[66:86] )
+	call BASH_EnvirMenus ( s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ BASH_XTRACEFD', s:BashEnvironmentVariables[0:16] )
+ 	call BASH_EnvirMenus ( s:BASH_Root.'E&nviron.&CDPATH\ \.\.\.\ FUNCNEST',    s:BashEnvironmentVariables[17:33] )
+ 	call BASH_EnvirMenus ( s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG',    s:BashEnvironmentVariables[34:50] )
+ 	call BASH_EnvirMenus ( s:BASH_Root.'E&nviron.&LC_ALL\ \.\.\.\ OSTYPE',      s:BashEnvironmentVariables[51:66] )
+ 	call BASH_EnvirMenus ( s:BASH_Root.'E&nviron.&PATH\ \.\.\.\ UID',           s:BashEnvironmentVariables[67:87] )
 	"
 	"-------------------------------------------------------------------------------
 	"----- menu Builtins  a-l   {{{2
 	"-------------------------------------------------------------------------------
-	call BASH_BuiltinMenus ( s:BASH_Root.'&Builtins.Builtins\ \ &a-f', s:BashBuiltins[0:21] )
-	call BASH_BuiltinMenus ( s:BASH_Root.'&Builtins.Builtins\ \ &g-r', s:BashBuiltins[22:41] )
+	call BASH_BuiltinMenus ( s:BASH_Root.'&Builtins.Builtins\ \ &a-f', s:BashBuiltins[0:23] )
+	call BASH_BuiltinMenus ( s:BASH_Root.'&Builtins.Builtins\ \ &g-r', s:BashBuiltins[24:41] )
 	call BASH_BuiltinMenus ( s:BASH_Root.'&Builtins.Builtins\ \ &s-w', s:BashBuiltins[42:57] )
 	"
 	"
@@ -777,8 +776,8 @@ function!	BASH_InitMenu ()
 	"-------------------------------------------------------------------------------
 	"----- menu shopt   {{{2
 	"-------------------------------------------------------------------------------
-	call	BASH_ShoptMenus ( s:BASH_Root.'sh&opt.shopt\ \ &a-g', s:BashShopt[0:20] )
-	call	BASH_ShoptMenus ( s:BASH_Root.'sh&opt.shopt\ \ &h-x', s:BashShopt[21:39] )
+	call	BASH_ShoptMenus ( s:BASH_Root.'sh&opt.shopt\ \ &a-g', s:BashShopt[0:21] )
+	call	BASH_ShoptMenus ( s:BASH_Root.'sh&opt.shopt\ \ &h-x', s:BashShopt[22:39] )
 	"
 	"------------------------------------------------------------------------------
 	"----- menu Regex    {{{2
@@ -1007,10 +1006,10 @@ function! BASH_InitMenuHeader ()
 	exe "amenu ".s:BASH_Root.'Spec&Vars.-Sep0-            :'
 	exe "amenu ".s:BASH_Root.'E&nviron.Environ<Tab>Bash   :call BASH_MenuTitle()<CR>'
 	exe "amenu ".s:BASH_Root.'E&nviron.-Sep0-             :'
-	exe "amenu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ BASH_VERSION.Environ-1<Tab>Bash :call BASH_MenuTitle()<CR>'
-	exe "amenu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ BASH_VERSION.-Sep0-             :'
-	exe "amenu ".s:BASH_Root.'E&nviron.&CDPATH\ \.\.\.\ FUNCNAME.Environ-2<Tab>Bash   :call BASH_MenuTitle()<CR>'
-	exe "amenu ".s:BASH_Root.'E&nviron.&CDPATH\ \.\.\.\ FUNCNAME.-Sep0-               :'
+	exe "amenu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ BASH_XTRACEFD.Environ-1<Tab>Bash :call BASH_MenuTitle()<CR>'
+	exe "amenu ".s:BASH_Root.'E&nviron.&BASH\ \.\.\.\ BASH_XTRACEFD.-Sep0-             :'
+	exe "amenu ".s:BASH_Root.'E&nviron.&CDPATH\ \.\.\.\ FUNCNEST.Environ-2<Tab>Bash   :call BASH_MenuTitle()<CR>'
+	exe "amenu ".s:BASH_Root.'E&nviron.&CDPATH\ \.\.\.\ FUNCNEST.-Sep0-               :'
 	exe "amenu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.Environ-3<Tab>Bash   :call BASH_MenuTitle()<CR>'
 	exe "amenu ".s:BASH_Root.'E&nviron.&GLOBIGNORE\ \.\.\.\ LANG.-Sep0-               :'
 	exe "amenu ".s:BASH_Root.'E&nviron.&LC_ALL\ \.\.\.\ OSTYPE.Environ-4<Tab>Bash :call BASH_MenuTitle()<CR>'
@@ -1048,29 +1047,29 @@ function! BASH_MenuTitle ()
 endfunction    " ----------  end of function BASH_MenuTitle  ----------
 
 let	s:BashEnvironmentVariables  = [
-	\	'&BASH',        'BASH&PID',               'BASH_&ALIASES',
-	\	'BASH_ARG&C',   'BASH_ARG&V',             'BASH_C&MDS',       'BASH_C&OMMAND',
-	\	'BASH_&ENV',    'BASH_E&XECUTION_STRING', 'BASH_&LINENO',     'BASH&OPTS',      'BASH_&REMATCH',
-	\	'BASH_&SOURCE', 'BASH_S&UBSHELL',         'BASH_VERS&INFO',   'BASH_VERSIO&N',  'BASH_XTRACEFD',
-	\	'&CDPATH',      'C&OLUMNS',               'CO&MPREPLY',       'COM&P_CWORD',
-	\	'COMP_&KEY',    'COMP_&LINE',             'COMP_POI&NT',      'COMP_&TYPE',
-	\	'COMP_WORD&BREAKS', 'COMP_&WORDS',
-	\	'&DIRSTACK',    '&EMAC&S',                '&EUID',            '&FCEDIT',
-	\	'F&IGNORE',     'F&UNCNAME',              '&GLOBIGNORE',      'GRO&UPS',
-	\	'&HISTCMD',     'HI&STCONTROL',           'HIS&TFILE',        'HIST&FILESIZE',
-	\	'HISTIG&NORE',  'HISTSI&ZE',              'HISTTI&MEFORMAT',  'H&OME',
-	\	'HOSTFIL&E',    'HOSTN&AME',              'HOSTT&YPE',        '&IFS',
-	\	'IGNO&REEOF',   'INPUTR&C',               '&LANG',            '&LC_ALL',
-	\	'LC_&COLLATE',  'LC_C&TYPE',              'LC_M&ESSAGES',     'LC_&NUMERIC',
-	\	'L&INENO',      'LINE&S',                 '&MACHTYPE',        'M&AIL',
-	\	'MAILCHEC&K',   'MAIL&PATH',              '&OLDPWD',          'OPTAR&G',
-	\	'OPTER&R',      'OPTIN&D',                'OST&YPE',          '&PATH',
-	\	'P&IPESTATUS',  'P&OSIXLY_CORRECT',       'PPI&D',            'PROMPT_&COMMAND',
-	\	'PROMPT_&DIRTRIM',
-	\	'PS&1',         'PS&2',                   'PS&3',             'PS&4',
-	\	'P&WD',         '&RANDOM',                'REPL&Y',           '&SECONDS',
-	\	'S&HELL',       'SH&ELLOPTS',             'SH&LVL',           '&TIMEFORMAT',
-	\	'T&MOUT',       'TMP&DIR',                '&UID',
+	\ '&BASH',            'BASH&PID',               'BASH_&ALIASES',
+	\ 'BASH_ARG&C',       'BASH_ARG&V',             'BASH_C&MDS',      'BASH_C&OMMAND',
+	\ 'BASH_&ENV',        'BASH_E&XECUTION_STRING', 'BASH_&LINENO',    'BASH&OPTS',       'BASH_&REMATCH',
+	\ 'BASH_&SOURCE',     'BASH_S&UBSHELL',         'BASH_VERS&INFO',  'BASH_VERSIO&N',   'BASH_&XTRACEFD',
+	\ '&CDPATH',          'C&OLUMNS',               'CO&MPREPLY',      'COM&P_CWORD',
+	\ 'COMP_&KEY',        'COMP_&LINE',             'COMP_POI&NT',     'COMP_&TYPE',
+	\ 'COMP_WORD&BREAKS', 'COMP_&WORDS',
+	\ '&DIRSTACK',        '&EMAC&S',                '&EUID',           '&FCEDIT',
+	\ 'F&IGNORE',         'F&UNCNAME',              'F&UNCNEST',       '&GLOBIGNORE',     'GRO&UPS',
+	\ '&HISTCMD',         'HI&STCONTROL',           'HIS&TFILE',       'HIST&FILESIZE',
+	\ 'HISTIG&NORE',      'HISTSI&ZE',              'HISTTI&MEFORMAT', 'H&OME',
+	\ 'HOSTFIL&E',        'HOSTN&AME',              'HOSTT&YPE',       '&IFS',
+	\ 'IGNO&REEOF',       'INPUTR&C',               '&LANG',           '&LC_ALL',
+	\ 'LC_&COLLATE',      'LC_C&TYPE',              'LC_M&ESSAGES',    'LC_&NUMERIC',
+	\ 'L&INENO',          'LINE&S',                 '&MACHTYPE',       'M&AIL',
+	\ 'MAILCHEC&K',       'MAIL&PATH',              '&OLDPWD',         'OPTAR&G',
+	\ 'OPTER&R',          'OPTIN&D',                'OST&YPE',         '&PATH',
+	\ 'P&IPESTATUS',      'P&OSIXLY_CORRECT',       'PPI&D',           'PROMPT_&COMMAND',
+	\ 'PROMPT_&DIRTRIM',
+	\ 'PS&1',             'PS&2',                   'PS&3',            'PS&4',
+	\ 'P&WD',             '&RANDOM',                'REPL&Y',          '&SECONDS',
+	\ 'S&HELL',           'SH&ELLOPTS',             'SH&LVL',          '&TIMEFORMAT',
+	\ 'T&MOUT',           'TMP&DIR',                '&UID',
 	\	]
 
 let s:BashBuiltins  = [
@@ -1089,12 +1088,13 @@ let s:BashBuiltins  = [
 
 let	s:BashShopt = [
 	\	'autocd',        'cdable_vars',      'cdspell',       'checkhash',
-	\	'checkjobs',     'checkwinsize',     'cmdhist',       'compat31',       'compat32',       'compat40',
+	\	'checkjobs',     'checkwinsize',     'cmdhist',
+	\	'compat31',      'compat32',         'compat40',      'compat41',
 	\	'dirspell',      'dotglob',          'execfail',      'expand_aliases',
 	\	'extdebug',      'extglob',          'extquote',      'failglob',
 	\	'force_fignore', 'globstar',         'gnu_errfmt',    'histappend',    'histreedit',
 	\	'histverify',    'hostcomplete',     'huponexit',     'interactive_comments',
-	\	'lithist',       'login_shell',      'mailwarn',      'no_empty_cmd_completion',
+	\	'lastpipe',      'lithist',          'login_shell',   'mailwarn',      'no_empty_cmd_completion',
 	\	'nocaseglob',    'nocasematch',      'nullglob',      'progcomp',
 	\	'promptvars',    'restricted_shell', 'shift_verbose', 'sourcepath',
 	\	'xpg_echo',

@@ -1,4 +1,4 @@
-README for bash-support.vim (Version 3.12) / January 02 2013
+README for bash-support.vim (Version 3.12.1) / January 15 2013
 
   *  INSTALLATION
   *  RELEASE NOTES
@@ -136,13 +136,10 @@ Look at the bashsupport help with
              +-----------------------------------------------+
 
 =======================================================================================
-  RELEASE NOTES FOR VERSION 3.12
+  RELEASE NOTES FOR VERSION 3.12.1
 =======================================================================================
-- New global variable g:BASH_InsertFileHeader (suppress file description comment for new files)
-- New menu item 'view code snippet' (\nv).
-- New ex command BASH_ScriptCmdLineArguments.
-- 3 ex commands renamed.
-- Minor internal improvements.
+- Minor additions and bugfixes in 2 menus.
+- Test -v added.
 
 =======================================================================================
   OLDER RELEASE NOTES : see file 'ChangeLog'

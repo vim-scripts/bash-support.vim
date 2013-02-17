@@ -31,6 +31,7 @@ EUID
 FCEDIT
 FIGNORE
 FUNCNAME
+FUNCNEST
 GLOBIGNORE
 GROUPS
 HISTCMD
@@ -195,6 +196,7 @@ cmdhist
 compat31
 compat32
 compat40
+compat41
 dirspell
 dotglob
 execfail
@@ -212,6 +214,7 @@ histverify
 hostcomplete
 huponexit
 interactive_comments
+lastpipe
 lithist
 login_shell
 mailwarn

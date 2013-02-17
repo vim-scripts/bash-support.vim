@@ -1,4 +1,13 @@
 =======================================================================================
+  RELEASE NOTES FOR VERSION 3.12
+=======================================================================================
+- New global variable g:BASH_InsertFileHeader (suppress file description comment for new files)
+- New menu item 'view code snippet' (\nv).
+- New ex command BASH_ScriptCmdLineArguments.
+- 3 ex commands renamed.
+- Minor internal improvements.
+
+=======================================================================================
   RELEASE NOTES FOR VERSION 3.11
 =======================================================================================
 - Rendering of manuals (\hm) and Bash help (\hh).
