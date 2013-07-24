@@ -1,19 +1,43 @@
+§ =============================================================
+§  User Macros
+§ =============================================================
+
+SetMacro( 'AUTHOR',      'YOUR NAME' )
+SetMacro( 'AUTHORREF',   '' )
+SetMacro( 'COMPANY',     '' )
+SetMacro( 'COPYRIGHT',   'Copyright (c) |YEAR|, |AUTHOR|' )
+SetMacro( 'EMAIL',       '' )
+SetMacro( 'LICENSE',     'GNU General Public License' )
+SetMacro( 'ORGANIZATION','' )
+
+SetFormat( 'DATE', '%x' )
+SetFormat( 'TIME', '%H:%M' )
+SetFormat( 'YEAR', '%Y' )
+
+SetStyle( 'default' )
 
 § =============================================================
-§ ========== USER MACROS ======================================
+§  File Includes and Shortcuts
 § =============================================================
-§
-|AUTHOR|       = YOUR NAME 
-|AUTHORREF|    = 
-|EMAIL|        = 
-|ORGANIZATION| = 
-|COPYRIGHT|    = Copyright (c) |YEAR|, |AUTHOR|
-§
-§ =============================================================
-§ ========== FILE INCLUDES ====================================
-§ =============================================================
-§
-|includefile| = bash.comments.template
-|includefile| = bash.statements.template
-|includefile| = bash.paramsub.template
-§
+
+§ :TODO:14.07.13 12:50:WM: files "paramsub.templates" and "io-redirection.templates": maps, shortcuts? sort alphabetically?
+
+MenuShortcut( 'Comments',        'c' )
+MenuShortcut( 'Statements',      's' )
+MenuShortcut( 'Tests',           't' )
+MenuShortcut( 'ParamSub',        'p' )
+MenuShortcut( 'Regexp',          'x' )
+MenuShortcut( 'IO-Redir',        'i' )
+
+IncludeFile( 'comments.templates'       )
+IncludeFile( 'statements.templates'     )
+IncludeFile( 'tests.templates'          )
+IncludeFile( 'paramsub.templates'       )
+IncludeFile( 'specialparams.templates'  )
+IncludeFile( 'environment.templates'    )
+IncludeFile( 'builtins.templates'       )
+IncludeFile( 'set.templates'            )
+IncludeFile( 'shelloptions.templates'   )
+IncludeFile( 'io-redirection.templates' )
+IncludeFile( 'regexp.templates'         )
+

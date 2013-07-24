@@ -1,15 +1,21 @@
-"===================================================================================
-"         FILE:  .gvimrc
-"  DESCRIPTION:  suggestion for a personal configuration file ~/.gvimrc
-"       AUTHOR:  Dr.-Ing. Fritz Mehner
-"      VERSION:  1.0
-"      CREATED:  04.04.2009
-"     REVISION:  $Id: customization.gvimrc,v 1.2 2009/07/04 10:47:41 mehner Exp $
-"===================================================================================
+"===============================================================================
 "
-"===================================================================================
+"          File:  customization.gvimrc
+" 
+"   Description:  suggestion for a personal configuration file ~/.gvimrc
+" 
+"   VIM Version:  7.0+
+"        Author:  Dr. Fritz Mehner (fgm), mehner.fritz@fh-swf.de
+"  Organization:  FH Südwestfalen, Iserlohn
+"       Version:  1.0
+"       Created:  18.05.2013 21:58
+"      Revision:  ---
+"       License:  Copyright (c) 2013, Dr. Fritz Mehner
+"===============================================================================
+"
+"===============================================================================
 " GENERAL SETTINGS
-"===================================================================================
+"===============================================================================
 set cmdheight=2                                 " Make command line two lines high
 set mousehide                                   " Hide the mouse when typing text
 

@@ -1,4 +1,4 @@
-README for bash-support.vim (Version 3.12.1) / January 15 2013
+README for bash-support.vim (Version 4.0) / July 07 2013
 
   *  INSTALLATION
   *  RELEASE NOTES
@@ -30,12 +30,6 @@ structure which is needed below the local installation directory $HOME/.vim/
 
       unzip bash-support.zip
 
-    If you have already an older version of bash-support and you have modified
-    the template files you may want to save your templates first and suppress
-    overwriting them with
-
-      unzip bash-support.zip  -x *Templates *.template
-
 (1.2) Loading of plugin files must be enabled. If not use
 
       :filetype plugin on
@@ -47,11 +41,11 @@ structure which is needed below the local installation directory $HOME/.vim/
     '$HOME/.vim/bash-support/templates/Templates'
     Here is the minimal personalization (my settings as an example):
 
-      |AUTHOR|    = Dr. Fritz Mehner
-      |AUTHORREF| = fgm
-      |EMAIL|     = mehner@fh-swf.de
-      |COMPANY|   = FH Südwestfalen, Iserlohn
-      |COPYRIGHT| = Copyright (c) |YEAR|, |AUTHOR|
+       SetMacro( 'AUTHOR',      'Dr. Fritz Mehner' )
+       SetMacro( 'AUTHORREF',   'fgm' )
+       SetMacro( 'EMAIL',       'mehner.fritz@fh-swf.de' )
+       SetMacro( 'ORGANIZATION','FH Südwestfalen, Iserlohn' )
+       SetMacro( 'COPYRIGHT',   'Copyright (c) |YEAR|, |AUTHOR|' )
 
     (Read more about the template system in the plugin documentation)
 
@@ -80,29 +74,22 @@ $HOME/vimfiles/ (find the value of $HOME with ":echo $HOME" from inside Vim).
 
       unzip bash-support.zip
 
-    If you have already an older version of bash-support and you have modified
-    the template files you may want to save your templates first and suppress
-    overwriting them with
-
-      unzip bash-support.zip  -x *Templates *.template
-
 (2.2) Loading of plugin files must be enabled. If not use
 
       :filetype plugin on
 
     This is the minimal content of the file '$HOME/_vimrc'. Create one if there
-    is none or use the files in $HOME/vimfiles/bash-support/rc as a starting
-    point.
+    is none or use the files in $HOME/vimfiles/bash-support/rc as a starting point.
 
 (2.3) Set at least some personal details in the file
     '$HOME/vimfiles/bash-support/templates/Templates'
     Here is the minimal personalization (my settings as an example):
 
-      |AUTHOR|    = Dr. Fritz Mehner
-      |AUTHORREF| = fgm
-      |EMAIL|     = mehner@fh-swf.de
-      |COMPANY|   = FH Südwestfalen, Iserlohn
-      |COPYRIGHT| = Copyright (c) |YEAR|, |AUTHOR|
+       SetMacro( 'AUTHOR',      'Dr. Fritz Mehner' )
+       SetMacro( 'AUTHORREF',   'fgm' )
+       SetMacro( 'EMAIL',       'mehner.fritz@fh-swf.de' )
+       SetMacro( 'ORGANIZATION','FH Südwestfalen, Iserlohn' )
+       SetMacro( 'COPYRIGHT',   'Copyright (c) |YEAR|, |AUTHOR|' )
 
     (Read more about the template system in the plugin documentation)
 
@@ -136,10 +123,22 @@ Look at the bashsupport help with
              +-----------------------------------------------+
 
 =======================================================================================
-  RELEASE NOTES FOR VERSION 3.12.1
+  RELEASE NOTES FOR VERSION 4.0
 =======================================================================================
-- Minor additions and bugfixes in 2 menus.
-- Test -v added.
+
+  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  ++  The plug-in version 4.0+ is a rewriting of version 3.12.1.              ++
+  ++  The versions 4.0+ are based on a new and more powerful template system  ++
+  ++  (please see ":help template-support" for more information).             ++
+  ++  The template syntax has changed!                                        ++
+  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+- New template system (many thanks to Wolfgang Mehner)
+- A few new hotkeys and menu item.
+- A few hotkeys and menu items renamed.
+
 
 =======================================================================================
   OLDER RELEASE NOTES : see file 'ChangeLog'
@@ -150,8 +149,6 @@ Look at the bashsupport help with
 =======================================================================================
 
 README.bashsupport                  This file.
-
-ftplugin/sh.vim                     A filetype plugin. Defines hotkeys and more.
 
 plugin/bash-support.vim             The bash plugin for Vim/gVim.
 bash-support/scripts/wrapper.sh     A wrapper script for the use of an xterm.

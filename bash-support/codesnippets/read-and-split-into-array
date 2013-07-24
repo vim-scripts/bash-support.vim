@@ -1,8 +1,0 @@
-
-declare infilename=""                           # input filename
-declare -a part                                 # make part an array
-
-while IFS=':' read -a part ; do                 # set IFS, read,  and split line
-  # use ${part[i]}
-done < "$infilename"
-

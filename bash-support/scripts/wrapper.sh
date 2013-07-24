@@ -12,20 +12,20 @@
 #        AUTHOR:  Dr.-Ing. Fritz Mehner (Mn), mehner@fh-swf.de
 #       COMPANY:  Fachhochschule Südwestfalen, Iserlohn
 #       CREATED:  23.11.2004 18:04:01 CET
-#      REVISION:  $Id: wrapper.sh,v 1.5 2009/06/04 17:14:02 mehner Exp $
+#      REVISION:  ---
 #===============================================================================
 
 scriptname="${1}"                               # name of the script to execute
 returncode=0                                    # default return code
 
 if [ ${#} -ge 1 ] ; then
-	if [ -x "$scriptname" ] ; then                # start an executable script?
-		"${@}"
-	else
+  if [ -x "$scriptname" ] ; then                # start an executable script?
+    "${@}"
+  else
     $SHELL "${@}"                               # start a script which is not executable
-	fi
-	returncode=$?
-	[ $returncode -ne 0 ] && printf "'${@}' returned ${returncode}\n"
+  fi
+  returncode=$?
+  [ $returncode -ne 0 ] && printf "'${@}' returned ${returncode}\n"
 else
   printf "\n!! ${0} : no argument(s) !!\n"
 fi
