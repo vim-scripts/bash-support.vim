@@ -28,6 +28,14 @@ The installation explained: http://www.thegeekstuff.com article
 
 Plugin featured in the  linux.com article 'Turn Vim into a bash IDE' : http://www.linux.com/articles/114359
 
+GitHub
+--------------------------------------------------------
+Bash Support is on GitHub:
+
+      https://github.com/WolfgangMehner/vim-plugins
+
+(Please help us keep track of all the issues and name your report/request "Bash-Support: <title>") 
+
 MAILING LIST
 --------------------------------------------------------
 You can subscribe to the vim-plugins-list mailing list to post your questions or

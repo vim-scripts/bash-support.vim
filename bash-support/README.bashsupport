@@ -1,4 +1,4 @@
-README for bash-support.vim (Version 4.0) / July 07 2013
+README for bash-support.vim (Version 4.1) / December 09 2013
 
   *  INSTALLATION
   *  RELEASE NOTES
@@ -123,24 +123,16 @@ Look at the bashsupport help with
              +-----------------------------------------------+
 
 =======================================================================================
-  RELEASE NOTES FOR VERSION 4.0
+  RELEASE NOTES FOR VERSION 4.1
 =======================================================================================
 
-  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  ++  The plug-in version 4.0+ is a rewriting of version 3.12.1.              ++
-  ++  The versions 4.0+ are based on a new and more powerful template system  ++
-  ++  (please see ":help template-support" for more information).             ++
-  ++  The template syntax has changed!                                        ++
-  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+- Filetype plugin added.
+- Bugfix: Setup of local templates in case of global installation.
+- Adjusting end-of-line comments improved.
+- Submenu 'Regexp' renamed to 'PatternMatching'. Appropriate hotkeys renamed.
+- Minor bugfixes.
+- Documentation updated.
 
-- New template system (many thanks to Wolfgang Mehner)
-- A few new hotkeys and menu item.
-- A few hotkeys and menu items renamed.
-
-
-=======================================================================================
   OLDER RELEASE NOTES : see file 'ChangeLog'
 =======================================================================================
 
@@ -150,6 +142,7 @@ Look at the bashsupport help with
 
 README.bashsupport                  This file.
 
+ftplugin/sh.vim                     The bash filetype plugin.
 plugin/bash-support.vim             The bash plugin for Vim/gVim.
 bash-support/scripts/wrapper.sh     A wrapper script for the use of an xterm.
 

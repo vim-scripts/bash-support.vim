@@ -41,7 +41,7 @@ endif
 if &cp || ( exists('g:Templates_Version') && ! exists('g:Templates_DevelopmentOverwrite') )
 	finish
 endif
-let g:Templates_Version= '0.9.1.1'     " version number of this script; do not change
+let g:Templates_Version= '0.9.2'     " version number of this script; do not change
 "
 if ! exists ( 'g:Templates_MapInUseWarn' )
 	let g:Templates_MapInUseWarn = 1
@@ -68,6 +68,8 @@ let s:Flagactions = {
 			\ }
 "
 let s:StandardPriority = 500
+"
+let g:CheckedFiletypes = {}
 "
 "----------------------------------------------------------------------
 "  s:StandardMacros : The standard macros.   {{{2
@@ -213,7 +215,6 @@ function! s:UpdateTemplateRegex ( regex, settings )
 	let a:regex.MacroName    = a:settings.MacroName
 	let a:regex.MacroNameC   = '\('.a:settings.MacroName.'\)'
 	let a:regex.MacroMatch   = '^'.a:settings.MacroStart.a:settings.MacroName.a:settings.MacroEnd.'$'
-	let a:regex.MacroSimple  = a:settings.MacroStart.a:settings.MacroName.a:settings.MacroEnd
 	"
 	" Syntax Categories
 	let a:regex.FunctionLine    = '^'.a:settings.MacroStart.'\('.a:regex.MacroNameC.'(\(.*\))\)'.a:settings.MacroEnd.'\s*\n'
@@ -223,6 +224,7 @@ function! s:UpdateTemplateRegex ( regex, settings )
 	let a:regex.FunctionInsert  = a:settings.MacroStart.'\(Insert\|InsertLine\)'.'(\(.\{-}\))'.a:settings.MacroEnd
 	let a:regex.MacroRequest    = a:settings.MacroStart.'?'.a:regex.MacroNameC.'\%(:\(\a\)\)\?'.a:settings.MacroEnd
 	let a:regex.MacroInsert     = a:settings.MacroStart.''.a:regex.MacroNameC.'\%(:\(\a\)\)\?'.a:settings.MacroEnd
+	let a:regex.MacroNoCapture  = a:settings.MacroStart.a:settings.MacroName.'\%(:\a\)\?'.a:settings.MacroEnd
 	let a:regex.ListItem        = a:settings.MacroStart.''.a:regex.MacroNameC.':ENTRY_*'.a:settings.MacroEnd
 	"
 	let a:regex.TextBlockFunctions = '^\%(C\|Comment\|Insert\|InsertLine\)$'
@@ -361,7 +363,10 @@ endfunction    " ----------  end of function s:UserInput ----------
 "----------------------------------------------------------------------
 "
 function! mmtemplates#core#UserInputEx ( ArgLead, CmdLine, CursorPos )
-	return filter( copy( s:UserInputList ), 'v:val =~ "\\V\\<'.escape(a:ArgLead,'\').'\\w\\*"' )
+	if empty( a:ArgLead )
+		return copy( s:UserInputList )
+	endif
+	return filter( copy( s:UserInputList ), 'v:val =~ ''\V\<'.escape(a:ArgLead,'\').'\w\*''' )
 endfunction    " ----------  end of function mmtemplates#core#UserInputEx  ----------
 " }}}3
 "
@@ -842,12 +847,12 @@ let s:FileReadNameSpace = {
 			\ 'SetFormat'    : 'ss',
 			\ 'SetMacro'     : 'ss',
 			\ 'SetPath'      : 'ss',
+			\ 'SetProperty'  : 'ss',
 			\ 'SetStyle'     : 's',
 			\
 			\ 'MenuShortcut' : 'ss',
 			\ }
 " 			\ 'SetMap'       : 'ss',
-" 			\ 'SetProperty'  : 'ss',
 " 			\ 'SetShortcut'  : 'ss',
 "
 "----------------------------------------------------------------------
@@ -946,12 +951,16 @@ function! s:SetMap ( name, map )
 endfunction    " ----------  end of function s:SetMap  ----------
 "
 "----------------------------------------------------------------------
-"  s:SetProperty : TODO (template function).   {{{2
+"  s:SetProperty : Set an existing property.   {{{2
 "----------------------------------------------------------------------
 "
-function! s:SetProperty ( name, shortcut )
+function! s:SetProperty ( name, value )
 	"
-	echo 'SetProperty: TO BE IMPLEMENTED'
+	let [ _, err ] = mmtemplates#core#Resource ( s:library, 'set', 'property', a:name , a:value )
+	"
+	if err != ''
+		return s:ErrorMsg ( 'Can not set the property "'.a:name.'".' )
+	endif
 	"
 endfunction    " ----------  end of function s:SetProperty  ----------
 "
@@ -1484,7 +1493,7 @@ function! s:ReplaceMacros ( text, m_local )
 			let m_text = get ( s:library.macros, mlist[2], '' )
 		end
 		"
-		if m_text =~ s:library.regex_template.MacroSimple
+		if m_text =~ s:library.regex_template.MacroNoCapture
 			"
 			call add ( s:t_runtime.macro_stack, mlist[2] )
 			"
@@ -2481,16 +2490,16 @@ function! s:InsertIntoBuffer ( text, placement, indentation, flag_mode )
 		" part0 and part1 can consist of several lines
 		"
 		if placement == 'insert'
-			" [_,line,col,off] = getpos()
-			let [_,l1,c1,o1] = getpos("'<")
-			let [_,l2,c2,o2] = getpos("'>")
-			call cursor ( l2, c2, o2 )
-			exe 'normal! a'.part[1]
-			call cursor ( l1, c1, o1 )
-			exe 'normal! i'.part[0]
+			" windows:  register @* does not work
+			" solution: recover area of the visual mode and yank,
+			"           puts the selected area into the buffer @"
+			let pos1 = line("'<")
+			let pos2 = line("'>") + len(split( text, '\n' )) - 1
+			normal gvy
+			let repl = escape ( part[0].@".part[1], '\&~' )
+			" substitute the selected area (using the '< and '> marks)
+			exe ':s/\%''<.*\%''>./'.repl.'/'
 			let indentation = 0
-			let pos1 = l1
-			let pos2 = l2 + len(split( text, '\n' )) - 1
 		elseif placement == 'below'
 			silent '<put! = part[0]
 			silent '>put  = part[1]
@@ -2521,26 +2530,39 @@ endfunction    " ----------  end of function s:InsertIntoBuffer  ----------
 "
 function! s:PositionCursor ( placement, flag_mode, pos1, pos2 )
 	"
-	" TODO: syntax
+	" :TODO:12.08.2013 11:03:WM: changeable syntax?
+	" :TODO:12.08.2013 12:00:WM: change behavior?
 	"
 	exe ":".a:pos1
 	let mtch = search( '<CURSOR>\|{CURSOR}', 'c', a:pos2 )
-	if mtch != 0  " CURSOR found:
+	if mtch != 0
+		" tag found (and cursor moved, we are now at the position of the match)
 		let line = getline(mtch)
 		if line =~ '<CURSOR>$\|{CURSOR}$'
+			" the tag is at the end of the line
 			call setline( mtch, substitute( line, '<CURSOR>\|{CURSOR}', '', '' ) )
-			if a:flag_mode == 'v' && getline(".") =~ '^\s*$'
+			if a:flag_mode == 'v' && getline('.') =~ '^\s*$'
+			"if a:flag_mode == 'v' && getline('.') =~ '^\s*\%(<CURSOR>\|{CURSOR}\)\s*$'
+				" the line contains nothing but the tag: remove and join without
+				" changing the second line
 				normal J
+				"call setline( mtch, '' )
+				"normal gJ
 			else
+				" the line contains other characters: remove the tag and start appending
+				"call setline( mtch, substitute( line, '<CURSOR>\|{CURSOR}', '', '' ) )
 				startinsert!
 			endif
 		else
+			" the line contains other characters: remove the tag and start inserting
 			call setline( mtch, substitute( line, '<CURSOR>\|{CURSOR}', '', '' ) )
-			:startinsert
+			startinsert
 		endif
-	else          " no CURSOR found
+	else
+		" no tag found (and cursor not moved)
 		if a:placement == 'below'
-			exe ":".a:pos2       | " to the end of the block; needed for repeated inserts
+			" to the end of the block, needed for repeated inserts
+			exe ":".a:pos2
 		endif
 	endif
 	"
@@ -2834,6 +2856,13 @@ function! mmtemplates#core#CreateMaps ( library, localleader, ... )
 	"  generate new commands
 	" ==================================================
 	"
+	if has_key ( g:CheckedFiletypes, &filetype )
+		let echo_warning = 0
+	else
+		let g:CheckedFiletypes[ &filetype ] = 1
+		let echo_warning = g:Templates_MapInUseWarn != 0
+	endif
+	"
 	" go through all the templates
 	for t_name in t_lib.menu_order
 		"
@@ -2849,7 +2878,7 @@ function! mmtemplates#core#CreateMaps ( library, localleader, ... )
 			"
 			" map already existing?
 			if ! empty ( maparg( leader.mp, mode ) )
-				if g:Templates_MapInUseWarn != 0
+				if echo_warning
 					call s:ErrorMsg ( 'Mapping already in use: "'.leader.mp.'", mode "'.mode.'"' )
 				endif
 				continue
@@ -2877,7 +2906,9 @@ function! mmtemplates#core#CreateMaps ( library, localleader, ... )
 	if do_jump_map
 		let jump_key = '<C-j>'   " TODO: configurable
 		if ! empty ( maparg( jump_key ) )
-			call s:ErrorMsg ( 'Mapping already in use: "'.jump_key.'"' )
+			if echo_warning
+				call s:ErrorMsg ( 'Mapping already in use: "'.jump_key.'"' )
+			endif
 		else
 			let jump_regex = string ( escape ( t_lib.regex_template.JumpTagBoth, '|' ) )
 			let cmd .= 'nnoremap '.options.' '.jump_key.' i<C-R>=mmtemplates#core#JumpToTag('.jump_regex.')<CR>'.sep
@@ -2897,7 +2928,9 @@ function! mmtemplates#core#CreateMaps ( library, localleader, ... )
 		"
 		for [ mp, action ] in items ( special_maps )
 			if ! empty ( maparg( leader.mp ) )
-				call s:ErrorMsg ( 'Mapping already in use: "'.leader.mp.'"' )
+				if echo_warning
+					call s:ErrorMsg ( 'Mapping already in use: "'.leader.mp.'"' )
+				endif
 			else
 				let cmd .= ' noremap '.options.' '.leader.mp.'      '.action.sep
 				let cmd .= 'inoremap '.options.' '.leader.mp.' <Esc>'.action.sep
@@ -3018,7 +3051,7 @@ endfunction    " ----------  end of function s:CreateSubmenu  ----------
 "
 function! s:CreateTemplateMenus ( t_lib, root_menu, global_name, t_lib_name )
 	"
-	let map_ldr = mmtemplates#core#EscapeMenu ( a:t_lib.properties[ 'Templates::Mapleader' ] )
+	let map_ldr = mmtemplates#core#EscapeMenu ( a:t_lib.properties[ 'Templates::Mapleader' ], 'right' )
 	"
 	" go through all the templates
 	for t_name in a:t_lib.menu_order
@@ -3107,13 +3140,13 @@ function! s:CreateSpecialsMenus ( t_lib, root_menu, global_name, t_lib_name, spe
 	" remove trailing point
 	let specials_menu = substitute( a:specials_menu, '\.$', '', '' )
 	"
-	let map_ldr   = mmtemplates#core#EscapeMenu ( a:t_lib.properties[ 'Templates::Mapleader' ] )
-	let map_edit  = map_ldr.mmtemplates#core#EscapeMenu ( a:t_lib.properties[ 'Templates::EditTemplates::Map' ] )
-	let map_read  = map_ldr.mmtemplates#core#EscapeMenu ( a:t_lib.properties[ 'Templates::RereadTemplates::Map' ] )
-	let map_style = map_ldr.mmtemplates#core#EscapeMenu ( a:t_lib.properties[ 'Templates::ChooseStyle::Map' ] )
-	let sc_edit   = mmtemplates#core#EscapeMenu ( a:t_lib.properties[ 'Templates::EditTemplates::Shortcut' ] )
-	let sc_read   = mmtemplates#core#EscapeMenu ( a:t_lib.properties[ 'Templates::RereadTemplates::Shortcut' ] )
-	let sc_style  = mmtemplates#core#EscapeMenu ( a:t_lib.properties[ 'Templates::ChooseStyle::Shortcut' ] )
+	let map_ldr   = mmtemplates#core#EscapeMenu ( a:t_lib.properties[ 'Templates::Mapleader' ], 'right' )
+	let map_edit  = map_ldr.mmtemplates#core#EscapeMenu ( a:t_lib.properties[ 'Templates::EditTemplates::Map' ], 'right' )
+	let map_read  = map_ldr.mmtemplates#core#EscapeMenu ( a:t_lib.properties[ 'Templates::RereadTemplates::Map' ], 'right' )
+	let map_style = map_ldr.mmtemplates#core#EscapeMenu ( a:t_lib.properties[ 'Templates::ChooseStyle::Map' ], 'right' )
+	let sc_edit   = mmtemplates#core#EscapeMenu ( a:t_lib.properties[ 'Templates::EditTemplates::Shortcut' ], 'right' )
+	let sc_read   = mmtemplates#core#EscapeMenu ( a:t_lib.properties[ 'Templates::RereadTemplates::Shortcut' ], 'right' )
+	let sc_style  = mmtemplates#core#EscapeMenu ( a:t_lib.properties[ 'Templates::ChooseStyle::Shortcut' ], 'right' )
 	"
 	" create the specials menu
 	call s:CreateSubmenu ( a:t_lib, a:root_menu, a:global_name, specials_menu, s:StandardPriority )
@@ -3179,7 +3212,7 @@ function! mmtemplates#core#CreateMenus ( library, root_menu, ... )
 	let root_menu     = global_name.'.'
 	let specials_menu = '&Run'
 	let priority      = s:StandardPriority
-	let existing     = []
+	let existing      = []
 	"
 	" jobs
 	let do_reset     = 0
@@ -3283,10 +3316,35 @@ endfunction    " ----------  end of function mmtemplates#core#CreateMenus  -----
 " mmtemplates#core#EscapeMenu : Escape a string so it can be used as a menu item.   {{{1
 "----------------------------------------------------------------------
 "
-function! mmtemplates#core#EscapeMenu ( str )
+function! mmtemplates#core#EscapeMenu ( str, ... )
 	"
-	let str = escape     ( a:str, ' \.|' )
-	let str = substitute (   str, '&', '\&\&', 'g' )
+	let mode = 'entry'
+	"
+	if a:0 > 0
+		if type( a:1 ) != type( '' )
+			return s:ErrorMsg ( 'Argument "mode" must be given as a string.' )
+		elseif a:1 == 'menu'
+			let mode = 'menu'
+		elseif a:1 == 'entry'
+			let mode = 'entry'
+		elseif a:1 == 'right'
+			let mode = 'right'
+		else
+			return s:ErrorMsg ( 'Unknown mode: '.a:1 )
+		endif
+	endif
+	"
+	" whole menu: do not escape '.'
+	if mode == 'menu'
+		let str = escape ( a:str, ' \|' )
+	else
+		let str = escape ( a:str, ' \|.' )
+	endif
+	"
+	" right-aligned text: do not escape '&'
+	if mode != 'right'
+		let str = substitute (   str, '&', '\&\&', 'g' )
+	endif
 	"
 	return str
 	"
@@ -3379,7 +3437,7 @@ function! mmtemplates#core#Resource ( library, mode, ... )
 	if a:mode == 'add' || a:mode == 'get' || a:mode == 'set'
 		" continue below
 	elseif a:mode == 'escaped_mapleader'
-		return [ mmtemplates#core#EscapeMenu( t_lib.properties[ 'Templates::Mapleader' ] ), '' ]
+		return [ mmtemplates#core#EscapeMenu( t_lib.properties[ 'Templates::Mapleader' ], 'right' ), '' ]
 	elseif a:mode == 'jumptag'
 		return [ t_lib.regex_template.JumpTagBoth, '' ]
 	elseif a:mode == 'style'
